@@ -1,6 +1,7 @@
 package com.example.cpu11398_local.activitycyclelife;
 
 import android.content.Intent;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -67,5 +68,11 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Log.w(ACTIVITY_NAME, "BackPressed");
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        Log.w(ACTIVITY_NAME, "onSaveInstanceState");
     }
 }

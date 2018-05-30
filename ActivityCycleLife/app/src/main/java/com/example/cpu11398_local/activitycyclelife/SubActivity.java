@@ -1,5 +1,6 @@
 package com.example.cpu11398_local.activitycyclelife;
 
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -63,5 +64,11 @@ public class SubActivity extends AppCompatActivity {
     {
         Log.d(ACTIVITY_NAME,"HomePressed");
         super.onUserLeaveHint();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        Log.w(ACTIVITY_NAME, "onSaveInstanceState");
     }
 }
