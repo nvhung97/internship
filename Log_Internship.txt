@@ -5,3 +5,9 @@
 
 3:01 PM 5/29/2018
 	- Tìm hiểu về FragmentCycleLife
+
+3:12 PM 5/31/2018
+	- Tìm hiểu cách hiện thực ứng dụng đa ngôn ngữ. Chuyển đổi qua lại giữa các ngôn ngữ, lưu trạng thái ngôn ngữ khi đóng ứng dụng. (https://proandroiddev.com/change-language-programmatically-at-runtime-on-android-5e6bc15c758)
+	- Tìm hiểu ViewGroup: vòng đời, hiệu suất, tạo customView. 
+		+ https://kipalog.com/posts/Android--Hieu-sau-hon-ve-CustomView-va-Huong-dan-xay-dung-thu-vien-UI-IndicatorView
+		+ https://viblo.asia/p/huong-dan-tao-custom-view-trong-android-YmjeoobWeqa

@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">LanguageChange</string>
+    
+    <string name="activity_a_name">Home</string>
+    <string name="activity_a_setting">Setting</string>
+    
+    <string name="activity_b_name">Setting</string>
+    <string name="activity_b_change">Change</string>
+    <string name="activity_b_next">Next</string>
+    
+    <string name="activity_c_name">Test</string>
+    <string name="activity_c_language">English</string>
+</resources>
