@@ -1,78 +1,75 @@
 package com.example.cpu11398_local.activitycyclelife;
 
 import android.content.Intent;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     static final String ACTIVITY_NAME = "Activity_A";
-    TextView btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (savedInstanceState != null){
+            Log.w(ACTIVITY_NAME, "onCreate begin " + savedInstanceState);
+        }
+        else {
+            Log.w(ACTIVITY_NAME, "onCreate begin");
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btn = findViewById(R.id.btn);
-        btn.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.w(ACTIVITY_NAME, "request Activity B");
+                Log.w(ACTIVITY_NAME, "request Activity B begin");
                 startActivity(new Intent(MainActivity.this, SubActivity.class));
+                Log.w(ACTIVITY_NAME, "request Activity B finish");
             }
         });
-        Log.w(ACTIVITY_NAME, "onCreate");
+        Log.w(ACTIVITY_NAME, "onCreate finish");
     }
 
     @Override
     protected void onStart() {
+        Log.w(ACTIVITY_NAME, "onStart begin");
         super.onStart();
-        Log.w(ACTIVITY_NAME, "onStart");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.w(ACTIVITY_NAME, "onResume");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.w(ACTIVITY_NAME, "onPause");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.w(ACTIVITY_NAME, "onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.w(ACTIVITY_NAME, "onDestroy");
+        Log.w(ACTIVITY_NAME, "onStart finish");
     }
 
     @Override
     protected void onRestart() {
+        Log.w(ACTIVITY_NAME, "onRestart begin");
         super.onRestart();
-        Log.w(ACTIVITY_NAME, "onRestart");
+        Log.w(ACTIVITY_NAME, "onRestart finish");
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Log.w(ACTIVITY_NAME, "BackPressed");
+    protected void onResume() {
+        Log.w(ACTIVITY_NAME, "onResume begin");
+        super.onResume();
+        Log.w(ACTIVITY_NAME, "onResume finish");
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        Log.w(ACTIVITY_NAME, "onSaveInstanceState");
+    protected void onPause() {
+        Log.w(ACTIVITY_NAME, "onPause begin");
+        super.onPause();
+        Log.w(ACTIVITY_NAME, "onPause finish");
+    }
+
+    @Override
+    protected void onStop() {
+        Log.w(ACTIVITY_NAME, "onStop begin");
+        super.onStop();
+        Log.w(ACTIVITY_NAME, "onStop finish");
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.w(ACTIVITY_NAME, "onDestroy begin");
+        super.onDestroy();
+        Log.w(ACTIVITY_NAME, "onDestroy finish");
     }
 }

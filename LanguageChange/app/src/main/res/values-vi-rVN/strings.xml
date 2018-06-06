@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LanguageChange</string>
+    <string name="activity_a_name">Trang chủ</string>
+    <string name="activity_a_setting">Cài đặt</string>
+    <string name="activity_b_name">Cài đặt</string>
+    <string name="activity_b_change">Thay đổi</string>
+    <string name="activity_b_next">Tiếp</string>
+    <string name="activity_c_name">Kiểm tra</string>
+    <string name="activity_c_language">Tiếng việt</string>
+</resources>
