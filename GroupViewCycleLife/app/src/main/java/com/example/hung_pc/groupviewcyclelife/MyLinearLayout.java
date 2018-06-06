@@ -37,13 +37,6 @@ public class MyLinearLayout extends LinearLayout{
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        Log.w(TAG, "onAttachedToWindow begin");
-        super.onAttachedToWindow();
-        Log.w(TAG, "onAttachedToWindow finish");
-    }
-
-    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         Log.w(TAG, "onMeasure begin");
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -58,23 +51,9 @@ public class MyLinearLayout extends LinearLayout{
     }
 
     @Override
-    protected void dispatchDraw(Canvas canvas) {
-        Log.w(TAG, "dispatchDraw begin");
-        super.dispatchDraw(canvas);
-        Log.w(TAG, "dispatchDraw finish");
-    }
-
-    @Override
     protected void onDraw(Canvas canvas) {
         Log.w(TAG, "onDraw begin");
         super.onDraw(canvas);
         Log.w(TAG, "onDraw finish");
-    }
-
-    @Override
-    public void requestLayout() {
-        Log.w(TAG, "requestLayout begin");
-        super.requestLayout();
-        Log.w(TAG, "requestLayout finish");
     }
 }

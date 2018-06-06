@@ -11,4 +11,19 @@
 	- Tìm hiểu ViewGroup: vòng đời, hiệu suất, tạo customView. 
 		+ https://kipalog.com/posts/Android--Hieu-sau-hon-ve-CustomView-va-Huong-dan-xay-dung-thu-vien-UI-IndicatorView
 		+ https://viblo.asia/p/huong-dan-tao-custom-view-trong-android-YmjeoobWeqa
+	- TODO: Tìm hiểu LayoutParams
 
+4:54 PM 6/6/2018
+	- Tìm hiểu ViewPager (https://developer.android.com/reference/android/support/v4/view/ViewPager; https://viblo.asia/p/adapting-viewpager-in-android-yMnKM3YEl7P)
+	- Tìm hiểu, so sánh các loại PagerAdapter (https://developer.android.com/reference/android/support/v4/view/PagerAdapter)
+	- TODO: Truyền dữ liệu giữa các fragment và giữa fragment với activity; Service 
+	- TODO: viết custom layout để layout 1 cái cell đọc bài trong app Báo Mớ
+
+
+5:03 PM 6/6/2018
+
+5:32 PM 6/6/2018
+
+5:35 PM 6/6/2018
+
+6:28 PM 6/6/2018
