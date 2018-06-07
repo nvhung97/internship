@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.cpu11398_local.baomoicelllayout.CellLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFF00">
+
+    <ImageView
+        android:id="@+id/cell_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_launcher_background"/>
+
+    <TextView
+        android:id="@+id/cell_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is a long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long title!"/>
+        <!--android:text="This is a short title"/>-->
+
+    <TextView
+        android:id="@+id/cell_source"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Source"/>
+
+</com.example.cpu11398_local.baomoicelllayout.CellLayout>
