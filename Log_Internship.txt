@@ -1,6 +1,4 @@
-﻿.LOG
-
-2:59 PM 5/28/2018
+﻿2:59 PM 5/28/2018
 	- Tìm hiểu về ActivityCycleLife (https://developer.android.com/guide/components/activities/activity-lifecycle)
 
 3:01 PM 5/29/2018
@@ -15,14 +13,28 @@
 	- TODO: Tìm hiểu LayoutParams
 
 4:54 PM 6/6/2018
-	- Tìm hiểu ViewPager (https://developer.android.com/reference/android/support/v4/view/ViewPager; https://viblo.asia/p/adapting-viewpager-in-android-yMnKM3YEl7P)
-	- Tìm hiểu, so sánh các loại PagerAdapter (https://developer.android.com/reference/android/support/v4/view/PagerAdapter)
+	- Tìm hiểu ViewPager (https://developer.android.com/reference/android/support/v4/view/ViewPager)
+	- Thêm icon cho TabLayout (https://github.com/ColaCheng/AndroidTabLayoutWithViewPager)
+	- Tìm hiểu, so sánh các loại PagerAdapter
+		+ https://developer.android.com/reference/android/support/v4/view/PagerAdapter
+		+ https://viblo.asia/p/adapting-viewpager-in-android-yMnKM3YEl7P
 	- TODO: Truyền dữ liệu giữa các fragment và giữa fragment với activity; Service 
 
 3:43 PM 6/7/2018
 	- Viết custom layout để layout một cell đọc bài trong app Báo Mới
 	- Tìm hiểu load image from network library: Fresco, Glide, Picasso, UImageLoader
+		+ https://bumptech.github.io/glide/
+		+ http://square.github.io/picasso/
 		+ https://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en
 		+ https://viblo.asia/p/difference-among-picasso-uil-glide-fresco-oOVlYE84l8W
-	- Tìm hiểu load network/local database
+		+ https://androidcreativity.wordpress.com/2017/04/22/compare-image-library/
+		+ https://viblo.asia/p/cach-toi-uu-cua-glide-va-fresco-khi-load-image-ORNZqPw3K0n
 
+10:31 AM 6/8/2018
+	- Tìm hiểu load network: HttpURLConnection, OkHttpClient, Retrofit, Volley (
+		http://www.jsonschema2pojo.org/; https://api.stackexchange.com/docs/search; https://code.tutsplus.com/vi/tutorials/getting-started-with-retrofit-2--cms-27792
+		https://www.androidhive.info/2014/09/android-json-parsing-using-volley/; https://viblo.asia/p/android-volley-library-YAQrMJb7M40E
+	)
+	- Local database
+
+1:17 PM 6/13/2018
