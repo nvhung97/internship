@@ -68,7 +68,9 @@
 			* https://stackoverflow.com/a/38313386/9661754
 		+ Comparison
 			* https://vickychijwani.me/retrofit-vs-volley/
-	- Tìm hiểu cách quản lý thread: AsyncTask, RxJava,
+	- Tìm hiểu cách quản lý thread: Thread, AsyncTask, Loader (AsyncTaskLoader, CursorLoader), RxJava,
+		+ https://github.com/trantronghien/component_in_android/wiki/%C4%90a-Ti%E1%BA%BFn-Tr%C3%ACnh-Trong-Android
+		+ https://www.toptal.com/android/android-threading-all-you-need-to-know
 	- Local database
 
 
