@@ -32,23 +32,36 @@
 
 10:31 AM 6/8/2018
 	- Tìm hiểu load network: HttpURLConnection, OkHttpClient, Retrofit, Volley
-		+ http://www.jsonschema2pojo.org/
-		+ https://api.stackexchange.com/docs/search
-		+ https://code.tutsplus.com/vi/tutorials/getting-started-with-retrofit-2--cms-27792
-		+ https://www.androidhive.info/2014/09/android-json-parsing-using-volley/; 
-		+ https://viblo.asia/p/android-volley-library-YAQrMJb7M40E
-		+ https://code.tutsplus.com/tutorials/an-introduction-to-volley--cms-23800
+		+ Retrofit
+			* http://www.jsonschema2pojo.org/
+			* https://api.stackexchange.com/docs/search
+			* https://code.tutsplus.com/vi/tutorials/getting-started-with-retrofit-2--cms-27792
 
 1:17 PM 6/13/2018
 	- Tìm hiểu load network: HttpURLConnection, OkHttpClient, Retrofit, Volley
-		+ http://www.jsonschema2pojo.org/
-		+ https://api.stackexchange.com/docs/search
-		+ https://code.tutsplus.com/vi/tutorials/getting-started-with-retrofit-2--cms-27792
-		+ https://www.androidhive.info/2014/09/android-json-parsing-using-volley/; 
-		+ https://viblo.asia/p/android-volley-library-YAQrMJb7M40E
-		+ https://code.tutsplus.com/tutorials/an-introduction-to-volley--cms-23800
-		+ https://developer.android.com/reference/java/net/HttpURLConnection
+		+ Retrofit
+			* http://www.jsonschema2pojo.org/
+			* https://api.stackexchange.com/docs/search
+			* https://code.tutsplus.com/vi/tutorials/getting-started-with-retrofit-2--cms-27792
+		+ Volley
+			* https://www.androidhive.info/2014/09/android-json-parsing-using-volley/; 
+			* https://viblo.asia/p/android-volley-library-YAQrMJb7M40E
+			* https://code.tutsplus.com/tutorials/an-introduction-to-volley--cms-23800
 
-https://www.srijan.net/blog/how-parse-json-data-rest-api-using-simple-json-library
-https://dzone.com/articles/how-to-parse-json-data-from-a-rest-api-using-simpl
+8:48 AM 6/14/2018
+	- Tìm hiểu load network: HttpURLConnection, OkHttpClient, Retrofit, Volley
+		+ Retrofit
+			* http://www.jsonschema2pojo.org/
+			* https://api.stackexchange.com/docs/search
+			* https://code.tutsplus.com/vi/tutorials/getting-started-with-retrofit-2--cms-27792
+		+ Volley
+			* https://www.androidhive.info/2014/09/android-json-parsing-using-volley/; 
+			* https://viblo.asia/p/android-volley-library-YAQrMJb7M40E
+			* https://code.tutsplus.com/tutorials/an-introduction-to-volley--cms-23800
+		+ HttpURLConnection
+			* https://developer.android.com/reference/java/net/HttpURLConnection
+			* https://stackoverflow.com/a/38313386/9661754
 	- Local database
+
+
+https://linksvip.net/

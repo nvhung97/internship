@@ -1,10 +1,12 @@
 package com.example.cpu11398_local.httpurlconnectiondemo;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
-import android.widget.Toast;
-import java.io.BufferedInputStream;
+import com.example.cpu11398_local.httpurlconnectiondemo.model.StackOverflowQuestions;
+import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,8 +18,8 @@ public class MainActivity extends AppCompatActivity {
     final String    URL_API = "https://api.stackexchange.com/2.2/search?order=desc&sort=activity&tagged=android&site=stackoverflow";
     ListView        lst_question;
     ListViewAdapter listViewAdapter;
-    String ret;
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,44 +27,51 @@ public class MainActivity extends AppCompatActivity {
 
         lst_question = findViewById(R.id.lst_question);
 
-        try {
-            sendGet();
-            URL url = new URL(URL_API);
-            HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
-            httpURLConnection.setRequestMethod("GET");
-            httpURLConnection.setRequestProperty("User-Agent", "Mozilla/5.0");
-            int responseCode = httpURLConnection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                //InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
-                BufferedReader in = new BufferedReader(new InputStreamReader(
-                        httpURLConnection.getInputStream()));
-                String inputLine;
-                StringBuffer response = new StringBuffer();
+        new AsyncTask<String, Void, String> () {
 
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
+            @Override
+            protected String doInBackground(String... urls) {
+
+                String result = null;
+
+                try {
+                    URL url = new URL(urls[0]);
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                    int responseCode = httpURLConnection.getResponseCode();
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        result = inputStreamToString(httpURLConnection.getInputStream());
+                    }
+                    else {
+                        throw new Exception("HttpResponseCode = " + responseCode);
+                    }
                 }
-                in.close();
-                Toast.makeText(this, response.toString(), Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Toast.makeText(this, "failed", Toast.LENGTH_SHORT).show();
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return result;
             }
 
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+            @Override
+            protected void onPostExecute(String result) {
+                listViewAdapter = new ListViewAdapter(
+                  MainActivity.this,
+                  new Gson().fromJson(result, StackOverflowQuestions.class).getQuestions()
+                );
+                lst_question.setAdapter(listViewAdapter);
+                listViewAdapter.notifyDataSetChanged();
+            }
+        }.execute(URL_API);
+
     }
 
     private String inputStreamToString(InputStream inputStream) {
 
-        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        StringBuilder result = new StringBuilder();
-        String readLine = "";
+        BufferedReader  bufferedReader  = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder   result          = new StringBuilder();
 
         try {
+            String readLine;
             while ((readLine = bufferedReader.readLine()) != null) {
                 result.append(readLine);
             }
@@ -71,41 +80,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return result.toString();
-    }
-
-    @Override
-    public void onBackPressed() {
-        Toast.makeText(this, ret, Toast.LENGTH_SHORT).show();
-        super.onBackPressed();
-    }
-
-    private void sendGet() throws Exception {
-
-        String url = "http://www.google.com/search?q=mkyong";
-
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-        // optional default is GET
-        con.setRequestMethod("GET");
-
-        //add request header
-        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-
-        int responseCode = con.getResponseCode();
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-
-        //print result
-        Toast.makeText(this, response.toString(), Toast.LENGTH_SHORT).show();
-
     }
 }
