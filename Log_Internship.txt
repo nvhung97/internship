@@ -68,6 +68,7 @@
 			* https://stackoverflow.com/a/38313386/9661754
 		+ Comparison
 			* https://vickychijwani.me/retrofit-vs-volley/
+	- Tìm hiểu cách quản lý thread: AsyncTask, RxJava,
 	- Local database
 
 

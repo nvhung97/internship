@@ -2,6 +2,7 @@ package com.example.cpu11398_local.retrofitdemo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.example.cpu11398_local.retrofitdemo.data.model.StackOverflowQuestions;
