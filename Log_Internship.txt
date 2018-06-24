@@ -70,10 +70,22 @@
 			* https://vickychijwani.me/retrofit-vs-volley/
 
 9:25 AM 6/15/2018
-	- Tìm hiểu cách quản lý thread: Thread, AsyncTask, Loader (AsyncTaskLoader, CursorLoader), RxJava,
-		+ https://github.com/trantronghien/component_in_android/wiki/%C4%90a-Ti%E1%BA%BFn-Tr%C3%ACnh-Trong-Android
-		+ https://www.toptal.com/android/android-threading-all-you-need-to-know
-		+ https://stackoverflow.com/a/9654445/9661754
-		+ https://o7planning.org/vi/10421/huong-dan-su-dung-service-trong-android
+	- Tìm hiểu cách quản lý thread: Thread, AsyncTask, Service, Intent Service, RxJava,
+		+ Thread
+			* https://developer.android.com/reference/java/lang/Thread
+		+ AsyncTask
+			https://developer.android.com/reference/android/os/AsyncTask
+		+ Service 
+			* https://developer.android.com/guide/components/services
+		+ IntentService
+			* https://developer.android.com/reference/android/app/IntentService
+		+ RxJava
+			* https://github.com/amitshekhariitbhu/RxJava2-Android-Samples
+			* https://mindorks.com/course/learn-rxjava
+		+ Common
+			* https://viblo.asia/p/thread-handler-va-asynctask-trong-android-3P0lPyp85ox
+			* https://stackoverflow.com/a/9654445/9661754
+			* https://www.toptal.com/android/android-threading-all-you-need-to-know
+			* https://github.com/trantronghien/component_in_android/wiki/%C4%90a-Ti%E1%BA%BFn-Tr%C3%ACnh-Trong-Android
+			* https://mindorks.com/course/learn-rxjava
 	- Local database
-https://linksvip.net/

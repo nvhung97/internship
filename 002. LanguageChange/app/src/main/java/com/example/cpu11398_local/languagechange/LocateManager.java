@@ -17,6 +17,7 @@ public class LocateManager {
 
     public static final  String LANGUAGE_ENGLISH    = "en";
     public static final  String LANGUAGE_VIETNAMESE = "vi";
+    public static final  String LANGUAGE_NONE       = "no";
     private static final String LANGUAGE_KEY        = "language_key";
 
     /**
@@ -45,9 +46,13 @@ public class LocateManager {
      * @return language code
      */
     public static String getLanguage(Context context) {
-        return PreferenceManager
+         String code = PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getString(LANGUAGE_KEY, LANGUAGE_ENGLISH);
+                .getString(LANGUAGE_KEY, LANGUAGE_NONE);
+         if (code.equalsIgnoreCase(LANGUAGE_NONE)){
+             code = getLocale(context).getLanguage();
+         }
+         return code;
     }
 
     /**
