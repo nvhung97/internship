@@ -10,7 +10,11 @@
 		+ https://developer.android.com/reference/android/view/ViewGroup
 		+ https://kipalog.com/posts/Android--Hieu-sau-hon-ve-CustomView-va-Huong-dan-xay-dung-thu-vien-UI-IndicatorView
 		+ https://developer.android.com/training/improving-layouts/optimizing-layout
-	- TODO: Tìm hiểu LayoutParams
+	- Tìm hiểu LayoutParams
+		+ https://developer.android.com/reference/android/view/ViewGroup.LayoutParams
+		+ https://developer.android.com/reference/android/widget/FrameLayout.LayoutParams
+		+ https://developer.android.com/reference/android/widget/LinearLayout.LayoutParams
+		+ https://developer.android.com/reference/android/widget/RelativeLayout.LayoutParams
 
 4:54 PM 6/6/2018
 	- Tìm hiểu ViewPager (https://developer.android.com/reference/android/support/v4/view/ViewPager)
@@ -88,4 +92,8 @@
 			* https://www.toptal.com/android/android-threading-all-you-need-to-know
 			* https://github.com/trantronghien/component_in_android/wiki/%C4%90a-Ti%E1%BA%BFn-Tr%C3%ACnh-Trong-Android
 			* https://mindorks.com/course/learn-rxjava
-	- Local database
+
+7:37 AM 6/25/2018
+	- Local database: SQLite
+		+ SQLite
+			* https://github.com/kelvinc1024/sqlite-object-mapping
