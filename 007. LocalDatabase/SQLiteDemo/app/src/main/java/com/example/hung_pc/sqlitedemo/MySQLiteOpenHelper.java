@@ -31,7 +31,6 @@ public class MySQLiteOpenHelper extends SQLiteAssetHelper {
                     "ID: " + cursor.getString(0)
                             + ", Name: " + cursor.getString(1)
                             + ", Age: " + cursor.getInt(2)
-
             );
             cursor.moveToNext();
         }

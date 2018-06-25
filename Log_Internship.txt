@@ -94,6 +94,20 @@
 			* https://mindorks.com/course/learn-rxjava
 
 7:37 AM 6/25/2018
-	- Local database: SQLite
-		+ SQLite
-			* https://github.com/kelvinc1024/sqlite-object-mapping
+	- Local database: SQLite, Room, Realm, SnappyDB, couchbase, 
+		+ SQLite, Room
+			* https://developer.android.com/training/data-storage/sqlite
+			* https://developer.android.com/training/data-storage/room/
+		+ Realm
+			* https://realm.io/docs/java/latest
+			* https://realm.io/products/realm-database/
+			* https://viblo.asia/p/gioi-thieu-realm-database-cho-android-bxjvZWYdGJZ
+			* https://proandroiddev.com/realm-backlinks-queries-to-linking-objects-and-changes-in-schema-design-d64de74f1608
+			* https://hackernoon.com/designing-the-schema-of-realm-effectively-and-other-realm-tips-feb76c5b6072
+		+ comparison
+			* https://www.linkedin.com/pulse/android-realm-vs-sqlite-swati-shrivastava
+			* https://db-engines.com/en/system/Realm%3BSQLite
+//TODO; sql và nosql
+
+https://github.com/nhachicha/SnappyDB
+https://www.javacodegeeks.com/2014/06/nosql-on-android.html
