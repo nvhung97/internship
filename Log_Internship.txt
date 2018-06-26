@@ -107,7 +107,31 @@
 		+ comparison
 			* https://www.linkedin.com/pulse/android-realm-vs-sqlite-swati-shrivastava
 			* https://db-engines.com/en/system/Realm%3BSQLite
-//TODO; sql và nosql
 
-https://github.com/nhachicha/SnappyDB
-https://www.javacodegeeks.com/2014/06/nosql-on-android.html
+11:49 AM 6/26/2018
+	- Local database: SQLite, Room, Realm, SnappyDB, Couchbase, Paper
+		+ SQLite, Room
+			* https://developer.android.com/training/data-storage/sqlite
+			* https://developer.android.com/training/data-storage/room/
+		+ Realm
+			* https://realm.io/docs/java/latest
+			* https://realm.io/products/realm-database/
+			* https://viblo.asia/p/gioi-thieu-realm-database-cho-android-bxjvZWYdGJZ
+			* https://proandroiddev.com/realm-backlinks-queries-to-linking-objects-and-changes-in-schema-design-d64de74f1608
+			* https://hackernoon.com/designing-the-schema-of-realm-effectively-and-other-realm-tips-feb76c5b6072
+		+ SQLite compare to Realm
+			* https://www.linkedin.com/pulse/android-realm-vs-sqlite-swati-shrivastava
+			* https://db-engines.com/en/system/Realm%3BSQLite
+		+ SnappyDB
+			* https://github.com/nhachicha/SnappyDB
+		+ Couchbase
+			* https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/java.html
+		+ Paper
+			* https://github.com/pilgr/Paper
+
+	- So sánh SQL và NoSQL
+		+ https://viblo.asia/p/nhung-diem-khac-biet-giua-sql-va-nosql-gDVK2WPjZLj
+		+ https://www.net.in.tum.de/fileadmin/TUM/NET/NET-2017-05-1/NET-2017-05-1_06.pdf
+
+
+//TODO: Tìm hiểu mô hình MVP và MVVM
