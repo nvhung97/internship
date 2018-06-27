@@ -94,7 +94,7 @@
 			* https://mindorks.com/course/learn-rxjava
 
 7:37 AM 6/25/2018
-	- Local database: SQLite, Room, Realm, SnappyDB, couchbase, 
+	- Local database: SQLite, Room, Realm, SnappyDB, couchbase, Paper
 		+ SQLite, Room
 			* https://developer.android.com/training/data-storage/sqlite
 			* https://developer.android.com/training/data-storage/room/
@@ -133,5 +133,9 @@
 		+ https://viblo.asia/p/nhung-diem-khac-biet-giua-sql-va-nosql-gDVK2WPjZLj
 		+ https://www.net.in.tum.de/fileadmin/TUM/NET/NET-2017-05-1/NET-2017-05-1_06.pdf
 
-
-//TODO: Tìm hiểu mô hình MVP và MVVM
+9:17 AM 6/27/2018
+	- Tìm hiểu mô hình MVP và MVVM
+		+ MVP
+			* https://viblo.asia/p/mvp-pattern-for-android-1qm6RWzOveJE
+			* https://medium.com/@trionkidnapper/android-mvp-keeping-presenters-alive-a91b9e080761
+		+ https://viblo.asia/p/architecture-patterns-mvc-mvp-va-mvvm-bJzKmLAw59N
