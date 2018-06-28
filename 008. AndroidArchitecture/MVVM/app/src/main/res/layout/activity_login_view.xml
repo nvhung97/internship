@@ -2,11 +2,11 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    
     <data>
         <variable
             name="view_model"
-            type="com.example.cpu11398_local.mvvm.view_model.ViewModel"/>
+            type="com.example.hung_pc.mvvm.view_model.ViewModel"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -19,16 +19,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
+            android:text="@={view_model.username}"
             android:hint="Enter username"
-            android:textColorHint="@{view_model.usernameHintColor}"/>
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@{view_model.isUsernameEmpty?@color/colorRed:@color/colorGray}"/>
 
         <EditText
             android:id="@+id/edt_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
+            android:text="@={view_model.password}"
             android:hint="Enter password"
-            android:textColorHint="@{view_model.passwordHintColor}"
+            android:textColorHint="@{view_model.isPasswordEmpty?@color/colorRed:@color/colorGray}"
             app:layout_constraintTop_toBottomOf="@+id/edt_username"/>
 
         <Button

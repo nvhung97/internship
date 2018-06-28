@@ -1,6 +1,10 @@
-package com.example.cpu11398_local.mvvm.utils;
+package com.example.hung_pc.mvvm.utils;
 
 import android.util.Log;
+
+/**
+ * Created by Hung-pc on 6/28/2018.
+ */
 
 public class Utils {
 

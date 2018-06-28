@@ -1,6 +1,10 @@
-package com.example.cpu11398_local.mvvm.model;
+package com.example.hung_pc.mvvm.model;
 
-import com.example.cpu11398_local.mvvm.utils.Utils;
+import com.example.hung_pc.mvvm.utils.Utils;
+
+/**
+ * Created by Hung-pc on 6/28/2018.
+ */
 
 public class User {
 

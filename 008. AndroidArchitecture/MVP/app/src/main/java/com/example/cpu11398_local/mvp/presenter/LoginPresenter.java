@@ -23,44 +23,44 @@ public class LoginPresenter implements ILoginPresenter {
     @Override
     public void performLogin(final String username, final String password) {
         Utils.showLog(TAG, "performLogin");
-        new AsyncTask<Void, Void, Void> () {
-            @Override
-            protected void onPreExecute() {
-                Utils.showLog(TAG, "performLogin.onPreExecute");
-                checkEmptyField(username, password);
-            }
+        if (!isExistEmptyField(username, password)) {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    Utils.showLog(TAG, "performLogin.doInBackground");
+                    if (user == null) {
+                        loadData();
+                    }
+                    return null;
+                }
 
-            @Override
-            protected Void doInBackground(Void... voids) {
-                Utils.showLog(TAG, "performLogin.doInBackground");
-                loadData();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                Utils.showLog(TAG, "performLogin.onPostExecute");
-                checkLogin(username, password);
-            }
-        }.execute();
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    Utils.showLog(TAG, "performLogin.onPostExecute");
+                    checkLogin(username, password);
+                }
+            }.execute();
+        }
     }
 
-    private void checkEmptyField(String username, String password) {
-        Utils.showLog(TAG, "checkEmptyField");
+    private boolean isExistEmptyField(String username, String password) {
+        Utils.showLog(TAG, "isExistEmptyField");
+        boolean result = false;
         if (username.isEmpty()) {
             loginView.onUsernameEmpty();
+            result = true;
         }
         if (password.isEmpty()) {
             loginView.onPasswordEmpty();
+            result = true;
         }
+        return result;
     }
 
     private void loadData() {
         Utils.showLog(TAG, "loadData");
-        if (user == null) {
-            SystemClock.sleep(1000);
-            user = new User();
-        }
+        SystemClock.sleep(1000);
+        user = new User();
     }
 
     private void checkLogin(String username, String password) {
