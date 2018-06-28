@@ -33,7 +33,7 @@ public class LoginView extends AppCompatActivity implements ILoginView, View.OnC
         initLoginPresenter();
     }
 
-    void initViewObject() {
+    private void initViewObject() {
         Utils.showLog(TAG, "initViewObject");
         edt_username = findViewById(R.id.edt_username);
         edt_password = findViewById(R.id.edt_password);
@@ -42,7 +42,7 @@ public class LoginView extends AppCompatActivity implements ILoginView, View.OnC
         btn_login.setOnClickListener(this);
     }
 
-    void initLoginPresenter() {
+    private void initLoginPresenter() {
         Utils.showLog(TAG, "initLoginPresenter");
         loginPresenter = (ILoginPresenter)getLastCustomNonConfigurationInstance();
         if (loginPresenter == null) {

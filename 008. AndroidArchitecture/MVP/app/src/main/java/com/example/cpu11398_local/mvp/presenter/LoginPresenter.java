@@ -58,7 +58,7 @@ public class LoginPresenter implements ILoginPresenter {
     private void loadData() {
         Utils.showLog(TAG, "loadData");
         if (user == null) {
-            SystemClock.sleep(5000);
+            SystemClock.sleep(1000);
             user = new User();
         }
     }
