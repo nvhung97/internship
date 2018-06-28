@@ -1,11 +1,14 @@
 ﻿2:59 PM 5/28/2018
-	- Tìm hiểu về ActivityCycleLife (https://developer.android.com/guide/components/activities/activity-lifecycle)
+	- Tìm hiểu về ActivityCycleLife 
+		* https://developer.android.com/guide/components/activities/activity-lifecycle
 
 3:01 PM 5/29/2018
-	- Tìm hiểu về FragmentCycleLife (https://yellowcodebooks.com/2018/03/20/android-bai-33-vong-doi-fragment/)
+	- Tìm hiểu về FragmentCycleLife 
+		* https://yellowcodebooks.com/2018/03/20/android-bai-33-vong-doi-fragment/
 
 3:12 PM 5/31/2018
-	- Tìm hiểu cách hiện thực ứng dụng đa ngôn ngữ. Chuyển đổi qua lại giữa các ngôn ngữ, lưu trạng thái ngôn ngữ khi đóng ứng dụng. (https://proandroiddev.com/change-language-programmatically-at-runtime-on-android-5e6bc15c758)
+	- Tìm hiểu cách hiện thực ứng dụng đa ngôn ngữ. Chuyển đổi qua lại giữa các ngôn ngữ, lưu trạng thái ngôn ngữ khi đóng ứng dụng
+		* https://proandroiddev.com/change-language-programmatically-at-runtime-on-android-5e6bc15c758)
 	- Tìm hiểu ViewGroup: vòng đời, hiệu suất, tạo customView. 
 		+ https://developer.android.com/reference/android/view/ViewGroup
 		+ https://kipalog.com/posts/Android--Hieu-sau-hon-ve-CustomView-va-Huong-dan-xay-dung-thu-vien-UI-IndicatorView
@@ -17,8 +20,10 @@
 		+ https://developer.android.com/reference/android/widget/RelativeLayout.LayoutParams
 
 4:54 PM 6/6/2018
-	- Tìm hiểu ViewPager (https://developer.android.com/reference/android/support/v4/view/ViewPager)
-	- Thêm icon cho TabLayout (https://github.com/ColaCheng/AndroidTabLayoutWithViewPager)
+	- Tìm hiểu ViewPager 
+		* https://developer.android.com/reference/android/support/v4/view/ViewPager
+	- Thêm icon cho TabLayout 
+		* https://github.com/ColaCheng/AndroidTabLayoutWithViewPager
 	- Tìm hiểu, so sánh các loại PagerAdapter
 		+ https://developer.android.com/reference/android/support/v4/view/PagerAdapter
 		+ https://viblo.asia/p/adapting-viewpager-in-android-yMnKM3YEl7P
@@ -138,4 +143,7 @@
 		+ MVP
 			* https://viblo.asia/p/mvp-pattern-for-android-1qm6RWzOveJE
 			* https://medium.com/@trionkidnapper/android-mvp-keeping-presenters-alive-a91b9e080761
+		+ MVVM
+			* https://lequangkhai.wordpress.com/2011/04/18/m-hnh-mvvm-gi%E1%BB%9Bi-thi%E1%BB%87u/
+			* https://medium.com/@husayn.hakeem/android-by-example-mvvm-data-binding-introduction-part-1-6a7a5f388bf7
 		+ https://viblo.asia/p/architecture-patterns-mvc-mvp-va-mvvm-bJzKmLAw59N
