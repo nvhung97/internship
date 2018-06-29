@@ -21,7 +21,6 @@
             android:inputType="text"
             android:text="@={view_model.username}"
             android:hint="Enter username"
-            android:textColor="@color/colorPrimary"
             android:textColorHint="@{view_model.isUsernameEmpty?@color/colorRed:@color/colorGray}"/>
 
         <EditText
