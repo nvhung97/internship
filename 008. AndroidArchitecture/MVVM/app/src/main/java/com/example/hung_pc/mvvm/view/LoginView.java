@@ -6,9 +6,10 @@ import android.os.Bundle;
 import android.widget.Toast;
 import com.example.hung_pc.mvvm.R;
 import com.example.hung_pc.mvvm.databinding.ActivityLoginViewBinding;
-import com.example.hung_pc.mvvm.utils.IEventHolder;
 import com.example.hung_pc.mvvm.utils.Utils;
 import com.example.hung_pc.mvvm.view_model.ViewModel;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class LoginView extends AppCompatActivity {
 
@@ -16,6 +17,7 @@ public class LoginView extends AppCompatActivity {
 
     private ActivityLoginViewBinding binding;
     private ViewModel                viewModel;
+    private Disposable               disposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,16 +33,37 @@ public class LoginView extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login_view);
         viewModel = (ViewModel) getLastCustomNonConfigurationInstance();
         if (viewModel == null) {
-            viewModel = new ViewModel(
-                    new IEventHolder() {
-                        @Override
-                        public void perform(boolean isSuccess) {
-                            onLoginCallback(isSuccess);
-                        }
-                    }
-            );
+            viewModel = new ViewModel();
         }
         binding.setViewModel(viewModel);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        viewModel.subscribeObserver(
+                new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        onLoginCallback(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                }
+        );
     }
 
     private void onLoginCallback(boolean isSuccess){
@@ -56,5 +79,11 @@ public class LoginView extends AppCompatActivity {
     public Object onRetainCustomNonConfigurationInstance() {
         Utils.showLog(TAG, "onRetainCustomNonConfigurationInstance");
         return viewModel;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        disposable.dispose();
     }
 }

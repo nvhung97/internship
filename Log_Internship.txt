@@ -143,10 +143,38 @@
 		+ MVP
 			* https://viblo.asia/p/mvp-pattern-for-android-1qm6RWzOveJE
 			* https://medium.com/@trionkidnapper/android-mvp-keeping-presenters-alive-a91b9e080761
+
+8:45 AM 6/28/2018
+	- Tìm hiểu mô hình MVP và MVVM
+		+ MVP
+			* https://viblo.asia/p/mvp-pattern-for-android-1qm6RWzOveJE
+			* https://medium.com/@trionkidnapper/android-mvp-keeping-presenters-alive-a91b9e080761
 		+ MVVM + dataBinding
 			* https://lequangkhai.wordpress.com/2011/04/18/m-hnh-mvvm-gi%E1%BB%9Bi-thi%E1%BB%87u/
 			* https://medium.com/@husayn.hakeem/android-by-example-mvvm-data-binding-introduction-part-1-6a7a5f388bf7
 			* https://viblo.asia/p/data-binding-trong-android-Do754EpJKM6
 			* https://www.androidhive.info/android-working-with-databinding/
+			* https://android.jlelse.eu/android-data-binding-part-2-42538064b1eb
+			* https://developer.android.com/topic/libraries/data-binding/
 			* https://github.com/manas-chaudhari/android-mvvm
-		+ https://viblo.asia/p/architecture-patterns-mvc-mvp-va-mvvm-bJzKmLAw59N
+
+2:42 PM 6/29/2018
+	- Tìm hiểu mô hình MVP và MVVM
+		+ MVP
+			* https://viblo.asia/p/mvp-pattern-for-android-1qm6RWzOveJE
+			* https://medium.com/@trionkidnapper/android-mvp-keeping-presenters-alive-a91b9e080761
+		+ MVVM + dataBinding
+			* https://lequangkhai.wordpress.com/2011/04/18/m-hnh-mvvm-gi%E1%BB%9Bi-thi%E1%BB%87u/
+			* https://medium.com/@husayn.hakeem/android-by-example-mvvm-data-binding-introduction-part-1-6a7a5f388bf7
+			* https://viblo.asia/p/data-binding-trong-android-Do754EpJKM6
+			* https://www.androidhive.info/android-working-with-databinding/
+			* https://android.jlelse.eu/android-data-binding-part-2-42538064b1eb
+			* https://developer.android.com/topic/libraries/data-binding/
+			* https://github.com/manas-chaudhari/android-mvvm
+		+ Comparison
+			* https://medium.com/@be.betr.codr/android-mvp-survival-guide-b2094ab79f78
+			* https://thinkmobiles.com/blog/mvp-vs-mvvm-android-patterns/
+
+https://github.com/MindorksOpenSource/android-dagger2-example
+https://github.com/google/dagger
+https://github.com/android10/Android-CleanArchitecture

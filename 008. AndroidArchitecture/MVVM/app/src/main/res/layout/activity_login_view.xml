@@ -5,7 +5,7 @@
     
     <data>
         <variable
-            name="view_model"
+            name="viewModel"
             type="com.example.hung_pc.mvvm.view_model.ViewModel"/>
     </data>
 
@@ -19,18 +19,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:text="@={view_model.username}"
+            android:text="@={viewModel.username}"
             android:hint="Enter username"
-            android:textColorHint="@{view_model.isUsernameEmpty?@color/colorRed:@color/colorGray}"/>
+            android:textColorHint="@{viewModel.isUsernameEmpty?@color/colorRed:@color/colorGray}"/>
 
         <EditText
             android:id="@+id/edt_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:text="@={view_model.password}"
+            android:text="@={viewModel.password}"
             android:hint="Enter password"
-            android:textColorHint="@{view_model.isPasswordEmpty?@color/colorRed:@color/colorGray}"
+            android:textColorHint="@{viewModel.isPasswordEmpty?@color/colorRed:@color/colorGray}"
             app:layout_constraintTop_toBottomOf="@+id/edt_username"/>
 
         <Button
@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="LOGIN"
-            android:onClick="@{() -> view_model.performLogin()}"
+            android:onClick="@{viewModel.performLogin}"
             app:layout_constraintTop_toBottomOf="@id/edt_password"/>
 
     </android.support.constraint.ConstraintLayout>

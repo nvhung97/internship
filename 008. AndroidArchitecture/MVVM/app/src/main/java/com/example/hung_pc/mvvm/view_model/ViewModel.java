@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.databinding.ObservableField;
 import android.os.AsyncTask;
 import android.os.SystemClock;
+import android.view.View;
 import com.example.hung_pc.mvvm.model.User;
-import com.example.hung_pc.mvvm.utils.IEventHolder;
 import com.example.hung_pc.mvvm.utils.Utils;
+import io.reactivex.Observer;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by Hung-pc on 6/28/2018.
@@ -18,19 +20,22 @@ public class ViewModel {
 
     private User user;
 
-    public IEventHolder              loginEventHolder;
+    public PublishSubject<Boolean>   publishSubject  = PublishSubject.create();
     public ObservableField<Boolean>  isUsernameEmpty = new ObservableField<>(false);
     public ObservableField<Boolean>  isPasswordEmpty = new ObservableField<>(false);
     public ObservableField<String>   username        = new ObservableField<>("");
     public ObservableField<String>   password        = new ObservableField<>("");
 
-    public ViewModel(IEventHolder loginEventHolder){
+    public ViewModel(){
         Utils.showLog(TAG, "ViewModel");
-        this.loginEventHolder = loginEventHolder;
+    }
+
+    public void subscribeObserver(Observer<Boolean> observer) {
+        publishSubject.subscribe(observer);
     }
 
     @SuppressLint("StaticFieldLeak")
-    public void performLogin(){
+    public void performLogin(View view){
         Utils.showLog(TAG, "performLogin");
         if (!isExistEmptyField()) {
             new AsyncTask<Void, Void, Void>() {
@@ -75,9 +80,9 @@ public class ViewModel {
     private void checkLogin() {
         Utils.showLog(TAG, "checkLogin");
         if (username.get().equals(user.getUsername()) && password.get().equals(user.getPassword())) {
-            loginEventHolder.perform(true);
+            publishSubject.onNext(true);
         } else {
-            loginEventHolder.perform(false);
+            publishSubject.onNext(false);
         }
     }
 }
