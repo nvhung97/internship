@@ -1,13 +1,13 @@
 package com.example.cpu11398_local.realmdemo;
 
 import android.graphics.drawable.AnimationDrawable;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Delete realm in case have some change
          */
-       /* Realm.deleteRealm(
+       /*Realm.deleteRealm(
                 new RealmConfiguration
                         .Builder()
                         .schemaVersion(BuildConfig.VERSION_CODE)
@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
         /**
          * delete
          */
-
         /*realm.beginTransaction();
             RealmResults<Student> delRet = realm.where(Student.class).findAll();
             delRet.deleteAllFromRealm();
@@ -66,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
          * Update
          */
         /*realm.beginTransaction();
-        Student delRet = realm.where(Student.class).equalTo("id", "1513696").findFirst();
-        delRet.setAge(22);
+        Student updateRet = realm.where(Student.class).equalTo("id", "1513696").findFirst();
+        updateRet.setAge(22);
         realm.commitTransaction();*/
 
         //realm.close();
@@ -87,6 +86,19 @@ public class MainActivity extends AppCompatActivity {
                 }*/
             }
         });
+
+        /**
+         * More example for query
+         */
+        /*realm.beginTransaction();
+            Dog dog = realm.createObject(Dog.class, "Jack");
+            Person person = realm.createObject(Person.class, "John");
+            person.setDog(dog);
+        realm.commitTransaction();
+        Log.e(
+            TAG,
+            realm.where(Person.class).equalTo("dog.name", "Jack").findFirst().getName()
+        );*/
     }
 
     @Override
