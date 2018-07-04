@@ -163,18 +163,27 @@
 		+ MVP
 			* https://viblo.asia/p/mvp-pattern-for-android-1qm6RWzOveJE
 			* https://medium.com/@trionkidnapper/android-mvp-keeping-presenters-alive-a91b9e080761
-		+ MVVM + dataBinding
+		+ MVVM
 			* https://lequangkhai.wordpress.com/2011/04/18/m-hnh-mvvm-gi%E1%BB%9Bi-thi%E1%BB%87u/
 			* https://medium.com/@husayn.hakeem/android-by-example-mvvm-data-binding-introduction-part-1-6a7a5f388bf7
-			* https://viblo.asia/p/data-binding-trong-android-Do754EpJKM6
-			* https://www.androidhive.info/android-working-with-databinding/
-			* https://android.jlelse.eu/android-data-binding-part-2-42538064b1eb
-			* https://developer.android.com/topic/libraries/data-binding/
 			* https://github.com/manas-chaudhari/android-mvvm
+			* https://github.com/googlesamples/android-architecture
 		+ Comparison
 			* https://medium.com/@be.betr.codr/android-mvp-survival-guide-b2094ab79f78
 			* https://thinkmobiles.com/blog/mvp-vs-mvvm-android-patterns/
 
-https://github.com/MindorksOpenSource/android-dagger2-example
-https://github.com/google/dagger
+
+8:56 AM 7/3/2018
+	- DataBinding
+		+ https://viblo.asia/p/data-binding-trong-android-Do754EpJKM6
+		+ https://www.androidhive.info/android-working-with-databinding/
+		+ https://android.jlelse.eu/android-data-binding-part-2-42538064b1eb
+		+ https://developer.android.com/topic/libraries/data-binding/
+	- Dagger
+		+ https://www.techyourchance.com/dependency-injection-android/
+		+ https://www.techyourchance.com/dagger-tutorial/
+		+ https://github.com/MindorksOpenSource/android-dagger2-example
+		+ http://jakewharton.github.io/butterknife/
+		+ https://github.com/google/dagger
+
 https://github.com/android10/Android-CleanArchitecture
