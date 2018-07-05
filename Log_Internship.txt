@@ -193,6 +193,8 @@
 	- 4 principles of OOP
 		+ https://kipalog.com/posts/4-tinh-chat-dac-thu-cua-lap-trinh-huong-doi-tuong
 
+6:22 PM 7/5/2018
+
 TODO:RxJava
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="loginViewModel"
+            type="com.example.cpu11398_local.cleanarchitecturedemo.presentation.view_model.LoginViewModel"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="25dp">
+
+        <EditText
+            android:id="@+id/edt_login_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter username"
+            android:textColorHint="@{loginViewModel.isUsernameEmpty?@color/colorRed:@color/colorGray}"
+            android:text="@={loginViewModel.username}"/>
+
+        <EditText
+            android:id="@+id/edt_login_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter password"
+            android:textColorHint="@{loginViewModel.isPasswordEmpty?@color/colorRed:@color/colorGray}"
+            android:text="@={loginViewModel.password}"
+            app:layout_constraintTop_toBottomOf="@+id/edt_login_username"/>
+
+        <Button
+            android:id="@+id/btn_login_create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:textColor="#777777"
+            android:text="Create new account?"
+            android:background="#00000000"
+            app:layout_constraintTop_toBottomOf="@+id/edt_login_password"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LOGIN"
+            android:onClick="@{loginViewModel.performLogin}"
+            app:layout_constraintTop_toBottomOf="@+id/btn_login_create"/>
+    </android.support.constraint.ConstraintLayout>
+</layout>
