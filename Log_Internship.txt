@@ -188,8 +188,12 @@
 	- Clean Architecture
 		+ https://github.com/android10/Android-CleanArchitecture
 		+ https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html
+	- Access modifiers in java
+		+ https://www.geeksforgeeks.org/access-modifiers-java/
+	- 4 principles of OOP
+		+ https://kipalog.com/posts/4-tinh-chat-dac-thu-cua-lap-trinh-huong-doi-tuong
 
-TODO: 4 tính chất OOP, RxJava, tầm vực (private public protected)
+TODO:RxJava
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
 https://www.youtube.com/watch?v=WYd3ItcizMw
