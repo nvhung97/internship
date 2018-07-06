@@ -10,17 +10,11 @@ public class PagerMapper {
     public PagerMapper() {
     }
 
-    public List<User> PagerModel2User(List<PaperModel> listData) {
-        List<User> listUser = new ArrayList<>();
-        for (PaperModel paperModel:listData) {
-            listUser.add(
-                    new User(
-                            paperModel.getKey(),
-                            paperModel.getValue()
-                    )
-            );
-        }
-        return listUser;
+    public User PagerModel2User(PaperModel data) {
+        return new User(
+                data.getKey(),
+                data.getValue()
+        );
     }
 
     public PaperModel User2PagerModel(User user) {

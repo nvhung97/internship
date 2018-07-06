@@ -19,8 +19,8 @@ public class Repository {
         this.pagerMapper = pagerMapper;
     }
 
-    public Observable<List<User>> getData() {
-        return localSource.getData().map(pagerMapper::PagerModel2User);
+    public Observable<User> getData(String key) {
+        return localSource.getData(key).map(pagerMapper::PagerModel2User);
     }
 
     public Observable<Boolean> putData(User user) {

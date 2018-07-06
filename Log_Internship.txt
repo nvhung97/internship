@@ -195,7 +195,7 @@
 
 6:22 PM 7/5/2018
 
-TODO:RxJava
+TODO:RxJava, Lambda expressions
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
 https://www.youtube.com/watch?v=WYd3ItcizMw

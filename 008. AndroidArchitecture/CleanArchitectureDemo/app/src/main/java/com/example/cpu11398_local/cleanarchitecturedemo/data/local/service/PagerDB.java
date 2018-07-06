@@ -2,8 +2,6 @@ package com.example.cpu11398_local.cleanarchitecturedemo.data.local.service;
 
 import android.content.Context;
 import com.example.cpu11398_local.cleanarchitecturedemo.data.local.model.PaperModel;
-import java.util.ArrayList;
-import java.util.List;
 import javax.inject.Inject;
 import io.paperdb.Paper;
 import io.reactivex.Observable;
@@ -15,22 +13,23 @@ public class PagerDB {
         Paper.init(context);
     }
 
-    public Observable<List<PaperModel>> getData() {
+    public Observable<PaperModel> getData(String key) {
         return Observable.create(
                 emitter -> {
                     try {
-                        List<PaperModel> listData = new ArrayList<>();
-                        List<String> keys = Paper.book().getAllKeys();
-                        for (String key : keys) {
-                            listData.add(
+                        if (Paper.book().contains(key)) {
+                            emitter.onNext(
                                     new PaperModel(
                                             key,
                                             String.valueOf(Paper.book().read(key))
                                     )
                             );
+                            emitter.onComplete();
                         }
-                        emitter.onNext(listData);
-                        emitter.onComplete();
+                        else {
+                            emitter.onNext(null);
+                            emitter.onComplete();
+                        }
                     }
                     catch (Exception e) {
                         emitter.onError(e);

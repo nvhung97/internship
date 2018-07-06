@@ -11,15 +11,16 @@ public class LoginViewModel {
     public ObservableField<String>  password        = new ObservableField<>("");
     public ObservableField<Boolean> isUsernameEmpty = new ObservableField<>(false);
     public ObservableField<Boolean> isPasswordEmpty = new ObservableField<>(false);
-    public PublishSubject<Boolean>  publishSubject  = PublishSubject.create();
+
+    private PublishSubject<Boolean>  loginPublisher  = PublishSubject.create();
 
     public void subscribeObserver(Observer<Boolean> observer) {
-        publishSubject.subscribe(observer);
+        loginPublisher.subscribe(observer);
     }
 
     public void performLogin(View v) {
         if (!isExistEmptyField()){
-            publishSubject.onNext(true);
+            loginPublisher.onNext(true);
         }
     }
 

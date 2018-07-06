@@ -8,6 +8,9 @@ import android.widget.Toast;
 import com.example.cpu11398_local.cleanarchitecturedemo.R;
 import com.example.cpu11398_local.cleanarchitecturedemo.databinding.ActivityLoginBinding;
 import com.example.cpu11398_local.cleanarchitecturedemo.presentation.view_model.LoginViewModel;
+
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observer;
@@ -15,8 +18,8 @@ import io.reactivex.disposables.Disposable;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private ActivityLoginBinding binding;
     private LoginViewModel       loginViewModel;
+    private ActivityLoginBinding binding;
     private Disposable           loginDisposable;
 
     @Override

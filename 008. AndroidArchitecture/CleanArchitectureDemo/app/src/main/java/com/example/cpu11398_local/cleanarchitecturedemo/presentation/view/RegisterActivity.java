@@ -4,17 +4,18 @@ import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
-
 import com.example.cpu11398_local.cleanarchitecturedemo.R;
 import com.example.cpu11398_local.cleanarchitecturedemo.databinding.ActivityRegisterBinding;
 import com.example.cpu11398_local.cleanarchitecturedemo.presentation.view_model.RegisterViewModel;
+import javax.inject.Inject;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    @Inject
+    public  RegisterViewModel       registerViewModel;
     private ActivityRegisterBinding binding;
-    private RegisterViewModel       registerViewModel;
     private Disposable              registerDisposable;
 
     @Override
