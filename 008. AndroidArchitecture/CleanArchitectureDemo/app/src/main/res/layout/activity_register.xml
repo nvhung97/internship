@@ -18,7 +18,7 @@
             android:id="@+id/edt_register_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@{registerViewModel.isUsernameEmpty?@color/colorRed:@color/colorGray}"
+            android:textColorHint="@{safeUnbox(registerViewModel.isUsernameEmpty)?@color/colorRed:@color/colorGray}"
             android:text="@={registerViewModel.username}"
             android:hint="Enter new username"/>
 
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter new password"
-            android:textColorHint="@{registerViewModel.isPasswordEmpty?@color/colorRed:@color/colorGray}"
+            android:textColorHint="@{safeUnbox(registerViewModel.isPasswordEmpty)?@color/colorRed:@color/colorGray}"
             android:text="@={registerViewModel.password}"
             app:layout_constraintTop_toBottomOf="@+id/edt_register_username"/>
 
@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="REGISTER"
-            android:onClick="@{registerViewModel.performRegister}"
+            android:onClick="@{registerViewModel::performRegister}"
             app:layout_constraintTop_toBottomOf="@+id/edt_register_password"/>
     </android.support.constraint.ConstraintLayout>
 </layout>

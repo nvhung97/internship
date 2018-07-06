@@ -6,10 +6,10 @@ import javax.inject.Inject;
 import io.paperdb.Paper;
 import io.reactivex.Observable;
 
-public class PagerDB {
+public class PaperDB {
 
     @Inject
-    public PagerDB(Context context) {
+    public PaperDB(Context context) {
         Paper.init(context);
     }
 
@@ -21,14 +21,13 @@ public class PagerDB {
                             emitter.onNext(
                                     new PaperModel(
                                             key,
-                                            String.valueOf(Paper.book().read(key))
+                                            Paper.book().read(key)
                                     )
                             );
                             emitter.onComplete();
                         }
                         else {
-                            emitter.onNext(null);
-                            emitter.onComplete();
+                            emitter.onError(new Throwable("Account does not exist!"));
                         }
                     }
                     catch (Exception e) {

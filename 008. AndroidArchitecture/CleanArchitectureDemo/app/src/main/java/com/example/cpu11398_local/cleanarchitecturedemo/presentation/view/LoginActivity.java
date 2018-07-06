@@ -8,9 +8,7 @@ import android.widget.Toast;
 import com.example.cpu11398_local.cleanarchitecturedemo.R;
 import com.example.cpu11398_local.cleanarchitecturedemo.databinding.ActivityLoginBinding;
 import com.example.cpu11398_local.cleanarchitecturedemo.presentation.view_model.LoginViewModel;
-
 import javax.inject.Inject;
-
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observer;
@@ -18,7 +16,9 @@ import io.reactivex.disposables.Disposable;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private LoginViewModel       loginViewModel;
+    @Inject
+    public  LoginViewModel       loginViewModel;
+
     private ActivityLoginBinding binding;
     private Disposable           loginDisposable;
 
@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         loginViewModel = (LoginViewModel) getLastCustomNonConfigurationInstance();
         if (loginViewModel == null) {
-            loginViewModel = new LoginViewModel();
+            ContentActivity.getAppComponent(this).inject(this);
         }
         binding.setLoginViewModel(loginViewModel);
         ButterKnife.bind(this);
@@ -91,5 +91,4 @@ public class LoginActivity extends AppCompatActivity {
 
         }
     }
-
 }

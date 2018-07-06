@@ -15,6 +15,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Inject
     public  RegisterViewModel       registerViewModel;
+
     private ActivityRegisterBinding binding;
     private Disposable              registerDisposable;
 
@@ -28,7 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_register);
         registerViewModel = (RegisterViewModel) getLastCustomNonConfigurationInstance();
         if (registerViewModel == null) {
-            registerViewModel = new RegisterViewModel();
+            ContentActivity.getAppComponent(this).inject(this);
         }
         binding.setRegisterViewModel(registerViewModel);
     }

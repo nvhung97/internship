@@ -8,14 +8,10 @@ import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
 
-/**
- * Created by Hung-pc on 7/6/2018.
- */
-
-public class UseCaseRegister extends UseCase<Boolean, Boolean, User> {
+public class UseCaseLogin extends UseCase<User, Boolean, User>{
 
     @Inject
-    public UseCaseRegister(Executor subscribeThread,
+    public UseCaseLogin(Executor subscribeThread,
                            Scheduler observeScheduler,
                            CompositeDisposable disposable,
                            Repository repository) {
@@ -28,17 +24,23 @@ public class UseCaseRegister extends UseCase<Boolean, Boolean, User> {
     }
 
     @Override
-    Observable<Boolean> buildUseCaseObservable(User user) {
-        return getRepository().putLocal(user);
+    Observable<User> buildUseCaseObservable(User user) {
+        return getRepository().getLocal(user.getUsername());
     }
 
     @Override
-    void doOnResponseSuccess(Boolean result) {
-        publishResult(result);
+    void doOnResponseSuccess(User user) {
+        if (getParams().getUsername().equals(user.getUsername())
+                && getParams().getPassword().equals(user.getPassword())) {
+            publishResult(true);
+        }
+        else {
+            publishResult(false);
+        }
     }
 
     @Override
     void doOnResponseFail(Throwable e) {
-        publishError(e);
+        publishResult(false);
     }
 }
