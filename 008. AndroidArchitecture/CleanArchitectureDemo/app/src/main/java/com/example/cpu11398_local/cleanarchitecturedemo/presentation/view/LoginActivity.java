@@ -4,13 +4,12 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 import com.example.cpu11398_local.cleanarchitecturedemo.R;
 import com.example.cpu11398_local.cleanarchitecturedemo.databinding.ActivityLoginBinding;
 import com.example.cpu11398_local.cleanarchitecturedemo.presentation.view_model.LoginViewModel;
 import javax.inject.Inject;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
@@ -35,7 +34,6 @@ public class LoginActivity extends AppCompatActivity {
             ContentActivity.getAppComponent(this).inject(this);
         }
         binding.setLoginViewModel(loginViewModel);
-        ButterKnife.bind(this);
     }
 
     @Override
@@ -57,8 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         return loginViewModel;
     }
 
-    @OnClick(R.id.btn_login_create)
-    public void showRegisterView() {
+    public void showRegisterView(View v) {
         startActivity(new Intent(this, RegisterActivity.class));
     }
 

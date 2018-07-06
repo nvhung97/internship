@@ -185,6 +185,8 @@
 		+ https://github.com/google/dagger
 
 9:49 AM 7/4/2018
+6:22 PM 7/5/2018
+8:26 AM 7/6/2018
 	- Clean Architecture
 		+ https://github.com/android10/Android-CleanArchitecture
 		+ https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html
@@ -193,10 +195,14 @@
 	- 4 principles of OOP
 		+ https://kipalog.com/posts/4-tinh-chat-dac-thu-cua-lap-trinh-huong-doi-tuong
 
-6:22 PM 7/5/2018
-8:26 AM 7/6/2018
-
-TODO:RxJava, Lambda expressions, test clean
+TODO:RxJava, Lambda expressions
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
 https://www.youtube.com/watch?v=WYd3ItcizMw
+
+https://minhaskamal.github.io/DownGit/#/home
+https://ourcodeworld.com/articles/read/123/how-to-download-a-single-folder-of-a-github-repository
+
+David Guetta & Showtek - Bad ft.Vassy (Lyrics Video)
+https://guides.codepath.com/android/Lambda-Expressions
+https://viblo.asia/p/tong-quat-ve-kotlin-va-so-sanh-giua-kotlin-voi-java-1VgZvBp7ZAw

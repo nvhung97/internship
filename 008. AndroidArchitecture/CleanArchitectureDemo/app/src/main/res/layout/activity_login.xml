@@ -39,6 +39,7 @@
             android:textColor="#777777"
             android:text="Create new account?"
             android:background="#00000000"
+            android:onClick="showRegisterView"
             app:layout_constraintTop_toBottomOf="@+id/edt_login_password"
             app:layout_constraintRight_toRightOf="parent"/>
 
