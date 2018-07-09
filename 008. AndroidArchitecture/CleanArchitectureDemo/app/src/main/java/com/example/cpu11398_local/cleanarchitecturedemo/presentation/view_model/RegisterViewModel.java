@@ -1,15 +1,17 @@
 package com.example.cpu11398_local.cleanarchitecturedemo.presentation.view_model;
 
 import android.databinding.ObservableField;
+import android.util.Log;
 import android.view.View;
-import com.example.cpu11398_local.cleanarchitecturedemo.domain.interactor.UseCaseRegister;
+import com.example.cpu11398_local.cleanarchitecturedemo.domain.interactor.UseCase;
 import com.example.cpu11398_local.cleanarchitecturedemo.presentation.model.User;
 import javax.inject.Inject;
+import javax.inject.Named;
 import io.reactivex.Observer;
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.subjects.PublishSubject;
 
-public class RegisterViewModel {
+public class RegisterViewModel implements ViewModel<Boolean>{
 
     public ObservableField<String>  username          = new ObservableField<>("");
     public ObservableField<String>  password          = new ObservableField<>("");
@@ -17,13 +19,14 @@ public class RegisterViewModel {
     public ObservableField<Boolean> isPasswordEmpty   = new ObservableField<>(false);
     public PublishSubject<Boolean>  registerPublisher = PublishSubject.create();
 
-    private UseCaseRegister         useCaseRegister;
+    private UseCase<Void, User>  useCaseRegister;
 
     @Inject
-    public RegisterViewModel(UseCaseRegister useCaseRegister) {
+    public RegisterViewModel(@Named("UseCaseRegister") UseCase<Void, User> useCaseRegister) {
         this.useCaseRegister = useCaseRegister;
     }
 
+    @Override
     public void subscribeObserver(Observer<Boolean> observer) {
         registerPublisher.subscribe(observer);
     }
@@ -53,20 +56,21 @@ public class RegisterViewModel {
         return result;
     }
 
-    private class RegisterObserer extends DisposableObserver<Boolean> {
+    private class RegisterObserer extends DisposableCompletableObserver {
         @Override
-        public void onNext(Boolean result) {
-            registerPublisher.onNext(result);
+        public void onComplete() {
+            registerPublisher.onNext(true);
         }
 
         @Override
         public void onError(Throwable e) {
-
+            Log.e("CleanArchitecture", e.getMessage());
+            registerPublisher.onNext(false);
         }
+    }
 
-        @Override
-        public void onComplete() {
-
-        }
+    @Override
+    public void endTask() {
+        useCaseRegister.endTask();
     }
 }

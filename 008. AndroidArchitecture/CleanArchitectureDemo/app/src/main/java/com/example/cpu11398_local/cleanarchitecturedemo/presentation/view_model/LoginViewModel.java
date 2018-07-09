@@ -1,18 +1,17 @@
 package com.example.cpu11398_local.cleanarchitecturedemo.presentation.view_model;
 
 import android.databinding.ObservableField;
+import android.util.Log;
 import android.view.View;
-
-import com.example.cpu11398_local.cleanarchitecturedemo.domain.interactor.UseCaseLogin;
+import com.example.cpu11398_local.cleanarchitecturedemo.domain.interactor.UseCase;
 import com.example.cpu11398_local.cleanarchitecturedemo.presentation.model.User;
-
 import javax.inject.Inject;
-
+import javax.inject.Named;
 import io.reactivex.Observer;
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.subjects.PublishSubject;
 
-public class LoginViewModel {
+public class LoginViewModel implements ViewModel<Boolean>{
 
     public ObservableField<String>  username        = new ObservableField<>("");
     public ObservableField<String>  password        = new ObservableField<>("");
@@ -20,13 +19,14 @@ public class LoginViewModel {
     public ObservableField<Boolean> isPasswordEmpty = new ObservableField<>(false);
     public PublishSubject<Boolean>  loginPublisher  = PublishSubject.create();
 
-    private UseCaseLogin            useCaseLogin;
+    private UseCase<Boolean, User> useCaseLogin;
 
     @Inject
-    public LoginViewModel(UseCaseLogin useCaseLogin) {
+    public LoginViewModel(@Named("UseCaseLogin") UseCase<Boolean, User> useCaseLogin) {
         this.useCaseLogin = useCaseLogin;
     }
 
+    @Override
     public void subscribeObserver(Observer<Boolean> observer) {
         loginPublisher.subscribe(observer);
     }
@@ -56,26 +56,23 @@ public class LoginViewModel {
         return result;
     }
 
-    private class LoginObserer extends DisposableObserver<Boolean> {
+    private class LoginObserer extends DisposableSingleObserver<Boolean> {
         @Override
-        public void onNext(Boolean result) {
-            if (result){
-                username.set("");
-                password.set("");
-                isUsernameEmpty.set(false);
-                isPasswordEmpty.set(false);
+        public void onSuccess(Boolean isSuccess) {
+            if (isSuccess) {
+                loginPublisher.onNext(true);
+            } else {
+                loginPublisher.onNext(false);
             }
-            loginPublisher.onNext(result);
         }
 
         @Override
         public void onError(Throwable e) {
-
+            Log.e("CleanArchitecture", e.getMessage());
         }
-
-        @Override
-        public void onComplete() {
-
-        }
+    }
+    @Override
+    public void endTask() {
+        useCaseLogin.endTask();
     }
 }

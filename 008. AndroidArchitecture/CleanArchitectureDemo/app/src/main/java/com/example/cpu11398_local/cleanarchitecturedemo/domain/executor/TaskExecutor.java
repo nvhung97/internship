@@ -8,19 +8,14 @@ import java.util.concurrent.TimeUnit;
 
 public class TaskExecutor implements Executor{
 
-    private final int       CORE_POOL_SIZE    = 3;
-    private final int       MAX_POOL_SIZE     = 5;
-    private final int       KEEP_ALIVE_TIME   = 10;
-    private final TimeUnit  TIME_UNIT         = TimeUnit.SECONDS;
-
     private ThreadPoolExecutor threadPoolExecutor;
 
     public TaskExecutor() {
         threadPoolExecutor = new ThreadPoolExecutor(
-                CORE_POOL_SIZE,
-                MAX_POOL_SIZE,
-                KEEP_ALIVE_TIME,
-                TIME_UNIT,
+                3,
+                5,
+                10,
+                TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>()
         );
     }

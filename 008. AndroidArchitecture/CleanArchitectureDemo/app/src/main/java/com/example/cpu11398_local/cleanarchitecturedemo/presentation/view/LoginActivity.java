@@ -2,7 +2,6 @@ package com.example.cpu11398_local.cleanarchitecturedemo.presentation.view;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -13,7 +12,7 @@ import javax.inject.Inject;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     @Inject
     public  LoginViewModel       loginViewModel;
@@ -24,10 +23,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initDataBinding();
     }
 
-    private void initDataBinding(){
+    @Override
+    void onDataBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         loginViewModel = (LoginViewModel) getLastCustomNonConfigurationInstance();
         if (loginViewModel == null) {
@@ -37,22 +36,25 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    void onSubscribeViewModel() {
         loginViewModel.subscribeObserver(new LoginObserver());
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    void onUnSubscribeViewModel() {
         if (!loginDisposable.isDisposed()){
             loginDisposable.dispose();
         }
     }
 
     @Override
-    public Object onRetainCustomNonConfigurationInstance() {
+    Object onSaveViewModel() {
         return loginViewModel;
+    }
+
+    @Override
+    void onEndTaskViewModel() {
+        loginViewModel.endTask();
     }
 
     public void showRegisterView(View v) {

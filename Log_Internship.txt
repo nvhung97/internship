@@ -92,6 +92,7 @@
 		+ RxJava
 			* https://github.com/amitshekhariitbhu/RxJava2-Android-Samples
 			* https://mindorks.com/course/learn-rxjava
+			* http://reactivex.io/RxJava/2.x/javadoc/
 		+ Common
 			* https://viblo.asia/p/thread-handler-va-asynctask-trong-android-3P0lPyp85ox
 			* https://stackoverflow.com/a/9654445/9661754
@@ -192,17 +193,15 @@
 		+ https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html
 	- Access modifiers in java
 		+ https://www.geeksforgeeks.org/access-modifiers-java/
+		+ https://stackoverflow.com/questions/5181578/what-is-the-point-of-final-class-in-java/12335925#12335925
 	- 4 principles of OOP
 		+ https://kipalog.com/posts/4-tinh-chat-dac-thu-cua-lap-trinh-huong-doi-tuong
+	- Lambda expressions
+		+ https://guides.codepath.com/android/Lambda-Expressions
+	- Download a single folder of a github repository
+		+ https://minhaskamal.github.io/DownGit/#/home
+		+ https://ourcodeworld.com/articles/read/123/how-to-download-a-single-folder-of-a-github-repository
 
-TODO:RxJava, Lambda expressions
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
 https://www.youtube.com/watch?v=WYd3ItcizMw
-
-https://minhaskamal.github.io/DownGit/#/home
-https://ourcodeworld.com/articles/read/123/how-to-download-a-single-folder-of-a-github-repository
-
-David Guetta & Showtek - Bad ft.Vassy (Lyrics Video)
-https://guides.codepath.com/android/Lambda-Expressions
-https://viblo.asia/p/tong-quat-ve-kotlin-va-so-sanh-giua-kotlin-voi-java-1VgZvBp7ZAw
