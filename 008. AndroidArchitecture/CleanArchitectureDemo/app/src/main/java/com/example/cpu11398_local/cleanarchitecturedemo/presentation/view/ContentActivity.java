@@ -3,6 +3,9 @@ package com.example.cpu11398_local.cleanarchitecturedemo.presentation.view;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
+
 import com.example.cpu11398_local.cleanarchitecturedemo.R;
 import com.example.cpu11398_local.cleanarchitecturedemo.databinding.ActivityContentBinding;
 import com.example.cpu11398_local.cleanarchitecturedemo.presentation.di.AppComponent;
@@ -23,6 +26,16 @@ public class ContentActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @Override

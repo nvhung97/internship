@@ -202,6 +202,11 @@
 		+ https://minhaskamal.github.io/DownGit/#/home
 		+ https://ourcodeworld.com/articles/read/123/how-to-download-a-single-folder-of-a-github-repository
 
+9:25 AM 7/10/2018
+	- persistableMode
+		+ https://developer.android.com/guide/topics/manifest/activity-element#persistableMode
+	- onTouch, onInterceptTouch, setOnTouchListener
+		+ https://stackoverflow.com/questions/7449799/how-are-android-touch-events-delivered/46862320#46862320
+
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
-https://www.youtube.com/watch?v=WYd3ItcizMw
