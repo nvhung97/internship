@@ -7,15 +7,13 @@ import javax.inject.Inject;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableCompletableObserver;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Hung-pc on 7/6/2018.
  */
 
-public class UseCaseRegister implements UseCase<Void, User> {
+public class UseCaseRegister implements UseCase {
 
     private Executor                executor;
     private Scheduler               scheduler;
@@ -34,23 +32,13 @@ public class UseCaseRegister implements UseCase<Void, User> {
     }
 
     @Override
-    public void execute(DisposableObserver<Void> observer, User params) {
-
-    }
-
-    @Override
-    public void execute(DisposableSingleObserver<Void> observer, User params) {
-
-    }
-
-    @Override
-    public void execute(DisposableCompletableObserver observer, User params) {
+    public void execute(Object observer, Object params) {
         disposable.add(
                 userRepository
-                        .putLocalUser(params)
+                        .putLocalUser((User)params)
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
-                        .subscribeWith(observer)
+                        .subscribeWith((DisposableCompletableObserver)observer)
         );
     }
 

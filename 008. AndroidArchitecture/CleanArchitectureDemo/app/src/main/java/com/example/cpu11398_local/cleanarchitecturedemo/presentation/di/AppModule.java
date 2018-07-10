@@ -12,7 +12,6 @@ import com.example.cpu11398_local.cleanarchitecturedemo.domain.interactor.UseCas
 import com.example.cpu11398_local.cleanarchitecturedemo.domain.interactor.UseCaseGetUserInfo;
 import com.example.cpu11398_local.cleanarchitecturedemo.domain.interactor.UseCaseLogin;
 import com.example.cpu11398_local.cleanarchitecturedemo.domain.interactor.UseCaseRegister;
-import com.example.cpu11398_local.cleanarchitecturedemo.presentation.model.User;
 import com.example.cpu11398_local.cleanarchitecturedemo.presentation.view_model.ContentViewModel;
 import com.example.cpu11398_local.cleanarchitecturedemo.presentation.view_model.LoginViewModel;
 import com.example.cpu11398_local.cleanarchitecturedemo.presentation.view_model.RegisterViewModel;
@@ -72,10 +71,10 @@ public class AppModule {
     }
 
     @Provides @Named("UseCaseRegister")
-    public UseCase<Void, User> provideUseCaseRegister(Executor executor,
-                                                      Scheduler scheduler,
-                                                      CompositeDisposable compositeDisposable,
-                                                      UserRepository userRepository) {
+    public UseCase provideUseCaseRegister(Executor executor,
+                                          Scheduler scheduler,
+                                          CompositeDisposable compositeDisposable,
+                                          UserRepository userRepository) {
         return new UseCaseRegister(
                 executor,
                 scheduler,
@@ -85,15 +84,15 @@ public class AppModule {
     }
 
     @Provides
-    public RegisterViewModel provideRegisterViewModel(@Named("UseCaseRegister") UseCase<Void, User> useCaseRegister) {
+    public RegisterViewModel provideRegisterViewModel(@Named("UseCaseRegister") UseCase useCaseRegister) {
         return new RegisterViewModel(useCaseRegister);
     }
 
     @Provides @Named("UseCaseLogin")
-    public UseCase<Boolean, User> provideUseCaseLogin(Executor executor,
-                                                      Scheduler scheduler,
-                                                      CompositeDisposable compositeDisposable,
-                                                      UserRepository userRepository) {
+    public UseCase provideUseCaseLogin(Executor executor,
+                                       Scheduler scheduler,
+                                       CompositeDisposable compositeDisposable,
+                                       UserRepository userRepository) {
         return new UseCaseLogin(
                 executor,
                 scheduler,
@@ -103,15 +102,15 @@ public class AppModule {
     }
 
     @Provides
-    public LoginViewModel provideLoginViewModel(@Named("UseCaseLogin") UseCase<Boolean, User> useCaseLogin) {
+    public LoginViewModel provideLoginViewModel(@Named("UseCaseLogin") UseCase useCaseLogin) {
         return new LoginViewModel(useCaseLogin);
     }
 
     @Provides @Named("UseCaseGetUserInfo")
-    public UseCase<User, Void> UseCaseGetUserInfo(Executor executor,
-                                                  Scheduler scheduler,
-                                                  CompositeDisposable compositeDisposable,
-                                                  UserRepository userRepository) {
+    public UseCase UseCaseGetUserInfo(Executor executor,
+                                      Scheduler scheduler,
+                                      CompositeDisposable compositeDisposable,
+                                      UserRepository userRepository) {
         return new UseCaseGetUserInfo(
                 executor,
                 scheduler,
@@ -121,7 +120,7 @@ public class AppModule {
     }
 
     @Provides
-    public ContentViewModel provideContentViewModel(@Named("UseCaseGetUserInfo") UseCase<User, Void> useCaseGetUserInfo) {
+    public ContentViewModel provideContentViewModel(@Named("UseCaseGetUserInfo") UseCase useCaseGetUserInfo) {
         return new ContentViewModel(useCaseGetUserInfo);
     }
 }

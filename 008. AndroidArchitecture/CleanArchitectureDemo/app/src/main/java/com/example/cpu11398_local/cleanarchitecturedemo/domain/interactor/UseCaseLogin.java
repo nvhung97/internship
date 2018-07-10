@@ -7,12 +7,10 @@ import java.util.concurrent.Executor;
 import javax.inject.Inject;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.observers.DisposableCompletableObserver;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public class UseCaseLogin implements UseCase<Boolean, User> {
+public class UseCaseLogin implements UseCase {
 
     private Executor                executor;
     private Scheduler               scheduler;
@@ -31,25 +29,16 @@ public class UseCaseLogin implements UseCase<Boolean, User> {
     }
 
     @Override
-    public void execute(DisposableObserver<Boolean> observer, User params) {
-
-    }
-
-    @Override
-    public void execute(DisposableSingleObserver<Boolean> observer, User params) {
+    public void execute(Object observer, Object params) {
+        User user = (User)params;
         disposable.add(
                 userRepository
-                        .getLocalUser(params.getUsername())
+                        .getLocalUser(user.getUsername())
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
-                        .map(item -> onTask(item, params))
-                        .subscribeWith(observer)
+                        .map(item -> onTask(item, user))
+                        .subscribeWith((DisposableSingleObserver<Boolean>)observer)
         );
-    }
-
-    @Override
-    public void execute(DisposableCompletableObserver observer, User params) {
-
     }
 
     private Boolean onTask(Optional<User> user, User newUser) {

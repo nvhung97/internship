@@ -19,10 +19,10 @@ public class LoginViewModel implements ViewModel<Boolean>{
     public ObservableField<Boolean> isPasswordEmpty = new ObservableField<>(false);
     public PublishSubject<Boolean>  loginPublisher  = PublishSubject.create();
 
-    private UseCase<Boolean, User> useCaseLogin;
+    private UseCase useCaseLogin;
 
     @Inject
-    public LoginViewModel(@Named("UseCaseLogin") UseCase<Boolean, User> useCaseLogin) {
+    public LoginViewModel(@Named("UseCaseLogin") UseCase useCaseLogin) {
         this.useCaseLogin = useCaseLogin;
     }
 

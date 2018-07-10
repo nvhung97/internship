@@ -19,10 +19,10 @@ public class RegisterViewModel implements ViewModel<Boolean>{
     public ObservableField<Boolean> isPasswordEmpty   = new ObservableField<>(false);
     public PublishSubject<Boolean>  registerPublisher = PublishSubject.create();
 
-    private UseCase<Void, User>  useCaseRegister;
+    private UseCase  useCaseRegister;
 
     @Inject
-    public RegisterViewModel(@Named("UseCaseRegister") UseCase<Void, User> useCaseRegister) {
+    public RegisterViewModel(@Named("UseCaseRegister") UseCase useCaseRegister) {
         this.useCaseRegister = useCaseRegister;
     }
 
