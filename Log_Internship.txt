@@ -207,6 +207,10 @@
 		+ https://developer.android.com/guide/topics/manifest/activity-element#persistableMode
 	- onTouch, onInterceptTouch, setOnTouchListener
 		+ https://stackoverflow.com/questions/7449799/how-are-android-touch-events-delivered/46862320#46862320
+	- Làm Demo Swipe back activity
+		+ http://nullpointerbay.com/android-appcompat-design-lib-activity-transparency
+https://tech.pic-collage.com/something-about-android-windowistranslucent-641cc02ff66f
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
+https://www.youtube.com/watch?v=jXf9A0c4qLw
