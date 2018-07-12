@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         }
         boolean b = super.dispatchTouchEvent(ev);
         Log.d(TAG, "Activity dispatchTouchEvent RETURNS " + b);
-        return b;
+        return true;
     }
 
     @Override

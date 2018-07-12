@@ -54,7 +54,6 @@ public class MyView extends TextView {
                 Log.d(TAG, "MyView onTouchEvent DOWN");
                 break;
             case MotionEvent.ACTION_MOVE:
-
                 Log.d(TAG, "MyView onTouchEvent MOVE");
                 break;
             case MotionEvent.ACTION_UP:

@@ -1,6 +1,5 @@
 package com.example.cpu11398_local.toucheventcyclelife;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -48,8 +47,6 @@ public class MyLayout extends FrameLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        this.setTranslationX(300.0f);
-        ((Activity)getContext()).finish();
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 Log.d(TAG, "MyLayout onInterceptTouchEvent DOWN");
