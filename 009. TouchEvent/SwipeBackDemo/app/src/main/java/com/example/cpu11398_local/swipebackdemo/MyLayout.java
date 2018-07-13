@@ -6,13 +6,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 public class MyLayout extends FrameLayout{
 
@@ -23,12 +21,14 @@ public class MyLayout extends FrameLayout{
     private float           screenWidth, screenHeight;
     private float           tomMaxTranslate;
     private float           downX, downY;
+    private float           tomPositionY;
 
     private float           touchSlop;
     private float           minimumFlingVelocity, maximumFlingVelocity;
 
     private boolean         isMoving, isHorizontalMoving, isRunningAnimation;
 
+    private Activity        activity;
     private VelocityTracker velocityTracker;
 
     private FrameLayout     lyt_frame;
@@ -55,6 +55,7 @@ public class MyLayout extends FrameLayout{
         touchSlop                       = configuration.getScaledTouchSlop();
         minimumFlingVelocity            = configuration.getScaledMinimumFlingVelocity();
         maximumFlingVelocity            = configuration.getScaledMaximumFlingVelocity();
+        activity                        = (Activity)context;
     }
 
     @Override
@@ -71,6 +72,7 @@ public class MyLayout extends FrameLayout{
         screenWidth     = MeasureSpec.getSize(widthMeasureSpec);
         screenHeight    = MeasureSpec.getSize(heightMeasureSpec);
         tomMaxTranslate = (screenHeight - img_tom.getMeasuredWidth()) / 2;
+        tomPositionY    = 0;
     }
 
     @Override
@@ -135,7 +137,7 @@ public class MyLayout extends FrameLayout{
             velocityTracker.computeCurrentVelocity(1000, maximumFlingVelocity);
             if (isHorizontalMoving) {
                 if (Math.abs(velocityTracker.getXVelocity()) > minimumFlingVelocity) {
-                    flingScreen(velocityTracker.getXVelocity(), event.getRawX() - downX);
+                    flingScreenHorizontal(velocityTracker.getXVelocity(), event.getRawX() - downX);
                 } else {
                     translateScreenAutomatic(event.getRawX() - downX);
                 }
@@ -143,7 +145,7 @@ public class MyLayout extends FrameLayout{
                 if (Math.abs(velocityTracker.getYVelocity()) > minimumFlingVelocity) {
                     flingTom(velocityTracker.getYVelocity(), event.getRawY() - downY);
                 } else {
-                    translateTomAutomatic(event.getRawY() - downY);
+                    tomPositionY += event.getRawY() - downY;
                 }
             }
             isMoving = false;
@@ -163,9 +165,9 @@ public class MyLayout extends FrameLayout{
         }
     }
 
-    private void translateTomManual(float translate) {
-        if (Math.abs(translate) <= tomMaxTranslate) {
-            img_tom.setTranslationY(translate);
+    private void translateTomManual(float translate)  {
+        if (Math.abs(translate + tomPositionY) <= tomMaxTranslate) {
+            img_tom.setTranslationY(translate + tomPositionY);
         } else {
             if (translate > 0) {
                 img_tom.setTranslationY(tomMaxTranslate);
@@ -222,7 +224,7 @@ public class MyLayout extends FrameLayout{
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            ((Activity)getContext()).finish();
+                            finishActivity();
                         }
 
                         @Override
@@ -239,36 +241,7 @@ public class MyLayout extends FrameLayout{
 
     }
 
-    private void translateTomAutomatic(float translate) {
-        setTomWaitTouch();
-        img_tom
-                .animate()
-                .translationY(0)
-                .setDuration((long)(Math.abs(translate) / tomMaxTranslate / 2 * MAX_ANIMATION_DURATION))
-                .setListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        isRunningAnimation = true;
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        isRunningAnimation = false;
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
-                });
-    }
-
-    private void flingScreen(float velocity, float translate) {
+    private void flingScreenHorizontal(float velocity, float translate) {
         if (velocity > 0) {
             long duration = (long)((screenWidth - translate) / screenWidth * MAX_FLING_SCREEN_DURATION);
             img_background.animate().alpha(0.0f).setDuration(duration);
@@ -283,7 +256,7 @@ public class MyLayout extends FrameLayout{
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            ((Activity)getContext()).finish();
+                            finishActivity();
                         }
 
                         @Override
@@ -329,7 +302,6 @@ public class MyLayout extends FrameLayout{
     }
 
     private void flingTom(float velocity, float translate) {
-        setTomLaugh();
         if (velocity > 0) {
             img_tom
                     .animate()
@@ -338,6 +310,7 @@ public class MyLayout extends FrameLayout{
                     .setListener(new Animator.AnimatorListener() {
                         @Override
                         public void onAnimationStart(Animator animation) {
+                            setTomLaugh();
                             isRunningAnimation = true;
                         }
 
@@ -390,6 +363,7 @@ public class MyLayout extends FrameLayout{
                     .setListener(new Animator.AnimatorListener() {
                         @Override
                         public void onAnimationStart(Animator animation) {
+                            setTomLaugh();
                             isRunningAnimation = true;
                         }
 
@@ -450,5 +424,10 @@ public class MyLayout extends FrameLayout{
 
     private void setScreenAlphaWithTranslate(float translate) {
         img_background.setAlpha((screenWidth - translate) / screenWidth);
+    }
+
+    private void finishActivity() {
+        activity.finish();
+        activity.overridePendingTransition(0, 0);
     }
 }

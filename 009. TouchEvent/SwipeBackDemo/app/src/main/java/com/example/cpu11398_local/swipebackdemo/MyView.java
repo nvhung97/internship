@@ -39,7 +39,12 @@ public class MyView extends ImageView {
                     isWaitForTickled = true;
                     handler.postDelayed(
                             () -> {
-                                setTomTickled();
+                                if (System.currentTimeMillis() % 2 == 0) {
+                                    setTomTickled();
+                                }
+                                else {
+                                    setTomLaugh();
+                                }
                                 isWaitForTickled = false;
                             },
                             TOUCH_TIMEOUT
@@ -72,5 +77,9 @@ public class MyView extends ImageView {
 
     private void setTomTickled() {
         this.setImageResource(R.drawable.img_tom_tickled);
+    }
+
+    private void setTomLaugh() {
+        this.setImageResource(R.drawable.img_tom_laugh);
     }
 }
