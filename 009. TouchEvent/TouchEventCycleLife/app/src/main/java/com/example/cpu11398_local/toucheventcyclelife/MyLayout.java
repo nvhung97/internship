@@ -49,7 +49,6 @@ public class MyLayout extends FrameLayout {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         this.setTranslationX(300.0f);
-        ((Activity)getContext()).finish();
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 Log.d(TAG, "MyLayout onInterceptTouchEvent DOWN");
