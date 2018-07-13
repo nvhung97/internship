@@ -211,10 +211,12 @@
 		+ https://stackoverflow.com/questions/7449799/how-are-android-touch-events-delivered/46862320#46862320
 
 4:20 PM 7/12/2018
+2:40 PM 7/13/2018
 	- Làm Demo Swipe back activity
 		+ http://nullpointerbay.com/android-appcompat-design-lib-activity-transparency
 		+ http://www.otroskopohistvo.si/otroska-soba-01-talking-tom.html
 		+ https://developer.android.com/reference/android/view/VelocityTracker
+		+ https://developer.android.com/reference/android/view/ViewConfiguration
 https://tech.pic-collage.com/something-about-android-windowistranslucent-641cc02ff66f
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
