@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
+import android.view.ViewPropertyAnimator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -23,11 +24,12 @@ public class MyLayout extends FrameLayout{
     private final long      MAX_FLING_DURATION          = 250;
 
     private float           screenWidth, screenHeight;
-    private float           tomMaxTranslate;
+    private float           tomPositionY, tomTempPositionY, tomMaxTranslateY;
     private float           downX, downY;
-    private float           tomPositionY, screenPositionY;
+    private float           translateX, translateY;
+    private float           velocityX, velocityY;
 
-    private float           touchSlop;
+    private float           touchSlop, flingSlop;
     private float           minimumFlingVelocity, maximumFlingVelocity;
 
     private boolean         isMoving, isHorizontalMoving, isRunningAnimation;
@@ -55,11 +57,12 @@ public class MyLayout extends FrameLayout{
     }
 
     private void init(Context context) {
-        ViewConfiguration configuration = ViewConfiguration.get(context);
-        touchSlop                       = configuration.getScaledTouchSlop();
-        minimumFlingVelocity            = configuration.getScaledMinimumFlingVelocity();
-        maximumFlingVelocity            = configuration.getScaledMaximumFlingVelocity();
-        activity                        = (Activity)context;
+        ViewConfiguration config = ViewConfiguration.get(context);
+        touchSlop                = config.getScaledTouchSlop();
+        minimumFlingVelocity     = config.getScaledMinimumFlingVelocity();
+        maximumFlingVelocity     = config.getScaledMaximumFlingVelocity();
+        activity                 = (Activity)context;
+        flingSlop                = 7 * touchSlop;
     }
 
     @Override
@@ -73,11 +76,10 @@ public class MyLayout extends FrameLayout{
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        screenWidth     = MeasureSpec.getSize(widthMeasureSpec);
-        screenHeight    = MeasureSpec.getSize(heightMeasureSpec);
-        tomMaxTranslate = (screenHeight - img_tom.getMeasuredHeight()) / 2;
-        tomPositionY    = 0;
-        screenPositionY = 0;
+        screenWidth      = MeasureSpec.getSize(widthMeasureSpec);
+        screenHeight     = MeasureSpec.getSize(heightMeasureSpec);
+        tomMaxTranslateY = (screenHeight - img_tom.getMeasuredHeight()) / 2;
+        tomPositionY     = 0;
     }
 
     @Override
@@ -95,7 +97,7 @@ public class MyLayout extends FrameLayout{
                 break;
         }
         return isMoving;
-    }//
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -110,57 +112,106 @@ public class MyLayout extends FrameLayout{
             }
         }
         return true;
-    }//
+    }
 
     private void considerActionDown(MotionEvent event) {
         downX = event.getRawX();
         downY = event.getRawY();
-    }//
+    }
 
     private void considerActionMove(MotionEvent event) {
-        float translateX = event.getRawX() - downX;
-        float translateY = event.getRawY() - downY;
+        translateX = event.getRawX() - downX;
+        translateY = event.getRawY() - downY;
         if (!isMoving) {
-            if (translateX > touchSlop || Math.abs(translateY) > touchSlop) {
+            if (Math.abs(translateX) > touchSlop || Math.abs(translateY) > touchSlop) {
                 isMoving = true;
-                isHorizontalMoving = translateX > Math.abs(translateY);
+                isHorizontalMoving = Math.abs(translateX) > Math.abs(translateY);
                 velocityTracker = VelocityTracker.obtain();
             }
         }
         if (isMoving) {
             if (isHorizontalMoving) {
-                translateScreenManualHorizontal(translateX);
-            } else {
-                float tomNewPosition = tomPositionY + translateY;
-                if (tomNewPosition >= -tomMaxTranslate && tomNewPosition <= tomMaxTranslate) {
-                    translateTomManualVertical(tomNewPosition);
-                } else if (tomNewPosition < -tomMaxTranslate) {
-                    translateTomManualVertical(-tomMaxTranslate);
-                    translateScreenManualVertical(tomNewPosition + tomMaxTranslate);
+                if (translateX > 0) {
+                    translateScreenManualHorizontal(translateX);
+                    setTomFraid();
                 } else {
-                    translateTomManualVertical(tomMaxTranslate);
-                    translateScreenManualVertical(tomNewPosition - tomMaxTranslate);
+                    translateScreenManualHorizontal(0.0f);
+                    setTomWaitTouch();
+                    downX += translateX;
+                }
+            } else {
+                tomTempPositionY = tomPositionY + translateY;
+                if (tomTempPositionY >= -tomMaxTranslateY && tomTempPositionY <= tomMaxTranslateY) {
+                    translateTomManualVertical(tomTempPositionY);
+                    translateScreenManualVertical(0.0f);
+                } else if (tomTempPositionY > tomMaxTranslateY) {
+                    translateTomManualVertical(tomMaxTranslateY);
+                    translateScreenManualVertical(tomTempPositionY - tomMaxTranslateY);
+                } else {
+                    translateTomManualVertical(-tomMaxTranslateY);
+                    downY += tomTempPositionY + tomMaxTranslateY;
                 }
             }
             velocityTracker.addMovement(event);
         }
-    }//
+    }
 
     private void considerActionUp(MotionEvent event) {
         if (isMoving) {
-            velocityTracker.addMovement(event);
             velocityTracker.computeCurrentVelocity(1000, maximumFlingVelocity);
             if (isHorizontalMoving) {
-                if (Math.abs(velocityTracker.getXVelocity()) > minimumFlingVelocity) {
-                    flingScreenHorizontal(velocityTracker.getXVelocity(), event.getRawX() - downX);
+                translateX = event.getRawX() - downX;
+                velocityX  = velocityTracker.getXVelocity();
+                if (velocityX > minimumFlingVelocity && translateX > flingSlop) {
+                    flingHideScreenHorizontal(translateX).withEndAction(this::finishActivity);
                 } else {
-                    translateScreenAutomaticHorizontal(event.getRawX() - downX);
+                    translateScreenAutomaticHorizontal(translateX).withEndAction(() -> {
+                        if (translateX < DISTANCE_RATIO_HORIZONTAL * screenWidth) {
+                            setTomWaitTouch();
+                        } else {
+                            finishActivity();
+                        }
+                    });
                 }
             } else {
-                if (Math.abs(velocityTracker.getYVelocity()) > minimumFlingVelocity) {
-                    flingTomVertical(velocityTracker.getYVelocity(), event.getRawY() - downY);
+                translateY       = event.getRawY() - downY;
+                tomTempPositionY = tomPositionY + translateY;
+                velocityY        = velocityTracker.getYVelocity();
+                if (Math.abs(velocityY) > minimumFlingVelocity && Math.abs(translateY) > flingSlop) {
+                    if (tomTempPositionY <= tomMaxTranslateY) {
+                        flingTomVertical(velocityY, tomTempPositionY);
+                    } else if (velocityY > 0) {
+                        flingHideScreenVertical(
+                                tomTempPositionY - tomMaxTranslateY
+                        ).withEndAction(this::finishActivity);
+                    } else {
+                        tomPositionY = tomMaxTranslateY;
+                        translateScreenAutomaticVertical(
+                                tomTempPositionY - tomMaxTranslateY
+                        ).withEndAction(() -> {
+                            if (tomTempPositionY - tomMaxTranslateY < DISTANCE_RATIO_VERTICAL * screenHeight) {
+                                setTomWaitTouch();
+                            } else {
+                                finishActivity();
+                            }
+                        });
+                    }
                 } else {
-                    tomPositionY += event.getRawY() - downY;
+                    if (tomTempPositionY <= tomMaxTranslateY) {
+                        tomPositionY = tomTempPositionY;
+                        setTomWaitTouch();
+                    } else {
+                        tomPositionY = tomMaxTranslateY;
+                        translateScreenAutomaticVertical(
+                                tomTempPositionY - tomMaxTranslateY
+                        ).withEndAction(() -> {
+                            if (tomTempPositionY - tomMaxTranslateY < DISTANCE_RATIO_VERTICAL * screenHeight) {
+                                setTomWaitTouch();
+                            } else {
+                                finishActivity();
+                            }
+                        });
+                    }
                 }
             }
             isMoving = false;
@@ -169,39 +220,31 @@ public class MyLayout extends FrameLayout{
     }
 
     private void translateScreenManualHorizontal(float translate) {
-        if (translate <= 0) {
-            setTomWaitTouch();
-            downX += translate;
-            lyt_frame.setTranslationX(0);
-        } else {
-            setTomFraid();
-            lyt_frame.setTranslationX(translate);
-            setScreenOpacityWithTranslateHorizontal(translate);
+        if (translate < 0 || translate > screenWidth) {
+            Log.d(TAG, "Cannot translate screen to left or over right edge.");
         }
-    }//
+        lyt_frame.setTranslationX(translate);
+        setScreenOpacityWithTranslateHorizontal(translate);
+    }
 
     private void translateScreenManualVertical(float translate) {
-        if (translate <= 0) {
-            downY += translate;
-            lyt_frame.setTranslationY(0);
-        } else {
-            lyt_frame.setTranslationY(translate);
-            setScreenOpacityWithTranslateVertical(translate);
+        if (translate < 0 || translate > screenHeight) {
+            Log.d(TAG, "Cannot translate screen to top or over bottom edge.");
         }
-    }//
+        lyt_frame.setTranslationY(translate);
+        setScreenOpacityWithTranslateVertical(translate);
+    }
 
     private void translateTomManualVertical(float translate) {
-        if (translate < -tomMaxTranslate || translate > tomMaxTranslate) {
-            Log.e(TAG, "Tom cannot go out of the screen.");
-            return;
+        if (translate < -tomMaxTranslateY || translate > tomMaxTranslateY) {
+            Log.d(TAG, "Tom cannot go out of the screen.");
         }
         img_tom.setTranslationY(translate);
-    }//
+    }
 
-    private void translateScreenAutomaticHorizontal(float startPosition) {
+    private ViewPropertyAnimator translateScreenAutomaticHorizontal(float startPosition) {
         if (startPosition < 0 || startPosition > screenWidth) {
-            Log.e(TAG, "Cannot automatic translate screen with start position out-side screen.");
-            return;
+            Log.d(TAG, "Cannot automatic translate screen with start position out-side screen.");
         }
         float endOpacity;
         float endPosition;
@@ -216,7 +259,7 @@ public class MyLayout extends FrameLayout{
             duration    = (long)((screenWidth - startPosition) / screenWidth * MAX_ANIMATION_DURATION);
         }
         img_background.animate().alpha(endOpacity).setDuration(duration);
-        lyt_frame
+        return lyt_frame
                 .animate()
                 .translationX(endPosition)
                 .setDuration(duration)
@@ -229,11 +272,6 @@ public class MyLayout extends FrameLayout{
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         isRunningAnimation = false;
-                        if (endPosition == 0.0f) {
-                            setTomWaitTouch();
-                        } else {
-                            finishActivity();
-                        }
                     }
 
                     @Override
@@ -247,12 +285,11 @@ public class MyLayout extends FrameLayout{
                     }
                 });
 
-    }//
+    }
 
-    private void translateScreenAutomaticVertical(float startPosition) {
+    private ViewPropertyAnimator translateScreenAutomaticVertical(float startPosition) {
         if (startPosition < 0 || startPosition > screenHeight) {
-            Log.e(TAG, "Cannot automatic translate screen with start position out-side screen.");
-            return;
+            Log.d(TAG, "Cannot automatic translate screen with start position out-side screen.");
         }
         float endOpacity;
         float endPosition;
@@ -267,9 +304,9 @@ public class MyLayout extends FrameLayout{
             duration    = (long)((screenHeight - startPosition) / screenHeight * MAX_ANIMATION_DURATION);
         }
         img_background.animate().alpha(endOpacity).setDuration(duration);
-        lyt_frame
+        return lyt_frame
                 .animate()
-                .translationX(endPosition)
+                .translationY(endPosition)
                 .setDuration(duration)
                 .setListener(new Animator.AnimatorListener() {
                     @Override
@@ -280,9 +317,6 @@ public class MyLayout extends FrameLayout{
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         isRunningAnimation = false;
-                        if (endPosition == screenHeight) {
-                            finishActivity();
-                        }
                     }
 
                     @Override
@@ -295,33 +329,17 @@ public class MyLayout extends FrameLayout{
 
                     }
                 });
-    }//
+    }
 
-    private void flingScreenHorizontal(float velocity, float startPosition) {
+    private ViewPropertyAnimator flingHideScreenHorizontal(float startPosition) {
         if (startPosition < 0 || startPosition > screenWidth) {
-            Log.e(TAG, "Cannot fling from out-side screen.");
-            return;
+            Log.d(TAG, "Cannot fling from out-side screen.");
         }
-        if (Math.abs(velocity) < minimumFlingVelocity || Math.abs(velocity) > maximumFlingVelocity) {
-            Log.e(TAG, "Illegal fling velocity.");
-            return;
-        }
-        float endOpacity;
-        float endPosition;
-        long  duration;
-        if (velocity < 0) {
-            endOpacity  = 1.0f;
-            endPosition = 0.0f;
-            duration    = (long)(startPosition / screenWidth * MAX_FLING_DURATION);
-        } else {
-            endOpacity  = 0.0f;
-            endPosition = screenWidth;
-            duration    = (long)((screenWidth - startPosition) / screenWidth * MAX_FLING_DURATION);
-        }
-        img_background.animate().alpha(endOpacity).setDuration(duration);
-        lyt_frame
+        long  duration = (long)((screenWidth - startPosition) / screenWidth * MAX_FLING_DURATION);
+        img_background.animate().alpha(0.0f).setDuration(duration);
+        return lyt_frame
                 .animate()
-                .translationX(endPosition)
+                .translationX(screenWidth)
                 .setDuration(duration)
                 .setListener(new Animator.AnimatorListener() {
                     @Override
@@ -332,11 +350,6 @@ public class MyLayout extends FrameLayout{
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         isRunningAnimation = false;
-                        if (endPosition == 0.0f) {
-                            setTomWaitTouch();
-                        } else {
-                            finishActivity();
-                        }
                     }
 
                     @Override
@@ -349,33 +362,17 @@ public class MyLayout extends FrameLayout{
 
                     }
                 });
-    }//
+    }
 
-    private void flingScreenVertical(float velocity, float startPosition) {
+    private ViewPropertyAnimator flingHideScreenVertical(float startPosition) {
         if (startPosition < 0 || startPosition > screenHeight) {
-            Log.e(TAG, "Cannot fling from out-side screen.");
-            return;
+            Log.d(TAG, "Cannot fling from out-side screen.");
         }
-        if (Math.abs(velocity) < minimumFlingVelocity || Math.abs(velocity) > maximumFlingVelocity) {
-            Log.e(TAG, "Illegal fling velocity.");
-            return;
-        }
-        float endOpacity;
-        float endPosition;
-        long  duration;
-        if (velocity < 0) {
-            endOpacity  = 1.0f;
-            endPosition = 0.0f;
-            duration    = (long)(startPosition / screenHeight * MAX_FLING_DURATION);
-        } else {
-            endOpacity  = 0.0f;
-            endPosition = screenHeight;
-            duration    = (long)((screenHeight - startPosition) / screenHeight * MAX_FLING_DURATION);
-        }
-        img_background.animate().alpha(endOpacity).setDuration(duration);
-        lyt_frame
+        long duration = (long)((screenHeight - startPosition) / screenHeight * MAX_FLING_DURATION);
+        img_background.animate().alpha(0.0f).setDuration(duration);
+        return lyt_frame
                 .animate()
-                .translationX(endPosition)
+                .translationY(screenHeight)
                 .setDuration(duration)
                 .setListener(new Animator.AnimatorListener() {
                     @Override
@@ -386,9 +383,6 @@ public class MyLayout extends FrameLayout{
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         isRunningAnimation = false;
-                        if (endPosition == screenHeight) {
-                            finishActivity();
-                        }
                     }
 
                     @Override
@@ -401,29 +395,26 @@ public class MyLayout extends FrameLayout{
 
                     }
                 });
-    }//
+    }
 
-    private void flingTomVertical(float velocity, float startPosition) {
-        if (startPosition < -tomMaxTranslate || startPosition > tomMaxTranslate) {
-            Log.e(TAG, "Tom cannot fling from out-side screen.");
-            return;
-        }
+    private ViewPropertyAnimator flingTomVertical(float velocity, float startPosition) {
         if (Math.abs(velocity) < minimumFlingVelocity || Math.abs(velocity) > maximumFlingVelocity) {
-            Log.e(TAG, "Illegal fling velocity.");
-            return;
+            Log.d(TAG, "Illegal fling velocity.");
         }
-        float tomNewPositon;
-        long  duration;
+        if (startPosition < -tomMaxTranslateY || startPosition > tomMaxTranslateY) {
+            Log.d(TAG, "Tom cannot fling from out-side screen.");
+        }
+        long duration;
         if (velocity > 0) {
-            tomNewPositon = tomMaxTranslate;
-            duration      = (long)((tomMaxTranslate - startPosition) / tomMaxTranslate / 2 * MAX_FLING_DURATION);
+            tomPositionY = tomMaxTranslateY;
+            duration     = (long)((tomMaxTranslateY - startPosition) / tomMaxTranslateY / 2 * MAX_FLING_DURATION);
         } else {
-            tomNewPositon = -tomMaxTranslate;
-            duration      = (long)((tomMaxTranslate + startPosition) / tomMaxTranslate / 2 * MAX_FLING_DURATION);
+            tomPositionY = -tomMaxTranslateY;
+            duration     = (long)((tomMaxTranslateY + startPosition) / tomMaxTranslateY / 2 * MAX_FLING_DURATION);
         }
-        img_tom
+        return img_tom
                 .animate()
-                .translationY(tomNewPositon)
+                .translationY(tomPositionY)
                 .setDuration(duration)
                 .setListener(new Animator.AnimatorListener() {
                     @Override
@@ -453,38 +444,36 @@ public class MyLayout extends FrameLayout{
 
                     }
                 });
-    }//
+    }
 
     private void setTomWaitTouch() {
         img_tom.setImageResource(R.drawable.img_tom_wait_touch);
-    }//
+    }
 
     private void setTomLaugh() {
         img_tom.setImageResource(R.drawable.img_tom_laugh);
-    }//
+    }
 
     private void setTomFraid() {
         img_tom.setImageResource(R.drawable.img_tom_afraid);
-    }//
+    }
 
     private void setScreenOpacityWithTranslateHorizontal(float position) {
-        if (position < 0) {
-            Log.e(TAG, "Cannot set opacity with negative position.");
-            return;
+        if (position < 0 || position > screenWidth) {
+            Log.d(TAG, "Cannot set opacity with position out-side screen.");
         }
         img_background.setAlpha((screenWidth - position) / screenWidth);
-    }//
+    }
 
     private void setScreenOpacityWithTranslateVertical(float position) {
-        if (position < 0) {
-            Log.e(TAG, "Cannot set opacity with negative position.");
-            return;
+        if (position < 0 || position > screenHeight) {
+            Log.d(TAG, "Cannot set opacity with position out-side screen.");
         }
         img_background.setAlpha((screenHeight - position) / screenHeight);
-    }//
+    }
 
     private void finishActivity() {
         activity.finish();
         activity.overridePendingTransition(0, 0);
-    }//
+    }
 }
