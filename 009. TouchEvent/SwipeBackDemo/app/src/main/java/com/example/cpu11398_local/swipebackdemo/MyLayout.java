@@ -14,6 +14,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewPropertyAnimator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class MyLayout extends FrameLayout{
 
@@ -29,7 +30,7 @@ public class MyLayout extends FrameLayout{
     private float           translateX, translateY;
     private float           velocityX, velocityY;
 
-    private float           touchSlop, flingSlop;
+    private float           touchSlop;
     private float           minimumFlingVelocity, maximumFlingVelocity;
 
     private boolean         isMoving, isHorizontalMoving, isRunningAnimation;
@@ -59,10 +60,9 @@ public class MyLayout extends FrameLayout{
     private void init(Context context) {
         ViewConfiguration config = ViewConfiguration.get(context);
         touchSlop                = config.getScaledTouchSlop();
-        minimumFlingVelocity     = config.getScaledMinimumFlingVelocity();
+        minimumFlingVelocity     = 10 * config.getScaledMinimumFlingVelocity();
         maximumFlingVelocity     = config.getScaledMaximumFlingVelocity();
         activity                 = (Activity)context;
-        flingSlop                = 7 * touchSlop;
     }
 
     @Override
@@ -162,7 +162,7 @@ public class MyLayout extends FrameLayout{
             if (isHorizontalMoving) {
                 translateX = event.getRawX() - downX;
                 velocityX  = velocityTracker.getXVelocity();
-                if (velocityX > minimumFlingVelocity && translateX > flingSlop) {
+                if (velocityX > minimumFlingVelocity) {
                     flingHideScreenHorizontal(translateX).withEndAction(this::finishActivity);
                 } else {
                     translateScreenAutomaticHorizontal(translateX).withEndAction(() -> {
@@ -177,10 +177,10 @@ public class MyLayout extends FrameLayout{
                 translateY       = event.getRawY() - downY;
                 tomTempPositionY = tomPositionY + translateY;
                 velocityY        = velocityTracker.getYVelocity();
-                if (Math.abs(velocityY) > minimumFlingVelocity && Math.abs(translateY) > flingSlop) {
+                if (Math.abs(velocityY) > minimumFlingVelocity) {
                     if (tomTempPositionY <= tomMaxTranslateY) {
                         flingTomVertical(velocityY, tomTempPositionY);
-                    } else if (velocityY > 0) {
+                    } else if (velocityY > 0 && tomPositionY == tomMaxTranslateY) {
                         flingHideScreenVertical(
                                 tomTempPositionY - tomMaxTranslateY
                         ).withEndAction(this::finishActivity);
