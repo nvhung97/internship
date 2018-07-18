@@ -218,10 +218,22 @@
 		+ http://www.otroskopohistvo.si/otroska-soba-01-talking-tom.html
 		+ https://developer.android.com/reference/android/view/VelocityTracker
 		+ https://developer.android.com/reference/android/view/ViewConfiguration
-.		+ https://developer.android.com/reference/android/support/v4/widget/NestedScrollView
 		+ https://developer.android.com/guide/topics/graphics/fling-animation
 https://tech.pic-collage.com/something-about-android-windowistranslucent-641cc02ff66f
+
+5:14 PM 7/18/2018
+	- NestedScrollingView
+.		+ https://developer.android.com/reference/android/support/v4/widget/NestedScrollView
+		+ https://developer.android.com/reference/android/support/v4/view/NestedScrollingParent
+		+ https://developer.android.com/reference/android/support/v4/view/NestedScrollingParent2
+		+ https://developer.android.com/reference/android/support/v4/view/NestedScrollingParentHelper
+		+ https://developer.android.com/reference/android/support/v4/view/NestedScrollingChild
+		+ https://developer.android.com/reference/android/support/v4/view/NestedScrollingChild2
+		+ https://developer.android.com/reference/android/support/v4/view/NestedScrollingChildHelper
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
 https://www.youtube.com/watch?v=jXf9A0c4qLw
+
+https://engineeringblog.yelp.com/2018/06/how-yelp-modularized-the-android-app.html
+http://sijinjoseph.com/programmer-competency-matrix/
