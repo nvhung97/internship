@@ -1,6 +1,7 @@
 package com.example.cpu11398_local.swipebackdemo;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
@@ -10,7 +11,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
+import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -29,17 +32,17 @@ public class MyLayout extends FrameLayout{
     private float           translateX, translateY;
     private float           velocityX, velocityY;
 
-    private float           touchSlop, flingSlop;
+    private float           touchSlop;
     private float           minimumFlingVelocity, maximumFlingVelocity;
 
     private boolean         isMoving, isHorizontalMoving, isRunningAnimation;
 
-    private Activity        activity;
+    private Context         context;
     private VelocityTracker velocityTracker;
 
     private FrameLayout     lyt_frame;
-    private ImageView       img_background;
     private ImageView       img_tom;
+    private View            background;
 
     public MyLayout(@NonNull Context context) {
         super(context);
@@ -56,21 +59,29 @@ public class MyLayout extends FrameLayout{
         init(context);
     }
 
-    private void init(Context context) {
-        ViewConfiguration config = ViewConfiguration.get(context);
+    private void init(Context ctx) {
+        ViewConfiguration config = ViewConfiguration.get(ctx);
         touchSlop                = config.getScaledTouchSlop();
-        minimumFlingVelocity     = config.getScaledMinimumFlingVelocity();
+        minimumFlingVelocity     = 10 * config.getScaledMinimumFlingVelocity();
         maximumFlingVelocity     = config.getScaledMaximumFlingVelocity();
-        activity                 = (Activity)context;
-        flingSlop                = 7 * touchSlop;
+        context                  = ctx;
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         lyt_frame       = findViewById(R.id.lyt_frame);
-        img_background  = findViewById(R.id.img_background);
         img_tom         = findViewById(R.id.img_tom);
+        background      = new View(context);
+        background.setBackgroundColor(getResources().getColor(R.color.colorLightBlack));
+        addView(
+                background,
+                new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                )
+        );
+        lyt_frame.bringToFront();
     }
 
     @Override
@@ -162,7 +173,7 @@ public class MyLayout extends FrameLayout{
             if (isHorizontalMoving) {
                 translateX = event.getRawX() - downX;
                 velocityX  = velocityTracker.getXVelocity();
-                if (velocityX > minimumFlingVelocity && translateX > flingSlop) {
+                if (velocityX > minimumFlingVelocity) {
                     flingHideScreenHorizontal(translateX).withEndAction(this::finishActivity);
                 } else {
                     translateScreenAutomaticHorizontal(translateX).withEndAction(() -> {
@@ -177,10 +188,10 @@ public class MyLayout extends FrameLayout{
                 translateY       = event.getRawY() - downY;
                 tomTempPositionY = tomPositionY + translateY;
                 velocityY        = velocityTracker.getYVelocity();
-                if (Math.abs(velocityY) > minimumFlingVelocity && Math.abs(translateY) > flingSlop) {
+                if (Math.abs(velocityY) > minimumFlingVelocity) {
                     if (tomTempPositionY <= tomMaxTranslateY) {
                         flingTomVertical(velocityY, tomTempPositionY);
-                    } else if (velocityY > 0 && tomTempPositionY - tomMaxTranslateY > flingSlop) {
+                    } else if (velocityY > 0 && tomPositionY == tomMaxTranslateY) {
                         flingHideScreenVertical(
                                 tomTempPositionY - tomMaxTranslateY
                         ).withEndAction(this::finishActivity);
@@ -246,24 +257,21 @@ public class MyLayout extends FrameLayout{
         if (startPosition < 0 || startPosition > screenWidth) {
             Log.d(TAG, "Cannot automatic translate screen with start position out-side screen.");
         }
-        float endOpacity;
         float endPosition;
         long  duration;
         if (startPosition < DISTANCE_RATIO_HORIZONTAL * screenWidth) {
-            endOpacity  = 1.0f;
             endPosition = 0.0f;
             duration    = (long)(startPosition / screenWidth * MAX_ANIMATION_DURATION);
         } else {
-            endOpacity  = 0.0f;
             endPosition = screenWidth;
             duration    = (long)((screenWidth - startPosition) / screenWidth * MAX_ANIMATION_DURATION);
         }
-        img_background.animate().alpha(endOpacity).setDuration(duration);
         return lyt_frame
                 .animate()
                 .translationX(endPosition)
                 .setDuration(duration)
-                .setListener(new Animator.AnimatorListener() {
+                .setUpdateListener(value -> setScreenOpacityWithTranslateHorizontal(lyt_frame.getTranslationX()))
+                .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animation) {
                         isRunningAnimation = true;
@@ -272,16 +280,6 @@ public class MyLayout extends FrameLayout{
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         isRunningAnimation = false;
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
                     }
                 });
 
@@ -291,24 +289,21 @@ public class MyLayout extends FrameLayout{
         if (startPosition < 0 || startPosition > screenHeight) {
             Log.d(TAG, "Cannot automatic translate screen with start position out-side screen.");
         }
-        float endOpacity;
         float endPosition;
         long  duration;
         if (startPosition < DISTANCE_RATIO_VERTICAL * screenHeight) {
-            endOpacity  = 1.0f;
             endPosition = 0.0f;
             duration    = (long)(startPosition / screenHeight * MAX_ANIMATION_DURATION);
         } else {
-            endOpacity  = 0.0f;
             endPosition = screenHeight;
             duration    = (long)((screenHeight - startPosition) / screenHeight * MAX_ANIMATION_DURATION);
         }
-        img_background.animate().alpha(endOpacity).setDuration(duration);
         return lyt_frame
                 .animate()
                 .translationY(endPosition)
                 .setDuration(duration)
-                .setListener(new Animator.AnimatorListener() {
+                .setUpdateListener(value -> setScreenOpacityWithTranslateVertical(lyt_frame.getTranslationY()))
+                .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animation) {
                         isRunningAnimation = true;
@@ -317,16 +312,6 @@ public class MyLayout extends FrameLayout{
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         isRunningAnimation = false;
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
                     }
                 });
     }
@@ -335,13 +320,12 @@ public class MyLayout extends FrameLayout{
         if (startPosition < 0 || startPosition > screenWidth) {
             Log.d(TAG, "Cannot fling from out-side screen.");
         }
-        long  duration = (long)((screenWidth - startPosition) / screenWidth * MAX_FLING_DURATION);
-        img_background.animate().alpha(0.0f).setDuration(duration);
         return lyt_frame
                 .animate()
                 .translationX(screenWidth)
-                .setDuration(duration)
-                .setListener(new Animator.AnimatorListener() {
+                .setDuration((long)((screenWidth - startPosition) / screenWidth * MAX_FLING_DURATION))
+                .setUpdateListener(value -> setScreenOpacityWithTranslateHorizontal(lyt_frame.getTranslationX()))
+                .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animation) {
                         isRunningAnimation = true;
@@ -350,16 +334,6 @@ public class MyLayout extends FrameLayout{
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         isRunningAnimation = false;
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
                     }
                 });
     }
@@ -368,13 +342,12 @@ public class MyLayout extends FrameLayout{
         if (startPosition < 0 || startPosition > screenHeight) {
             Log.d(TAG, "Cannot fling from out-side screen.");
         }
-        long duration = (long)((screenHeight - startPosition) / screenHeight * MAX_FLING_DURATION);
-        img_background.animate().alpha(0.0f).setDuration(duration);
         return lyt_frame
                 .animate()
                 .translationY(screenHeight)
-                .setDuration(duration)
-                .setListener(new Animator.AnimatorListener() {
+                .setDuration((long)((screenHeight - startPosition) / screenHeight * MAX_FLING_DURATION))
+                .setUpdateListener(value -> setScreenOpacityWithTranslateVertical(lyt_frame.getTranslationY()))
+                .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animation) {
                         isRunningAnimation = true;
@@ -383,16 +356,6 @@ public class MyLayout extends FrameLayout{
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         isRunningAnimation = false;
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
                     }
                 });
     }
@@ -416,7 +379,7 @@ public class MyLayout extends FrameLayout{
                 .animate()
                 .translationY(tomPositionY)
                 .setDuration(duration)
-                .setListener(new Animator.AnimatorListener() {
+                .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animation) {
                         isRunningAnimation = true;
@@ -432,16 +395,6 @@ public class MyLayout extends FrameLayout{
                                 },
                                 MAX_ANIMATION_DURATION
                         );
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
                     }
                 });
     }
@@ -462,18 +415,18 @@ public class MyLayout extends FrameLayout{
         if (position < 0 || position > screenWidth) {
             Log.d(TAG, "Cannot set opacity with position out-side screen.");
         }
-        img_background.setAlpha((screenWidth - position) / screenWidth);
+        background.setAlpha((screenWidth - position) / screenWidth);
     }
 
     private void setScreenOpacityWithTranslateVertical(float position) {
         if (position < 0 || position > screenHeight) {
             Log.d(TAG, "Cannot set opacity with position out-side screen.");
         }
-        img_background.setAlpha((screenHeight - position) / screenHeight);
+        background.setAlpha((screenHeight - position) / screenHeight);
     }
 
     private void finishActivity() {
-        activity.finish();
-        activity.overridePendingTransition(0, 0);
+        ((Activity)context).finish();
+        ((Activity)context).overridePendingTransition(0, 0);
     }
 }
