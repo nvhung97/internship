@@ -209,6 +209,7 @@
 4:19 PM 7/11/2018
 	- onTouch, onInterceptTouch, setOnTouchListener
 		+ https://stackoverflow.com/questions/7449799/how-are-android-touch-events-delivered/46862320#46862320
+		+ http://codetheory.in/understanding-android-input-touch-events/
 
 4:20 PM 7/12/2018
 2:40 PM 7/13/2018
@@ -222,6 +223,7 @@
 https://tech.pic-collage.com/something-about-android-windowistranslucent-641cc02ff66f
 
 5:14 PM 7/18/2018
+10:55 AM 7/19/2018
 	- NestedScrollingView
 .		+ https://developer.android.com/reference/android/support/v4/widget/NestedScrollView
 		+ https://developer.android.com/reference/android/support/v4/view/NestedScrollingParent
@@ -230,6 +232,8 @@ https://tech.pic-collage.com/something-about-android-windowistranslucent-641cc02
 		+ https://developer.android.com/reference/android/support/v4/view/NestedScrollingChild
 		+ https://developer.android.com/reference/android/support/v4/view/NestedScrollingChild2
 		+ https://developer.android.com/reference/android/support/v4/view/NestedScrollingChildHelper
+		+ https://coolegos.github.io/2017/11/01/NestedScrolling%E7%AC%94%E8%AE%B0/
+		+ https://marishunxiang.github.io/2017/08/27/Android-Nested-Scrolling/
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/

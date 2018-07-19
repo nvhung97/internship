@@ -1,7 +1,6 @@
 package com.example.cpu11398_local.swipebackdemo;
 
 import android.graphics.drawable.AnimationDrawable;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -16,6 +15,5 @@ public class TomActivity extends AppCompatActivity {
         AnimationDrawable animation = (AnimationDrawable)getDrawable(R.drawable.img_tom_greeting);
         img_tom.setImageDrawable(animation);
         animation.start();
-        NestedScrollView
     }
 }
