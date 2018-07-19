@@ -180,7 +180,7 @@ public class MyLayout extends FrameLayout{
                 if (Math.abs(velocityY) > minimumFlingVelocity && Math.abs(translateY) > flingSlop) {
                     if (tomTempPositionY <= tomMaxTranslateY) {
                         flingTomVertical(velocityY, tomTempPositionY);
-                    } else if (velocityY > 0) {
+                    } else if (velocityY > 0 && tomTempPositionY - tomMaxTranslateY > flingSlop) {
                         flingHideScreenVertical(
                                 tomTempPositionY - tomMaxTranslateY
                         ).withEndAction(this::finishActivity);
