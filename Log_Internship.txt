@@ -224,6 +224,7 @@ https://tech.pic-collage.com/something-about-android-windowistranslucent-641cc02
 
 5:14 PM 7/18/2018
 10:55 AM 7/19/2018
+4:37 PM 7/20/2018
 	- NestedScrollingView
 .		+ https://developer.android.com/reference/android/support/v4/widget/NestedScrollView
 		+ https://developer.android.com/reference/android/support/v4/view/NestedScrollingParent

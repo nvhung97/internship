@@ -49,6 +49,7 @@ public class MyView extends TextView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        getParent().requestDisallowInterceptTouchEvent(true);
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 Log.d(TAG, "MyView onTouchEvent DOWN");
@@ -65,6 +66,6 @@ public class MyView extends TextView {
         }
         boolean b = super.onTouchEvent(event);
         Log.d(TAG, "MyView onTouchEvent RETURNS " + b);
-        return b;
+        return true;
     }
 }
