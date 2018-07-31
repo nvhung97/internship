@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.NestedScrollingParentHelper;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -36,7 +35,7 @@ public class MyNestedScrollingParent extends FrameLayout {
     private VelocityTracker             velocityTracker;
     private Context                     context;
     private ViewPropertyAnimator        animator;
-    private NestedScrollView            nestedScrollingChild;
+    private MyNestedScrollingChild      nestedScrollingChild;
 
     public MyNestedScrollingParent(@NonNull Context context) {
         super(context);
@@ -304,20 +303,20 @@ public class MyNestedScrollingParent extends FrameLayout {
     @Override
     public void onNestedScroll(@NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         if (dyUnconsumed != 0) {
-            screenPositionY -= dyUnconsumed;
+            screenPositionY += dyUnconsumed;
             translateScreenManualVertical(screenPositionY);
         }
     }
 
     @Override
     public void onNestedPreScroll(@NonNull View target, int dx, int dy, @NonNull int[] consumed) {
-        if ((screenPositionY > 0 && dy > 0) || (screenPositionY < 0 && dy < 0)) {
+        if ((screenPositionY > 0 && dy < 0) || (screenPositionY < 0 && dy > 0)) {
             if (Math.abs(screenPositionY) >= Math.abs(dy)) {
                 consumed[1] = dy;
-                screenPositionY -= dy;
+                screenPositionY += dy;
                 translateScreenManualVertical(screenPositionY);
             } else {
-                consumed[1] = (int)screenPositionY;
+                consumed[1] = -(int)screenPositionY;
                 screenPositionY = 0.0f;
                 translateScreenManualVertical(screenPositionY);
             }
@@ -329,7 +328,7 @@ public class MyNestedScrollingParent extends FrameLayout {
         if (!consumed) {
             if (screenPositionY != 0) {
                 if (Math.abs(velocityY) > minimumFlingVelocity && Math.abs(velocityY) < maximumFlingVelocity) {
-                    flingScreenVertical(screenPositionY, -velocityY).withEndAction(() -> {
+                    flingScreenVertical(screenPositionY, velocityY).withEndAction(() -> {
                         if (nestedScrollingChild.getTranslationY() != 0) {
                             finishActivity();
                         } else {
@@ -347,7 +346,7 @@ public class MyNestedScrollingParent extends FrameLayout {
     public boolean onNestedPreFling(@NonNull View target, float velocityX, float velocityY) {
         if (screenPositionY != 0) {
             if (Math.abs(velocityY) > minimumFlingVelocity && Math.abs(velocityY) < maximumFlingVelocity) {
-                flingScreenVertical(screenPositionY, -velocityY).withEndAction(() -> {
+                flingScreenVertical(screenPositionY, velocityY).withEndAction(() -> {
                     if (nestedScrollingChild.getTranslationY() != 0) {
                         finishActivity();
                     } else {
