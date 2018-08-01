@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -169,6 +170,7 @@ public class MyNestedScrollingChild extends FrameLayout{
         if (isVerticalMoving) {
             velocityTracker.computeCurrentVelocity(1000, maximumFlingVelocity);
             velocityY = velocityTracker.getYVelocity();
+            Log.e("Test", "check"+velocityY);
             if (Math.abs(velocityY) > minimumFlingVelocity && Math.abs(velocityY) < maximumFlingVelocity) {
                 if (!dispatchNestedPreFling(0.0f, velocityY)) {
                     if (listItemPositionY < 0 && listItemPositionY > -listItemHeight + screenHeight) {
