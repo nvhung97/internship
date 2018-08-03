@@ -226,6 +226,7 @@ https://tech.pic-collage.com/something-about-android-windowistranslucent-641cc02
 10:55 AM 7/19/2018
 4:37 PM 7/20/2018
 5:23 PM 7/31/2018
+8:30 AM 8/1/2018
 	- NestedScrollingView
 .		+ https://developer.android.com/reference/android/support/v4/widget/NestedScrollView
 		+ https://developer.android.com/reference/android/support/v4/view/NestedScrollingParent
@@ -237,9 +238,19 @@ https://tech.pic-collage.com/something-about-android-windowistranslucent-641cc02
 		+ https://coolegos.github.io/2017/11/01/NestedScrolling%E7%AC%94%E8%AE%B0/
 		+ https://marishunxiang.github.io/2017/08/27/Android-Nested-Scrolling/
 
+8:31 AM 8/2/2018
+8:33 AM 8/3/2018
+	- RecyclerView
+		+ https://viblo.asia/p/recycleview-la-gi-so-sanh-voi-listview-WAyK8xWoKxX
+		+ https://viblo.asia/p/recyclerview-trong-android-phan-2-p1PvQ5W9vldr
+		+ https://developer.android.com/reference/android/support/v7/widget/RecyclerView.ItemDecoration
+		+ https://stackoverflow.com/questions/35188413/how-to-determine-column-position-in-staggered-grid-layout-manager
+		+ https://medium.com/@ruut_j/a-recyclerview-with-multiple-item-types-bce7fbd1d30e
+
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
 https://www.youtube.com/watch?v=jXf9A0c4qLw
 
 https://engineeringblog.yelp.com/2018/06/how-yelp-modularized-the-android-app.html
 http://sijinjoseph.com/programmer-competency-matrix/
+https://en.wikipedia.org/wiki/Double-checked_locking

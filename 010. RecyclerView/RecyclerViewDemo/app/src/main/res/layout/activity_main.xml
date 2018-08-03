@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.hung_pc.recyclerviewdemo.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="25dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <Button
+            android:id="@+id/btn_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/linear_layout"
+            android:textAllCaps="false"/>
+        <Button
+            android:id="@+id/btn_grid_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/grid_layout"
+            android:textAllCaps="false"/>
+        <Button
+            android:id="@+id/btn_staggerd_grid_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/staggered_grid_layout"
+            android:textAllCaps="false"/>
+        <Button
+            android:id="@+id/btn_item_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/item_animation"
+            android:textAllCaps="false"/>
+        <Button
+            android:id="@+id/btn_multiple_item_types"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/multiple_item_types"
+            android:textAllCaps="false"/>
+        <Button
+            android:id="@+id/btn_listener"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/listener"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

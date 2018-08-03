@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">RecyclerViewDemo</string>
+    <string name="menu">Menu</string>
+    <string name="linear_layout">Linear Layout</string>
+    <string name="grid_layout">Grid Layout</string>
+    <string name="staggered_grid_layout">Staggered Grid Layout</string>
+    <string name="item_animation">Item Animation</string>
+    <string name="multiple_item_types">Multiple Item Types</string>
+    <string name="listener">Listener</string>
+</resources>
