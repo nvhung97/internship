@@ -2,8 +2,11 @@ package com.example.hung_pc.recyclerviewdemo.multiple_item_types;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+
 import com.example.hung_pc.recyclerviewdemo.R;
 import com.example.hung_pc.recyclerviewdemo.multiple_item_types.adapter.MultipleItemTypesAdapter;
 import com.example.hung_pc.recyclerviewdemo.multiple_item_types.divider.MultipleItemTypesDivider;

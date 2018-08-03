@@ -29,7 +29,10 @@
             android:label="@string/staggered_grid_layout" />
         <activity
             android:name=".multiple_item_types.MultipleItemTypesActivity"
-            android:label="@string/multiple_item_types"/>
+            android:label="@string/multiple_item_types" />
+        <activity
+            android:name=".swipe_delete_item.SwipeDeleteItemActivity"
+            android:label="@string/swipe_delete_item"/>
     </application>
 
 </manifest>

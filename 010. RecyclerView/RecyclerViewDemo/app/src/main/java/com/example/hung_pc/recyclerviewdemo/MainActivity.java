@@ -7,6 +7,7 @@ import com.example.hung_pc.recyclerviewdemo.grid_layout.GridLayoutActivity;
 import com.example.hung_pc.recyclerviewdemo.linear_layout.LinearLayoutActivity;
 import com.example.hung_pc.recyclerviewdemo.multiple_item_types.MultipleItemTypesActivity;
 import com.example.hung_pc.recyclerviewdemo.staggered_grid_layout.StaggeredGridLayoutActivity;
+import com.example.hung_pc.recyclerviewdemo.swipe_delete_item.SwipeDeleteItemActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_grid_layout).setOnClickListener(v -> startActivity(new Intent(this, GridLayoutActivity.class)));
         findViewById(R.id.btn_staggerd_grid_layout).setOnClickListener(v -> startActivity(new Intent(this, StaggeredGridLayoutActivity.class)));
         findViewById(R.id.btn_multiple_item_types).setOnClickListener(v -> startActivity(new Intent(this, MultipleItemTypesActivity.class)));
-        /*findViewById(R.id.btn_).setOnClickListener(v -> startActivity(new Intent(this, Activity.class)));
-        findViewById(R.id.btn_).setOnClickListener(v -> startActivity(new Intent(this, Activity.class)));*/
+        findViewById(R.id.btn_swipe_delete_item).setOnClickListener(v -> startActivity(new Intent(this, SwipeDeleteItemActivity.class)));
+        /*findViewById(R.id.btn_).setOnClickListener(v -> startActivity(new Intent(this, Activity.class)));*/
     }
 }

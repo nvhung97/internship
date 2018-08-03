@@ -6,5 +6,6 @@
     <string name="staggered_grid_layout">Staggered Grid Layout</string>
     <string name="item_animation">Item Animation</string>
     <string name="multiple_item_types">Multiple Item Types</string>
+    <string name="swipe_delete_item">Swipe Delete Item</string>
     <string name="listener">Listener</string>
 </resources>

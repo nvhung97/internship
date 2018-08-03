@@ -4,6 +4,7 @@ import com.example.hung_pc.recyclerviewdemo.multiple_item_types.item_type.ItemTy
 import com.example.hung_pc.recyclerviewdemo.multiple_item_types.item_type.TypeGroup;
 import com.example.hung_pc.recyclerviewdemo.multiple_item_types.item_type.TypeItem;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class DataSource {
 
     public static List<String> getDataSource() {
         if (listItem == null) {
-            listItem = Arrays.asList(
+            listItem = new ArrayList<>(Arrays.asList(
                     "A A A A A A A A A A A ",
                     "B B B B B B B",
                     "C C C C C C C C C C C",
@@ -45,14 +46,14 @@ public class DataSource {
                     "X X X X X X",
                     "Y Y Y Y Y Y Y Y Y",
                     "Z Z Z Z  Z"
-            );
+            ));
         }
         return listItem;
     }
 
     public static List<ItemType> getDataSourceWithType() {
         if (listItemWithGroup == null) {
-            listItemWithGroup = Arrays.asList(
+            listItemWithGroup = new ArrayList<>(Arrays.asList(
                     new TypeGroup("Group 1"),
                     new TypeItem("A A A A A A A A A A A"),
                     new TypeItem("B B B B B B B"),
@@ -83,7 +84,7 @@ public class DataSource {
                     new TypeItem("X X X X X X"),
                     new TypeItem("Y Y Y Y Y Y Y Y Y"),
                     new TypeItem("Z Z Z Z Z")
-            );
+            ));
         }
         return listItemWithGroup;
     }

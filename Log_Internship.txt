@@ -246,6 +246,9 @@ https://tech.pic-collage.com/something-about-android-windowistranslucent-641cc02
 		+ https://developer.android.com/reference/android/support/v7/widget/RecyclerView.ItemDecoration
 		+ https://stackoverflow.com/questions/35188413/how-to-determine-column-position-in-staggered-grid-layout-manager
 		+ https://medium.com/@ruut_j/a-recyclerview-with-multiple-item-types-bce7fbd1d30e
+		+ https://www.androidhive.info/2017/09/android-recyclerview-swipe-delete-undo-using-itemtouchhelper/
+
+add, remove, change, slide to remove, load less
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/

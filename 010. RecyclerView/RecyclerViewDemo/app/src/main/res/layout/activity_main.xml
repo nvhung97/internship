@@ -45,6 +45,12 @@
             android:text="@string/multiple_item_types"
             android:textAllCaps="false"/>
         <Button
+            android:id="@+id/btn_swipe_delete_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/swipe_delete_item"
+            android:textAllCaps="false"/>
+        <Button
             android:id="@+id/btn_listener"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
