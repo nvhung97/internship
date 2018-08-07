@@ -32,7 +32,10 @@
             android:label="@string/multiple_item_types" />
         <activity
             android:name=".swipe_delete_item.SwipeDeleteItemActivity"
-            android:label="@string/swipe_delete_item"/>
+            android:label="@string/swipe_delete_item" />
+        <activity
+            android:name=".diff_util.DiffUtilActivity"
+            android:label="@string/diff_util"/>
     </application>
 
 </manifest>

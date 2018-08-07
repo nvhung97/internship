@@ -8,4 +8,5 @@
     <string name="multiple_item_types">Multiple Item Types</string>
     <string name="swipe_delete_item">Swipe Delete Item</string>
     <string name="listener">Listener</string>
+    <string name="diff_util">DiffUtil</string>
 </resources>

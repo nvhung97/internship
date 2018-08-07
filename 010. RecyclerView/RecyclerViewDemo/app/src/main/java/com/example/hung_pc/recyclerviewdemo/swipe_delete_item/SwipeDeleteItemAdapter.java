@@ -52,6 +52,6 @@ public class SwipeDeleteItemAdapter extends RecyclerView.Adapter<SwipeDeleteItem
 
     public void removeAt(int position) {
         listItem.remove(position);
-        notifyDataSetChanged();
+        notifyItemRemoved(position);
     }
 }

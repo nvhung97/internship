@@ -240,6 +240,7 @@ https://tech.pic-collage.com/something-about-android-windowistranslucent-641cc02
 
 8:31 AM 8/2/2018
 8:33 AM 8/3/2018
+10:44 AM 8/7/2018
 	- RecyclerView
 		+ https://viblo.asia/p/recycleview-la-gi-so-sanh-voi-listview-WAyK8xWoKxX
 		+ https://viblo.asia/p/recyclerview-trong-android-phan-2-p1PvQ5W9vldr
@@ -247,8 +248,11 @@ https://tech.pic-collage.com/something-about-android-windowistranslucent-641cc02
 		+ https://stackoverflow.com/questions/35188413/how-to-determine-column-position-in-staggered-grid-layout-manager
 		+ https://medium.com/@ruut_j/a-recyclerview-with-multiple-item-types-bce7fbd1d30e
 		+ https://www.androidhive.info/2017/09/android-recyclerview-swipe-delete-undo-using-itemtouchhelper/
+		+ https://nankainotes.com/topic/diffutil-is-a-must/
+		+ https://hellsoft.se/a-nice-combination-of-rxjava-and-diffutil-fe3807186012
 
 add, remove, change, slide to remove, load less
+reimplement swipe to remove item using onItemTouchListener (Trong adapter truyền callback vào view, khi vuốt ngang thì disallow cha để cha không vuốt dọc được, khi con chờ nhấn delete thì con gọi callback để adapter ghi nhận con nào đang chờ. Gọi call back để adapter biết khi con bị remove. Tại onItemTouchListener khi có sự kiện vuốt dọc thì từ rv lấy ra adapter và kiểm tra xem có con nào đang chờ delete, nếu có reset con).
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/

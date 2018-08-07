@@ -56,6 +56,12 @@
             android:layout_height="wrap_content"
             android:text="@string/listener"
             android:textAllCaps="false"/>
+        <Button
+            android:id="@+id/btn_diff_util"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/diff_util"
+            android:textAllCaps="false"/>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
