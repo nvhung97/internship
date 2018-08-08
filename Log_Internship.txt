@@ -254,6 +254,12 @@ https://tech.pic-collage.com/something-about-android-windowistranslucent-641cc02
 add, remove, change, slide to remove, load less
 reimplement swipe to remove item using onItemTouchListener (Trong adapter truyền callback vào view, khi vuốt ngang thì disallow cha để cha không vuốt dọc được, khi con chờ nhấn delete thì con gọi callback để adapter ghi nhận con nào đang chờ. Gọi call back để adapter biết khi con bị remove. Tại onItemTouchListener khi có sự kiện vuốt dọc thì từ rv lấy ra adapter và kiểm tra xem có con nào đang chờ delete, nếu có reset con).
 
+TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
+9:44 AM 8/8/2018
+	- Thiết kế database và flow usercase
+
+
+
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
 https://www.youtube.com/watch?v=jXf9A0c4qLw
@@ -261,3 +267,6 @@ https://www.youtube.com/watch?v=jXf9A0c4qLw
 https://engineeringblog.yelp.com/2018/06/how-yelp-modularized-the-android-app.html
 http://sijinjoseph.com/programmer-competency-matrix/
 https://en.wikipedia.org/wiki/Double-checked_locking
+
+https://www.dkn.tv/doi-song/17-buc-anh-day-xuc-dong-khien-trai-tim-ban-tan-chay-ngay-lap-tuc.html
+https://ins.dkn.tv/giaitri/cam-dong-hinh-anh-ve-8-chu-cho-trung-thanh.html
