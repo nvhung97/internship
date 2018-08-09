@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Welcome activity-->
+    <item name="welcome_activity_btn_login" type="id"/>
+    <item name="welcome_activity_btn_register" type="id"/>
+
+    <!--Login activity-->
+    <item name="login_activity_status_bar" type="id"/>
+    <item name="login_activity_toolbar" type="id"/>
+    <item name="login_activity_btn_back_arrow" type="id"/>
+    <item name="login_activity_txt_title" type="id"/>
+    <item name="login_activity_txt_input_hint" type="id"/>
+    <item name="login_activity_edt_username" type="id"/>
+    <item name="login_activity_edt_password" type="id"/>
+    <item name="login_activity_btn_login" type="id"/>
+
+    <!--Register activity-->
+    <item name="register_activity_status_bar" type="id"/>
+    <item name="register_activity_toolbar" type="id"/>
+    <item name="register_activity_btn_back_arrow" type="id"/>
+    <item name="register_activity_txt_title" type="id"/>
+    <item name="register_activity_txt_input_hint" type="id"/>
+    <item name="register_activity_edt_name" type="id"/>
+    <item name="register_activity_edt_username" type="id"/>
+    <item name="register_activity_edt_password" type="id"/>
+    <item name="register_activity_edt_phone" type="id"/>
+    <item name="register_activity_btn_register" type="id"/>
+</resources>

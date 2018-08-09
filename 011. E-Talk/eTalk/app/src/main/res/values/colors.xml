@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#000000</color>
+
+    <color name="colorTransparent">#00000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorWhite50Transparent">#7FFFFFFF</color>
+    <color name="colorBlack25Transparent">#3F000000</color>
+    <color name="colorBlack50Transparent">#7F000000</color>
+
+    <color name="colorETalkDark">#0095FF</color>
+    <color name="colorETalkLight">#00ABFF</color>
+    <color name="colorETalkClickDark">#0075FF</color>
+    <color name="colorETalkClickLight">#008BFF</color>
+    <color name="colorETalkDisable">#C1D4E3</color>
+
+    <color name="colorLightGray">#E6EBF0</color>
+    <color name="colorLightGrayClick">#F0F5FB</color>
+
+    <color name="colorStatusBarDark">#1D5FC6</color>
+    <color name="colorStatusBarLight">#0092C3</color>
+
+</resources>

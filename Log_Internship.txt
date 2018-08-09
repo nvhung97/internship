@@ -257,6 +257,9 @@ reimplement swipe to remove item using onItemTouchListener (Trong adapter truy�
 TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 9:44 AM 8/8/2018
 	- Thiết kế database và flow usercase
+9:14 AM 8/9/2018
+	- Tạo tài khoản gmail mới {username=hungnv6.VNG@gmail.com, password=lanhlungtienlen14011997}
+	- Thiết kế layout activity main/login/register
 
 
 
@@ -270,3 +273,4 @@ https://en.wikipedia.org/wiki/Double-checked_locking
 
 https://www.dkn.tv/doi-song/17-buc-anh-day-xuc-dong-khien-trai-tim-ban-tan-chay-ngay-lap-tuc.html
 https://ins.dkn.tv/giaitri/cam-dong-hinh-anh-ve-8-chu-cho-trung-thanh.html
+Tháng Tư Là Lời Nói Dối Của Em

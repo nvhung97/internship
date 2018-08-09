@@ -1,0 +1,24 @@
+<resources>
+
+    <string name="app_name">eTalk</string>
+
+    <!--Welcome activity-->
+    <string name="welcome_activity_btn_login">LOGIN</string>
+    <string name="welcome_activity_btn_register">REGISTER</string>
+
+    <!--Login activity-->
+    <string name="login_activity_txt_title">Login</string>
+    <string name="login_activity_txt_input_hint">Enter username and password to login</string>
+    <string name="login_activity_txt_username_hint">Enter username</string>
+    <string name="login_activity_txt_password_hint">Enter password</string>
+    <string name="login_activity_btn_login">LOGIN</string>
+
+    <!--Register activity-->
+    <string name="register_activity_txt_title">Register</string>
+    <string name="register_activity_txt_input_hint">Enter full information to register</string>
+    <string name="register_activity_txt_name_hint">Enter full name</string>
+    <string name="register_activity_txt_username_hint">Enter username</string>
+    <string name="register_activity_txt_password_hint">Enter password</string>
+    <string name="register_activity_txt_phone_hint">Enter phone number</string>
+    <string name="register_activity_btn_login">REGISTER</string>
+</resources>
