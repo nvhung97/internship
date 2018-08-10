@@ -260,6 +260,14 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 9:14 AM 8/9/2018
 	- Tạo tài khoản gmail mới {username=hungnv6.VNG@gmail.com, password=lanhlungtienlen14011997}
 	- Thiết kế layout activity main/login/register
+10:41 AM 8/10/2018
+	- Java Doc
+		+ https://stackoverflow.com/a/34501284/9661754
+	- ToolBar
+		+ https://google-developer-training.gitbooks.io/android-developer-fundamentals-course-concepts/content/en/Unit%202/42_c_menus.html
+	- PopupMenu
+		+ https://stackoverflow.com/a/37240472/9661754
+		+ https://stackoverflow.com/a/46557131/9661754
 
 
 

@@ -1,8 +1,10 @@
-package com.example.cpu11398_local.cleanarchitecturedemo.data.helper;
+package com.example.cpu11398_local.etalk.utils;
 
 /**
- * Created by Hung-pc on 7/8/2018.
- * Optional is used to wrapper data
+ * A container object which may or may not contain a non-{@code null} value.
+ * If a value is present, {@link #isPresent()} returns {@code true} and
+ * {@link #get()} returns the value.
+ * @param <T> the type of value.
  */
 
 public final class Optional<T> {
@@ -17,7 +19,7 @@ public final class Optional<T> {
         return new Optional<T>(null);
     }
 
-    public static <T> Optional<T> of(T value) {
+    public static <T> Optional<T> of(T value){
         if (value == null) {
             return Optional.empty();
         }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.view.ContentActivity">
+
+    <View
+        android:id="@id/content_activity_status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:background="@drawable/status_bar_background"/>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@id/content_activity_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:contentInsetStart="0dp"
+        android:background="@drawable/toolbar_backgound"
+        app:layout_constraintTop_toBottomOf="@id/content_activity_status_bar">
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageButton
+                android:id="@id/content_activity_btn_search"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="match_parent"
+                android:padding="17dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_search"
+                android:background="@drawable/toolbar_background_button"/>
+            <EditText
+                android:id="@id/content_activity_edt_search"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/login_activity_txt_title"
+                android:textColor="@color/colorWhite"
+                android:textSize="18dp"
+                android:textCursorDrawable="@drawable/edt_cursor_search"
+                android:backgroundTint="@color/colorTransparent"
+                android:gravity="center_vertical"
+                app:layout_constraintLeft_toRightOf="@id/content_activity_btn_search"
+                app:layout_constraintRight_toRightOf="parent"/>
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.Toolbar>
+
+</android.support.constraint.ConstraintLayout>

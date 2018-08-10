@@ -1,7 +1,10 @@
-package com.example.cpu11398_local.etalk;
+package com.example.cpu11398_local.etalk.presentation.view;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+
+import com.example.cpu11398_local.etalk.R;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -40,5 +43,13 @@ public class RegisterActivity extends AppCompatActivity {
     public void finishFailed() {
         setResult(RESULT_CANCELED);
         finish();
+    }
+
+    /**
+     * Finish activity when user click back arrow
+     * @param v
+     */
+    public void onBackPressed(View v) {
+        onBackPressed();
     }
 }

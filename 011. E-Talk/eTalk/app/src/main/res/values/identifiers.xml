@@ -13,6 +13,7 @@
     <item name="login_activity_txt_input_hint" type="id"/>
     <item name="login_activity_edt_username" type="id"/>
     <item name="login_activity_edt_password" type="id"/>
+    <item name="login_activity_btn_password" type="id"/>
     <item name="login_activity_btn_login" type="id"/>
 
     <!--Register activity-->
@@ -24,6 +25,16 @@
     <item name="register_activity_edt_name" type="id"/>
     <item name="register_activity_edt_username" type="id"/>
     <item name="register_activity_edt_password" type="id"/>
+    <item name="register_activity_btn_password" type="id"/>
     <item name="register_activity_edt_phone" type="id"/>
     <item name="register_activity_btn_register" type="id"/>
+
+    <!--Content activity-->
+    <item name="content_activity_status_bar" type="id"/>
+    <item name="content_activity_toolbar" type="id"/>
+    <item name="content_activity_btn_search" type="id"/>
+    <item name="content_activity_edt_search" type="id"/>
+    <item name="content_activity_btn_more" type="id"/>
+    <item name="content_activity_pager" type="id"/>
+    <item name="content_activity_lyt_tab" type="id"/>
 </resources>
