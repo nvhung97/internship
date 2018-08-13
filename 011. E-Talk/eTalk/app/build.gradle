@@ -31,6 +31,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     //Firebase
+    //noinspection GradleCompatible
     implementation 'com.google.firebase:firebase-core:16.0.1'
 
     //Dagger 2
@@ -41,5 +42,8 @@ dependencies {
     //RxJava 2
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.16'
+
+    //RecyclerView
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
 }
 apply plugin: 'com.google.gms.google-services'

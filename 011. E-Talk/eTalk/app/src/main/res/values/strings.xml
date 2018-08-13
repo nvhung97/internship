@@ -22,6 +22,9 @@
     <string name="register_activity_txt_phone_hint">Enter phone number</string>
     <string name="register_activity_btn_login">REGISTER</string>
 
+    <!--Content activity-->
+    <string name="content_activity_edt_search">Search friends, messages...</string>
+
     <!--Chat activity-->
     <string name="chat_activity_edt_message">Message</string>
 </resources>

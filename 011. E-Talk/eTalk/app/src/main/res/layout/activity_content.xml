@@ -18,46 +18,134 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@id/content_activity_tool_bar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:contentInsetStart="0dp"
-        android:background="@drawable/tool_bar_backgound">
         <android.support.constraint.ConstraintLayout
+            android:id="@id/content_activity_tool_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <ImageButton
-                android:id="@id/content_activity_btn_search"
-                android:layout_width="?attr/actionBarSize"
-                android:layout_height="match_parent"
-                android:padding="17dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_search"
-                android:background="@drawable/tool_bar_background_button"/>
+            android:layout_height="?attr/actionBarSize"
+            android:background="@drawable/tool_bar_backgound">
             <EditText
                 android:id="@id/content_activity_edt_search"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:paddingLeft="10dp"
+                android:paddingLeft="15dp"
                 android:paddingRight="10dp"
-                android:text="@string/login_activity_txt_title"
+                android:inputType="text"
+                android:maxLines="1"
+                android:hint="@string/content_activity_edt_search"
+                android:textColorHint="@color/colorSearchHint"
                 android:textColor="@color/colorWhite"
                 android:textSize="18dp"
                 android:textCursorDrawable="@drawable/edt_cursor_tool_bar"
                 android:backgroundTint="@color/colorTransparent"
                 android:gravity="center_vertical"
-                app:layout_constraintLeft_toRightOf="@id/content_activity_btn_search"
-                app:layout_constraintRight_toRightOf="parent"/>
+                android:drawableStart="@drawable/ic_search"
+                android:drawablePadding="15dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/content_activity_lyt_function"/>
+            <FrameLayout
+                android:id="@id/content_activity_lyt_function"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintRight_toRightOf="parent">
+                <ImageButton
+                    android:id="@id/content_activity_btn_camera"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="?attr/actionBarSize"
+                    android:layout_gravity="right"
+                    android:padding="17dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_camera"
+                    android:background="@drawable/tool_bar_background_button"/>
+                <ImageButton
+                    android:id="@id/content_activity_btn_plus"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:padding="17dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_plus"
+                    android:background="@drawable/tool_bar_background_button"/>
+                <ImageButton
+                    android:id="@id/content_activity_btn_add_friend"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:padding="17dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_add_friend"
+                    android:visibility="gone"
+                    android:background="@drawable/tool_bar_background_button"/>
+                <ImageButton
+                    android:id="@id/content_activity_btn_add_image"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="?attr/actionBarSize"
+                    android:layout_gravity="right"
+                    android:padding="17dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_add_image"
+                    android:visibility="gone"
+                    android:background="@drawable/tool_bar_background_button"/>
+                <ImageButton
+                    android:id="@id/content_activity_btn_bell"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:padding="17dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_bell"
+                    android:visibility="gone"
+                    android:background="@drawable/tool_bar_background_button"/>
+                <ImageButton
+                    android:id="@id/content_activity_btn_qr_code"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="?attr/actionBarSize"
+                    android:layout_gravity="right"
+                    android:padding="17dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_qr_code"
+                    android:visibility="gone"
+                    android:background="@drawable/tool_bar_background_button"/>
+                <ImageButton
+                    android:id="@id/content_activity_btn_setting"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:padding="17dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_setting"
+                    android:visibility="gone"
+                    android:background="@drawable/tool_bar_background_button"/>
+            </FrameLayout>
         </android.support.constraint.ConstraintLayout>
-    </android.support.v7.widget.Toolbar>
 
-    <EditText
-        android:id="@+id/idid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="?attr/actionBarSize"
+            android:layout_gravity="bottom"
+            android:background="@color/colorLightGray" />
+
+        <LinearLayout
+            android:id="@id/content_activity_lyt_tab"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+
+        </LinearLayout>
 
     </FrameLayout>
 
 </FrameLayout>
+
+
+<!--
+<data>
+<import type="android.view.View"/>
+</data>
+    And
+
+    android:visibility="@{isVisible ? View.VISIBLE : View.GONE}"-->

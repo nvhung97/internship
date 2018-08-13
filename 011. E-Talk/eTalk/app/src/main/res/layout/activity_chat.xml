@@ -14,6 +14,7 @@
         android:background="@drawable/status_bar_background"/>
 
     <FrameLayout
+        android:id="@id/chat_activity_lyt_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
@@ -90,6 +91,15 @@
                 android:background="@drawable/tool_bar_background_button"
                 app:layout_constraintRight_toRightOf="parent"/>
         </android.support.constraint.ConstraintLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@id/chat_activity_lst_message"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_marginBottom="?attr/actionBarSize">
+
+        </android.support.v7.widget.RecyclerView>
 
         <View
             android:layout_width="match_parent"
