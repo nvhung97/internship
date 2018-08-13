@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         Tool.forcePopupMenuShowIcon(popupMenu);
         popupMenu.show();*/
         startActivityForResult(
-                new Intent(MainActivity.this, ContentActivity.class),
+                new Intent(MainActivity.this, ChatActivity.class),
                 REQUEST_LOGIN
         );
     }

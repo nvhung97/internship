@@ -21,4 +21,7 @@
     <string name="register_activity_txt_password_hint">Enter password</string>
     <string name="register_activity_txt_phone_hint">Enter phone number</string>
     <string name="register_activity_btn_login">REGISTER</string>
+
+    <!--Chat activity-->
+    <string name="chat_activity_edt_message">Message</string>
 </resources>

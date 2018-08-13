@@ -7,7 +7,7 @@
 
     <!--Login activity-->
     <item name="login_activity_status_bar" type="id"/>
-    <item name="login_activity_toolbar" type="id"/>
+    <item name="login_activity_tool_bar" type="id"/>
     <item name="login_activity_btn_back_arrow" type="id"/>
     <item name="login_activity_txt_title" type="id"/>
     <item name="login_activity_txt_input_hint" type="id"/>
@@ -18,7 +18,7 @@
 
     <!--Register activity-->
     <item name="register_activity_status_bar" type="id"/>
-    <item name="register_activity_toolbar" type="id"/>
+    <item name="register_activity_tool_bar" type="id"/>
     <item name="register_activity_btn_back_arrow" type="id"/>
     <item name="register_activity_txt_title" type="id"/>
     <item name="register_activity_txt_input_hint" type="id"/>
@@ -31,10 +31,28 @@
 
     <!--Content activity-->
     <item name="content_activity_status_bar" type="id"/>
-    <item name="content_activity_toolbar" type="id"/>
+    <item name="content_activity_tool_bar" type="id"/>
     <item name="content_activity_btn_search" type="id"/>
     <item name="content_activity_edt_search" type="id"/>
     <item name="content_activity_btn_more" type="id"/>
     <item name="content_activity_pager" type="id"/>
     <item name="content_activity_lyt_tab" type="id"/>
+
+    <!--Chat activity-->
+    <item name="chat_activity_status_bar" type="id"/>
+    <item name="chat_activity_tool_bar" type="id"/>
+    <item name="chat_activity_btn_back_arrow" type="id"/>
+    <item name="chat_activity_txt_friend_name" type="id"/>
+    <item name="chat_activity_txt_friend_status" type="id"/>
+    <item name="chat_activity_btn_voice_call" type="id"/>
+    <item name="chat_activity_btn_video_call" type="id"/>
+    <item name="chat_activity_btn_more" type="id"/>
+    <item name="chat_activity_conversation" type="id"/>
+    <item name="chat_activity_lyt_message" type="id"/>
+    <item name="chat_activity_btn_emoticon" type="id"/>
+    <item name="chat_activity_edt_message" type="id"/>
+    <item name="chat_activity_btn_attach" type="id"/>
+    <item name="chat_activity_btn_voice" type="id"/>
+    <item name="chat_activity_btn_image" type="id"/>
+    <item name="chat_activity_btn_send" type="id"/>
 </resources>

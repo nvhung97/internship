@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#0095FF</color>
+    <color name="colorAccent">#FF4081</color>
 
     <color name="colorTransparent">#00000000</color>
     <color name="colorWhite">#FFFFFF</color>
@@ -10,16 +10,17 @@
     <color name="colorBlack25Transparent">#3F000000</color>
     <color name="colorBlack50Transparent">#7F000000</color>
 
-    <color name="colorETalkDark">#0095FF</color>
-    <color name="colorETalkLight">#00ABFF</color>
-    <color name="colorETalkClickDark">#0075FF</color>
-    <color name="colorETalkClickLight">#008BFF</color>
+    <color name="colorETalkDark">#267BFF</color>
+    <color name="colorETalkLight">#00BBFA</color>
+    <color name="colorETalkClickDark">#007FE6</color>
+    <color name="colorETalkClickLight">#0099E5</color>
     <color name="colorETalkDisable">#C1D4E3</color>
 
-    <color name="colorLightGray">#E6EBF0</color>
-    <color name="colorLightGrayClick">#F0F5FB</color>
+    <color name="colorGray">#777777</color>
+    <color name="colorLightGray">#E9EEF2</color>
+    <color name="colorLightGrayClick">#F3F4F8</color>
 
-    <color name="colorStatusBarDark">#1D5FC6</color>
-    <color name="colorStatusBarLight">#0092C3</color>
+    <color name="colorStatusBarDark">#1A55B1</color>
+    <color name="colorStatusBarLight">#0083AF</color>
 
 </resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -13,16 +13,16 @@
         android:layout_height="25dp"
         android:background="@drawable/status_bar_background"/>
 
-    <android.support.v7.widget.Toolbar
-        android:id="@id/login_activity_toolbar"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:contentInsetStart="0dp"
-        android:background="@drawable/toolbar_backgound"
-        app:layout_constraintTop_toBottomOf="@id/login_activity_status_bar">
-        <android.support.constraint.ConstraintLayout
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <FrameLayout
+            android:id="@id/login_activity_tool_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="?attr/actionBarSize"
+            android:background="@drawable/tool_bar_backgound">
             <ImageButton
                 android:id="@id/login_activity_btn_back_arrow"
                 android:layout_width="?attr/actionBarSize"
@@ -31,95 +31,96 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_arrow_back"
                 android:onClick="onBackPressed"
-                android:background="@drawable/toolbar_background_button"/>
+                android:background="@drawable/tool_bar_background_button"/>
             <TextView
                 android:id="@id/login_activity_txt_title"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="?attr/actionBarSize"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="@string/login_activity_txt_title"
                 android:textColor="@color/colorWhite"
                 android:textSize="18dp"
-                android:gravity="center_vertical"
-                app:layout_constraintLeft_toRightOf="@id/login_activity_btn_back_arrow"
-                app:layout_constraintRight_toRightOf="parent"/>
-        </android.support.constraint.ConstraintLayout>
-    </android.support.v7.widget.Toolbar>
+                android:gravity="center_vertical"/>
+        </FrameLayout>
 
-    <TextView
-        android:id="@id/login_activity_txt_input_hint"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:text="@string/login_activity_txt_input_hint"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/login_activity_toolbar"/>
+        <TextView
+            android:id="@id/login_activity_txt_input_hint"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="@string/login_activity_txt_input_hint"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/login_activity_tool_bar"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorLightGray"
-        app:layout_constraintBottom_toBottomOf="@id/login_activity_txt_input_hint"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorLightGray"
+            app:layout_constraintBottom_toBottomOf="@id/login_activity_txt_input_hint"/>
 
-    <EditText
-        android:id="@id/login_activity_edt_username"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:inputType="text"
-        android:maxLines="1"
-        android:hint="@string/login_activity_txt_username_hint"
-        android:background="@color/colorWhite"
-        app:layout_constraintTop_toBottomOf="@id/login_activity_txt_input_hint"/>
+        <EditText
+            android:id="@id/login_activity_edt_username"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:inputType="text"
+            android:maxLines="1"
+            android:hint="@string/login_activity_txt_username_hint"
+            android:textCursorDrawable="@drawable/edt_cursor_normal"
+            android:background="@color/colorWhite"
+            app:layout_constraintTop_toBottomOf="@id/login_activity_txt_input_hint"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorLightGray"
-        app:layout_constraintBottom_toBottomOf="@id/login_activity_edt_username"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorLightGray"
+            app:layout_constraintBottom_toBottomOf="@id/login_activity_edt_username"/>
 
-    <EditText
-        android:id="@id/login_activity_edt_password"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:paddingLeft="15dp"
-        android:inputType="textPassword"
-        android:hint="@string/login_activity_txt_password_hint"
-        android:background="@color/colorWhite"
-        app:layout_constraintTop_toBottomOf="@id/login_activity_edt_username"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/login_activity_btn_password"/>
+        <EditText
+            android:id="@id/login_activity_edt_password"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:paddingLeft="15dp"
+            android:inputType="textPassword"
+            android:hint="@string/login_activity_txt_password_hint"
+            android:textCursorDrawable="@drawable/edt_cursor_normal"
+            android:background="@color/colorWhite"
+            app:layout_constraintTop_toBottomOf="@id/login_activity_edt_username"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/login_activity_btn_password"/>
 
-    <ImageButton
-        android:id="@id/login_activity_btn_password"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_show_password"
-        android:background="@color/colorWhite"
-        app:layout_constraintTop_toBottomOf="@id/login_activity_edt_username"
-        app:layout_constraintRight_toRightOf="parent"/>
+        <ImageButton
+            android:id="@id/login_activity_btn_password"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_show_password"
+            android:background="@color/colorWhite"
+            app:layout_constraintTop_toBottomOf="@id/login_activity_edt_username"
+            app:layout_constraintRight_toRightOf="parent"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorLightGray"
-        app:layout_constraintBottom_toBottomOf="@id/login_activity_edt_password"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorLightGray"
+            app:layout_constraintBottom_toBottomOf="@id/login_activity_edt_password"/>
 
-    <Button
-        android:id="@id/login_activity_btn_login"
-        android:layout_width="200dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/login_activity_btn_login"
-        android:textColor="@color/colorWhite"
-        android:background="@drawable/btn_login"
-        android:stateListAnimator="@null"
-        android:enabled="false"
-        app:layout_constraintTop_toBottomOf="@id/login_activity_edt_password"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        <Button
+            android:id="@id/login_activity_btn_login"
+            android:layout_width="200dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/login_activity_btn_login"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/btn_login"
+            android:stateListAnimator="@null"
+            android:enabled="false"
+            app:layout_constraintTop_toBottomOf="@id/login_activity_edt_password"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+    </android.support.constraint.ConstraintLayout>
 
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

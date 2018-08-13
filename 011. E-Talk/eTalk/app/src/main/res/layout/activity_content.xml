@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,13 +13,17 @@
         android:layout_height="25dp"
         android:background="@drawable/status_bar_background"/>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
     <android.support.v7.widget.Toolbar
-        android:id="@id/content_activity_toolbar"
+        android:id="@id/content_activity_tool_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:contentInsetStart="0dp"
-        android:background="@drawable/toolbar_backgound"
-        app:layout_constraintTop_toBottomOf="@id/content_activity_status_bar">
+        android:background="@drawable/tool_bar_backgound">
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -29,7 +34,7 @@
                 android:padding="17dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_search"
-                android:background="@drawable/toolbar_background_button"/>
+                android:background="@drawable/tool_bar_background_button"/>
             <EditText
                 android:id="@id/content_activity_edt_search"
                 android:layout_width="0dp"
@@ -39,7 +44,7 @@
                 android:text="@string/login_activity_txt_title"
                 android:textColor="@color/colorWhite"
                 android:textSize="18dp"
-                android:textCursorDrawable="@drawable/edt_cursor_search"
+                android:textCursorDrawable="@drawable/edt_cursor_tool_bar"
                 android:backgroundTint="@color/colorTransparent"
                 android:gravity="center_vertical"
                 app:layout_constraintLeft_toRightOf="@id/content_activity_btn_search"
@@ -47,4 +52,12 @@
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.Toolbar>
 
-</android.support.constraint.ConstraintLayout>
+    <EditText
+        android:id="@+id/idid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"/>
+
+    </FrameLayout>
+
+</FrameLayout>
