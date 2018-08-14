@@ -43,20 +43,6 @@ public class ContentViewModel implements ViewModel<Void>{
         }
     }
 
-    /**
-     * Add setter for attribute {@code layout_weight} with float parameter in {@code ContrainLayout}.
-     * @param view  view need to set layout weight.
-     * @param weight layout weight.
-     */
-    @BindingAdapter("android:layout_weight")
-    public static void setLayoutWeight(View view, float weight) {
-        view.setLayoutParams(new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                weight
-        ));
-    }
-
     @Override
     public void subscribeObserver(Observer<Void> observer) {
 
