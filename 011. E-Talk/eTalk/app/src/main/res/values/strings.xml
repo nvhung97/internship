@@ -24,6 +24,16 @@
 
     <!--Content activity-->
     <string name="content_activity_edt_search">Search friends, messages...</string>
+    <string name="content_activity_tab_messages">Messages</string>
+    <string name="content_activity_tab_contacts">Contacts</string>
+    <string name="content_activity_tab_groups">Groups</string>
+    <string name="content_activity_tab_timeline">Timeline</string>
+    <string name="content_activity_tab_more">More</string>
+    <string name="content_activity_menu_create_group">Create group</string>
+    <string name="content_activity_menu_add_friend">Add friend</string>
+    <string name="content_activity_menu_scan_qr_code">Scan QR Code</string>
+    <string name="content_activity_menu_etalk_for_desktop">eTalk for Desktop</string>
+    <string name="content_activity_menu_etalk_calendar">eTalk Calender</string>
 
     <!--Chat activity-->
     <string name="chat_activity_edt_message">Message</string>

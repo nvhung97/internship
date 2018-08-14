@@ -20,10 +20,21 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Finish activity when user click back arrow
+     * Finish activity when user click back arrow on tool bar with {@code RESULT_CANCELED}.
+     * This method call method {@link #onBackPressed()}
      * @param v
      */
     public void onBackPressed(View v) {
         onBackPressed();
+    }
+
+    /**
+     * Finish activity when user click back on Navigation bar with {@code RESULT_CANCELED}.
+     * @param v
+     */
+    @Override
+    public void onBackPressed() {
+        //Tool.finishFailed(this);
+        Tool.finishSuccessfully(this);
     }
 }

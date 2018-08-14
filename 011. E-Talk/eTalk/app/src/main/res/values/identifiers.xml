@@ -43,6 +43,26 @@
     <item name="content_activity_btn_setting" type="id"/>
     <item name="content_activity_pager" type="id"/>
     <item name="content_activity_lyt_tab" type="id"/>
+    <item name="content_activity_tab_messages" type="id"/>
+    <item name="content_activity_tab_messages_icon" type="id"/>
+    <item name="content_activity_tab_messages_title" type="id"/>
+    <item name="content_activity_tab_contacts" type="id"/>
+    <item name="content_activity_tab_contacts_icon" type="id"/>
+    <item name="content_activity_tab_contacts_title" type="id"/>
+    <item name="content_activity_tab_groups" type="id"/>
+    <item name="content_activity_tab_groups_icon" type="id"/>
+    <item name="content_activity_tab_groups_title" type="id"/>
+    <item name="content_activity_tab_timeline" type="id"/>
+    <item name="content_activity_tab_timeline_icon" type="id"/>
+    <item name="content_activity_tab_timeline_title" type="id"/>
+    <item name="content_activity_tab_more" type="id"/>
+    <item name="content_activity_tab_more_icon" type="id"/>
+    <item name="content_activity_tab_more_title" type="id"/>
+    <item name="content_activity_menu_create_group" type="id"/>
+    <item name="content_activity_menu_add_friend" type="id"/>
+    <item name="content_activity_menu_scan_qr_code" type="id"/>
+    <item name="content_activity_menu_etalk_for_desktop" type="id"/>
+    <item name="content_activity_menu_etalk_calendar" type="id"/>
 
     <!--Chat activity-->
     <item name="chat_activity_status_bar" type="id"/>
@@ -59,7 +79,7 @@
     <item name="chat_activity_btn_emoticon" type="id"/>
     <item name="chat_activity_edt_message" type="id"/>
     <item name="chat_activity_btn_attach" type="id"/>
-    <item name="chat_activity_btn_voice" type="id"/>
+    <item name="chat_activity_btn_record" type="id"/>
     <item name="chat_activity_btn_image" type="id"/>
     <item name="chat_activity_btn_send" type="id"/>
 </resources>

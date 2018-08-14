@@ -1,15 +1,11 @@
 package com.example.cpu11398_local.etalk.presentation.view;
 
 import android.content.Intent;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.View;
-import android.widget.PopupMenu;
 import com.example.cpu11398_local.etalk.R;
-import com.example.cpu11398_local.etalk.utils.Tool;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,12 +23,8 @@ public class MainActivity extends AppCompatActivity {
      * @param v View is clicked
      */
     public void showLoginView(View v) {
-        /*PopupMenu popupMenu = new PopupMenu(this, v, Gravity.RIGHT);
-        popupMenu.inflate(R.menu.aaaaa);
-        Tool.forcePopupMenuShowIcon(popupMenu);
-        popupMenu.show();*/
         startActivityForResult(
-                new Intent(MainActivity.this, ContentActivity.class),
+                new Intent(MainActivity.this, LoginActivity.class),
                 REQUEST_LOGIN
         );
     }
@@ -46,5 +38,32 @@ public class MainActivity extends AppCompatActivity {
                 new Intent(MainActivity.this, RegisterActivity.class),
                 REQUEST_REGISTER
         );
+    }
+
+    /**
+     * Get result after {@link #showLoginView(View)} for login or {@link #showRegisterView(View)}
+     * for register. If login successfully, start {@code ContentActivity}. If register successfully,
+     * start {@code LoginActivity}. In other cases, do nothing.
+     * @param requestCode code of action
+     * @param resultCode result of action
+     * @param data data after perform action
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    startActivity(new Intent(this, ContentActivity.class));
+                }
+                break;
+            case REQUEST_REGISTER:
+                if (resultCode == RESULT_OK) {
+                    startActivityForResult(
+                            new Intent(this, LoginActivity.class),
+                            REQUEST_LOGIN
+                    );
+                }
+        }
     }
 }

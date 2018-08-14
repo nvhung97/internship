@@ -1,151 +1,287 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.view.ContentActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
-        android:id="@id/content_activity_status_bar"
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:background="@drawable/status_bar_background"/>
+    <data>
+        <variable
+            name="contentViewModel"
+            type="com.example.cpu11398_local.etalk.presentation.view_model.ContentViewModel"/>
+        <import type="android.view.View"/>
+    </data>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@id/content_activity_tool_bar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@drawable/tool_bar_backgound">
-            <EditText
-                android:id="@id/content_activity_edt_search"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:paddingLeft="15dp"
-                android:paddingRight="10dp"
-                android:inputType="text"
-                android:maxLines="1"
-                android:hint="@string/content_activity_edt_search"
-                android:textColorHint="@color/colorSearchHint"
-                android:textColor="@color/colorWhite"
-                android:textSize="18dp"
-                android:textCursorDrawable="@drawable/edt_cursor_tool_bar"
-                android:backgroundTint="@color/colorTransparent"
-                android:gravity="center_vertical"
-                android:drawableStart="@drawable/ic_search"
-                android:drawablePadding="15dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/content_activity_lyt_function"/>
-            <FrameLayout
-                android:id="@id/content_activity_lyt_function"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:layout_constraintRight_toRightOf="parent">
-                <ImageButton
-                    android:id="@id/content_activity_btn_camera"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="?attr/actionBarSize"
-                    android:layout_gravity="right"
-                    android:padding="17dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_camera"
-                    android:background="@drawable/tool_bar_background_button"/>
-                <ImageButton
-                    android:id="@id/content_activity_btn_plus"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right"
-                    android:padding="17dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_plus"
-                    android:background="@drawable/tool_bar_background_button"/>
-                <ImageButton
-                    android:id="@id/content_activity_btn_add_friend"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right"
-                    android:padding="17dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_add_friend"
-                    android:visibility="gone"
-                    android:background="@drawable/tool_bar_background_button"/>
-                <ImageButton
-                    android:id="@id/content_activity_btn_add_image"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="?attr/actionBarSize"
-                    android:layout_gravity="right"
-                    android:padding="17dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_add_image"
-                    android:visibility="gone"
-                    android:background="@drawable/tool_bar_background_button"/>
-                <ImageButton
-                    android:id="@id/content_activity_btn_bell"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right"
-                    android:padding="17dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_bell"
-                    android:visibility="gone"
-                    android:background="@drawable/tool_bar_background_button"/>
-                <ImageButton
-                    android:id="@id/content_activity_btn_qr_code"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="?attr/actionBarSize"
-                    android:layout_gravity="right"
-                    android:padding="17dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_qr_code"
-                    android:visibility="gone"
-                    android:background="@drawable/tool_bar_background_button"/>
-                <ImageButton
-                    android:id="@id/content_activity_btn_setting"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right"
-                    android:padding="17dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_setting"
-                    android:visibility="gone"
-                    android:background="@drawable/tool_bar_background_button"/>
-            </FrameLayout>
-        </android.support.constraint.ConstraintLayout>
+        android:layout_height="match_parent">
 
         <View
+            android:id="@id/content_activity_status_bar"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="?attr/actionBarSize"
-            android:layout_gravity="bottom"
-            android:background="@color/colorLightGray" />
+            android:layout_height="25dp"
+            android:background="@drawable/status_bar_background"/>
 
-        <LinearLayout
-            android:id="@id/content_activity_lyt_tab"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="bottom"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
 
-        </LinearLayout>
+            <android.support.constraint.ConstraintLayout
+                android:id="@id/content_activity_tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/tool_bar_backgound">
+                <EditText
+                    android:id="@id/content_activity_edt_search"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="10dp"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:hint="@string/content_activity_edt_search"
+                    android:textColorHint="@color/colorSearchHint"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18dp"
+                    android:textCursorDrawable="@drawable/edt_cursor_tool_bar"
+                    android:backgroundTint="@color/colorTransparent"
+                    android:gravity="center_vertical"
+                    android:drawableStart="@drawable/ic_search"
+                    android:drawablePadding="15dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/content_activity_lyt_function"/>
+                <FrameLayout
+                    android:id="@id/content_activity_lyt_function"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:layout_constraintRight_toRightOf="parent">
+                    <ImageButton
+                        android:id="@id/content_activity_btn_camera"
+                        android:layout_width="?attr/actionBarSize"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="?attr/actionBarSize"
+                        android:layout_gravity="right"
+                        android:padding="17dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_camera"
+                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 0 ? View.VISIBLE : View.GONE}"
+                        android:background="@drawable/tool_bar_background_button"/>
+                    <ImageButton
+                        android:id="@id/content_activity_btn_plus"
+                        android:layout_width="?attr/actionBarSize"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:padding="17dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_plus"
+                        android:onClick="showPopupMenu"
+                        android:visibility="@{safeUnbox(contentViewModel.currentTab == 0 || contentViewModel.currentTab == 2) ? View.VISIBLE : View.GONE}"
+                        android:background="@drawable/tool_bar_background_button"/>
+                    <ImageButton
+                        android:id="@id/content_activity_btn_add_friend"
+                        android:layout_width="?attr/actionBarSize"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:padding="17dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_add_friend"
+                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 1 ? View.VISIBLE : View.GONE}"
+                        android:background="@drawable/tool_bar_background_button"/>
+                    <ImageButton
+                        android:id="@id/content_activity_btn_add_image"
+                        android:layout_width="?attr/actionBarSize"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="?attr/actionBarSize"
+                        android:layout_gravity="right"
+                        android:padding="17dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_add_image"
+                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 3 ? View.VISIBLE : View.GONE}"
+                        android:background="@drawable/tool_bar_background_button"/>
+                    <ImageButton
+                        android:id="@id/content_activity_btn_bell"
+                        android:layout_width="?attr/actionBarSize"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:padding="17dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_bell"
+                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 3 ? View.VISIBLE : View.GONE}"
+                        android:background="@drawable/tool_bar_background_button"/>
+                    <ImageButton
+                        android:id="@id/content_activity_btn_qr_code"
+                        android:layout_width="?attr/actionBarSize"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="?attr/actionBarSize"
+                        android:layout_gravity="right"
+                        android:padding="17dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_qr_code"
+                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 4 ? View.VISIBLE : View.GONE}"
+                        android:background="@drawable/tool_bar_background_button"/>
+                    <ImageButton
+                        android:id="@id/content_activity_btn_setting"
+                        android:layout_width="?attr/actionBarSize"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:padding="17dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_setting"
+                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 4 ? View.VISIBLE : View.GONE}"
+                        android:background="@drawable/tool_bar_background_button"/>
+                </FrameLayout>
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="?attr/actionBarSize"
+                android:layout_gravity="bottom"
+                android:background="@color/colorLightGray" />
+
+            <LinearLayout
+                android:id="@id/content_activity_lyt_tab"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="bottom"
+                android:orientation="horizontal">
+                <android.support.constraint.ConstraintLayout
+                    android:id="@id/content_activity_tab_messages"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="@{safeUnbox(contentViewModel.currentTab) == 0 ? 1.5f : 1.0f}"
+                    android:onClick="@{contentViewModel::onTabClickListener}">
+                    <ImageView
+                        android:id="@id/content_activity_tab_messages_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:padding="@{safeUnbox(contentViewModel.currentTab) == 0 ? @dimen/content_activity_tab_icon_padding_selected : @dimen/content_activity_tab_icon_padding}"
+                        android:src="@{safeUnbox(contentViewModel.currentTab) == 0 ? @drawable/ic_tab_messages_selected : @drawable/ic_tab_messages}"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/content_activity_tab_messages_title"/>
+                    <TextView
+                        android:id="@id/content_activity_tab_messages_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:text="@string/content_activity_tab_messages"
+                        android:gravity="top|center_horizontal"
+                        android:textColor="@color/colorTabSelected"
+                        android:textStyle="bold"
+                        android:textSize="12dp"
+                        android:includeFontPadding="false"
+                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 0 ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                </android.support.constraint.ConstraintLayout>
+                <android.support.constraint.ConstraintLayout
+                    android:id="@id/content_activity_tab_contacts"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="@{safeUnbox(contentViewModel.currentTab) == 1 ? 1.5f : 1.0f}"
+                    android:onClick="@{contentViewModel::onTabClickListener}">
+                    <ImageView
+                        android:id="@id/content_activity_tab_contacts_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:padding="@{safeUnbox(contentViewModel.currentTab) == 1 ? @dimen/content_activity_tab_icon_padding_selected : @dimen/content_activity_tab_icon_padding}"
+                        android:src="@{safeUnbox(contentViewModel.currentTab) == 1 ? @drawable/ic_tab_contacts_selected : @drawable/ic_tab_contacts}"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/content_activity_tab_contacts_title"/>
+                    <TextView
+                        android:id="@id/content_activity_tab_contacts_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:text="@string/content_activity_tab_contacts"
+                        android:gravity="top|center_horizontal"
+                        android:textColor="@color/colorTabSelected"
+                        android:textStyle="bold"
+                        android:textSize="12dp"
+                        android:includeFontPadding="false"
+                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 1 ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                </android.support.constraint.ConstraintLayout>
+                <android.support.constraint.ConstraintLayout
+                    android:id="@id/content_activity_tab_groups"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="@{safeUnbox(contentViewModel.currentTab) == 2 ? 1.5f : 1.0f}"
+                    android:onClick="@{contentViewModel::onTabClickListener}">
+                    <ImageView
+                        android:id="@id/content_activity_tab_groups_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:padding="@{safeUnbox(contentViewModel.currentTab) == 2 ? @dimen/content_activity_tab_icon_padding_selected : @dimen/content_activity_tab_icon_padding}"
+                        android:src="@{safeUnbox(contentViewModel.currentTab) == 2 ? @drawable/ic_tab_groups_selected : @drawable/ic_tab_groups}"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/content_activity_tab_groups_title"/>
+                    <TextView
+                        android:id="@id/content_activity_tab_groups_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:text="@string/content_activity_tab_groups"
+                        android:gravity="top|center_horizontal"
+                        android:textColor="@color/colorTabSelected"
+                        android:textStyle="bold"
+                        android:textSize="12dp"
+                        android:includeFontPadding="false"
+                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 2 ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                </android.support.constraint.ConstraintLayout>
+                <android.support.constraint.ConstraintLayout
+                    android:id="@id/content_activity_tab_timeline"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="@{safeUnbox(contentViewModel.currentTab) == 3 ? 1.5f : 1.0f}"
+                    android:onClick="@{contentViewModel::onTabClickListener}">
+                    <ImageView
+                        android:id="@id/content_activity_tab_timeline_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:padding="@{safeUnbox(contentViewModel.currentTab) == 3 ? @dimen/content_activity_tab_icon_padding_selected : @dimen/content_activity_tab_icon_padding}"
+                        android:src="@{safeUnbox(contentViewModel.currentTab) == 3 ? @drawable/ic_tab_timeline_selected : @drawable/ic_tab_timeline}"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/content_activity_tab_timeline_title"/>
+                    <TextView
+                        android:id="@id/content_activity_tab_timeline_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:text="@string/content_activity_tab_timeline"
+                        android:gravity="top|center_horizontal"
+                        android:textColor="@color/colorTabSelected"
+                        android:textStyle="bold"
+                        android:textSize="12dp"
+                        android:includeFontPadding="false"
+                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 3 ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                </android.support.constraint.ConstraintLayout>
+                <android.support.constraint.ConstraintLayout
+                    android:id="@id/content_activity_tab_more"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="@{safeUnbox(contentViewModel.currentTab) == 4 ? 1.5f : 1.0f}"
+                    android:onClick="@{contentViewModel::onTabClickListener}">
+                    <ImageView
+                        android:id="@id/content_activity_tab_more_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:padding="@{safeUnbox(contentViewModel.currentTab) == 4 ? @dimen/content_activity_tab_icon_padding_selected : @dimen/content_activity_tab_icon_padding}"
+                        android:src="@{safeUnbox(contentViewModel.currentTab) == 4 ? @drawable/ic_tab_more_selected : @drawable/ic_tab_more}"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/content_activity_tab_more_title"/>
+                    <TextView
+                        android:id="@id/content_activity_tab_more_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:text="@string/content_activity_tab_more"
+                        android:gravity="top|center_horizontal"
+                        android:textColor="@color/colorTabSelected"
+                        android:textStyle="bold"
+                        android:textSize="12dp"
+                        android:includeFontPadding="false"
+                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 4 ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                </android.support.constraint.ConstraintLayout>
+            </LinearLayout>
+
+        </FrameLayout>
 
     </FrameLayout>
-
-</FrameLayout>
-
-
-<!--
-<data>
-<import type="android.view.View"/>
-</data>
-    And
-
-    android:visibility="@{isVisible ? View.VISIBLE : View.GONE}"-->
+</layout>

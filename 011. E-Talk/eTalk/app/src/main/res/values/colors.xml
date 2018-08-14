@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorSearchHint">#74C9FF</color>
+    <color name="colorTabSelected">#1493FC</color>
 
     <color name="colorTransparent">#00000000</color>
     <color name="colorWhite">#FFFFFF</color>

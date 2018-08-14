@@ -145,14 +145,14 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_attach"
                 android:background="@drawable/message_bar_background_button"
-                app:layout_constraintRight_toLeftOf="@id/chat_activity_btn_voice"/>
+                app:layout_constraintRight_toLeftOf="@id/chat_activity_btn_record"/>
             <ImageButton
-                android:id="@id/chat_activity_btn_voice"
+                android:id="@id/chat_activity_btn_record"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="match_parent"
                 android:padding="17dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_voice"
+                android:src="@drawable/ic_record"
                 android:background="@drawable/message_bar_background_button"
                 app:layout_constraintRight_toLeftOf="@id/chat_activity_btn_image"/>
             <ImageButton

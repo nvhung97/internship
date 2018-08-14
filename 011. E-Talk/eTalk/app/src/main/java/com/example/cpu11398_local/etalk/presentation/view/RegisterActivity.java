@@ -3,8 +3,8 @@ package com.example.cpu11398_local.etalk.presentation.view;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-
 import com.example.cpu11398_local.etalk.R;
+import com.example.cpu11398_local.etalk.utils.Tool;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -13,43 +13,28 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        setStatusBarHeight();
-    }
-
-    public void setStatusBarHeight() {
-        int resourceId = getResources().getIdentifier(
-                "status_bar_height",
-                "dimen",
-                "android"
+        Tool.setStatusBarHeight(
+                this,
+                findViewById(R.id.register_activity_status_bar)
         );
-        if (resourceId > 0) {
-            findViewById(R.id.register_activity_status_bar)
-                    .getLayoutParams()
-                    .height = getResources().getDimensionPixelSize(resourceId);
-        }
     }
 
     /**
-     * Finish activity with login successfully
-     */
-    public void finishSuccessfully() {
-        setResult(RESULT_OK);
-        finish();
-    }
-
-    /**
-     * Finish activity with login failed
-     */
-    public void finishFailed() {
-        setResult(RESULT_CANCELED);
-        finish();
-    }
-
-    /**
-     * Finish activity when user click back arrow
+     * Finish activity when user click back arrow on tool bar with {@code RESULT_CANCELED}.
+     * This method call method {@link #onBackPressed()}
      * @param v
      */
     public void onBackPressed(View v) {
         onBackPressed();
+    }
+
+    /**
+     * Finish activity when user click back on Navigation bar with {@code RESULT_CANCELED}.
+     * @param v
+     */
+    @Override
+    public void onBackPressed() {
+        //Tool.finishFailed(this);
+        Tool.finishSuccessfully(this);
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@id/content_activity_menu_create_group"
+        android:icon="@drawable/ic_menu_create_group"
+        android:title="@string/content_activity_menu_create_group" />
+    <item
+        android:id="@id/content_activity_menu_add_friend"
+        android:icon="@drawable/ic_menu_add_friend"
+        android:title="@string/content_activity_menu_add_friend"/>
+    <item
+        android:id="@id/content_activity_menu_scan_qr_code"
+        android:icon="@drawable/ic_menu_scan_qr_code"
+        android:title="@string/content_activity_menu_scan_qr_code"/>
+    <item
+        android:id="@id/content_activity_menu_etalk_for_desktop"
+        android:icon="@drawable/ic_menu_etalk_for_desktop"
+        android:title="@string/content_activity_menu_etalk_for_desktop"/>
+    <item
+        android:id="@id/content_activity_menu_etalk_calendar"
+        android:icon="@drawable/ic_menu_etalk_calendar"
+        android:title="@string/content_activity_menu_etalk_calendar"/>
+</menu>

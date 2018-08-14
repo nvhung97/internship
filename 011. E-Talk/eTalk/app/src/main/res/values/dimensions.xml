@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="content_activity_tab_icon_padding">15dp</dimen>
+    <dimen name="content_activity_tab_icon_padding_selected">7dp</dimen>
+</resources>
