@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".presentation.view.MainActivity">
+            android:name=".presentation.view.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,13 +19,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.view.LoginActivity" />
+            android:name=".presentation.view.login.LoginActivity" />
         <activity
-            android:name=".presentation.view.RegisterActivity" />
+            android:name=".presentation.view.register.RegisterActivity" />
         <activity
-            android:name=".presentation.view.ContentActivity"/>
+            android:name=".presentation.view.content.ContentActivity"/>
         <activity
-            android:name=".presentation.view.ChatActivity"
+            android:name=".presentation.view.chat.ChatActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
     </application>
 

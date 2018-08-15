@@ -268,6 +268,10 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- PopupMenu
 		+ https://stackoverflow.com/a/37240472/9661754
 		+ https://stackoverflow.com/a/46557131/9661754
+8:54 AM 8/14/2018
+	- Tạo Tab bar và Tool bar thay đổi theo Tab bar trong ContentActivity
+8:55 AM 8/15/2018
+	- Thêm ViewModel cho các View, thêm đầy đủ hàm chức năng cho các đối tượng View.
 
 
 

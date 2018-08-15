@@ -55,26 +55,26 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * Called in {@link #onCreate(Bundle)} to bind data between view and viewModel.
      */
-    abstract void onDataBinding();
+    public abstract void onDataBinding();
 
     /**
      * Called in {@link #onStart()} to subscribe observer to viewModel.
      */
-    abstract void onSubscribeViewModel();
+    public abstract void onSubscribeViewModel();
 
     /**
      * Called in {@link #onStop()} to unsubscribe observer in viewModel.
      */
-    abstract void onUnSubscribeViewModel();
+    public abstract void onUnSubscribeViewModel();
 
     /**
      * Called in {@link #onRetainCustomNonConfigurationInstance()} to save viewModel.
      * @return Object is viewModel to save.
      */
-    abstract Object onSaveViewModel();
+    public abstract Object onSaveViewModel();
 
     /**
      * Called in {@link #onDestroy()} to inform viewModel stop usecase if activity really finish.
      */
-    abstract void onEndTaskViewModel();
+    public abstract void onEndTaskViewModel();
 }

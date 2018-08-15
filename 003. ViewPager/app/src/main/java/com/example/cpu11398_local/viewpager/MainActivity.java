@@ -29,5 +29,6 @@ public class MainActivity extends AppCompatActivity {
         pager.setOffscreenPageLimit(1);
         Log.w(TAG, "setup tabLayout with pager");
         tabLayout.setupWithViewPager(pager);
+        pager.setCurrentItem();
     }
 }

@@ -1,0 +1,116 @@
+package com.example.cpu11398_local.etalk.presentation.view.content;
+
+import android.databinding.DataBindingUtil;
+import android.os.Bundle;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.PopupMenu;
+import com.example.cpu11398_local.etalk.R;
+import com.example.cpu11398_local.etalk.databinding.ActivityContentBinding;
+import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
+import com.example.cpu11398_local.etalk.presentation.view.content.pager_adapter.ContentPagerAdapter;
+import com.example.cpu11398_local.etalk.presentation.view.main.MainActivity;
+import com.example.cpu11398_local.etalk.presentation.view_model.ContentViewModel;
+import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
+import com.example.cpu11398_local.etalk.utils.Event;
+import com.example.cpu11398_local.etalk.utils.Tool;
+import javax.inject.Inject;
+import javax.inject.Named;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+
+public class ContentActivity extends BaseActivity {
+
+    @Inject
+    @Named("ContentViewModel")
+    public ViewModel                    viewModel;
+
+    @Inject
+    @Named("ContentPagerAdapter")
+    public FragmentStatePagerAdapter    pagerAdapter;
+
+    private ActivityContentBinding      binding;
+    private Disposable                  disposable;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Tool.setStatusBarHeight(
+                this,
+                findViewById(R.id.content_activity_status_bar)
+        );
+    }
+
+    @Override
+    public void onDataBinding() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_content);
+        viewModel = (ViewModel) getLastCustomNonConfigurationInstance();
+        if (viewModel == null) {
+            MainActivity.getAppComponent(this).inject(this);
+        }
+        binding.setViewModel((ContentViewModel)viewModel);
+        binding.setPagerAdapter((ContentPagerAdapter)pagerAdapter);
+    }
+
+    @Override
+    public void onSubscribeViewModel() {
+        viewModel.subscribeObserver(new ContentObserver());
+    }
+
+    @Override
+    public void onUnSubscribeViewModel() {
+        if (!disposable.isDisposed()){
+            disposable.dispose();
+        }
+    }
+
+    @Override
+    public Object onSaveViewModel() {
+        return viewModel;
+    }
+
+    @Override
+    public void onEndTaskViewModel() {
+        viewModel.endTask();
+    }
+
+    public void showPopupMenu(View view, PopupMenu.OnMenuItemClickListener listener) {
+        PopupMenu popupMenu = new PopupMenu(this, view, Gravity.RIGHT);
+        popupMenu.inflate(R.menu.menu_plus);
+        popupMenu.setOnMenuItemClickListener(listener);
+        Tool.forcePopupMenuShowIcon(popupMenu);
+        popupMenu.show();
+    }
+
+    private class ContentObserver implements Observer<Event> {
+        @Override
+        public void onSubscribe(Disposable d) {
+            disposable = d;
+        }
+
+        @Override
+        public void onNext(Event event) {
+            Object[] data = event.getData();
+            switch (event.getType()) {
+                case Event.CONTENT_ACTIVITY_SHOW_POPUP_MENU:
+                    showPopupMenu(
+                            (View)data[0],
+                            (PopupMenu.OnMenuItemClickListener)data[1]
+                    );
+                    break;
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    }
+}

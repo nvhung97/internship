@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <variable
-            name="contentViewModel"
+            name="viewModel"
             type="com.example.cpu11398_local.etalk.presentation.view_model.ContentViewModel"/>
+        <variable
+            name="pagerAdapter"
+            type="com.example.cpu11398_local.etalk.presentation.view.content.pager_adapter.ContentPagerAdapter"/>
         <import type="android.view.View"/>
     </data>
 
@@ -63,7 +66,7 @@
                         android:padding="17dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_camera"
-                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 0 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{safeUnbox(viewModel.currentTab) == 0 ? View.VISIBLE : View.GONE}"
                         android:background="@drawable/tool_bar_background_button"/>
                     <ImageButton
                         android:id="@id/content_activity_btn_plus"
@@ -73,8 +76,8 @@
                         android:padding="17dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_plus"
-                        android:onClick="showPopupMenu"
-                        android:visibility="@{safeUnbox(contentViewModel.currentTab == 0 || contentViewModel.currentTab == 2) ? View.VISIBLE : View.GONE}"
+                        android:onClick="@{viewModel::onPlusClick}"
+                        android:visibility="@{safeUnbox(viewModel.currentTab == 0 || viewModel.currentTab == 2) ? View.VISIBLE : View.GONE}"
                         android:background="@drawable/tool_bar_background_button"/>
                     <ImageButton
                         android:id="@id/content_activity_btn_add_friend"
@@ -84,7 +87,7 @@
                         android:padding="17dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_add_friend"
-                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 1 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{safeUnbox(viewModel.currentTab) == 1 ? View.VISIBLE : View.GONE}"
                         android:background="@drawable/tool_bar_background_button"/>
                     <ImageButton
                         android:id="@id/content_activity_btn_add_image"
@@ -95,7 +98,7 @@
                         android:padding="17dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_add_image"
-                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 3 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{safeUnbox(viewModel.currentTab) == 3 ? View.VISIBLE : View.GONE}"
                         android:background="@drawable/tool_bar_background_button"/>
                     <ImageButton
                         android:id="@id/content_activity_btn_bell"
@@ -105,7 +108,7 @@
                         android:padding="17dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_bell"
-                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 3 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{safeUnbox(viewModel.currentTab) == 3 ? View.VISIBLE : View.GONE}"
                         android:background="@drawable/tool_bar_background_button"/>
                     <ImageButton
                         android:id="@id/content_activity_btn_qr_code"
@@ -116,7 +119,7 @@
                         android:padding="17dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_qr_code"
-                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 4 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{safeUnbox(viewModel.currentTab) == 4 ? View.VISIBLE : View.GONE}"
                         android:background="@drawable/tool_bar_background_button"/>
                     <ImageButton
                         android:id="@id/content_activity_btn_setting"
@@ -126,10 +129,20 @@
                         android:padding="17dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_setting"
-                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 4 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{safeUnbox(viewModel.currentTab) == 4 ? View.VISIBLE : View.GONE}"
                         android:background="@drawable/tool_bar_background_button"/>
                 </FrameLayout>
             </android.support.constraint.ConstraintLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@id/content_activity_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="?attr/actionBarSize"
+                android:layout_marginBottom="?attr/actionBarSize"
+                bind:setPagerAdapter="@{pagerAdapter}"
+                bind:setOnPageChangeListener="@{viewModel}"
+                bind:setCurrentItem="@{viewModel.currentTab}"/>
 
             <View
                 android:layout_width="match_parent"
@@ -148,14 +161,14 @@
                     android:id="@id/content_activity_tab_messages"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="@{safeUnbox(contentViewModel.currentTab) == 0 ? 1.5f : 1.0f}"
-                    android:onClick="@{contentViewModel::onTabClickListener}">
+                    android:layout_weight="@{safeUnbox(viewModel.currentTab) == 0 ? 1.5f : 1.0f}"
+                    android:onClick="@{viewModel::onTabClick}">
                     <ImageView
                         android:id="@id/content_activity_tab_messages_icon"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:padding="@{safeUnbox(contentViewModel.currentTab) == 0 ? @dimen/content_activity_tab_icon_padding_selected : @dimen/content_activity_tab_icon_padding}"
-                        android:src="@{safeUnbox(contentViewModel.currentTab) == 0 ? @drawable/ic_tab_messages_selected : @drawable/ic_tab_messages}"
+                        android:padding="@{safeUnbox(viewModel.currentTab) == 0 ? @dimen/content_activity_tab_icon_padding_selected : @dimen/content_activity_tab_icon_padding}"
+                        android:src="@{safeUnbox(viewModel.currentTab) == 0 ? @drawable/ic_tab_messages_selected : @drawable/ic_tab_messages}"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toTopOf="@id/content_activity_tab_messages_title"/>
                     <TextView
@@ -168,21 +181,21 @@
                         android:textStyle="bold"
                         android:textSize="12dp"
                         android:includeFontPadding="false"
-                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 0 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{safeUnbox(viewModel.currentTab) == 0 ? View.VISIBLE : View.GONE}"
                         app:layout_constraintBottom_toBottomOf="parent"/>
                 </android.support.constraint.ConstraintLayout>
                 <android.support.constraint.ConstraintLayout
                     android:id="@id/content_activity_tab_contacts"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="@{safeUnbox(contentViewModel.currentTab) == 1 ? 1.5f : 1.0f}"
-                    android:onClick="@{contentViewModel::onTabClickListener}">
+                    android:layout_weight="@{safeUnbox(viewModel.currentTab) == 1 ? 1.5f : 1.0f}"
+                    android:onClick="@{viewModel::onTabClick}">
                     <ImageView
                         android:id="@id/content_activity_tab_contacts_icon"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:padding="@{safeUnbox(contentViewModel.currentTab) == 1 ? @dimen/content_activity_tab_icon_padding_selected : @dimen/content_activity_tab_icon_padding}"
-                        android:src="@{safeUnbox(contentViewModel.currentTab) == 1 ? @drawable/ic_tab_contacts_selected : @drawable/ic_tab_contacts}"
+                        android:padding="@{safeUnbox(viewModel.currentTab) == 1 ? @dimen/content_activity_tab_icon_padding_selected : @dimen/content_activity_tab_icon_padding}"
+                        android:src="@{safeUnbox(viewModel.currentTab) == 1 ? @drawable/ic_tab_contacts_selected : @drawable/ic_tab_contacts}"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toTopOf="@id/content_activity_tab_contacts_title"/>
                     <TextView
@@ -195,21 +208,21 @@
                         android:textStyle="bold"
                         android:textSize="12dp"
                         android:includeFontPadding="false"
-                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 1 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{safeUnbox(viewModel.currentTab) == 1 ? View.VISIBLE : View.GONE}"
                         app:layout_constraintBottom_toBottomOf="parent"/>
                 </android.support.constraint.ConstraintLayout>
                 <android.support.constraint.ConstraintLayout
                     android:id="@id/content_activity_tab_groups"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="@{safeUnbox(contentViewModel.currentTab) == 2 ? 1.5f : 1.0f}"
-                    android:onClick="@{contentViewModel::onTabClickListener}">
+                    android:layout_weight="@{safeUnbox(viewModel.currentTab) == 2 ? 1.5f : 1.0f}"
+                    android:onClick="@{viewModel::onTabClick}">
                     <ImageView
                         android:id="@id/content_activity_tab_groups_icon"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:padding="@{safeUnbox(contentViewModel.currentTab) == 2 ? @dimen/content_activity_tab_icon_padding_selected : @dimen/content_activity_tab_icon_padding}"
-                        android:src="@{safeUnbox(contentViewModel.currentTab) == 2 ? @drawable/ic_tab_groups_selected : @drawable/ic_tab_groups}"
+                        android:padding="@{safeUnbox(viewModel.currentTab) == 2 ? @dimen/content_activity_tab_icon_padding_selected : @dimen/content_activity_tab_icon_padding}"
+                        android:src="@{safeUnbox(viewModel.currentTab) == 2 ? @drawable/ic_tab_groups_selected : @drawable/ic_tab_groups}"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toTopOf="@id/content_activity_tab_groups_title"/>
                     <TextView
@@ -222,21 +235,21 @@
                         android:textStyle="bold"
                         android:textSize="12dp"
                         android:includeFontPadding="false"
-                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 2 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{safeUnbox(viewModel.currentTab) == 2 ? View.VISIBLE : View.GONE}"
                         app:layout_constraintBottom_toBottomOf="parent"/>
                 </android.support.constraint.ConstraintLayout>
                 <android.support.constraint.ConstraintLayout
                     android:id="@id/content_activity_tab_timeline"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="@{safeUnbox(contentViewModel.currentTab) == 3 ? 1.5f : 1.0f}"
-                    android:onClick="@{contentViewModel::onTabClickListener}">
+                    android:layout_weight="@{safeUnbox(viewModel.currentTab) == 3 ? 1.5f : 1.0f}"
+                    android:onClick="@{viewModel::onTabClick}">
                     <ImageView
                         android:id="@id/content_activity_tab_timeline_icon"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:padding="@{safeUnbox(contentViewModel.currentTab) == 3 ? @dimen/content_activity_tab_icon_padding_selected : @dimen/content_activity_tab_icon_padding}"
-                        android:src="@{safeUnbox(contentViewModel.currentTab) == 3 ? @drawable/ic_tab_timeline_selected : @drawable/ic_tab_timeline}"
+                        android:padding="@{safeUnbox(viewModel.currentTab) == 3 ? @dimen/content_activity_tab_icon_padding_selected : @dimen/content_activity_tab_icon_padding}"
+                        android:src="@{safeUnbox(viewModel.currentTab) == 3 ? @drawable/ic_tab_timeline_selected : @drawable/ic_tab_timeline}"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toTopOf="@id/content_activity_tab_timeline_title"/>
                     <TextView
@@ -249,21 +262,21 @@
                         android:textStyle="bold"
                         android:textSize="12dp"
                         android:includeFontPadding="false"
-                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 3 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{safeUnbox(viewModel.currentTab) == 3 ? View.VISIBLE : View.GONE}"
                         app:layout_constraintBottom_toBottomOf="parent"/>
                 </android.support.constraint.ConstraintLayout>
                 <android.support.constraint.ConstraintLayout
                     android:id="@id/content_activity_tab_more"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="@{safeUnbox(contentViewModel.currentTab) == 4 ? 1.5f : 1.0f}"
-                    android:onClick="@{contentViewModel::onTabClickListener}">
+                    android:layout_weight="@{safeUnbox(viewModel.currentTab) == 4 ? 1.5f : 1.0f}"
+                    android:onClick="@{viewModel::onTabClick}">
                     <ImageView
                         android:id="@id/content_activity_tab_more_icon"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:padding="@{safeUnbox(contentViewModel.currentTab) == 4 ? @dimen/content_activity_tab_icon_padding_selected : @dimen/content_activity_tab_icon_padding}"
-                        android:src="@{safeUnbox(contentViewModel.currentTab) == 4 ? @drawable/ic_tab_more_selected : @drawable/ic_tab_more}"
+                        android:padding="@{safeUnbox(viewModel.currentTab) == 4 ? @dimen/content_activity_tab_icon_padding_selected : @dimen/content_activity_tab_icon_padding}"
+                        android:src="@{safeUnbox(viewModel.currentTab) == 4 ? @drawable/ic_tab_more_selected : @drawable/ic_tab_more}"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toTopOf="@id/content_activity_tab_more_title"/>
                     <TextView
@@ -276,7 +289,7 @@
                         android:textStyle="bold"
                         android:textSize="12dp"
                         android:includeFontPadding="false"
-                        android:visibility="@{safeUnbox(contentViewModel.currentTab) == 4 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{safeUnbox(viewModel.currentTab) == 4 ? View.VISIBLE : View.GONE}"
                         app:layout_constraintBottom_toBottomOf="parent"/>
                 </android.support.constraint.ConstraintLayout>
             </LinearLayout>

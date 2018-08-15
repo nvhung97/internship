@@ -1,164 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.view.RegisterActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
-        android:id="@id/register_activity_status_bar"
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.cpu11398_local.etalk.presentation.view_model.RegisterViewModel"/>
+        <import type="android.text.InputType"/>
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:background="@drawable/status_bar_background"/>
+        android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
-
-        <FrameLayout
-            android:id="@id/register_activity_tool_bar"
+        <View
+            android:id="@id/register_activity_status_bar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@drawable/tool_bar_backgound">
-            <ImageButton
-                android:id="@id/register_activity_btn_back_arrow"
-                android:layout_width="?attr/actionBarSize"
-                android:layout_height="match_parent"
-                android:padding="17dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_arrow_back"
-                android:onClick="onBackPressed"
-                android:background="@drawable/tool_bar_background_button"/>
-            <TextView
-                android:id="@id/register_activity_txt_title"
+            android:layout_height="25dp"
+            android:background="@drawable/status_bar_background"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
+
+            <FrameLayout
+                android:id="@id/register_activity_tool_bar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="?attr/actionBarSize"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="@string/register_activity_txt_title"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/tool_bar_backgound">
+                <ImageButton
+                    android:id="@id/register_activity_btn_back_arrow"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:padding="17dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_arrow_back"
+                    android:onClick="@{viewModel::onBackPressed}"
+                    android:background="@drawable/tool_bar_background_button"/>
+                <TextView
+                    android:id="@id/register_activity_txt_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="?attr/actionBarSize"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/register_activity_txt_title"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18dp"
+                    android:gravity="center_vertical"/>
+            </FrameLayout>
+
+            <TextView
+                android:id="@id/register_activity_txt_input_hint"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="@string/register_activity_txt_input_hint"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/register_activity_tool_bar"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLightGray"
+                app:layout_constraintBottom_toBottomOf="@id/register_activity_txt_input_hint"/>
+
+            <EditText
+                android:id="@id/register_activity_edt_name"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:inputType="textCapWords"
+                android:maxLines="1"
+                android:text="@={viewModel.fullname}"
+                android:hint="@string/register_activity_txt_name_hint"
+                android:textCursorDrawable="@drawable/edt_cursor_normal"
+                android:background="@color/colorWhite"
+                app:layout_constraintTop_toBottomOf="@id/register_activity_txt_input_hint"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLightGray"
+                app:layout_constraintBottom_toBottomOf="@id/register_activity_edt_name"/>
+
+            <EditText
+                android:id="@id/register_activity_edt_username"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:inputType="text"
+                android:maxLines="1"
+                android:text="@={viewModel.username}"
+                android:hint="@string/register_activity_txt_username_hint"
+                android:textCursorDrawable="@drawable/edt_cursor_normal"
+                android:background="@color/colorWhite"
+                app:layout_constraintTop_toBottomOf="@id/register_activity_edt_name"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLightGray"
+                app:layout_constraintBottom_toBottomOf="@id/register_activity_edt_username"/>
+
+            <EditText
+                android:id="@id/register_activity_edt_password"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:paddingLeft="15dp"
+                android:inputType="@{viewModel.visiblePassword ? InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD}"
+                android:maxLines="1"
+                android:hint="@string/register_activity_txt_password_hint"
+                android:text="@={viewModel.password}"
+                android:textCursorDrawable="@drawable/edt_cursor_normal"
+                android:background="@color/colorWhite"
+                app:layout_constraintTop_toBottomOf="@id/register_activity_edt_username"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/register_activity_btn_password"/>
+
+            <ImageButton
+                android:id="@id/register_activity_btn_password"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@color/colorWhite"
+                android:src="@{viewModel.visiblePassword ? @drawable/ic_hide_password : @drawable/ic_show_password}"
+                android:onClick="@{viewModel::onChangeVisiblePasswordState}"
+                app:layout_constraintTop_toBottomOf="@id/register_activity_edt_username"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLightGray"
+                app:layout_constraintBottom_toBottomOf="@id/register_activity_edt_password"/>
+
+            <EditText
+                android:id="@id/register_activity_edt_phone"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:inputType="phone"
+                android:maxLines="1"
+                android:text="@={viewModel.phoneNumber}"
+                android:hint="@string/register_activity_txt_phone_hint"
+                android:textCursorDrawable="@drawable/edt_cursor_normal"
+                android:background="@color/colorWhite"
+                app:layout_constraintTop_toBottomOf="@id/register_activity_edt_password"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLightGray"
+                app:layout_constraintBottom_toBottomOf="@id/register_activity_edt_phone"/>
+
+            <Button
+                android:id="@id/register_activity_btn_register"
+                android:layout_width="200dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/register_activity_btn_login"
                 android:textColor="@color/colorWhite"
-                android:textSize="18dp"
-                android:gravity="center_vertical"/>
-        </FrameLayout>
+                android:background="@drawable/btn_register"
+                android:stateListAnimator="@null"
+                android:onClick="@{viewModel::onRegisterRequest}"
+                android:enabled="@{viewModel.phoneNumber.isEmpty() || viewModel.password.isEmpty() || viewModel.username.isEmpty() || viewModel.fullname.isEmpty() ? false : true}"
+                app:layout_constraintTop_toBottomOf="@id/register_activity_edt_phone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+        </android.support.constraint.ConstraintLayout>
 
-        <TextView
-            android:id="@id/register_activity_txt_input_hint"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:text="@string/register_activity_txt_input_hint"
-            android:gravity="center"
-            app:layout_constraintTop_toBottomOf="@id/register_activity_tool_bar"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorLightGray"
-            app:layout_constraintBottom_toBottomOf="@id/register_activity_txt_input_hint"/>
-
-        <EditText
-            android:id="@id/register_activity_edt_name"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:inputType="textCapWords"
-            android:maxLines="1"
-            android:hint="@string/register_activity_txt_name_hint"
-            android:textCursorDrawable="@drawable/edt_cursor_normal"
-            android:background="@color/colorWhite"
-            app:layout_constraintTop_toBottomOf="@id/register_activity_txt_input_hint"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorLightGray"
-            app:layout_constraintBottom_toBottomOf="@id/register_activity_edt_name"/>
-
-        <EditText
-            android:id="@id/register_activity_edt_username"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:inputType="text"
-            android:maxLines="1"
-            android:hint="@string/register_activity_txt_username_hint"
-            android:textCursorDrawable="@drawable/edt_cursor_normal"
-            android:background="@color/colorWhite"
-            app:layout_constraintTop_toBottomOf="@id/register_activity_edt_name"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorLightGray"
-            app:layout_constraintBottom_toBottomOf="@id/register_activity_edt_username"/>
-
-        <EditText
-            android:id="@id/register_activity_edt_password"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:paddingLeft="15dp"
-            android:inputType="textPassword"
-            android:hint="@string/register_activity_txt_password_hint"
-            android:textCursorDrawable="@drawable/edt_cursor_normal"
-            android:background="@color/colorWhite"
-            app:layout_constraintTop_toBottomOf="@id/register_activity_edt_username"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/register_activity_btn_password"/>
-
-        <ImageButton
-            android:id="@id/register_activity_btn_password"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_show_password"
-            android:background="@color/colorWhite"
-            app:layout_constraintTop_toBottomOf="@id/register_activity_edt_username"
-            app:layout_constraintRight_toRightOf="parent"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorLightGray"
-            app:layout_constraintBottom_toBottomOf="@id/register_activity_edt_password"/>
-
-        <EditText
-            android:id="@id/register_activity_edt_phone"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:inputType="phone"
-            android:maxLines="1"
-            android:hint="@string/register_activity_txt_phone_hint"
-            android:textCursorDrawable="@drawable/edt_cursor_normal"
-            android:background="@color/colorWhite"
-            app:layout_constraintTop_toBottomOf="@id/register_activity_edt_password"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorLightGray"
-            app:layout_constraintBottom_toBottomOf="@id/register_activity_edt_phone"/>
-
-        <Button
-            android:id="@id/register_activity_btn_register"
-            android:layout_width="200dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/register_activity_btn_login"
-            android:textColor="@color/colorWhite"
-            android:background="@drawable/btn_register"
-            android:stateListAnimator="@null"
-            android:enabled="false"
-            app:layout_constraintTop_toBottomOf="@id/register_activity_edt_phone"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
-    </android.support.constraint.ConstraintLayout>
-
-</FrameLayout>
+    </FrameLayout>
+</layout>
