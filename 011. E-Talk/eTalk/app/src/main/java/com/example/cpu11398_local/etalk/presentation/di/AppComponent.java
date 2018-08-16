@@ -4,6 +4,7 @@ import com.example.cpu11398_local.etalk.presentation.view.chat.ChatActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.ContentActivity;
 import com.example.cpu11398_local.etalk.presentation.view.login.LoginActivity;
 import com.example.cpu11398_local.etalk.presentation.view.register.RegisterActivity;
+import javax.inject.Singleton;
 import dagger.Component;
 
 @Component(modules = {AppModule.class})

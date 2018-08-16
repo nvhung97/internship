@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-
 import com.example.cpu11398_local.etalk.presentation.view.content.pager_adapter.ContentPagerAdapter;
 import com.example.cpu11398_local.etalk.presentation.view_model.ChatViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ContentViewModel;
@@ -12,6 +11,7 @@ import com.example.cpu11398_local.etalk.presentation.view_model.LoginViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.RegisterViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
