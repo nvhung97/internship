@@ -1,13 +1,17 @@
-package com.example.cpu11398_local.etalk.presentation.view_model;
+package com.example.cpu11398_local.etalk.presentation.view_model.login;
 
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
+import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
+import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
 import javax.inject.Inject;
+import javax.inject.Named;
 import io.reactivex.Observer;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.subjects.PublishSubject;
 
 public class LoginViewModel implements ViewModel {
@@ -29,6 +33,12 @@ public class LoginViewModel implements ViewModel {
     public ObservableBoolean visiblePassword = new ObservableBoolean(false);
 
     /**
+     * Binding data between {@code loginFailed} and attribute {@code text} and
+     * {@code textColor} of {@code EditText} input hint on view.
+     */
+    public ObservableBoolean loginFailed = new ObservableBoolean(false);
+
+    /**
      * Publisher will emit event to view. View listen these event via a observer.
      */
     private PublishSubject<Event> publisher = PublishSubject.create();
@@ -39,11 +49,17 @@ public class LoginViewModel implements ViewModel {
     private Context context;
 
     /**
-     * Create new {@code LoginViewModel} with a context.
+     * When user request login, viewModel use {@code loginUsecase} to perform the action.
+     */
+    private Usecase loginUsecase;
+
+    /**
+     * create new {@code LoginViewModel} with a context and an usecase.
      */
     @Inject
-    public LoginViewModel(Context context) {
-        this.context = context;
+    public LoginViewModel(Context context, @Named("LoginUsecase") Usecase loginUsecase) {
+        this.context      = context;
+        this.loginUsecase = loginUsecase;
     }
 
     /**
@@ -60,7 +76,7 @@ public class LoginViewModel implements ViewModel {
      * @param view
      */
     public void onBackPressed(View view) {
-        publisher.onNext(Event.Create(Event.LOGIN_ACTIVITY_BACK));
+        publisher.onNext(Event.create(Event.LOGIN_ACTIVITY_BACK));
     }
 
     /**
@@ -68,7 +84,12 @@ public class LoginViewModel implements ViewModel {
      * @param view
      */
     public void onLoginRequest(View view) {
-        Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+        publisher.onNext(Event.create(Event.LOGIN_ACTIVITY_SHOW_LOADING));
+        loginUsecase.execute(
+                new LoginObserver(),
+                username.get(),
+                password.get()
+        );
     }
 
     /**
@@ -79,8 +100,31 @@ public class LoginViewModel implements ViewModel {
         visiblePassword.set(!visiblePassword.get());
     }
 
+    /**
+     * Called when this viewModel destroyed to inform usecase stop current task.
+     */
     @Override
     public void endTask() {
+        loginUsecase.endTask();
+    }
 
+    /**
+     * {@code LoginObserver} is subscribed to usecase to listen event from it.
+     */
+    private class LoginObserver extends DisposableSingleObserver<Boolean> {
+        @Override
+        public void onSuccess(Boolean isSuccess) {
+            if (isSuccess) {
+                publisher.onNext(Event.create(Event.LOGIN_ACTIVITY_FINISH_OK));
+            } else {
+                publisher.onNext(Event.create(Event.LOGIN_ACTIVITY_HIDE_LOADING));
+                loginFailed.set(true);
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.i("eTalk", e.getMessage());
+        }
     }
 }

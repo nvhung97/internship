@@ -1,13 +1,13 @@
-package com.example.cpu11398_local.etalk.presentation.view.content.pager_adapter;
+package com.example.cpu11398_local.etalk.presentation.view.content.pager_page;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.ContactsFragment;
-import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.GroupsFragment;
-import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.MessagesFragment;
-import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.MoreFragment;
-import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.TimelineFragment;
+import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.contacts.ContactsFragment;
+import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.groups.GroupsFragment;
+import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.messages.MessagesFragment;
+import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.more.MoreFragment;
+import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.timeline.TimelineFragment;
 
 public class ContentPagerAdapter extends FragmentStatePagerAdapter {
 

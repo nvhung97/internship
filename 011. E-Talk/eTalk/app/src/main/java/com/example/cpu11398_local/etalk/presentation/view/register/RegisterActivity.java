@@ -6,7 +6,7 @@ import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityRegisterBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.main.MainActivity;
-import com.example.cpu11398_local.etalk.presentation.view_model.RegisterViewModel;
+import com.example.cpu11398_local.etalk.presentation.view_model.register.RegisterViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.Tool;
@@ -19,10 +19,9 @@ public class RegisterActivity extends BaseActivity {
 
     @Inject
     @Named("RegisterViewModel")
-    public ViewModel                viewModel;
+    public ViewModel    viewModel;
 
-    private ActivityRegisterBinding binding;
-    private Disposable              disposable;
+    private Disposable  disposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +35,7 @@ public class RegisterActivity extends BaseActivity {
 
     @Override
     public void onDataBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_register);
+        ActivityRegisterBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_register);
         viewModel = (ViewModel) getLastCustomNonConfigurationInstance();
         if (viewModel == null) {
             MainActivity.getAppComponent(this).inject(this);
@@ -92,6 +91,12 @@ public class RegisterActivity extends BaseActivity {
             switch (event.getType()) {
                 case Event.REGISTER_ACTIVITY_BACK:
                     onBackPressed();
+                    break;
+                case Event.REGISTER_ACTIVITY_FINISH_OK:
+                    onFinishSuccessfully();
+                    break;
+                case Event.REGISTER_ACTIVITY_FINISH_CANCELED:
+                    onFinishFailed();
                     break;
             }
         }

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.cpu11398_local.etalk.presentation.view_model.ChatViewModel"/>
+            type="com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatViewModel"/>
         <import type="android.view.View"/>
     </data>
 

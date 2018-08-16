@@ -2,16 +2,15 @@ package com.example.cpu11398_local.etalk.presentation.view.content;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.PopupMenu;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityContentBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
-import com.example.cpu11398_local.etalk.presentation.view.content.pager_adapter.ContentPagerAdapter;
+import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.ContentPagerAdapter;
 import com.example.cpu11398_local.etalk.presentation.view.main.MainActivity;
-import com.example.cpu11398_local.etalk.presentation.view_model.ContentViewModel;
+import com.example.cpu11398_local.etalk.presentation.view_model.content.ContentViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.Tool;
@@ -24,14 +23,9 @@ public class ContentActivity extends BaseActivity {
 
     @Inject
     @Named("ContentViewModel")
-    public ViewModel                    viewModel;
+    public ViewModel    viewModel;
 
-    @Inject
-    @Named("ContentPagerAdapter")
-    public FragmentStatePagerAdapter    pagerAdapter;
-
-    private ActivityContentBinding      binding;
-    private Disposable                  disposable;
+    private Disposable  disposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +39,13 @@ public class ContentActivity extends BaseActivity {
 
     @Override
     public void onDataBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_content);
+        ActivityContentBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_content);
         viewModel = (ViewModel) getLastCustomNonConfigurationInstance();
         if (viewModel == null) {
             MainActivity.getAppComponent(this).inject(this);
         }
         binding.setViewModel((ContentViewModel)viewModel);
-        binding.setPagerAdapter((ContentPagerAdapter)pagerAdapter);
+        binding.setPagerAdapter(new ContentPagerAdapter(getSupportFragmentManager()));
     }
 
     @Override

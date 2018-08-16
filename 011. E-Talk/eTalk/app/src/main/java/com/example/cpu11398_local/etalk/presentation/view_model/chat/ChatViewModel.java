@@ -1,4 +1,4 @@
-package com.example.cpu11398_local.etalk.presentation.view_model;
+package com.example.cpu11398_local.etalk.presentation.view_model.chat;
 
 import android.content.Context;
 import android.databinding.ObservableField;
@@ -29,7 +29,7 @@ public class ChatViewModel implements ViewModel {
     private Context context;
 
     /**
-     * Create new {@code ChatViewModel} with a context.
+     * create new {@code ChatViewModel} with a context.
      */
     @Inject
     public ChatViewModel(Context context) {
@@ -50,7 +50,7 @@ public class ChatViewModel implements ViewModel {
      * @param view
      */
     public void onBackPressed(View view) {
-        publisher.onNext(Event.Create(Event.CHAT_ACTIVITY_BACK));
+        publisher.onNext(Event.create(Event.CHAT_ACTIVITY_BACK));
     }
 
     /**

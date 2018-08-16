@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.cpu11398_local.etalk.presentation.view_model.RegisterViewModel"/>
+            type="com.example.cpu11398_local.etalk.presentation.view_model.register.RegisterViewModel"/>
         <import type="android.text.InputType"/>
     </data>
 

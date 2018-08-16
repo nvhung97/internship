@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.cpu11398_local.etalk.presentation.view_model.LoginViewModel"/>
+            type="com.example.cpu11398_local.etalk.presentation.view_model.login.LoginViewModel"/>
         <import type="android.text.InputType"/>
     </data>
 
@@ -58,7 +58,8 @@
                 android:layout_height="60dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:text="@string/login_activity_txt_input_hint"
+                android:text="@{viewModel.loginFailed ? @string/login_activity_login_failed : @string/login_activity_txt_input_hint}"
+                android:textColor="@{viewModel.loginFailed ? @color/colorRed : @color/colorGray}"
                 android:gravity="center"
                 app:layout_constraintTop_toBottomOf="@id/login_activity_tool_bar"/>
 
