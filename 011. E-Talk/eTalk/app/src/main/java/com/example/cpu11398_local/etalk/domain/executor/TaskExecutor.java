@@ -11,7 +11,7 @@ public class TaskExecutor implements Executor{
     private ThreadPoolExecutor threadPoolExecutor;
 
     /**
-     * Create a new {@Code TaskExecutor} with a {@code ThreadPoolExecutor}.
+     * create a new {@Code TaskExecutor} with a {@code ThreadPoolExecutor}.
      */
     public TaskExecutor() {
         threadPoolExecutor = new ThreadPoolExecutor(
@@ -19,7 +19,7 @@ public class TaskExecutor implements Executor{
                 5,
                 10,
                 TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>()
+                new LinkedBlockingQueue<>()
         );
     }
 

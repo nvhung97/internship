@@ -1,4 +1,4 @@
-package com.example.cpu11398_local.etalk.presentation.view.content.pager_page;
+package com.example.cpu11398_local.etalk.presentation.view.content.pager_page.more;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,10 +11,10 @@ import com.example.cpu11398_local.etalk.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TimelineFragment extends Fragment {
+public class MoreFragment extends Fragment {
 
 
-    public TimelineFragment() {
+    public MoreFragment() {
         // Required empty public constructor
     }
 
@@ -24,7 +24,7 @@ public class TimelineFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_timeline, container, false);
+        return inflater.inflate(R.layout.fragment_more, container, false);
     }
 
 }

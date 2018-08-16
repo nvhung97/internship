@@ -12,6 +12,8 @@
     <string name="login_activity_txt_username_hint">Enter username</string>
     <string name="login_activity_txt_password_hint">Enter password</string>
     <string name="login_activity_btn_login">LOGIN</string>
+    <string name="login_activity_loading">Logging in...</string>
+    <string name="login_activity_login_failed">Invalid login credentials.\n Please double-check and try again.</string>
 
     <!--Register activity-->
     <string name="register_activity_txt_title">Register</string>

@@ -1,16 +1,18 @@
-package com.example.cpu11398_local.etalk.presentation.view_model;
+package com.example.cpu11398_local.etalk.presentation.view_model.register;
 
 import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.view.View;
 import android.widget.Toast;
+
+import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
 import javax.inject.Inject;
 import io.reactivex.Observer;
 import io.reactivex.subjects.PublishSubject;
 
-public class RegisterViewModel implements ViewModel{
+public class RegisterViewModel implements ViewModel {
 
     /**
      * Binding data between {@code fullname} and Fullname {@code EditText} on view.
@@ -49,7 +51,7 @@ public class RegisterViewModel implements ViewModel{
     private Context context;
 
     /**
-     * Create new {@code RegisterViewModel} with a context.
+     * create new {@code RegisterViewModel} with a context.
      */
     @Inject
     public RegisterViewModel(Context context) {
@@ -70,7 +72,7 @@ public class RegisterViewModel implements ViewModel{
      * @param view
      */
     public void onBackPressed(View view) {
-        publisher.onNext(Event.Create(Event.REGISTER_ACTIVITY_BACK));
+        publisher.onNext(Event.create(Event.REGISTER_ACTIVITY_BACK));
     }
 
     /**

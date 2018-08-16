@@ -1,4 +1,4 @@
-package com.example.cpu11398_local.etalk.presentation.view.content.pager_page;
+package com.example.cpu11398_local.etalk.presentation.view.content.pager_page.contacts;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

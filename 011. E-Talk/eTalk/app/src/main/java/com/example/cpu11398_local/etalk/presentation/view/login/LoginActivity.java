@@ -1,12 +1,13 @@
 package com.example.cpu11398_local.etalk.presentation.view.login;
 
+import android.app.ProgressDialog;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityLoginBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.main.MainActivity;
-import com.example.cpu11398_local.etalk.presentation.view_model.LoginViewModel;
+import com.example.cpu11398_local.etalk.presentation.view_model.login.LoginViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.Tool;
@@ -19,10 +20,10 @@ public class LoginActivity extends BaseActivity {
 
     @Inject
     @Named("LoginViewModel")
-    public ViewModel                viewModel;
+    public ViewModel        viewModel;
 
-    private ActivityLoginBinding    binding;
-    private Disposable              disposable;
+    private Disposable      disposable;
+    private ProgressDialog  dialogLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onDataBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        ActivityLoginBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         viewModel = (ViewModel) getLastCustomNonConfigurationInstance();
         if (viewModel == null) {
             MainActivity.getAppComponent(this).inject(this);
@@ -79,6 +80,19 @@ public class LoginActivity extends BaseActivity {
         Tool.finishFailed(this);
     }
 
+    private void onShowLoading() {
+        dialogLoading = ProgressDialog.show(
+                this,
+                "",
+                getString(R.string.login_activity_loading),
+                true
+        );
+    }
+
+    private void onHideLoading() {
+        dialogLoading.dismiss();
+    }
+
     private class LoginObserver implements Observer<Event> {
         @Override
         public void onSubscribe(Disposable d) {
@@ -91,6 +105,18 @@ public class LoginActivity extends BaseActivity {
             switch (event.getType()) {
                 case Event.LOGIN_ACTIVITY_BACK:
                     onBackPressed();
+                    break;
+                case Event.LOGIN_ACTIVITY_FINISH_OK:
+                    onFinishSuccessfully();
+                    break;
+                case Event.LOGIN_ACTIVITY_FINISH_CANCELED:
+                    onFinishFailed();
+                    break;
+                case Event.LOGIN_ACTIVITY_SHOW_LOADING:
+                    onShowLoading();
+                    break;
+                case Event.LOGIN_ACTIVITY_HIDE_LOADING:
+                    onHideLoading();
                     break;
             }
         }

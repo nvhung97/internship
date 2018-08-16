@@ -1,20 +1,20 @@
 package com.example.cpu11398_local.etalk.presentation.view.main;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.di.AppComponent;
 import com.example.cpu11398_local.etalk.presentation.di.AppModule;
 import com.example.cpu11398_local.etalk.presentation.di.DaggerAppComponent;
-import com.example.cpu11398_local.etalk.presentation.view.chat.ChatActivity;
+import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.ContentActivity;
 import com.example.cpu11398_local.etalk.presentation.view.login.LoginActivity;
 import com.example.cpu11398_local.etalk.presentation.view.register.RegisterActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private final int REQUEST_LOGIN     = 0;
     private final int REQUEST_REGISTER  = 1;
@@ -29,12 +29,13 @@ public class MainActivity extends AppCompatActivity {
      * Start Login Activity when user click Login button.
      * @param v View is clicked.
      */
+    @SuppressLint("CheckResult")
     public void showLoginView(View v) {
-        startActivity(new Intent(MainActivity.this, ContentActivity.class));
-        /*startActivityForResult(
+        //startActivity(new Intent(MainActivity.this, ContentActivity.class));
+        startActivityForResult(
                 new Intent(MainActivity.this, LoginActivity.class),
                 REQUEST_LOGIN
-        );*/
+        );
     }
 
     /**
@@ -42,11 +43,11 @@ public class MainActivity extends AppCompatActivity {
      * @param v View is clicked.
      */
     public void showRegisterView(View v) {
-        startActivity(new Intent(MainActivity.this, ChatActivity.class));
-        /*startActivityForResult(
+        //startActivity(new Intent(MainActivity.this, ChatActivity.class));
+        startActivityForResult(
                 new Intent(MainActivity.this, RegisterActivity.class),
                 REQUEST_REGISTER
-        );*/
+        );
     }
 
     /**
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
     private static AppComponent appComponent;
 
     /**
-     * Create a new {@code AppComponent} if it does not exist.
+     * create a new {@code AppComponent} if it does not exist.
      * @param context parameter is used create a new {@code AppComponent}.
      * @return {@code AppComponent}.
      */
@@ -94,5 +95,30 @@ public class MainActivity extends AppCompatActivity {
                     .build();
         }
         return appComponent;
+    }
+
+    @Override
+    public void onDataBinding() {
+
+    }
+
+    @Override
+    public void onSubscribeViewModel() {
+
+    }
+
+    @Override
+    public void onUnSubscribeViewModel() {
+
+    }
+
+    @Override
+    public Object onSaveViewModel() {
+        return null;
+    }
+
+    @Override
+    public void onEndTaskViewModel() {
+
     }
 }

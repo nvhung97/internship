@@ -1,4 +1,4 @@
-package com.example.cpu11398_local.etalk.presentation.view_model;
+package com.example.cpu11398_local.etalk.presentation.view_model.content;
 
 import android.content.Context;
 import android.databinding.ObservableInt;
@@ -34,7 +34,7 @@ public class ContentViewModel implements ViewModel, PopupMenu.OnMenuItemClickLis
     private Context context;
 
     /**
-     * Create new {@code ContentViewModel} with a context.
+     * create new {@code ContentViewModel} with a context.
      */
     @Inject
     public ContentViewModel(Context context) {
@@ -76,12 +76,60 @@ public class ContentViewModel implements ViewModel, PopupMenu.OnMenuItemClickLis
     }
 
     /**
+     * Called when user click camera button on tool bar.
+     * @param view
+     */
+    public void onCameraClick(View view) {
+        Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Called when user click add friend button on tool bar.
+     * @param view
+     */
+    public void onAddFriendClick(View view) {
+        Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Called when user click add image button on tool bar.
+     * @param view
+     */
+    public void onAddImageClick(View view) {
+        Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Called when user click bell button on tool bar.
+     * @param view
+     */
+    public void onBellClick(View view) {
+        Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Called when user click QR code button on tool bar.
+     * @param view
+     */
+    public void onQRCodeClick(View view) {
+        Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Called when user click setting button on tool bar.
+     * @param view
+     */
+    public void onSettingClick(View view) {
+        Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
      * Called when user click plus button.
      * @param view
      */
     public void onPlusClick(View view) {
         publisher.onNext(
-                Event.Create(
+                Event.create(
                         Event.CONTENT_ACTIVITY_SHOW_POPUP_MENU,
                         view, this
                 )

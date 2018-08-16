@@ -53,6 +53,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
+     * Allow subclass of this class can detect when it is recreating.
+     * @return
+     */
+    protected boolean isReCreating() {
+        return isReCreating;
+    }
+
+    /**
      * Called in {@link #onCreate(Bundle)} to bind data between view and viewModel.
      */
     public abstract void onDataBinding();

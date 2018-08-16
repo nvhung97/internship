@@ -31,23 +31,25 @@ public class Event {
     public static final int LOGIN_ACTIVITY_BACK             = LOGIN_ACTIVITY_MARK | 0;
     public static final int LOGIN_ACTIVITY_FINISH_OK        = LOGIN_ACTIVITY_MARK | 1;
     public static final int LOGIN_ACTIVITY_FINISH_CANCELED  = LOGIN_ACTIVITY_MARK | 2;
+    public static final int LOGIN_ACTIVITY_SHOW_LOADING     = LOGIN_ACTIVITY_MARK | 3;
+    public static final int LOGIN_ACTIVITY_HIDE_LOADING     = LOGIN_ACTIVITY_MARK | 4;
 
     /**
      * Bellow commands for {@code RegisterActivity}.
      */
     private static final int REGISTER_ACTIVITY_MARK             = 3 << MODE_SHIFT;
     public static final int REGISTER_ACTIVITY_BACK              = REGISTER_ACTIVITY_MARK | 0;
-    public static final int REGISTER_ACTIVITY_FINISH_OK         = LOGIN_ACTIVITY_MARK | 1;
-    public static final int REGISTER_ACTIVITY_FINISH_CANCELED   = LOGIN_ACTIVITY_MARK | 2;
+    public static final int REGISTER_ACTIVITY_FINISH_OK         = REGISTER_ACTIVITY_MARK | 1;
+    public static final int REGISTER_ACTIVITY_FINISH_CANCELED   = REGISTER_ACTIVITY_MARK | 2;
 
     private int         type;
     private Object[]    data;
 
-    public static Event Create(int type) {
+    public static Event create(int type) {
         return new Event(type, (Object)null);
     }
 
-    public static Event Create(int type, Object... data) {
+    public static Event create(int type, Object... data) {
         return new Event(type, data);
     }
 
