@@ -1,5 +1,6 @@
 package com.example.cpu11398_local.etalk.presentation.view.register;
 
+import android.app.Dialog;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import com.example.cpu11398_local.etalk.R;
@@ -22,6 +23,7 @@ public class RegisterActivity extends BaseActivity {
     public ViewModel    viewModel;
 
     private Disposable  disposable;
+    private Dialog      dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,17 @@ public class RegisterActivity extends BaseActivity {
         Tool.finishFailed(this);
     }
 
+    private void onShowLoading() {
+        dialog = Tool.createProcessingDialog(this);
+        dialog.show();
+    }
+
+    private void onHideLoading() {
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+    }
+
     private class RegisterObserver implements Observer<Event> {
         @Override
         public void onSubscribe(Disposable d) {
@@ -97,6 +110,12 @@ public class RegisterActivity extends BaseActivity {
                     break;
                 case Event.REGISTER_ACTIVITY_FINISH_CANCELED:
                     onFinishFailed();
+                    break;
+                case Event.REGISTER_ACTIVITY_SHOW_LOADING:
+                    onShowLoading();
+                    break;
+                case Event.REGISTER_ACTIVITY_HIDE_LOADING:
+                    onHideLoading();
                     break;
             }
         }

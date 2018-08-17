@@ -1,10 +1,13 @@
 package com.example.cpu11398_local.etalk.utils;
 
+import android.content.res.Resources;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.databinding.BindingAdapter;
+import android.widget.TextView;
+import com.example.cpu11398_local.etalk.R;
 
 /**
  * Created by Hung-pc on 8/14/2018.
@@ -56,5 +59,49 @@ public class ETalkBindingAdapter {
     @BindingAdapter("setCurrentItem")
     public static void setCurrentItem(ViewPager viewPager, int item) {
         viewPager.setCurrentItem(item);
+    }
+
+    /**
+     * Add setter to bind text and text color for {@code TextView} according to given {@code Event}.
+     * @param textView TextView need to set hint state.
+     * @param event used to set hint state for the TextView.
+     */
+    @BindingAdapter("hintWithEvent")
+    public static void setHintWithEvent(TextView textView, Event event) {
+        Resources resources = textView.getContext().getResources();
+        switch (textView.getId()) {
+            case R.id.login_activity_txt_input_hint:
+                switch (event.getType()) {
+                    case Event.NONE:
+                        textView.setText(resources.getString(R.string.login_activity_txt_input_hint));
+                        textView.setTextColor(resources.getColor(R.color.colorGray));
+                        break;
+                    case Event.LOGIN_ACTIVITY_LOGIN_FAILED:
+                        textView.setText(resources.getString(R.string.login_activity_login_failed));
+                        textView.setTextColor(resources.getColor(R.color.colorRed));
+                        break;
+                    case Event.LOGIN_ACTIVITY_TIMEOUT:
+                        textView.setText(resources.getString(R.string.app_request_timeout));
+                        textView.setTextColor(resources.getColor(R.color.colorRed));
+                        break;
+                }
+                break;
+            case R.id.register_activity_txt_input_hint:
+                switch (event.getType()) {
+                    case Event.NONE:
+                        textView.setText(resources.getString(R.string.register_activity_txt_input_hint));
+                        textView.setTextColor(resources.getColor(R.color.colorGray));
+                        break;
+                    case Event.REGISTER_ACTIVITY_REGISTER_FAILED:
+                        textView.setText(resources.getString(R.string.register_activity_register_failed));
+                        textView.setTextColor(resources.getColor(R.color.colorRed));
+                        break;
+                    case Event.REGISTER_ACTIVITY_TIMEOUT:
+                        textView.setText(resources.getString(R.string.app_request_timeout));
+                        textView.setTextColor(resources.getColor(R.color.colorRed));
+                        break;
+                }
+                break;
+        }
     }
 }

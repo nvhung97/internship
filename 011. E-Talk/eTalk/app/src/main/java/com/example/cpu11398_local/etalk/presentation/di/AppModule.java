@@ -1,18 +1,20 @@
 package com.example.cpu11398_local.etalk.presentation.di;
 
 import android.content.Context;
-import com.example.cpu11398_local.etalk.data.netword.FirebaseDB;
+import com.example.cpu11398_local.etalk.data.network.FirebaseDB;
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
 import com.example.cpu11398_local.etalk.data.repository.implement.UserRepositoryImpl;
 import com.example.cpu11398_local.etalk.domain.executor.TaskExecutor;
 import com.example.cpu11398_local.etalk.domain.interactor.LoginUsecase;
+import com.example.cpu11398_local.etalk.domain.interactor.RegisterUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
 import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContentViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.login.LoginViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.register.RegisterViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
+import com.example.cpu11398_local.etalk.utils.NetworkChangeReceiver;
 import java.util.concurrent.Executor;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -50,6 +52,11 @@ public class AppModule {
     @Provides
     public CompositeDisposable provideCompositeDisposable() {
         return new CompositeDisposable();
+    }
+
+    @Provides
+    public NetworkChangeReceiver provideNetworkChangeReceiver() {
+        return new NetworkChangeReceiver();
     }
 
 
@@ -92,6 +99,20 @@ public class AppModule {
         );
     }
 
+    @Provides
+    @Named("RegisterUsecase")
+    public Usecase provideRegisterUsecase(Executor executor,
+                                          Scheduler scheduler,
+                                          CompositeDisposable compositeDisposable,
+                                          UserRepository userRepository) {
+        return new RegisterUsecase(
+                executor,
+                scheduler,
+                compositeDisposable,
+                userRepository
+        );
+    }
+
 
     /**********************************************************************************************
      *                                     VIEW-MODEL
@@ -111,13 +132,17 @@ public class AppModule {
 
     @Provides
     @Named("LoginViewModel")
-    public ViewModel provideLoginViewModel(Context context, @Named("LoginUsecase") Usecase usecase) {
-        return new LoginViewModel(context, usecase);
+    public ViewModel provideLoginViewModel(Context context,
+                                           @Named("LoginUsecase") Usecase usecase,
+                                           NetworkChangeReceiver receiver) {
+        return new LoginViewModel(context, usecase, receiver);
     }
 
     @Provides
     @Named("RegisterViewModel")
-    public ViewModel provideRegisterViewModel(Context context) {
-        return new RegisterViewModel(context);
+    public ViewModel provideRegisterViewModel(Context context,
+                                              @Named("RegisterUsecase") Usecase usecase,
+                                              NetworkChangeReceiver receiver) {
+        return new RegisterViewModel(context, usecase, receiver);
     }
 }

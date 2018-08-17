@@ -6,10 +6,13 @@
     <color name="colorSearchHint">#74C9FF</color>
     <color name="colorTabSelected">#1493FC</color>
     <color name="colorRed">#FF0000</color>
+    <color name="colorNoConnection">#EDEDED</color>
+    <color name="colorNoConnectionDivider">#DADADA</color>
 
     <color name="colorTransparent">#00000000</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorWhite50Transparent">#7FFFFFFF</color>
+    <color name="colorBlack">#000000</color>
     <color name="colorBlack25Transparent">#3F000000</color>
     <color name="colorBlack50Transparent">#7F000000</color>
 
@@ -25,5 +28,8 @@
 
     <color name="colorStatusBarDark">#1A55B1</color>
     <color name="colorStatusBarLight">#0083AF</color>
+
+    <color name="colorLoading">#1493FA</color>
+    <color name="colorLoadingBackground">#DCE1E7</color>
 
 </resources>

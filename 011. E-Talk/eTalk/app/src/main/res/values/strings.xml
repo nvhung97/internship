@@ -1,6 +1,9 @@
 <resources>
 
     <string name="app_name">eTalk</string>
+    <string name="app_processing">Processing…</string>
+    <string name="app_no_connection">No connection</string>
+    <string name="app_request_timeout">Request Timeout.\n Check connection and try again.</string>
 
     <!--Welcome activity-->
     <string name="welcome_activity_btn_login">LOGIN</string>
@@ -12,7 +15,6 @@
     <string name="login_activity_txt_username_hint">Enter username</string>
     <string name="login_activity_txt_password_hint">Enter password</string>
     <string name="login_activity_btn_login">LOGIN</string>
-    <string name="login_activity_loading">Logging in...</string>
     <string name="login_activity_login_failed">Invalid login credentials.\n Please double-check and try again.</string>
 
     <!--Register activity-->
@@ -23,9 +25,10 @@
     <string name="register_activity_txt_password_hint">Enter password</string>
     <string name="register_activity_txt_phone_hint">Enter phone number</string>
     <string name="register_activity_btn_login">REGISTER</string>
+    <string name="register_activity_register_failed">The username is already in use by another account</string>
 
     <!--Content activity-->
-    <string name="content_activity_edt_search">Search friends, messages...</string>
+    <string name="content_activity_edt_search">Search friends, messages…</string>
     <string name="content_activity_tab_messages">Messages</string>
     <string name="content_activity_tab_contacts">Contacts</string>
     <string name="content_activity_tab_groups">Groups</string>

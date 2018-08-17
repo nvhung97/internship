@@ -13,6 +13,11 @@ public class Event {
     private static final int MODE_SHIFT = 28; //Maximum 16 different views.
 
     /**
+     * Used when need to return an event but do nothing or default action.
+     */
+    public static final int NONE = 0x7fffffff;
+
+    /**
      * Bellow commands for {@code ContentActivity}.
      */
     private static final int CONTENT_ACTIVITY_MARK              = 0 << MODE_SHIFT;
@@ -33,6 +38,8 @@ public class Event {
     public static final int LOGIN_ACTIVITY_FINISH_CANCELED  = LOGIN_ACTIVITY_MARK | 2;
     public static final int LOGIN_ACTIVITY_SHOW_LOADING     = LOGIN_ACTIVITY_MARK | 3;
     public static final int LOGIN_ACTIVITY_HIDE_LOADING     = LOGIN_ACTIVITY_MARK | 4;
+    public static final int LOGIN_ACTIVITY_LOGIN_FAILED     = LOGIN_ACTIVITY_MARK | 5;
+    public static final int LOGIN_ACTIVITY_TIMEOUT          = LOGIN_ACTIVITY_MARK | 6;
 
     /**
      * Bellow commands for {@code RegisterActivity}.
@@ -41,6 +48,10 @@ public class Event {
     public static final int REGISTER_ACTIVITY_BACK              = REGISTER_ACTIVITY_MARK | 0;
     public static final int REGISTER_ACTIVITY_FINISH_OK         = REGISTER_ACTIVITY_MARK | 1;
     public static final int REGISTER_ACTIVITY_FINISH_CANCELED   = REGISTER_ACTIVITY_MARK | 2;
+    public static final int REGISTER_ACTIVITY_SHOW_LOADING      = REGISTER_ACTIVITY_MARK | 3;
+    public static final int REGISTER_ACTIVITY_HIDE_LOADING      = REGISTER_ACTIVITY_MARK | 4;
+    public static final int REGISTER_ACTIVITY_REGISTER_FAILED   = REGISTER_ACTIVITY_MARK | 5;
+    public static final int REGISTER_ACTIVITY_TIMEOUT           = REGISTER_ACTIVITY_MARK | 6;
 
     private int         type;
     private Object[]    data;

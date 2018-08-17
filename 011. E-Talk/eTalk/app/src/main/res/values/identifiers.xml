@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--Loading-->
+    <item name="loading" type="id"/>
+    <item name="loading_icon" type="id"/>
+    <item name="loading_message" type="id"/>
+
     <!--Welcome activity-->
     <item name="welcome_activity_btn_login" type="id"/>
     <item name="welcome_activity_btn_register" type="id"/>
@@ -10,6 +15,7 @@
     <item name="login_activity_tool_bar" type="id"/>
     <item name="login_activity_btn_back_arrow" type="id"/>
     <item name="login_activity_txt_title" type="id"/>
+    <item name="login_activity_txt_no_connection" type="id"/>
     <item name="login_activity_txt_input_hint" type="id"/>
     <item name="login_activity_edt_username" type="id"/>
     <item name="login_activity_edt_password" type="id"/>
@@ -21,6 +27,7 @@
     <item name="register_activity_tool_bar" type="id"/>
     <item name="register_activity_btn_back_arrow" type="id"/>
     <item name="register_activity_txt_title" type="id"/>
+    <item name="register_activity_txt_no_connection" type="id"/>
     <item name="register_activity_txt_input_hint" type="id"/>
     <item name="register_activity_edt_name" type="id"/>
     <item name="register_activity_edt_username" type="id"/>

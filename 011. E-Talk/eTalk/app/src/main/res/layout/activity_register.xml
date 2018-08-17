@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <variable
             name="viewModel"
             type="com.example.cpu11398_local.etalk.presentation.view_model.register.RegisterViewModel"/>
         <import type="android.text.InputType"/>
+        <import type="android.view.View"/>
     </data>
 
     <FrameLayout
@@ -53,14 +55,25 @@
             </FrameLayout>
 
             <TextView
+                android:id="@id/register_activity_txt_no_connection"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="@string/app_no_connection"
+                android:textColor="@color/colorBlack"
+                android:gravity="center"
+                android:background="@color/colorLoadingBackground"
+                android:visibility="@{viewModel.isNetworkAvailable ? View.GONE : View.VISIBLE}"
+                app:layout_constraintTop_toBottomOf="@id/register_activity_tool_bar"/>
+
+            <TextView
                 android:id="@id/register_activity_txt_input_hint"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:text="@string/register_activity_txt_input_hint"
                 android:gravity="center"
-                app:layout_constraintTop_toBottomOf="@id/register_activity_tool_bar"/>
+                bind:hintWithEvent="@{viewModel.hintEvent}"
+                app:layout_constraintTop_toBottomOf="@id/register_activity_txt_no_connection"/>
 
             <View
                 android:layout_width="match_parent"
@@ -169,7 +182,7 @@
                 android:background="@drawable/btn_register"
                 android:stateListAnimator="@null"
                 android:onClick="@{viewModel::onRegisterRequest}"
-                android:enabled="@{viewModel.phoneNumber.isEmpty() || viewModel.password.isEmpty() || viewModel.username.isEmpty() || viewModel.fullname.isEmpty() ? false : true}"
+                android:enabled="@{viewModel.phoneNumber.isEmpty() || viewModel.password.isEmpty() || viewModel.username.isEmpty() || viewModel.fullname.isEmpty() || !viewModel.isNetworkAvailable ? false : true}"
                 app:layout_constraintTop_toBottomOf="@id/register_activity_edt_phone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>

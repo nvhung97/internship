@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <variable
             name="viewModel"
             type="com.example.cpu11398_local.etalk.presentation.view_model.login.LoginViewModel"/>
         <import type="android.text.InputType"/>
+        <import type="android.view.View"/>
     </data>
 
     <FrameLayout
@@ -53,15 +55,25 @@
             </FrameLayout>
 
             <TextView
+                android:id="@id/login_activity_txt_no_connection"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="@string/app_no_connection"
+                android:textColor="@color/colorBlack"
+                android:gravity="center"
+                android:background="@color/colorLoadingBackground"
+                android:visibility="@{viewModel.isNetworkAvailable ? View.GONE : View.VISIBLE}"
+                app:layout_constraintTop_toBottomOf="@id/login_activity_tool_bar"/>
+
+            <TextView
                 android:id="@id/login_activity_txt_input_hint"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:text="@{viewModel.loginFailed ? @string/login_activity_login_failed : @string/login_activity_txt_input_hint}"
-                android:textColor="@{viewModel.loginFailed ? @color/colorRed : @color/colorGray}"
                 android:gravity="center"
-                app:layout_constraintTop_toBottomOf="@id/login_activity_tool_bar"/>
+                bind:hintWithEvent="@{viewModel.hintEvent}"
+                app:layout_constraintTop_toBottomOf="@id/login_activity_txt_no_connection"/>
 
             <View
                 android:layout_width="match_parent"
@@ -130,7 +142,7 @@
                 android:background="@drawable/btn_login"
                 android:stateListAnimator="@null"
                 android:onClick="@{viewModel::onLoginRequest}"
-                android:enabled="@{viewModel.password.isEmpty() || viewModel.username.isEmpty() ? false : true}"
+                android:enabled="@{viewModel.password.isEmpty() || viewModel.username.isEmpty() || !viewModel.isNetworkAvailable ? false : true}"
                 app:layout_constraintTop_toBottomOf="@id/login_activity_edt_password"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>

@@ -22,7 +22,12 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
+    public Single<Boolean> putNetworkUser(User user) {
+        return networkSource.putUser(user);
+    }
+
+    @Override
     public void updateNetworkUserStatus(String username, String status) {
-        networkSource.updateNetworkUserStatus(username, status);
+        networkSource.updateUserStatus(username, status);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.cpu11398_local.etalk.presentation.view.login;
 
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import com.example.cpu11398_local.etalk.R;
@@ -20,10 +20,10 @@ public class LoginActivity extends BaseActivity {
 
     @Inject
     @Named("LoginViewModel")
-    public ViewModel        viewModel;
+    public ViewModel    viewModel;
 
-    private Disposable      disposable;
-    private ProgressDialog  dialogLoading;
+    private Disposable  disposable;
+    private Dialog      dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,16 +81,14 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void onShowLoading() {
-        dialogLoading = ProgressDialog.show(
-                this,
-                "",
-                getString(R.string.login_activity_loading),
-                true
-        );
+        dialog = Tool.createProcessingDialog(this);
+        dialog.show();
     }
 
     private void onHideLoading() {
-        dialogLoading.dismiss();
+       if (dialog != null) {
+           dialog.dismiss();
+       }
     }
 
     private class LoginObserver implements Observer<Event> {

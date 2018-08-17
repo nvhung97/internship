@@ -15,6 +15,14 @@ public interface UserRepository {
     Single<Optional<User>> getNetworkUser(String username);
 
     /**
+     * Push new user to network database base on given {@code user}.
+     * @param user data need to push to network database.
+     * @return an observable contain result of action. {@code true} if successfully,
+     * otherwise {@code false}.
+     */
+    Single<Boolean> putNetworkUser(User user);
+
+    /**
      * Set status of given user by {@code username} to {@code ONLINE} when user login or
      * {@code OFFLINE} when user logout.
      * @param status {@code ONLINE} or {@code OFFLINE}.
