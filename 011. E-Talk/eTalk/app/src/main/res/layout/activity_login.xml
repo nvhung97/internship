@@ -142,7 +142,7 @@
                 android:background="@drawable/btn_login"
                 android:stateListAnimator="@null"
                 android:onClick="@{viewModel::onLoginRequest}"
-                android:enabled="@{viewModel.password.isEmpty() || viewModel.username.isEmpty() || !viewModel.isNetworkAvailable ? false : true}"
+                android:enabled="@{viewModel.getEnable}"
                 app:layout_constraintTop_toBottomOf="@id/login_activity_edt_password"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>

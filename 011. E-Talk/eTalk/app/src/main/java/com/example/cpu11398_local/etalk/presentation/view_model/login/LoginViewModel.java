@@ -1,6 +1,8 @@
 package com.example.cpu11398_local.etalk.presentation.view_model.login;
 
 import android.content.Context;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.os.Handler;
@@ -16,7 +18,7 @@ import io.reactivex.Observer;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.subjects.PublishSubject;
 
-public class LoginViewModel implements ViewModel, NetworkChangeReceiver.NetworkChangeListener {
+public class LoginViewModel extends BaseObservable implements ViewModel, NetworkChangeReceiver.NetworkChangeListener {
 
     /**
      * Binding data between {@code username} and Username {@code EditText} on view.
@@ -171,5 +173,10 @@ public class LoginViewModel implements ViewModel, NetworkChangeReceiver.NetworkC
         public void onError(Throwable e) {
             Log.i("eTalk", e.getMessage());
         }
+    }
+
+    @Bindable
+    public boolean getEnable() {
+        return !(password.get().isEmpty() || username.get().isEmpty() || !isNetworkAvailable.get());
     }
 }
