@@ -5,7 +5,7 @@ import android.os.Bundle;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityChatBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
-import com.example.cpu11398_local.etalk.presentation.view.main.MainActivity;
+import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
@@ -38,7 +38,7 @@ public class ChatActivity extends BaseActivity {
         ActivityChatBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_chat);
         viewModel = (ViewModel) getLastCustomNonConfigurationInstance();
         if (viewModel == null) {
-            MainActivity.getAppComponent(this).inject(this);
+            WelcomeActivity.getAppComponent(this).inject(this);
         }
         binding.setViewModel((ChatViewModel) viewModel);
     }

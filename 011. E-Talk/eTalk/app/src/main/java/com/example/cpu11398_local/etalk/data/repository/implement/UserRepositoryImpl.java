@@ -1,6 +1,7 @@
 package com.example.cpu11398_local.etalk.data.repository.implement;
 
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
+import com.example.cpu11398_local.etalk.data.repository.data_source.CacheSource;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.Optional;
@@ -9,25 +10,47 @@ import io.reactivex.Single;
 
 public class UserRepositoryImpl implements UserRepository{
 
-    private NetworkSource networkSource;
+    private NetworkSource   networkSource;
+    private CacheSource     cacheSource;
 
     @Inject
-    public UserRepositoryImpl(NetworkSource networkSource) {
-        this.networkSource = networkSource;
+    public UserRepositoryImpl(NetworkSource networkSource, CacheSource cacheSource) {
+        this.networkSource  = networkSource;
+        this.cacheSource    = cacheSource;
     }
 
     @Override
     public Single<Optional<User>> getNetworkUser(String username) {
-        return networkSource.getUser(username);
+        return networkSource.loadUser(username);
     }
 
     @Override
-    public Single<Boolean> putNetworkUser(User user) {
-        return networkSource.putUser(user);
+    public Single<Boolean> setNetworkUser(User user) {
+        return networkSource.pushUser(user);
+    }
+
+    @Override
+    public Single<Boolean> checkNetworkUserExisted(String username) {
+        return networkSource.checkUserExisted(username);
     }
 
     @Override
     public void updateNetworkUserStatus(String username, String status) {
         networkSource.updateUserStatus(username, status);
+    }
+
+    @Override
+    public void setCacheUser(User user) {
+        cacheSource.cacheUser(user);
+    }
+
+    @Override
+    public Single<User> getCacheUser() {
+        return cacheSource.getUser();
+    }
+
+    @Override
+    public Single<Boolean> checkCacheUserLoggedIn() {
+        return cacheSource.checkUserLoggedIn();
     }
 }

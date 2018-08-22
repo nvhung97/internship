@@ -277,6 +277,11 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	https://stackoverflow.com/questions/43946449/set-a-timeout-to-a-firebase-database-read-query
 	https://thangcoder.com/lap-trinh-android/hoc-lap-trinh-android-nang-cao/broadcast-receiver-trong-lap-trinh-android
 3:26 PM 8/17/2018
+	- Chỉnh sửa layout login và register để user có thể scroll khi bàn phím hiện lên.
+	- Detect network realtime.
+10:30 AM 8/22/2018
+	- Hiểu sâu data binding
+		+ https://viblo.asia/p/understanding-data-bindings-generated-code-and-how-does-android-data-binding-compiler-work-Ljy5Vd1yZra
 
 
 
@@ -287,8 +292,11 @@ https://www.youtube.com/watch?v=jXf9A0c4qLw
 https://engineeringblog.yelp.com/2018/06/how-yelp-modularized-the-android-app.html
 http://sijinjoseph.com/programmer-competency-matrix/
 https://en.wikipedia.org/wiki/Double-checked_locking
+https://github.com/MindorksOpenSource/android-interview-questions
+https://www.deeplearningbook.org/
 
 https://www.dkn.tv/doi-song/17-buc-anh-day-xuc-dong-khien-trai-tim-ban-tan-chay-ngay-lap-tuc.html
 https://ins.dkn.tv/giaitri/cam-dong-hinh-anh-ve-8-chu-cho-trung-thanh.html
 Tháng Tư Là Lời Nói Dối Của Em
 https://www.youtube.com/watch?v=55F8bT91KG4&index=27&list=RDEV-91JV4Fws
+http://www.phunutoday.vn/news/152750.amp

@@ -18,7 +18,7 @@ import io.reactivex.Observer;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.subjects.PublishSubject;
 
-public class LoginViewModel extends BaseObservable implements ViewModel, NetworkChangeReceiver.NetworkChangeListener {
+public class LoginViewModel implements ViewModel, NetworkChangeReceiver.NetworkChangeListener {
 
     /**
      * Binding data between {@code username} and Username {@code EditText} on view.
@@ -173,10 +173,5 @@ public class LoginViewModel extends BaseObservable implements ViewModel, Network
         public void onError(Throwable e) {
             Log.i("eTalk", e.getMessage());
         }
-    }
-
-    @Bindable
-    public boolean getEnable() {
-        return !(password.get().isEmpty() || username.get().isEmpty() || !isNetworkAvailable.get());
     }
 }

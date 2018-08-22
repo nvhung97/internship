@@ -12,7 +12,7 @@ public interface NetworkSource {
      * @return an observable contain a container {@code Optional} that contain
      * user's info if exist or contain {@code null}.
      */
-    Single<Optional<User>> getUser(String username);
+    Single<Optional<User>> loadUser(String username);
 
     /**
      * Push new user to network database base on given {@code user}.
@@ -20,7 +20,15 @@ public interface NetworkSource {
      * @return an observable contain result of action. {@code true} if successfully,
      * otherwise {@code false}.
      */
-    Single<Boolean> putUser(User user);
+    Single<Boolean> pushUser(User user);
+
+    /**
+     * Check if user with given username exited.
+     * @param username user need to check for existence.
+     * @return an observable contain result of action. {@code true} if user existed,
+     * otherwise {@code false}.
+     */
+    Single<Boolean> checkUserExisted(String username);
 
     /**
      * Set status of given user by {@code username} to {@code ONLINE} when user login or

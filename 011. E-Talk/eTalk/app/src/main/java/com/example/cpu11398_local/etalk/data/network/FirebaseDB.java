@@ -2,14 +2,11 @@ package com.example.cpu11398_local.etalk.data.network;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.FirebaseTree;
 import com.example.cpu11398_local.etalk.utils.Optional;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,36 +16,34 @@ import io.reactivex.Single;
 
 public class FirebaseDB implements NetworkSource{
 
+    private DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
+
     @SuppressLint("CheckResult")
     @Override
-    public Single<Optional<User>> getUser(String username) {
+    public Single<Optional<User>> loadUser(String username) {
         return Single.create(emitter ->
-            FirebaseDatabase
-                    .getInstance()
-                    .getReference()
-                    .child(FirebaseTree.Users.NODE_NAME)
-                    .child(username)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            emitter.onSuccess(Optional.of(dataSnapshot.getValue(User.class)));
-                        }
+                firebaseDatabase
+                        .child(FirebaseTree.Users.NODE_NAME)
+                        .child(username)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                emitter.onSuccess(Optional.of(dataSnapshot.getValue(User.class)));
+                            }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Log.i("eTalk" , databaseError.getMessage());
-                            emitter.onSuccess(Optional.empty());
-                        }
-                    })
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.i("eTalk" , databaseError.getMessage());
+                                emitter.onSuccess(Optional.empty());
+                            }
+                        })
         );
     }
 
     @Override
-    public Single<Boolean> putUser(User user) {
+    public Single<Boolean> pushUser(User user) {
         return Single.create(emitter ->
-                FirebaseDatabase
-                        .getInstance()
-                        .getReference()
+                firebaseDatabase
                         .child(FirebaseTree.Users.NODE_NAME)
                         .child(user.getUsername())
                         .setValue(user, (databaseError, databaseReference) -> {
@@ -63,10 +58,13 @@ public class FirebaseDB implements NetworkSource{
     }
 
     @Override
+    public Single<Boolean> checkUserExisted(String username) {
+        return loadUser(username).map(Optional::isPresent);
+    }
+
+    @Override
     public void updateUserStatus(String username, String status) {
-        FirebaseDatabase
-                .getInstance()
-                .getReference()
+        firebaseDatabase
                 .child(FirebaseTree.Users.NODE_NAME)
                 .child(username)
                 .child(FirebaseTree.Users.Status.NODE_NAME)

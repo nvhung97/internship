@@ -53,6 +53,15 @@ public class Event {
     public static final int REGISTER_ACTIVITY_REGISTER_FAILED   = REGISTER_ACTIVITY_MARK | 5;
     public static final int REGISTER_ACTIVITY_TIMEOUT           = REGISTER_ACTIVITY_MARK | 6;
 
+    /**
+     * Bellow commands for {@code WelcomeActivity}.
+     */
+    private static final int WELCOME_ACTIVITY_MARK          = 4 << MODE_SHIFT;
+    public static final int WELCOME_ACTIVITY_SHOW_LOADING   = WELCOME_ACTIVITY_MARK | 0;
+    public static final int WELCOME_ACTIVITY_HIDE_LOADING   = WELCOME_ACTIVITY_MARK | 1;
+    public static final int WELCOME_ACTIVITY_USER_LOGGED_IN = WELCOME_ACTIVITY_MARK | 2;
+
+
     private int         type;
     private Object[]    data;
 

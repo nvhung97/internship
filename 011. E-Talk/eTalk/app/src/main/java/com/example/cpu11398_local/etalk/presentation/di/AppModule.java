@@ -1,19 +1,23 @@
 package com.example.cpu11398_local.etalk.presentation.di;
 
 import android.content.Context;
+import com.example.cpu11398_local.etalk.data.cache.SharedPreferencesDB;
 import com.example.cpu11398_local.etalk.data.network.FirebaseDB;
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
+import com.example.cpu11398_local.etalk.data.repository.data_source.CacheSource;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
 import com.example.cpu11398_local.etalk.data.repository.implement.UserRepositoryImpl;
 import com.example.cpu11398_local.etalk.domain.executor.TaskExecutor;
 import com.example.cpu11398_local.etalk.domain.interactor.LoginUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.RegisterUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
+import com.example.cpu11398_local.etalk.domain.interactor.WelcomeUsecase;
 import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContentViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.login.LoginViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.register.RegisterViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
+import com.example.cpu11398_local.etalk.presentation.view_model.welcome.WelcomeViewModel;
 import com.example.cpu11398_local.etalk.utils.NetworkChangeReceiver;
 import java.util.concurrent.Executor;
 import javax.inject.Named;
@@ -69,6 +73,11 @@ public class AppModule {
         return new FirebaseDB();
     }
 
+    @Provides
+    public CacheSource provideCacheSource(Context context) {
+        return new SharedPreferencesDB(context);
+    }
+
 
     /**********************************************************************************************
      *                                     REPOSITORY
@@ -76,14 +85,29 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public UserRepository provideUserRepository(NetworkSource networkSource) {
-        return new UserRepositoryImpl(networkSource);
+    public UserRepository provideUserRepository(NetworkSource networkSource,
+                                                CacheSource cacheSource) {
+        return new UserRepositoryImpl(networkSource, cacheSource);
     }
 
 
     /**********************************************************************************************
      *                                       USECASE
      **********************************************************************************************/
+
+    @Provides
+    @Named("WelcomeUsecase")
+    public Usecase provideWelcomeUsecase(Executor executor,
+                                       Scheduler scheduler,
+                                       CompositeDisposable compositeDisposable,
+                                       UserRepository userRepository) {
+        return new WelcomeUsecase(
+                executor,
+                scheduler,
+                compositeDisposable,
+                userRepository
+        );
+    }
 
     @Provides
     @Named("LoginUsecase")
@@ -119,15 +143,10 @@ public class AppModule {
      **********************************************************************************************/
 
     @Provides
-    @Named("ContentViewModel")
-    public ViewModel provideContentViewModel(Context context) {
-        return new ContentViewModel(context);
-    }
-
-    @Provides
-    @Named("ChatViewModel")
-    public ViewModel provideChatViewModel(Context context) {
-        return new ChatViewModel(context);
+    @Named("WelcomeViewModel")
+    public ViewModel provideWelcomeViewModel(Context context,
+                                             @Named("WelcomeUsecase") Usecase usecase) {
+        return new WelcomeViewModel(context, usecase);
     }
 
     @Provides
@@ -144,5 +163,17 @@ public class AppModule {
                                               @Named("RegisterUsecase") Usecase usecase,
                                               NetworkChangeReceiver receiver) {
         return new RegisterViewModel(context, usecase, receiver);
+    }
+
+    @Provides
+    @Named("ContentViewModel")
+    public ViewModel provideContentViewModel(Context context) {
+        return new ContentViewModel(context);
+    }
+
+    @Provides
+    @Named("ChatViewModel")
+    public ViewModel provideChatViewModel(Context context) {
+        return new ChatViewModel(context);
     }
 }

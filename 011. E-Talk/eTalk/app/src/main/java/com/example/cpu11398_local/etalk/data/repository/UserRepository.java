@@ -20,7 +20,15 @@ public interface UserRepository {
      * @return an observable contain result of action. {@code true} if successfully,
      * otherwise {@code false}.
      */
-    Single<Boolean> putNetworkUser(User user);
+    Single<Boolean> setNetworkUser(User user);
+
+    /**
+     * Check if user with given username exited.
+     * @param username user need to check for existence.
+     * @return an observable contain result of action. {@code true} if user existed,
+     * otherwise {@code false}.
+     */
+    Single<Boolean> checkNetworkUserExisted(String username);
 
     /**
      * Set status of given user by {@code username} to {@code ONLINE} when user login or
@@ -28,4 +36,22 @@ public interface UserRepository {
      * @param status {@code ONLINE} or {@code OFFLINE}.
      */
     void updateNetworkUserStatus(String username, String status);
+
+    /**
+     * Cache user's info when user login to retrieve in the future.
+     * @param user need to cache.
+     */
+    void setCacheUser(User user);
+
+    /**
+     * Get user's info cached.
+     * @return an observable contain user.
+     */
+    Single<User> getCacheUser();
+
+    /**
+     * Check if user logged in. if true, go straight to content view.
+     * @return an observable contain {@code true} or {@code false}.
+     */
+    Single<Boolean> checkCacheUserLoggedIn();
 }

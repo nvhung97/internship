@@ -2,11 +2,9 @@ package com.example.cpu11398_local.etalk.domain.interactor;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
-
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.FirebaseTree;
-import com.example.cpu11398_local.etalk.utils.Optional;
 import java.util.concurrent.Executor;
 import javax.inject.Inject;
 import io.reactivex.Scheduler;
@@ -41,14 +39,14 @@ public class RegisterUsecase implements Usecase {
         String phoneNumber  = (String)params[3];
         disposable.add(
                 userRepository
-                        .getNetworkUser(username)
+                        .checkNetworkUserExisted(username)
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
-                        .subscribeWith(new DisposableSingleObserver<Optional<User>>() {
+                        .subscribeWith(new DisposableSingleObserver<Boolean>() {
                             @SuppressLint("CheckResult")
                             @Override
-                            public void onSuccess(Optional<User> user) {
-                                if (user.isPresent()) {
+                            public void onSuccess(Boolean isExisted) {
+                                if (isExisted) {
                                     Single
                                             .just(false)
                                             .subscribeOn(Schedulers.from(executor))
@@ -56,7 +54,7 @@ public class RegisterUsecase implements Usecase {
                                             .subscribeWith((DisposableSingleObserver<Boolean>)observer);
                                 } else {
                                     userRepository
-                                            .putNetworkUser(
+                                            .setNetworkUser(
                                                     new User(
                                                             fullname,
                                                             username,

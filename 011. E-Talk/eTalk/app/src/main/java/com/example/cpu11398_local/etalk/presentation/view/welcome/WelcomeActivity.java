@@ -1,6 +1,7 @@
-package com.example.cpu11398_local.etalk.presentation.view.main;
+package com.example.cpu11398_local.etalk.presentation.view.welcome;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,16 +14,30 @@ import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.ContentActivity;
 import com.example.cpu11398_local.etalk.presentation.view.login.LoginActivity;
 import com.example.cpu11398_local.etalk.presentation.view.register.RegisterActivity;
+import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
+import com.example.cpu11398_local.etalk.utils.Event;
+import com.example.cpu11398_local.etalk.utils.Tool;
+import javax.inject.Inject;
+import javax.inject.Named;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
-public class MainActivity extends BaseActivity {
+public class WelcomeActivity extends BaseActivity {
 
     private final int REQUEST_LOGIN     = 0;
     private final int REQUEST_REGISTER  = 1;
 
+    @Inject
+    @Named("WelcomeViewModel")
+    public ViewModel    viewModel;
+
+    private Disposable  disposable;
+    private Dialog      dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_welcome);
     }
 
     /**
@@ -31,9 +46,8 @@ public class MainActivity extends BaseActivity {
      */
     @SuppressLint("CheckResult")
     public void showLoginView(View v) {
-        //startActivity(new Intent(MainActivity.this, ContentActivity.class));
         startActivityForResult(
-                new Intent(MainActivity.this, LoginActivity.class),
+                new Intent(WelcomeActivity.this, LoginActivity.class),
                 REQUEST_LOGIN
         );
     }
@@ -43,9 +57,8 @@ public class MainActivity extends BaseActivity {
      * @param v View is clicked.
      */
     public void showRegisterView(View v) {
-        //startActivity(new Intent(MainActivity.this, ChatActivity.class));
         startActivityForResult(
-                new Intent(MainActivity.this, RegisterActivity.class),
+                new Intent(WelcomeActivity.this, RegisterActivity.class),
                 REQUEST_REGISTER
         );
     }
@@ -65,6 +78,7 @@ public class MainActivity extends BaseActivity {
             case REQUEST_LOGIN:
                 if (resultCode == RESULT_OK) {
                     startActivity(new Intent(this, ContentActivity.class));
+                    finish();
                 }
                 break;
             case REQUEST_REGISTER:
@@ -99,26 +113,77 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onDataBinding() {
-
+        WelcomeActivity.getAppComponent(this).inject(this);
     }
 
     @Override
     public void onSubscribeViewModel() {
-
+        viewModel.subscribeObserver(new WelcomeObserver());
     }
 
     @Override
     public void onUnSubscribeViewModel() {
-
+        if (!disposable.isDisposed()){
+            disposable.dispose();
+        }
     }
 
     @Override
     public Object onSaveViewModel() {
-        return null;
+        return viewModel;
     }
 
     @Override
     public void onEndTaskViewModel() {
+        viewModel.endTask();
+    }
 
+    private void onUserLoggedIn() {
+        startActivity(new Intent(this, ContentActivity.class));
+        finish();
+    }
+
+    private void onShowLoading() {
+        dialog = Tool.createProcessingDialog(this);
+        dialog.show();
+    }
+
+    private void onHideLoading() {
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+    }
+
+    private class WelcomeObserver implements Observer<Event> {
+        @Override
+        public void onSubscribe(Disposable d) {
+            disposable = d;
+        }
+
+        @Override
+        public void onNext(Event event) {
+            Object[] data = event.getData();
+            switch (event.getType()) {
+                case Event.WELCOME_ACTIVITY_USER_LOGGED_IN:
+                    onUserLoggedIn();
+                    break;
+                case Event.WELCOME_ACTIVITY_SHOW_LOADING:
+                    onShowLoading();
+                    break;
+                case Event.WELCOME_ACTIVITY_HIDE_LOADING:
+                    onHideLoading();
+                    break;
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
     }
 }

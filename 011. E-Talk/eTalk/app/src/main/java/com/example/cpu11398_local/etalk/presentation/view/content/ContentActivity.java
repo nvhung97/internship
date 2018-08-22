@@ -9,7 +9,7 @@ import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityContentBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.ContentPagerAdapter;
-import com.example.cpu11398_local.etalk.presentation.view.main.MainActivity;
+import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContentViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
@@ -42,7 +42,7 @@ public class ContentActivity extends BaseActivity {
         ActivityContentBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_content);
         viewModel = (ViewModel) getLastCustomNonConfigurationInstance();
         if (viewModel == null) {
-            MainActivity.getAppComponent(this).inject(this);
+            WelcomeActivity.getAppComponent(this).inject(this);
         }
         binding.setViewModel((ContentViewModel)viewModel);
         binding.setPagerAdapter(new ContentPagerAdapter(getSupportFragmentManager()));
