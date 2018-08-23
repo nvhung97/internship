@@ -164,7 +164,7 @@ public class RegisterViewModel implements ViewModel, NetworkChangeReceiver.Netwo
                         publisher.onNext(Event.create(Event.REGISTER_ACTIVITY_HIDE_LOADING));
                         registerUsecase.endTask();
                     },
-                    1000 * 30
+                    1000 * 10
             );
         }
 

@@ -167,8 +167,10 @@ public class AppModule {
 
     @Provides
     @Named("ContentViewModel")
-    public ViewModel provideContentViewModel(Context context) {
-        return new ContentViewModel(context);
+    public ViewModel provideContentViewModel(Context context,
+                                             @Named("RegisterUsecase") Usecase usecase,
+                                             NetworkChangeReceiver receiver) {
+        return new ContentViewModel(context, usecase, receiver);
     }
 
     @Provides

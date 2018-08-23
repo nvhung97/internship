@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.view.content.pager_page.messages.MessagesFragment">
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Messages"/>
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Messages"/>
+
+        <ImageView
+            android:id="@+id/aaaa"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:src="@drawable/ic_launcher_background"
+            android:background="@drawable/img_rounded_corners"
+            bind:clipToOutline="@{true}"/>
+
+    </FrameLayout>
+</layout>

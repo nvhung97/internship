@@ -1,8 +1,6 @@
 package com.example.cpu11398_local.etalk.presentation.view_model.login;
 
 import android.content.Context;
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.os.Handler;
@@ -154,7 +152,7 @@ public class LoginViewModel implements ViewModel, NetworkChangeReceiver.NetworkC
                         publisher.onNext(Event.create(Event.LOGIN_ACTIVITY_HIDE_LOADING));
                         loginUsecase.endTask();
                     },
-                    1000 * 30
+                    1000 * 10
             );
         }
 

@@ -1,27 +1,42 @@
 package com.example.cpu11398_local.etalk.presentation.view_model.content;
 
 import android.content.Context;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableInt;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.Toast;
-
 import com.example.cpu11398_local.etalk.R;
+import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
+import com.example.cpu11398_local.etalk.utils.NetworkChangeReceiver;
 import javax.inject.Inject;
+import javax.inject.Named;
 import io.reactivex.Observer;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.subjects.PublishSubject;
 
-public class ContentViewModel implements ViewModel, PopupMenu.OnMenuItemClickListener, ViewPager.OnPageChangeListener {
+public class ContentViewModel implements ViewModel,
+                                         PopupMenu.OnMenuItemClickListener,
+                                         ViewPager.OnPageChangeListener,
+                                         NetworkChangeReceiver.NetworkChangeListener {
 
     /**
      * Determine which tab is selected to change layout.
      * Value reassigned in {@link #onTabClick(View)}.
      */
     public ObservableInt currentTab = new ObservableInt(0);
+
+    /**
+     * Binding data between {@code isNetworkAvailable} and {@code TextView} for inform
+     * state of network.
+     */
+    public ObservableBoolean isNetworkAvailable = new ObservableBoolean(false);
 
     /**
      * Publisher will emit event to view. View listen these event via a observer.
@@ -34,11 +49,26 @@ public class ContentViewModel implements ViewModel, PopupMenu.OnMenuItemClickLis
     private Context context;
 
     /**
+     * When user request logout, viewModel use {@code logoutUsecase} to perform the action.
+     */
+    private Usecase logoutUsecase;
+
+    /**
+     * Listen network state to inform user check connection again.
+     */
+    private NetworkChangeReceiver receiver;
+
+    /**
      * create new {@code ContentViewModel} with a context.
      */
     @Inject
-    public ContentViewModel(Context context) {
-        this.context = context;
+    public ContentViewModel(Context context,
+                            @Named("LogoutUsecase") Usecase logoutUsecase,
+                            NetworkChangeReceiver receiver) {
+        this.context        = context;
+        this.logoutUsecase  = logoutUsecase;
+        this.receiver       = receiver;
+        receiver.initReceiver(this.context, this);
     }
 
     /**
@@ -120,7 +150,12 @@ public class ContentViewModel implements ViewModel, PopupMenu.OnMenuItemClickLis
      * @param view
      */
     public void onSettingClick(View view) {
-        Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+        publisher.onNext(
+                Event.create(
+                        Event.CONTENT_ACTIVITY_SHOW_POPUP_SETTING,
+                        view, this
+                )
+        );
     }
 
     /**
@@ -159,8 +194,62 @@ public class ContentViewModel implements ViewModel, PopupMenu.OnMenuItemClickLis
             case R.id.content_activity_menu_etalk_calendar:
                 Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.content_activity_menu_logout:
+                onLogoutRequest();
+                break;
         }
         return true;
+    }
+
+    /**
+     * Call when user request logout. See {@link #onMenuItemClick(MenuItem)}
+     */
+    public void onLogoutRequest() {
+        publisher.onNext(Event.create(Event.CONTENT_ACTIVITY_SHOW_LOADING));
+        new LogoutObserver();
+    }
+
+    /**
+     * Called when network state change and reassign {@code isNetworkAvailable}
+     * according to {@code networkState}.
+     * @param networkState current network state.
+     */
+    @Override
+    public void onNetworkChange(boolean networkState) {
+        isNetworkAvailable.set(networkState);
+    }
+
+    /**
+     * {@code LogoutObserver} is subscribed to usecase to listen event from it.
+     */
+    private class LogoutObserver extends DisposableSingleObserver<Boolean> {
+
+        private Handler handler = new Handler();
+
+        public LogoutObserver() {
+            handler.postDelayed(
+                    () -> {
+                        publisher.onNext(Event.create(Event.CONTENT_ACTIVITY_HIDE_LOADING));
+                        logoutUsecase.endTask();
+                    },
+                    1000 * 10
+            );
+        }
+
+        @Override
+        public void onSuccess(Boolean isSuccess) {
+            handler.removeCallbacksAndMessages(null);
+            if (isSuccess) {
+                publisher.onNext(Event.create(Event.CONTENT_ACTIVITY_LOGOUT));
+            } else {
+                publisher.onNext(Event.create(Event.LOGIN_ACTIVITY_HIDE_LOADING));
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.i("eTalk", e.getMessage());
+        }
     }
 
     /**

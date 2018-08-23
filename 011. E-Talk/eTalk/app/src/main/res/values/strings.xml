@@ -39,6 +39,7 @@
     <string name="content_activity_menu_scan_qr_code">Scan QR Code</string>
     <string name="content_activity_menu_etalk_for_desktop">eTalk for Desktop</string>
     <string name="content_activity_menu_etalk_calendar">eTalk Calender</string>
+    <string name="content_activity_menu_logout">Log out</string>
 
     <!--Chat activity-->
     <string name="chat_activity_edt_message">Message</string>

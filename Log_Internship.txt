@@ -282,6 +282,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 10:30 AM 8/22/2018
 	- Hiểu sâu data binding
 		+ https://viblo.asia/p/understanding-data-bindings-generated-code-and-how-does-android-data-binding-compiler-work-Ljy5Vd1yZra
+2:38 PM 8/23/2018
+	- Hiện thực chức năng logout.
 
 
 

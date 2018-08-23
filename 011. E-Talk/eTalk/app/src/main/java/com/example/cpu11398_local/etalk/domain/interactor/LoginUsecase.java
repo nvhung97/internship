@@ -47,6 +47,9 @@ public class LoginUsecase implements Usecase {
         if (user.isPresent()
                 && username.equals(user.get().getUsername())
                 && password.equals(user.get().getPassword())) {
+            user.get().setStatus(
+                    FirebaseTree.Users.Status.ONLINE
+            );
             userRepository.setCacheUser(user.get());
             userRepository.updateNetworkUserStatus(
                     user.get().getUsername(),

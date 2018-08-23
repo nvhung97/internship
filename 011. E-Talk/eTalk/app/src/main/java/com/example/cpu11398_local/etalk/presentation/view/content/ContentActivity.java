@@ -1,5 +1,7 @@
 package com.example.cpu11398_local.etalk.presentation.view.content;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -26,6 +28,7 @@ public class ContentActivity extends BaseActivity {
     public ViewModel    viewModel;
 
     private Disposable  disposable;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +73,36 @@ public class ContentActivity extends BaseActivity {
         viewModel.endTask();
     }
 
-    public void showPopupMenu(View view, PopupMenu.OnMenuItemClickListener listener) {
+    public void onShowPopupMenu(View view, PopupMenu.OnMenuItemClickListener listener) {
         PopupMenu popupMenu = new PopupMenu(this, view, Gravity.RIGHT);
         popupMenu.inflate(R.menu.menu_plus);
         popupMenu.setOnMenuItemClickListener(listener);
         Tool.forcePopupMenuShowIcon(popupMenu);
         popupMenu.show();
+    }
+
+    public void onShowPopupSetting(View view, PopupMenu.OnMenuItemClickListener listener) {
+        PopupMenu popupMenu = new PopupMenu(this, view, Gravity.RIGHT);
+        popupMenu.inflate(R.menu.menu_setting);
+        popupMenu.setOnMenuItemClickListener(listener);
+        Tool.forcePopupMenuShowIcon(popupMenu);
+        popupMenu.show();
+    }
+
+    private void onShowLoading() {
+        dialog = Tool.createProcessingDialog(this);
+        dialog.show();
+    }
+
+    private void onHideLoading() {
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+    }
+
+    private void onLogout() {
+        startActivity(new Intent(this, WelcomeActivity.class));
+        finish();
     }
 
     private class ContentObserver implements Observer<Event> {
@@ -89,10 +116,26 @@ public class ContentActivity extends BaseActivity {
             Object[] data = event.getData();
             switch (event.getType()) {
                 case Event.CONTENT_ACTIVITY_SHOW_POPUP_MENU:
-                    showPopupMenu(
+                    onShowPopupMenu(
                             (View)data[0],
                             (PopupMenu.OnMenuItemClickListener)data[1]
                     );
+                    break;
+                case Event.CONTENT_ACTIVITY_SHOW_POPUP_SETTING:
+                    onShowPopupSetting(
+                            (View)data[0],
+                            (PopupMenu.OnMenuItemClickListener)data[1]
+                    );
+                    break;
+                case Event.CONTENT_ACTIVITY_SHOW_LOADING:
+                    onShowLoading();
+                    break;
+                case Event.CONTENT_ACTIVITY_HIDE_LOADING:
+                    onHideLoading();
+                    break;
+
+                case Event.CONTENT_ACTIVITY_LOGOUT:
+                    onLogout();
                     break;
             }
         }

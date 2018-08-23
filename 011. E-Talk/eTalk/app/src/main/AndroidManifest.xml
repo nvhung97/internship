@@ -24,6 +24,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".presentation.view.register.RegisterActivity"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".presentation.view.content.ContentActivity"

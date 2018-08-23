@@ -70,6 +70,7 @@
     <item name="content_activity_menu_scan_qr_code" type="id"/>
     <item name="content_activity_menu_etalk_for_desktop" type="id"/>
     <item name="content_activity_menu_etalk_calendar" type="id"/>
+    <item name="content_activity_menu_logout" type="id"/>
 
     <!--Chat activity-->
     <item name="chat_activity_status_bar" type="id"/>

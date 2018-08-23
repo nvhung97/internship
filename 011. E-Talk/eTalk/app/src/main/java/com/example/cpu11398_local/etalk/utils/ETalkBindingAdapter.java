@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.databinding.BindingAdapter;
 import android.widget.TextView;
@@ -103,5 +104,15 @@ public class ETalkBindingAdapter {
                 }
                 break;
         }
+    }
+
+    /**
+     * Add setter for {@code clipToOutline} in {@code ImageView}.
+     * @param imageView  imageView need to set clip to outline.
+     * @param clipToOutline true or false.
+     */
+    @BindingAdapter("clipToOutline")
+    public static void setClipToOutline(ImageView imageView, boolean clipToOutline) {
+        imageView.setClipToOutline(clipToOutline);
     }
 }
