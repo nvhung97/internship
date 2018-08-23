@@ -5,18 +5,18 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import com.example.cpu11398_local.etalk.data.repository.data_source.CacheSource;
 import com.example.cpu11398_local.etalk.presentation.model.User;
+import com.example.cpu11398_local.etalk.utils.FirebaseTree;
 import javax.inject.Inject;
 import io.reactivex.Single;
 
 public class SharedPreferencesDB implements CacheSource {
 
-    private final String FILENAME   = "etalk_cache";
-    private final String NAME       = "name";
-    private final String USERNAME   = "username";
-    private final String PASSWORD   = "password";
-    private final String PHONE      = "phone";
-    private final String STATUS     = "status";
-    private final String DEFAULT    = "default";
+    private final String FILENAME   = FirebaseTree.NODE_NAME;
+    private final String NAME       = FirebaseTree.Users.Name.NODE_NAME;
+    private final String USERNAME   = FirebaseTree.Users.Username.NODE_NAME;
+    private final String PASSWORD   = FirebaseTree.Users.Password.NODE_NAME;
+    private final String PHONE      = FirebaseTree.Users.Phone.NODE_NAME;
+    private final String ACTIVE     = FirebaseTree.Users.Active.NODE_NAME;
 
     private SharedPreferences   sharedPref;
     private Editor              editor;
@@ -31,11 +31,11 @@ public class SharedPreferencesDB implements CacheSource {
     public Single<User> getUser() {
         return Single.just(
                 new User(
-                        sharedPref.getString(NAME, DEFAULT),
-                        sharedPref.getString(USERNAME, DEFAULT),
-                        sharedPref.getString(PASSWORD, DEFAULT),
-                        sharedPref.getString(PHONE, DEFAULT),
-                        sharedPref.getString(STATUS, DEFAULT)
+                        sharedPref.getString(NAME, ""),
+                        sharedPref.getString(USERNAME, ""),
+                        sharedPref.getString(PASSWORD, ""),
+                        sharedPref.getString(PHONE, ""),
+                        sharedPref.getLong(ACTIVE, 0)
                 )
         );
     }
@@ -47,22 +47,22 @@ public class SharedPreferencesDB implements CacheSource {
             editor.putString(USERNAME, user.getUsername());
             editor.putString(PASSWORD, user.getPassword());
             editor.putString(PHONE, user.getPhone());
-            editor.putString(STATUS, user.getStatus());
+            editor.putLong(ACTIVE, user.getActive());
             editor.commit();
         } else {
             editor.remove(NAME);
             editor.remove(USERNAME);
             editor.remove(PASSWORD);
             editor.remove(PHONE);
-            editor.remove(STATUS);
+            editor.remove(ACTIVE);
             editor.commit();
         }
     }
 
     @Override
-    public Single<Boolean> checkUserLoggedIn() {
+    public Single<String> getUsernameLoggedIn() {
         return Single.just(
-                !sharedPref.getString(USERNAME, DEFAULT).equals(DEFAULT)
+                sharedPref.getString(USERNAME, "")
         );
     }
 }

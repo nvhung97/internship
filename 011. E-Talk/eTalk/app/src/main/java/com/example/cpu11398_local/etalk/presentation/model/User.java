@@ -6,17 +6,17 @@ public class User {
     private String username;
     private String password;
     private String phone;
-    private String status;
+    private long   active;
 
     public User() {
     }
 
-    public User(String name, String username, String password, String phone, String status) {
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.phone = phone;
-        this.status = status;
+    public User(String name, String username, String password, String phone, long active) {
+        this.name       = name;
+        this.username   = username;
+        this.password   = password;
+        this.phone      = phone;
+        this.active     = active;
     }
 
     public String getName() {
@@ -51,11 +51,11 @@ public class User {
         this.phone = phone;
     }
 
-    public String getStatus() {
-        return status;
+    public long getActive() {
+        return active;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setActive(long active) {
+        this.active = active;
     }
 }

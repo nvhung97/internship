@@ -5,6 +5,7 @@ import java.util.concurrent.Executor;
 import javax.inject.Inject;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -30,11 +31,20 @@ public class WelcomeUsecase implements Usecase {
     public void execute(Object observer, Object... params) {
         disposable.add(
                 userRepository
-                        .checkCacheUserLoggedIn()
+                        .getCacheUsernameLoggedIn()
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
+                        .map(this::onTask)
                         .subscribeWith((DisposableSingleObserver<Boolean>) observer)
         );
+    }
+
+    private boolean onTask(String username) {
+        if (!username.isEmpty()) {
+            userRepository.updateNetworkUserActive(username, true);
+            return true;
+        }
+        return false;
     }
 
     @Override

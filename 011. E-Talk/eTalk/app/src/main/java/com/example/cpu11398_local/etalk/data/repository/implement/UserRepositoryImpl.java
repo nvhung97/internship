@@ -35,8 +35,8 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
-    public void updateNetworkUserStatus(String username, String status) {
-        networkSource.updateUserStatus(username, status);
+    public void updateNetworkUserActive(String username, Boolean update) {
+        networkSource.updateUserActive(username, update);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
-    public Single<Boolean> checkCacheUserLoggedIn() {
-        return cacheSource.checkUserLoggedIn();
+    public Single<String> getCacheUsernameLoggedIn() {
+        return cacheSource.getUsernameLoggedIn();
     }
 }

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import com.example.cpu11398_local.etalk.presentation.model.User;
-import com.example.cpu11398_local.etalk.utils.FirebaseTree;
 import java.util.concurrent.Executor;
 import javax.inject.Inject;
 import io.reactivex.Scheduler;
@@ -33,10 +32,10 @@ public class RegisterUsecase implements Usecase {
 
     @Override
     public void execute(Object observer, Object... params) {
-        String fullname     = (String)params[0];
+        String name         = (String)params[0];
         String username     = (String)params[1];
         String password     = (String)params[2];
-        String phoneNumber  = (String)params[3];
+        String phone        = (String)params[3];
         disposable.add(
                 userRepository
                         .checkNetworkUserExisted(username)
@@ -56,11 +55,11 @@ public class RegisterUsecase implements Usecase {
                                     userRepository
                                             .setNetworkUser(
                                                     new User(
-                                                            fullname,
+                                                            name,
                                                             username,
                                                             password,
-                                                            phoneNumber,
-                                                            FirebaseTree.Users.Status.OFFLINE
+                                                            phone,
+                                                            System.currentTimeMillis()
                                                     )
                                             )
                                             .subscribeOn(Schedulers.from(executor))

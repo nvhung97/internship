@@ -284,6 +284,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://viblo.asia/p/understanding-data-bindings-generated-code-and-how-does-android-data-binding-compiler-work-Ljy5Vd1yZra
 2:38 PM 8/23/2018
 	- Hiện thực chức năng logout.
+	- Cập nhật thời gian để xác định user đang online.
+		+ https://stackoverflow.com/a/26194488
 
 
 

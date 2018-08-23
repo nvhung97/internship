@@ -9,6 +9,7 @@ import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSourc
 import com.example.cpu11398_local.etalk.data.repository.implement.UserRepositoryImpl;
 import com.example.cpu11398_local.etalk.domain.executor.TaskExecutor;
 import com.example.cpu11398_local.etalk.domain.interactor.LoginUsecase;
+import com.example.cpu11398_local.etalk.domain.interactor.LogoutUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.RegisterUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
 import com.example.cpu11398_local.etalk.domain.interactor.WelcomeUsecase;
@@ -137,6 +138,20 @@ public class AppModule {
         );
     }
 
+    @Provides
+    @Named("LogoutUsecase")
+    public Usecase provideLogoutUsecase(Executor executor,
+                                        Scheduler scheduler,
+                                        CompositeDisposable compositeDisposable,
+                                        UserRepository userRepository) {
+        return new LogoutUsecase(
+                executor,
+                scheduler,
+                compositeDisposable,
+                userRepository
+        );
+    }
+
 
     /**********************************************************************************************
      *                                     VIEW-MODEL
@@ -168,7 +183,7 @@ public class AppModule {
     @Provides
     @Named("ContentViewModel")
     public ViewModel provideContentViewModel(Context context,
-                                             @Named("RegisterUsecase") Usecase usecase,
+                                             @Named("LogoutUsecase") Usecase usecase,
                                              NetworkChangeReceiver receiver) {
         return new ContentViewModel(context, usecase, receiver);
     }

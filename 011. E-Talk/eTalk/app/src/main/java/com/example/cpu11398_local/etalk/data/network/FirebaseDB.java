@@ -1,6 +1,7 @@
 package com.example.cpu11398_local.etalk.data.network;
 
 import android.annotation.SuppressLint;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
@@ -16,7 +17,8 @@ import io.reactivex.Single;
 
 public class FirebaseDB implements NetworkSource{
 
-    private DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference firebaseDatabase  = FirebaseDatabase.getInstance().getReference();
+    private Handler           handler           = new Handler();
 
     @SuppressLint("CheckResult")
     @Override
@@ -63,11 +65,21 @@ public class FirebaseDB implements NetworkSource{
     }
 
     @Override
-    public void updateUserStatus(String username, String status) {
-        firebaseDatabase
-                .child(FirebaseTree.Users.NODE_NAME)
-                .child(username)
-                .child(FirebaseTree.Users.Status.NODE_NAME)
-                .setValue(status);
+    public void updateUserActive(String username, Boolean update) {
+        if (update) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    firebaseDatabase
+                            .child(FirebaseTree.Users.NODE_NAME)
+                            .child(username)
+                            .child(FirebaseTree.Users.Active.NODE_NAME)
+                            .setValue(System.currentTimeMillis());
+                    handler.postDelayed(this, 1000 * 10); //10 seconds
+                }
+            });
+        } else {
+            handler.removeCallbacksAndMessages(null);
+        }
     }
 }

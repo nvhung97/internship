@@ -2,7 +2,6 @@ package com.example.cpu11398_local.etalk.domain.interactor;
 
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import com.example.cpu11398_local.etalk.presentation.model.User;
-import com.example.cpu11398_local.etalk.utils.FirebaseTree;
 import com.example.cpu11398_local.etalk.utils.Optional;
 import java.util.concurrent.Executor;
 import javax.inject.Inject;
@@ -47,13 +46,10 @@ public class LoginUsecase implements Usecase {
         if (user.isPresent()
                 && username.equals(user.get().getUsername())
                 && password.equals(user.get().getPassword())) {
-            user.get().setStatus(
-                    FirebaseTree.Users.Status.ONLINE
-            );
             userRepository.setCacheUser(user.get());
-            userRepository.updateNetworkUserStatus(
+            userRepository.updateNetworkUserActive(
                     user.get().getUsername(),
-                    FirebaseTree.Users.Status.ONLINE
+                    true
             );
             return true;
         }

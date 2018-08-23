@@ -18,10 +18,8 @@ public final class FirebaseTree {
         public final class Phone {
             public static final String NODE_NAME = "phone";
         }
-        public final class Status {
-            public static final String NODE_NAME = "status";
-            public static final String ONLINE = "ONLINE";
-            public static final String OFFLINE = "OFFLINE";
+        public final class Active {
+            public static final String NODE_NAME = "active";
         }
     }
 }

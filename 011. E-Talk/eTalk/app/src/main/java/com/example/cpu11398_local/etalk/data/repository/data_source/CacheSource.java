@@ -18,8 +18,8 @@ public interface CacheSource {
     Single<User> getUser();
 
     /**
-     * Check if user logged in. if true, go straight to content view.
-     * @return an observable contain {@code true} or {@code false}.
+     * Get username of user logged in. if have, go straight to content view.
+     * @return an observable contain username or empty string.
      */
-    Single<Boolean> checkUserLoggedIn();
+    Single<String> getUsernameLoggedIn();
 }

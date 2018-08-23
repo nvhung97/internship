@@ -205,8 +205,8 @@ public class ContentViewModel implements ViewModel,
      * Call when user request logout. See {@link #onMenuItemClick(MenuItem)}
      */
     public void onLogoutRequest() {
-        publisher.onNext(Event.create(Event.CONTENT_ACTIVITY_SHOW_LOADING));
-        new LogoutObserver();
+        logoutUsecase.execute(null, null);
+        publisher.onNext(Event.create(Event.CONTENT_ACTIVITY_LOGOUT));
     }
 
     /**
@@ -217,39 +217,6 @@ public class ContentViewModel implements ViewModel,
     @Override
     public void onNetworkChange(boolean networkState) {
         isNetworkAvailable.set(networkState);
-    }
-
-    /**
-     * {@code LogoutObserver} is subscribed to usecase to listen event from it.
-     */
-    private class LogoutObserver extends DisposableSingleObserver<Boolean> {
-
-        private Handler handler = new Handler();
-
-        public LogoutObserver() {
-            handler.postDelayed(
-                    () -> {
-                        publisher.onNext(Event.create(Event.CONTENT_ACTIVITY_HIDE_LOADING));
-                        logoutUsecase.endTask();
-                    },
-                    1000 * 10
-            );
-        }
-
-        @Override
-        public void onSuccess(Boolean isSuccess) {
-            handler.removeCallbacksAndMessages(null);
-            if (isSuccess) {
-                publisher.onNext(Event.create(Event.CONTENT_ACTIVITY_LOGOUT));
-            } else {
-                publisher.onNext(Event.create(Event.LOGIN_ACTIVITY_HIDE_LOADING));
-            }
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            Log.i("eTalk", e.getMessage());
-        }
     }
 
     /**

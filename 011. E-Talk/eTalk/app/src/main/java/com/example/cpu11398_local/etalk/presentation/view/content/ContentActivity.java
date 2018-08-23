@@ -89,7 +89,7 @@ public class ContentActivity extends BaseActivity {
         popupMenu.show();
     }
 
-    private void onShowLoading() {
+    /*private void onShowLoading() {
         dialog = Tool.createProcessingDialog(this);
         dialog.show();
     }
@@ -98,7 +98,7 @@ public class ContentActivity extends BaseActivity {
         if (dialog != null) {
             dialog.dismiss();
         }
-    }
+    }*/
 
     private void onLogout() {
         startActivity(new Intent(this, WelcomeActivity.class));
@@ -127,13 +127,12 @@ public class ContentActivity extends BaseActivity {
                             (PopupMenu.OnMenuItemClickListener)data[1]
                     );
                     break;
-                case Event.CONTENT_ACTIVITY_SHOW_LOADING:
+                /*case Event.CONTENT_ACTIVITY_SHOW_LOADING:
                     onShowLoading();
                     break;
                 case Event.CONTENT_ACTIVITY_HIDE_LOADING:
                     onHideLoading();
-                    break;
-
+                    break;*/
                 case Event.CONTENT_ACTIVITY_LOGOUT:
                     onLogout();
                     break;

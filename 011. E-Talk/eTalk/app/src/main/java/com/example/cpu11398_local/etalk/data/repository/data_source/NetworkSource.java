@@ -31,9 +31,9 @@ public interface NetworkSource {
     Single<Boolean> checkUserExisted(String username);
 
     /**
-     * Set status of given user by {@code username} to {@code ONLINE} when user login or
-     * {@code OFFLINE} when user logout.
-     * @param status {@code ONLINE} or {@code OFFLINE}.
+     * Schedule update user active time if user logging in. If the second parameter is true,
+     * start update. Otherwise stop.
+     * @param update {@code true} or {@code false}.
      */
-    void updateUserStatus(String username, String status);
+    void updateUserActive(String username, Boolean update);
 }

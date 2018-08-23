@@ -31,11 +31,11 @@ public interface UserRepository {
     Single<Boolean> checkNetworkUserExisted(String username);
 
     /**
-     * Set status of given user by {@code username} to {@code ONLINE} when user login or
-     * {@code OFFLINE} when user logout.
-     * @param status {@code ONLINE} or {@code OFFLINE}.
+     * Schedule update user active time if user logging in. If the second parameter is true,
+     * start update. Otherwise stop.
+     * @param update {@code true} or {@code false}.
      */
-    void updateNetworkUserStatus(String username, String status);
+    void updateNetworkUserActive(String username, Boolean update);
 
     /**
      * Cache user's info when user login to retrieve in the future.
@@ -50,8 +50,8 @@ public interface UserRepository {
     Single<User> getCacheUser();
 
     /**
-     * Check if user logged in. if true, go straight to content view.
-     * @return an observable contain {@code true} or {@code false}.
+     * Get username of user logged in. if have, go straight to content view.
+     * @return an observable contain username or empty string.
      */
-    Single<Boolean> checkCacheUserLoggedIn();
+    Single<String> getCacheUsernameLoggedIn();
 }

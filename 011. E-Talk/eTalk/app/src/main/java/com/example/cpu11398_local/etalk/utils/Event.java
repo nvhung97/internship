@@ -23,8 +23,8 @@ public class Event {
     private static final int CONTENT_ACTIVITY_MARK              = 0 << MODE_SHIFT;
     public static final int CONTENT_ACTIVITY_SHOW_POPUP_MENU    = CONTENT_ACTIVITY_MARK | 0;
     public static final int CONTENT_ACTIVITY_SHOW_POPUP_SETTING = CONTENT_ACTIVITY_MARK | 1;
-    public static final int CONTENT_ACTIVITY_SHOW_LOADING       = CONTENT_ACTIVITY_MARK | 2;
-    public static final int CONTENT_ACTIVITY_HIDE_LOADING       = CONTENT_ACTIVITY_MARK | 3;
+    /*public static final int CONTENT_ACTIVITY_SHOW_LOADING       = CONTENT_ACTIVITY_MARK | 2;
+    public static final int CONTENT_ACTIVITY_HIDE_LOADING       = CONTENT_ACTIVITY_MARK | 3;*/
     public static final int CONTENT_ACTIVITY_LOGOUT             = CONTENT_ACTIVITY_MARK | 4;
 
     /**
