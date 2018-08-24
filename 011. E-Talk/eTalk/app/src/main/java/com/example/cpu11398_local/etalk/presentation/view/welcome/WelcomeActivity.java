@@ -13,6 +13,7 @@ import com.example.cpu11398_local.etalk.presentation.di.DaggerAppComponent;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.ContentActivity;
 import com.example.cpu11398_local.etalk.presentation.view.login.LoginActivity;
+import com.example.cpu11398_local.etalk.presentation.view.profile.ProfileActivity;
 import com.example.cpu11398_local.etalk.presentation.view.register.RegisterActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
@@ -46,6 +47,7 @@ public class WelcomeActivity extends BaseActivity {
      */
     @SuppressLint("CheckResult")
     public void showLoginView(View v) {
+        //startActivity(new Intent(this, ProfileActivity.class));
         startActivityForResult(
                 new Intent(WelcomeActivity.this, LoginActivity.class),
                 REQUEST_LOGIN

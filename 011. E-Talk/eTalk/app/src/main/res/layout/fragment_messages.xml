@@ -25,6 +25,7 @@
             android:layout_height="300dp"
             android:src="@drawable/ic_launcher_background"
             android:background="@drawable/img_rounded_corners"
+            android:padding="10dp"
             bind:clipToOutline="@{true}"/>
 
     </FrameLayout>
