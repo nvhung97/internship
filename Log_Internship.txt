@@ -274,11 +274,11 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Thêm ViewModel cho các View, thêm đầy đủ hàm chức năng cho các đối tượng View.
 9:47 AM 8/16/2018
 	- Hoàn thiện usecase login.
-	https://stackoverflow.com/questions/43946449/set-a-timeout-to-a-firebase-database-read-query
-	https://thangcoder.com/lap-trinh-android/hoc-lap-trinh-android-nang-cao/broadcast-receiver-trong-lap-trinh-android
+		+ https://stackoverflow.com/questions/43946449/set-a-timeout-to-a-firebase-database-read-query
 3:26 PM 8/17/2018
 	- Chỉnh sửa layout login và register để user có thể scroll khi bàn phím hiện lên.
 	- Detect network realtime.
+		+ https://thangcoder.com/lap-trinh-android/hoc-lap-trinh-android-nang-cao/broadcast-receiver-trong-lap-trinh-android
 10:30 AM 8/22/2018
 	- Hiểu sâu data binding
 		+ https://viblo.asia/p/understanding-data-bindings-generated-code-and-how-does-android-data-binding-compiler-work-Ljy5Vd1yZra
@@ -286,6 +286,14 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Hiện thực chức năng logout.
 	- Cập nhật thời gian để xác định user đang online.
 		+ https://stackoverflow.com/a/26194488
+9:48 PM 8/24/2018
+	- Thiết kế layout profile
+		+ Status bar, Action bar, Navigation bar height
+			* https://gist.github.com/hamakn/8939eb68a920a6d7a498
+		+ Animation XML
+			* https://evgenii.com/blog/spring-button-animation-on-android/
+			* http://www.singhajit.com/android-custom-animations/
+			* https://www.journaldev.com/9481/android-animation-example
 
 
 

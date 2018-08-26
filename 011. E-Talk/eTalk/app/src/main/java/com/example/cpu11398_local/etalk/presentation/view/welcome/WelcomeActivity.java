@@ -39,6 +39,7 @@ public class WelcomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        //findViewById(R.id.welcome_activity_btn_login).startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_edit_avatar));
     }
 
     /**

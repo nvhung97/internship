@@ -12,20 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Messages"/>
-
         <ImageView
             android:id="@+id/aaaa"
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:src="@drawable/ic_launcher_background"
             android:background="@drawable/img_rounded_corners"
-            android:padding="10dp"
             bind:clipToOutline="@{true}"/>
 
     </FrameLayout>

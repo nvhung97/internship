@@ -27,12 +27,16 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".presentation.view.content.ContentActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".presentation.view.chat.ChatActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".presentation.view.profile.ProfileActivity"></activity>
+        <activity
+            android:name=".presentation.view.profile.ProfileActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

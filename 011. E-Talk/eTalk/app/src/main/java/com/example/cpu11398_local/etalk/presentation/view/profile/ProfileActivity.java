@@ -1,8 +1,9 @@
 package com.example.cpu11398_local.etalk.presentation.view.profile;
 
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.animation.AnimationUtils;
+
 import com.example.cpu11398_local.etalk.R;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -11,6 +12,9 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        ((CollapsingToolbarLayout)findViewById(R.id.toolbar0)).setContentScrim(getDrawable(R.drawable.tool_bar_backgound));
+        findViewById(R.id.profile_activity_img_avatar).setClipToOutline(true);
+        findViewById(R.id.temp1).setClipToOutline(true);
+        findViewById(R.id.temp2).startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_edit_avatar));
+        //android.support.v7.appcompat.R.attr.actionBarSize
     }
 }

@@ -1,4 +1,4 @@
-package com.example.cpu11398_local.etalk.utils;
+package com.example.cpu11398_local.etalk.presentation.custom;
 
 import android.content.res.Resources;
 import android.support.v4.view.PagerAdapter;
@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.databinding.BindingAdapter;
 import android.widget.TextView;
 import com.example.cpu11398_local.etalk.R;
+import com.example.cpu11398_local.etalk.utils.Event;
 
 /**
  * Created by Hung-pc on 8/14/2018.
