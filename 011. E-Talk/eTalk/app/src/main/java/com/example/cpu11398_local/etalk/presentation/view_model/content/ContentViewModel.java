@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
+import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.NetworkChangeReceiver;
 import javax.inject.Inject;
@@ -22,6 +23,7 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.subjects.PublishSubject;
 
 public class ContentViewModel implements ViewModel,
+                                         ViewModelCallback,
                                          PopupMenu.OnMenuItemClickListener,
                                          ViewPager.OnPageChangeListener,
                                          NetworkChangeReceiver.NetworkChangeListener {
@@ -150,12 +152,7 @@ public class ContentViewModel implements ViewModel,
      * @param view
      */
     public void onSettingClick(View view) {
-        publisher.onNext(
-                Event.create(
-                        Event.CONTENT_ACTIVITY_SHOW_POPUP_SETTING,
-                        view, this
-                )
-        );
+        Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -194,15 +191,12 @@ public class ContentViewModel implements ViewModel,
             case R.id.content_activity_menu_etalk_calendar:
                 Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.content_activity_menu_logout:
-                onLogoutRequest();
-                break;
         }
         return true;
     }
 
     /**
-     * Call when user request logout. See {@link #onMenuItemClick(MenuItem)}
+     * Call when user request logout. See {@link #onNewEvent(Event)}
      */
     public void onLogoutRequest() {
         logoutUsecase.execute(null, null);
@@ -217,6 +211,20 @@ public class ContentViewModel implements ViewModel,
     @Override
     public void onNetworkChange(boolean networkState) {
         isNetworkAvailable.set(networkState);
+    }
+
+    /**
+     * Called when viewModel child emit an event.
+     * @param event event that emitted to viewModel Parent.
+     */
+    @Override
+    public void onNewEvent(Event event) {
+        Object[] data = event.getData();
+        switch (event.getType()) {
+            case Event.MORE_FRAGMENT_LOGOUT:
+                onLogoutRequest();
+                break;
+        }
     }
 
     /**

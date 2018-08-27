@@ -62,6 +62,7 @@ public class ETalkBindingAdapter {
     @BindingAdapter("setCurrentItem")
     public static void setCurrentItem(ViewPager viewPager, int item) {
         viewPager.setCurrentItem(item);
+        viewPager.setOffscreenPageLimit(4);
     }
 
     /**
@@ -109,12 +110,12 @@ public class ETalkBindingAdapter {
     }
 
     /**
-     * Add setter for {@code clipToOutline} in {@code ImageView}.
-     * @param imageView  imageView need to set clip to outline.
-     * @param clipToOutline true or false.
+     * Add setter for {@code src_from_url} in {@code AvatarImageView}.
+     * @param avatarImageView view need to set image.
+     * @param url used to load image from network using Glide.
      */
-    @BindingAdapter("clipToOutline")
-    public static void setClipToOutline(ImageView imageView, boolean clipToOutline) {
-        imageView.setClipToOutline(clipToOutline);
+    @BindingAdapter("src_from_url")
+    public static void setImageFromUrl(AvatarImageView avatarImageView, String url) {
+        avatarImageView.setImageFromUrl(url);
     }
 }

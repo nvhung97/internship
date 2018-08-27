@@ -71,7 +71,18 @@
     <item name="content_activity_menu_scan_qr_code" type="id"/>
     <item name="content_activity_menu_etalk_for_desktop" type="id"/>
     <item name="content_activity_menu_etalk_calendar" type="id"/>
-    <item name="content_activity_menu_logout" type="id"/>
+
+    <!--More fragment-->
+    <item name="more_fragment_btn_my_profile" type="id"/>
+    <item name="more_fragment_btn_my_profile_avatar" type="id"/>
+    <item name="more_fragment_btn_my_profile_name" type="id"/>
+    <item name="more_fragment_btn_people_nearby" type="id"/>
+    <item name="more_fragment_btn_chat_rooms" type="id"/>
+    <item name="more_fragment_btn_shop" type="id"/>
+    <item name="more_fragment_btn_game" type="id"/>
+    <item name="more_fragment_btn_channel" type="id"/>
+    <item name="more_fragment_btn_taxi" type="id"/>
+    <item name="more_fragment_btn_logout" type="id"/>
 
     <!--Chat activity-->
     <item name="chat_activity_status_bar" type="id"/>

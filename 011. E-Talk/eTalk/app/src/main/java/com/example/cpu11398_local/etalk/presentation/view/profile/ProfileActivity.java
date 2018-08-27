@@ -12,9 +12,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        findViewById(R.id.profile_activity_img_avatar).setClipToOutline(true);
-        findViewById(R.id.temp1).setClipToOutline(true);
-        findViewById(R.id.temp2).startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_edit_avatar));
+        //findViewById(R.id.temp2).startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_edit_avatar));
         //android.support.v7.appcompat.R.attr.actionBarSize
     }
 }

@@ -6,16 +6,18 @@ public class User {
     private String username;
     private String password;
     private String phone;
+    private String avatar;
     private long   active;
 
     public User() {
     }
 
-    public User(String name, String username, String password, String phone, long active) {
+    public User(String name, String username, String password, String phone, String avatar, long active) {
         this.name       = name;
         this.username   = username;
         this.password   = password;
         this.phone      = phone;
+        this.avatar     = avatar;
         this.active     = active;
     }
 
@@ -57,5 +59,13 @@ public class User {
 
     public void setActive(long active) {
         this.active = active;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

@@ -81,14 +81,6 @@ public class ContentActivity extends BaseActivity {
         popupMenu.show();
     }
 
-    public void onShowPopupSetting(View view, PopupMenu.OnMenuItemClickListener listener) {
-        PopupMenu popupMenu = new PopupMenu(this, view, Gravity.RIGHT);
-        popupMenu.inflate(R.menu.menu_setting);
-        popupMenu.setOnMenuItemClickListener(listener);
-        Tool.forcePopupMenuShowIcon(popupMenu);
-        popupMenu.show();
-    }
-
     /*private void onShowLoading() {
         dialog = Tool.createProcessingDialog(this);
         dialog.show();
@@ -117,12 +109,6 @@ public class ContentActivity extends BaseActivity {
             switch (event.getType()) {
                 case Event.CONTENT_ACTIVITY_SHOW_POPUP_MENU:
                     onShowPopupMenu(
-                            (View)data[0],
-                            (PopupMenu.OnMenuItemClickListener)data[1]
-                    );
-                    break;
-                case Event.CONTENT_ACTIVITY_SHOW_POPUP_SETTING:
-                    onShowPopupSetting(
                             (View)data[0],
                             (PopupMenu.OnMenuItemClickListener)data[1]
                     );

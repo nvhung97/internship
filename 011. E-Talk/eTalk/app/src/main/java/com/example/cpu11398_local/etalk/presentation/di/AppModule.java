@@ -8,13 +8,16 @@ import com.example.cpu11398_local.etalk.data.repository.data_source.CacheSource;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
 import com.example.cpu11398_local.etalk.data.repository.implement.UserRepositoryImpl;
 import com.example.cpu11398_local.etalk.domain.executor.TaskExecutor;
+import com.example.cpu11398_local.etalk.domain.interactor.GetUserInfoUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LoginUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LogoutUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.RegisterUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
 import com.example.cpu11398_local.etalk.domain.interactor.WelcomeUsecase;
+import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
 import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContentViewModel;
+import com.example.cpu11398_local.etalk.presentation.view_model.content.MoreViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.login.LoginViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.register.RegisterViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
@@ -32,7 +35,8 @@ import io.reactivex.disposables.CompositeDisposable;
 @Module
 public class AppModule {
 
-    private Context context;
+    private Context             context;
+    private ViewModelCallback   viewModelCallback;
 
     public AppModule(Context context) {
         this.context = context.getApplicationContext();
@@ -41,6 +45,11 @@ public class AppModule {
     @Provides
     public Context provideContext() {
         return context;
+    }
+
+    @Provides
+    public ViewModelCallback provideViewModelCallback() {
+        return viewModelCallback;
     }
 
     @Provides
@@ -139,6 +148,20 @@ public class AppModule {
     }
 
     @Provides
+    @Named("GetUserInfoUsecase")
+    public Usecase provideGetUserInfoUsecase(Executor executor,
+                                             Scheduler scheduler,
+                                             CompositeDisposable compositeDisposable,
+                                             UserRepository userRepository) {
+        return new GetUserInfoUsecase(
+                executor,
+                scheduler,
+                compositeDisposable,
+                userRepository
+        );
+    }
+
+    @Provides
     @Named("LogoutUsecase")
     public Usecase provideLogoutUsecase(Executor executor,
                                         Scheduler scheduler,
@@ -185,7 +208,17 @@ public class AppModule {
     public ViewModel provideContentViewModel(Context context,
                                              @Named("LogoutUsecase") Usecase usecase,
                                              NetworkChangeReceiver receiver) {
-        return new ContentViewModel(context, usecase, receiver);
+        ContentViewModel contentViewModel = new ContentViewModel(context, usecase, receiver);
+        viewModelCallback = contentViewModel;
+        return contentViewModel;
+    }
+
+    @Provides
+    @Named("MoreViewModel")
+    public ViewModel provideMoreViewModel(Context context,
+                                          ViewModelCallback viewModelCallback,
+                                          @Named("GetUserInfoUsecase") Usecase usecase) {
+        return new MoreViewModel(context, viewModelCallback, usecase);
     }
 
     @Provides

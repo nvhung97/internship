@@ -294,6 +294,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 			* https://evgenii.com/blog/spring-button-animation-on-android/
 			* http://www.singhajit.com/android-custom-animations/
 			* https://www.journaldev.com/9481/android-animation-example
+9:25 AM 8/27/2018
+	- 
 
 
 

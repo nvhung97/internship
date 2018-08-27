@@ -59,6 +59,7 @@ public class RegisterUsecase implements Usecase {
                                                             username,
                                                             password,
                                                             phone,
+                                                            null,
                                                             System.currentTimeMillis()
                                                     )
                                             )
