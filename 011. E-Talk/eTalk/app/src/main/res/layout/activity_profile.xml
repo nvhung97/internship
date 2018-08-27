@@ -66,25 +66,20 @@
                     android:layout_height="wrap_content"
                     android:background="@color/colorWhite"
                     app:layout_constraintTop_toBottomOf="@id/profile_activity_txt_no_connection">
-                    <ImageView
+                    <com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView
                         android:id="@id/profile_activity_img_avatar"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:layout_margin="15dp"
-                        android:background="@drawable/img_rounded_corners"
-                        android:src="@drawable/img_avatar"
-                        android:scaleType="centerCrop"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"/>
                     <ImageView
-                        android:id="@+id/temp1"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:background="@drawable/img_edit_avatar"
                         app:layout_constraintBottom_toBottomOf="@id/profile_activity_img_avatar"
                         app:layout_constraintRight_toRightOf="@id/profile_activity_img_avatar"/>
                     <ImageView
-                        android:id="@+id/temp2"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:padding="6dp"
@@ -99,7 +94,6 @@
                         android:paddingRight="15dp"
                         android:inputType="textCapWords"
                         android:maxLines="1"
-                        android:text="Nguyen Van Hung"
                         android:hint="@string/register_activity_txt_name_hint"
                         android:textCursorDrawable="@drawable/edt_cursor_normal"
                         android:background="@color/colorWhite"
@@ -120,7 +114,6 @@
                         android:paddingRight="15dp"
                         android:inputType="text"
                         android:maxLines="1"
-                        android:text="hungnv6"
                         android:hint="@string/register_activity_txt_username_hint"
                         android:textCursorDrawable="@drawable/edt_cursor_normal"
                         android:background="@color/colorWhite"
@@ -141,7 +134,6 @@
                         android:paddingRight="15dp"
                         android:inputType="textPassword"
                         android:maxLines="1"
-                        android:text="password"
                         android:hint="@string/register_activity_txt_password_hint"
                         android:textCursorDrawable="@drawable/edt_cursor_normal"
                         android:background="@color/colorWhite"
@@ -170,7 +162,6 @@
                         android:paddingRight="15dp"
                         android:inputType="phone"
                         android:maxLines="1"
-                        android:text="01234503569"
                         android:hint="@string/register_activity_txt_phone_hint"
                         android:textCursorDrawable="@drawable/edt_cursor_normal"
                         android:background="@color/colorWhite"

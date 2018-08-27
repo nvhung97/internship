@@ -61,6 +61,7 @@ public class ETalkBindingAdapter {
     @BindingAdapter("setCurrentItem")
     public static void setCurrentItem(ViewPager viewPager, int item) {
         viewPager.setCurrentItem(item);
+        viewPager.setOffscreenPageLimit(4);
     }
 
     /**

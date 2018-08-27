@@ -21,5 +21,8 @@ public final class FirebaseTree {
         public final class Active {
             public static final String NODE_NAME = "active";
         }
+        public final class Avatar {
+            public static final String NODE_NAME = "avatar";
+        }
     }
 }

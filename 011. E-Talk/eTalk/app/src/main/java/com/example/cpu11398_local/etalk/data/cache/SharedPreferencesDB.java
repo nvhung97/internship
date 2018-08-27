@@ -16,6 +16,7 @@ public class SharedPreferencesDB implements CacheSource {
     private final String USERNAME   = FirebaseTree.Users.Username.NODE_NAME;
     private final String PASSWORD   = FirebaseTree.Users.Password.NODE_NAME;
     private final String PHONE      = FirebaseTree.Users.Phone.NODE_NAME;
+    private final String AVATAR     = FirebaseTree.Users.Avatar.NODE_NAME;
     private final String ACTIVE     = FirebaseTree.Users.Active.NODE_NAME;
 
     private SharedPreferences   sharedPref;
@@ -35,6 +36,7 @@ public class SharedPreferencesDB implements CacheSource {
                         sharedPref.getString(USERNAME, ""),
                         sharedPref.getString(PASSWORD, ""),
                         sharedPref.getString(PHONE, ""),
+                        sharedPref.getString(AVATAR, ""),
                         sharedPref.getLong(ACTIVE, 0)
                 )
         );
@@ -47,6 +49,7 @@ public class SharedPreferencesDB implements CacheSource {
             editor.putString(USERNAME, user.getUsername());
             editor.putString(PASSWORD, user.getPassword());
             editor.putString(PHONE, user.getPhone());
+            editor.putString(AVATAR, user.getAvatar());
             editor.putLong(ACTIVE, user.getActive());
             editor.commit();
         } else {
@@ -54,6 +57,7 @@ public class SharedPreferencesDB implements CacheSource {
             editor.remove(USERNAME);
             editor.remove(PASSWORD);
             editor.remove(PHONE);
+            editor.remove(AVATAR);
             editor.remove(ACTIVE);
             editor.commit();
         }

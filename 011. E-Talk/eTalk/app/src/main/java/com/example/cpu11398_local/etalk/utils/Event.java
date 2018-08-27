@@ -22,7 +22,6 @@ public class Event {
      */
     private static final int CONTENT_ACTIVITY_MARK              = 0 << MODE_SHIFT;
     public static final int CONTENT_ACTIVITY_SHOW_POPUP_MENU    = CONTENT_ACTIVITY_MARK | 0;
-    public static final int CONTENT_ACTIVITY_SHOW_POPUP_SETTING = CONTENT_ACTIVITY_MARK | 1;
     /*public static final int CONTENT_ACTIVITY_SHOW_LOADING       = CONTENT_ACTIVITY_MARK | 2;
     public static final int CONTENT_ACTIVITY_HIDE_LOADING       = CONTENT_ACTIVITY_MARK | 3;*/
     public static final int CONTENT_ACTIVITY_LOGOUT             = CONTENT_ACTIVITY_MARK | 4;
@@ -64,6 +63,13 @@ public class Event {
     public static final int WELCOME_ACTIVITY_SHOW_LOADING   = WELCOME_ACTIVITY_MARK | 0;
     public static final int WELCOME_ACTIVITY_HIDE_LOADING   = WELCOME_ACTIVITY_MARK | 1;
     public static final int WELCOME_ACTIVITY_USER_LOGGED_IN = WELCOME_ACTIVITY_MARK | 2;
+
+    /**
+     * Bellow commands for {@code MoreFragment}.
+     */
+    private static final int MORE_FRAGMENT_MARK         = 5 << MODE_SHIFT;
+    public static final int MORE_FRAGMENT_MY_PRORILE    = MORE_FRAGMENT_MARK | 0;
+    public static final int MORE_FRAGMENT_LOGOUT        = MORE_FRAGMENT_MARK | 1;
 
 
     /***********************************************************************************************
