@@ -41,6 +41,7 @@ public class ETalkBindingAdapter {
     @BindingAdapter("setPagerAdapter")
     public static void setPagerAdapter(ViewPager viewPager, PagerAdapter pagerAdapter) {
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setOffscreenPageLimit(4);
     }
 
     /**
