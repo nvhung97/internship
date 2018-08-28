@@ -65,6 +65,7 @@
                         android:text="@string/app_no_connection"
                         android:textColor="@color/colorBlack"
                         android:gravity="center"
+                        android:visibility="@{viewModel.networkStateNotificationVisibility}"
                         android:background="@color/colorLoadingBackground"
                         app:layout_constraintTop_toTopOf="parent"/>
                     <android.support.constraint.ConstraintLayout
@@ -78,12 +79,15 @@
                             android:layout_width="70dp"
                             android:layout_height="70dp"
                             android:layout_margin="15dp"
+                            bind:src_from_url="@{viewModel.avatarUrl}"
+                            android:onClick="@{viewModel::onChangeAvatar}"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toLeftOf="parent"/>
                         <ImageView
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:background="@drawable/img_edit_avatar"
+                            android:onClick="@{viewModel::onChangeAvatar}"
                             app:layout_constraintBottom_toBottomOf="@id/profile_activity_img_avatar"
                             app:layout_constraintRight_toRightOf="@id/profile_activity_img_avatar"/>
                         <ImageView
@@ -91,6 +95,7 @@
                             android:layout_height="30dp"
                             android:padding="6dp"
                             android:src="@drawable/ic_edit_avatar"
+                            android:onClick="@{viewModel::onChangeAvatar}"
                             bind:anim="@{@anim/anim_edit_avatar}"
                             app:layout_constraintBottom_toBottomOf="@id/profile_activity_img_avatar"
                             app:layout_constraintRight_toRightOf="@id/profile_activity_img_avatar"/>
@@ -102,6 +107,7 @@
                             android:paddingRight="15dp"
                             android:inputType="textCapWords"
                             android:maxLines="1"
+                            android:text="@{viewModel.name}"
                             android:hint="@string/register_activity_txt_name_hint"
                             android:textCursorDrawable="@drawable/edt_cursor_normal"
                             android:background="@color/colorWhite"
@@ -122,6 +128,8 @@
                             android:paddingRight="15dp"
                             android:inputType="text"
                             android:maxLines="1"
+                            android:text="@{viewModel.username}"
+                            android:enabled="false"
                             android:hint="@string/register_activity_txt_username_hint"
                             android:textCursorDrawable="@drawable/edt_cursor_normal"
                             android:background="@color/colorWhite"
@@ -139,9 +147,10 @@
                             android:id="@id/profile_activity_edt_password"
                             android:layout_width="0dp"
                             android:layout_height="50dp"
-                            android:paddingRight="15dp"
-                            android:inputType="textPassword"
+                            android:inputType="@{viewModel.passwordInputType}"
+                            android:enabled="@{viewModel.passwordEnable}"
                             android:maxLines="1"
+                            android:text="@{viewModel.password}"
                             android:hint="@string/register_activity_txt_password_hint"
                             android:textCursorDrawable="@drawable/edt_cursor_normal"
                             android:background="@color/colorWhite"
@@ -153,7 +162,8 @@
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:background="@color/colorWhite"
-                            android:src="@drawable/ic_show_password"
+                            android:src="@{viewModel.passwordIcon}"
+                            android:onClick="@{viewModel::onChangeVisiblePasswordState}"
                             app:layout_constraintTop_toBottomOf="@id/profile_activity_edt_username"
                             app:layout_constraintRight_toRightOf="@id/profile_activity_edt_username"/>
                         <View
@@ -170,6 +180,7 @@
                             android:paddingRight="15dp"
                             android:inputType="phone"
                             android:maxLines="1"
+                            android:text="@{viewModel.phone}"
                             android:hint="@string/register_activity_txt_phone_hint"
                             android:textCursorDrawable="@drawable/edt_cursor_normal"
                             android:background="@color/colorWhite"
@@ -187,6 +198,8 @@
                         android:textColor="@color/colorWhite"
                         android:background="@drawable/btn_update"
                         android:stateListAnimator="@null"
+                        android:enabled="@{viewModel.updateEnable}"
+                        android:onClick="@{viewModel::onUpdateRequest}"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/profile_activity_lyt_content"

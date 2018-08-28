@@ -51,7 +51,7 @@ public class RegisterViewModel implements ViewModel, NetworkChangeReceiver.Netwo
     public ObservableField<Event> hintEvent = new ObservableField<>(Event.create(Event.NONE));
 
     /**
-     * Binding data between {@code isNetworkAvailable} and {@code TextView} for inform
+     * Binding data between {@code networkAvailable} and {@code TextView} for inform
      * state of network.
      */
     public ObservableBoolean isNetworkAvailable = new ObservableBoolean(false);
@@ -87,7 +87,7 @@ public class RegisterViewModel implements ViewModel, NetworkChangeReceiver.Netwo
         this.context            = context;
         this.registerUsecase    = registerUsecase;
         this.receiver           = receiver;
-        receiver.initReceiver(this.context, this);
+        this.receiver.initReceiver(this.context, this);
     }
 
     /**
@@ -141,7 +141,7 @@ public class RegisterViewModel implements ViewModel, NetworkChangeReceiver.Netwo
     }
 
     /**
-     * Called when network state change an reassign {@code isNetworkAvailable}
+     * Called when network state change an reassign {@code networkAvailable}
      * according to {@code networkState}.
      * @param networkState current network state.
      */

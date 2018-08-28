@@ -35,7 +35,7 @@ public class ContentViewModel implements ViewModel,
     public ObservableInt currentTab = new ObservableInt(0);
 
     /**
-     * Binding data between {@code isNetworkAvailable} and {@code TextView} for inform
+     * Binding data between {@code networkAvailable} and {@code TextView} for inform
      * state of network.
      */
     public ObservableBoolean isNetworkAvailable = new ObservableBoolean(false);
@@ -70,7 +70,7 @@ public class ContentViewModel implements ViewModel,
         this.context        = context;
         this.logoutUsecase  = logoutUsecase;
         this.receiver       = receiver;
-        receiver.initReceiver(this.context, this);
+        this.receiver.initReceiver(this.context, this);
     }
 
     /**
@@ -204,7 +204,7 @@ public class ContentViewModel implements ViewModel,
     }
 
     /**
-     * Called when network state change and reassign {@code isNetworkAvailable}
+     * Called when network state change and reassign {@code networkAvailable}
      * according to {@code networkState}.
      * @param networkState current network state.
      */
@@ -243,8 +243,11 @@ public class ContentViewModel implements ViewModel,
     @Override
     public void onPageScrollStateChanged(int state) {}
 
+    /**
+     * Called when this viewModel destroyed to inform usecase stop current task.
+     */
     @Override
     public void endTask() {
-
+        logoutUsecase.endTask();
     }
 }

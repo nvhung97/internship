@@ -41,7 +41,7 @@ public class LoginViewModel implements ViewModel, NetworkChangeReceiver.NetworkC
     public ObservableField<Event> hintEvent = new ObservableField<>(Event.create(Event.NONE));
 
     /**
-     * Binding data between {@code isNetworkAvailable} and {@code TextView} for inform
+     * Binding data between {@code networkAvailable} and {@code TextView} for inform
      * state of network.
      */
     public ObservableBoolean isNetworkAvailable = new ObservableBoolean(false);
@@ -77,7 +77,7 @@ public class LoginViewModel implements ViewModel, NetworkChangeReceiver.NetworkC
         this.context      = context;
         this.loginUsecase = loginUsecase;
         this.receiver     = receiver;
-        receiver.initReceiver(this.context, this);
+        this.receiver.initReceiver(this.context, this);
     }
 
     /**
@@ -129,7 +129,7 @@ public class LoginViewModel implements ViewModel, NetworkChangeReceiver.NetworkC
     }
 
     /**
-     * Called when network state change and reassign {@code isNetworkAvailable}
+     * Called when network state change and reassign {@code networkAvailable}
      * according to {@code networkState}.
      * @param networkState current network state.
      */

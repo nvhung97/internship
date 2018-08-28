@@ -19,6 +19,7 @@ import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatViewMod
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContentViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.MoreViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.login.LoginViewModel;
+import com.example.cpu11398_local.etalk.presentation.view_model.profile.ProfileViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.register.RegisterViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.welcome.WelcomeViewModel;
@@ -219,6 +220,14 @@ public class AppModule {
                                           ViewModelCallback viewModelCallback,
                                           @Named("GetUserInfoUsecase") Usecase usecase) {
         return new MoreViewModel(context, viewModelCallback, usecase);
+    }
+
+    @Provides
+    @Named("ProfileViewModel")
+    public ViewModel provideProfileViewModel(Context context,
+                                             @Named("GetUserInfoUsecase") Usecase usecase,
+                                             NetworkChangeReceiver receiver) {
+        return new ProfileViewModel(context, usecase, receiver);
     }
 
     @Provides
