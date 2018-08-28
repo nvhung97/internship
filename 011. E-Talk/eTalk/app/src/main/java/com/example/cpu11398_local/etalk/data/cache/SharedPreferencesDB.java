@@ -7,6 +7,8 @@ import com.example.cpu11398_local.etalk.data.repository.data_source.CacheSource;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.FirebaseTree;
 import javax.inject.Inject;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
 import io.reactivex.Single;
 
 public class SharedPreferencesDB implements CacheSource {
@@ -19,8 +21,9 @@ public class SharedPreferencesDB implements CacheSource {
     private final String AVATAR     = FirebaseTree.Users.Avatar.NODE_NAME;
     private final String ACTIVE     = FirebaseTree.Users.Active.NODE_NAME;
 
-    private SharedPreferences   sharedPref;
-    private Editor              editor;
+    private SharedPreferences       sharedPref;
+    private Editor                  editor;
+    private ObservableEmitter<User> changeableUserEmitter;
 
     @Inject
     public SharedPreferencesDB(Context context) {
@@ -30,16 +33,15 @@ public class SharedPreferencesDB implements CacheSource {
 
     @Override
     public Single<User> getUser() {
-        return Single.just(
-                new User(
-                        sharedPref.getString(NAME, ""),
-                        sharedPref.getString(USERNAME, ""),
-                        sharedPref.getString(PASSWORD, ""),
-                        sharedPref.getString(PHONE, ""),
-                        sharedPref.getString(AVATAR, ""),
-                        sharedPref.getLong(ACTIVE, 0)
-                )
-        );
+        return Single.just(getUserHelper());
+    }
+
+    @Override
+    public Observable<User> getChangeableUser(){
+        return Observable.create(emitter -> {
+            changeableUserEmitter = emitter;
+            changeableUserEmitter.onNext(getUserHelper());
+        });
     }
 
     @Override
@@ -52,6 +54,9 @@ public class SharedPreferencesDB implements CacheSource {
             editor.putString(AVATAR, user.getAvatar());
             editor.putLong(ACTIVE, user.getActive());
             editor.commit();
+            if (changeableUserEmitter != null) {
+                changeableUserEmitter.onNext(user);
+            }
         } else {
             editor.remove(NAME);
             editor.remove(USERNAME);
@@ -61,6 +66,17 @@ public class SharedPreferencesDB implements CacheSource {
             editor.remove(ACTIVE);
             editor.commit();
         }
+    }
+
+    private User getUserHelper() {
+        return new User(
+                sharedPref.getString(NAME, ""),
+                sharedPref.getString(USERNAME, ""),
+                sharedPref.getString(PASSWORD, ""),
+                sharedPref.getString(PHONE, ""),
+                sharedPref.getString(AVATAR, ""),
+                sharedPref.getLong(ACTIVE, 0)
+        );
     }
 
     @Override

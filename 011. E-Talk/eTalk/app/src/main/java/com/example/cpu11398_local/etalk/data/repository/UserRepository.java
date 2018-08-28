@@ -2,6 +2,7 @@ package com.example.cpu11398_local.etalk.data.repository;
 
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.Optional;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public interface UserRepository {
@@ -48,6 +49,12 @@ public interface UserRepository {
      * @return an observable contain user.
      */
     Single<User> getCacheUser();
+
+    /**
+     * Get user's info cached and might changed in the future.
+     * @return an observable contain user.
+     */
+    Observable<User> getCacheChangeableUser();
 
     /**
      * Get username of user logged in. if have, go straight to content view.

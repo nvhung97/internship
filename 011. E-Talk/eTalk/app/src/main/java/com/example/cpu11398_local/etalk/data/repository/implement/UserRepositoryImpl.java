@@ -6,6 +6,8 @@ import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSourc
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.Optional;
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public class UserRepositoryImpl implements UserRepository{
@@ -47,6 +49,11 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     public Single<User> getCacheUser() {
         return cacheSource.getUser();
+    }
+
+    @Override
+    public Observable<User> getCacheChangeableUser() {
+        return cacheSource.getChangeableUser();
     }
 
     @Override

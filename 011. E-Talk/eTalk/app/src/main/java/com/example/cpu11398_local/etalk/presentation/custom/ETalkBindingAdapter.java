@@ -3,8 +3,10 @@ package com.example.cpu11398_local.etalk.presentation.custom;
 import android.content.res.Resources;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.databinding.BindingAdapter;
 import android.widget.TextView;
@@ -117,5 +119,16 @@ public class ETalkBindingAdapter {
     @BindingAdapter("src_from_url")
     public static void setImageFromUrl(AvatarImageView avatarImageView, String url) {
         avatarImageView.setImageFromUrl(url);
+    }
+
+    /**
+     * Set animation for a view with attribute {@code anim} in {@code View}.
+     * @param view view need to set animation.
+     * @param animation animation from resource.
+     */
+    @BindingAdapter("anim")
+    public static void setAnimation(View view, Animation animation) {
+        Log.e("Test","ss");
+        view.startAnimation(animation);
     }
 }

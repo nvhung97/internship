@@ -1,6 +1,7 @@
 package com.example.cpu11398_local.etalk.presentation.custom;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
@@ -26,7 +27,11 @@ public class AvatarImageView extends AppCompatImageView {
     }
 
     private void init() {
-        setBackground(getContext().getDrawable(R.drawable.img_rounded_corners));
+        GradientDrawable shape = new GradientDrawable();
+        shape.setShape(GradientDrawable.RECTANGLE);
+        shape.setCornerRadius(Float.MAX_VALUE);
+        shape.setColor(getContext().getResources().getColor(R.color.colorWhite));
+        setBackground(shape);
         setScaleType(ScaleType.CENTER_CROP);
         setClipToOutline(true);
     }

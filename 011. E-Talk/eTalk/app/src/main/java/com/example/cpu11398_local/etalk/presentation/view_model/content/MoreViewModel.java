@@ -15,7 +15,7 @@ import com.example.cpu11398_local.etalk.utils.Event;
 import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observer;
-import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.subjects.PublishSubject;
 
 public class MoreViewModel extends BaseObservable implements ViewModel{
@@ -92,7 +92,7 @@ public class MoreViewModel extends BaseObservable implements ViewModel{
     @Override
     public void subscribeObserver(Observer<Event> observer) {
         publisher.subscribe(observer);
-        getUserInfoUsecase.execute(new GetUserInfoUsecaseObserver(),null);
+        getUserInfoUsecase.execute(new GetUserInfoUsecaseObserver(),true);
     }
 
     /**
@@ -170,10 +170,9 @@ public class MoreViewModel extends BaseObservable implements ViewModel{
     /**
      * {@code GetUserInfoUsecaseObserver} is subscribed to usecase to listen event from it.
      */
-    private class GetUserInfoUsecaseObserver extends DisposableSingleObserver<User> {
-
+    private class GetUserInfoUsecaseObserver extends DisposableObserver<User> {
         @Override
-        public void onSuccess(User user) {
+        public void onNext(User user) {
             setName(user.getName());
             setAvatarUrl(user.getAvatar());
         }
@@ -182,5 +181,8 @@ public class MoreViewModel extends BaseObservable implements ViewModel{
         public void onError(Throwable e) {
             Log.i("eTalk", e.getMessage());
         }
+
+        @Override
+        public void onComplete() {}
     }
 }
