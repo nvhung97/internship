@@ -3,12 +3,15 @@ package com.example.cpu11398_local.etalk.utils;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.provider.MediaStore;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.PopupMenu;
 import com.example.cpu11398_local.etalk.R;
 import java.lang.reflect.Field;
@@ -84,5 +87,43 @@ public class Tool {
                 new ColorDrawable(android.graphics.Color.TRANSPARENT)
         );
         return dialog;
+    }
+
+    /**
+     * Show pop up to allow user to choose to take photo from camera or gallery
+     */
+    public static Dialog createImageOptionDialog(final Context context,
+                                                 final int REQUEST_CAMERA_CODE,
+                                                 final int REQUEST_GALLERY_CODE){
+        View view = LayoutInflater
+                .from(context)
+                .inflate(R.layout.lyt_image_option, null);
+        Button btn_option_camera  = view.findViewById(R.id.profile_activity_image_option_camera);
+        Button btn_option_gallery = view.findViewById(R.id.profile_activity_image_option_library);
+        Dialog imageOptionDialog  = new Dialog(context);
+        imageOptionDialog.setContentView(view);
+        imageOptionDialog.setCancelable(true);
+        imageOptionDialog.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT)
+        );
+
+        btn_option_camera.setOnClickListener(view1 -> {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            ((FragmentActivity)context).startActivityForResult(intent, REQUEST_CAMERA_CODE);
+            imageOptionDialog.dismiss();
+        });
+
+        btn_option_gallery.setOnClickListener(view2 -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            ((FragmentActivity)context).startActivityForResult(
+                    Intent.createChooser(intent, "Select Image"),
+                    REQUEST_GALLERY_CODE
+            );
+            imageOptionDialog.dismiss();
+        });
+
+        return imageOptionDialog;
     }
 }

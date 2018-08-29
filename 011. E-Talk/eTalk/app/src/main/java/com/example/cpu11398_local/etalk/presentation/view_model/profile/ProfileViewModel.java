@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 import com.example.cpu11398_local.etalk.BR;
 import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
 import com.example.cpu11398_local.etalk.presentation.model.User;
@@ -21,7 +20,6 @@ import io.reactivex.Observer;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.subjects.PublishSubject;
 import com.example.cpu11398_local.etalk.R;
-import com.example.cpu11398_local.etalk.utils.Optional;
 
 public class ProfileViewModel extends    BaseObservable
                               implements ViewModel,
@@ -56,6 +54,7 @@ public class ProfileViewModel extends    BaseObservable
     public void setName(String name) {
         this.name = name;
         notifyPropertyChanged(BR.name);
+        notifyPropertyChanged(BR.updateEnable);
     }
 
     /**
@@ -86,6 +85,7 @@ public class ProfileViewModel extends    BaseObservable
     public void setPassword(String password) {
         this.password = password;
         notifyPropertyChanged(BR.password);
+        notifyPropertyChanged(BR.updateEnable);
     }
 
     /**
@@ -117,6 +117,7 @@ public class ProfileViewModel extends    BaseObservable
     public void setPhone(String phone) {
         this.phone = phone;
         notifyPropertyChanged(BR.phone);
+        notifyPropertyChanged(BR.updateEnable);
     }
 
     /**
@@ -168,7 +169,12 @@ public class ProfileViewModel extends    BaseObservable
     /**
      * A container contain bitmap avatar from camara or gallery.
      */
-    private Optional<Bitmap> avatarContainer = Optional.empty();
+    private Bitmap bitmapAvatar = null;
+
+    public void setBitmapAvatar(Bitmap bitmapAvatar) {
+        this.bitmapAvatar = bitmapAvatar;
+        notifyPropertyChanged(BR.updateEnable);
+    }
 
     /**
      * create new {@code ProfileViewModel} with a context, an usecase to get user info and
@@ -199,7 +205,13 @@ public class ProfileViewModel extends    BaseObservable
      * @param view
      */
     public void onChangeAvatar(View view) {
-        Toast.makeText(context, "avatar", Toast.LENGTH_SHORT).show();
+        publisher.onNext(Event.create(
+                Event.PROFILE_ACTIVITY_SHOW_IMAGE_OPTION,
+                (AvatarCopy) bitmap -> {
+                    bitmapAvatar = bitmap;
+                    notifyPropertyChanged(BR.updateEnable);
+                }
+        ));
     }
 
     /**
@@ -254,7 +266,7 @@ public class ProfileViewModel extends    BaseObservable
 
     @Bindable
     public boolean getUpdateEnable() {
-        if (!avatarContainer.isPresent()
+        if (bitmapAvatar == null
                 && (name.isEmpty() || name.equals(currentUser.getName()))
                 && (passwordIcon == R.drawable.ic_edit || password.isEmpty())
                 && (phone.isEmpty() || phone.equals(currentUser.getPhone()))) {
@@ -299,5 +311,13 @@ public class ProfileViewModel extends    BaseObservable
         public void onError(Throwable e) {
             Log.i("eTalk", e.getMessage());
         }
+    }
+
+    /**
+     * A callback to update {@link #bitmapAvatar} when user change avatar that
+     * get from camera or gallery.
+     */
+    public interface AvatarCopy {
+        void copy(Bitmap bitmap);
     }
 }

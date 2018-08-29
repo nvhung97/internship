@@ -117,5 +117,8 @@
     <item name="profile_activity_btn_password" type="id"/>
     <item name="profile_activity_edt_phone" type="id"/>
     <item name="profile_activity_btn_update" type="id"/>
+    <item name="profile_activity_image_option_title" type="id"/>
+    <item name="profile_activity_image_option_camera" type="id"/>
+    <item name="profile_activity_image_option_library" type="id"/>
 
 </resources>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite">
+
+    <TextView
+        android:id="@id/profile_activity_image_option_title"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/colorBlack"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="@string/profile_activity_image_option_title"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <Button
+        android:id="@id/profile_activity_image_option_camera"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="@string/profile_activity_image_option_camera"
+        android:textAllCaps="false"
+        android:gravity="left|center_vertical"
+        android:stateListAnimator="@null"
+        android:drawableLeft="@drawable/ic_option_camera"
+        android:drawablePadding="10dp"
+        android:background="@drawable/btn_image_option"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/profile_activity_image_option_library"
+        app:layout_constraintTop_toBottomOf="@id/profile_activity_image_option_title"/>
+
+    <Button
+        android:id="@id/profile_activity_image_option_library"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="70dp"
+        android:text="@string/profile_activity_image_option_library"
+        android:textAllCaps="false"
+        android:gravity="left|center_vertical"
+        android:stateListAnimator="@null"
+        android:drawableLeft="@drawable/ic_option_library"
+        android:drawablePadding="10dp"
+        android:background="@drawable/btn_image_option"
+        app:layout_constraintTop_toBottomOf="@id/profile_activity_image_option_camera"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>
