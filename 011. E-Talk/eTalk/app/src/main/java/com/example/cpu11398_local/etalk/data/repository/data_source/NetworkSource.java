@@ -1,5 +1,7 @@
 package com.example.cpu11398_local.etalk.data.repository.data_source;
 
+import android.graphics.Bitmap;
+
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.Optional;
 import io.reactivex.Single;
@@ -36,4 +38,12 @@ public interface NetworkSource {
      * @param update {@code true} or {@code false}.
      */
     void updateUserActive(String username, Boolean update);
+
+    /**
+     * Upload image to network database.
+     * @param image need to upload.
+     * @param username user need to upload their image.
+     * @return an observable contain link of image.
+     */
+    Single<String> uploadImage(String username, Bitmap image);
 }

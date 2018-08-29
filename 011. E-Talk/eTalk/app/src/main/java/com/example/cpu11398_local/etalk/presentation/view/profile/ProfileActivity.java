@@ -6,7 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
+import android.widget.Toast;
 
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityProfileBinding;
@@ -72,6 +72,17 @@ public class ProfileActivity extends BaseActivity {
         viewModel.endTask();
     }
 
+    private void onShowLoading() {
+        dialog = Tool.createProcessingDialog(this);
+        dialog.show();
+    }
+
+    private void onHideLoading() {
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+    }
+
     private class ProfileObserver implements Observer<Event> {
         @Override
         public void onSubscribe(Disposable d) {
@@ -90,18 +101,36 @@ public class ProfileActivity extends BaseActivity {
                             REQUEST_GALLERY_CODE
                     ).show();
                     break;
-                /*case Event.LOGIN_ACTIVITY_FINISH_OK:
-                    onFinishSuccessfully();
+                case Event.PROFILE_ACTIVITY_TIME_OUT:
+                    Toast.makeText(
+                            ProfileActivity.this,
+                            getString(R.string.profile_activity_request_timeout),
+                            Toast.LENGTH_SHORT
+                    ).show();
                     break;
-                case Event.LOGIN_ACTIVITY_FINISH_CANCELED:
-                    onFinishFailed();
+                case Event.PROFILE_ACTIVITY_UPDATE_OK:
+                    Toast.makeText(
+                            ProfileActivity.this,
+                            getString(R.string.profile_activity_update_successfully),
+                            Toast.LENGTH_SHORT
+                    ).show();
                     break;
-                case Event.LOGIN_ACTIVITY_SHOW_LOADING:
+                case Event.PROFILE_ACTIVITY_UPDATE_FAILED:
+                    Toast.makeText(
+                            ProfileActivity.this,
+                            getString(R.string.profile_activity_update_failed),
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    break;
+                case Event.PROFILE_ACTIVITY_HIDE_LOADING:
+                    onHideLoading();
+                    break;
+                case Event.PROFILE_ACTIVITY_SHOW_LOADING:
                     onShowLoading();
                     break;
-                case Event.LOGIN_ACTIVITY_HIDE_LOADING:
-                    onHideLoading();
-                    break;*/
+                case Event.PROFILE_ACTIVITY_BACK:
+                    onBackPressed();
+                    break;
             }
         }
 
@@ -119,12 +148,11 @@ public class ProfileActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("Test" , "123");
         if (resultCode == RESULT_OK && data != null) {
             if (requestCode == REQUEST_CAMERA_CODE) {
                 Bitmap bitmapAvatar = (Bitmap)data.getExtras().get("data");
-                binding.profileActivityImgAvatar.setImageBitmap(bitmapAvatar);
                 avatarCopy.copy(bitmapAvatar);
+                binding.profileActivityImgAvatar.setImageBitmap(bitmapAvatar);
             }
             else if (requestCode == REQUEST_GALLERY_CODE) {
                 try {
@@ -132,8 +160,8 @@ public class ProfileActivity extends BaseActivity {
                             .Images
                             .Media
                             .getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                    binding.profileActivityImgAvatar.setImageBitmap(bitmapAvatar);
                     avatarCopy.copy(bitmapAvatar);
+                    binding.profileActivityImgAvatar.setImageBitmap(bitmapAvatar);
                 }
                 catch (Exception e) {
                     e.printStackTrace();

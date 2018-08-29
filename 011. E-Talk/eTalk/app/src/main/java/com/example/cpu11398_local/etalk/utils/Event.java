@@ -72,13 +72,16 @@ public class Event {
     public static final int MORE_FRAGMENT_LOGOUT        = MORE_FRAGMENT_MARK | 1;
 
     /**
-     * Bellow commands for {@code MoreFragment}.
+     * Bellow commands for {@code Profile acticity}.
      */
     private static final int PROFILE_ACTIVITY_MARK              = 6 << MODE_SHIFT;
     public static final int PROFILE_ACTIVITY_SHOW_LOADING       = PROFILE_ACTIVITY_MARK | 0;
     public static final int PROFILE_ACTIVITY_HIDE_LOADING       = PROFILE_ACTIVITY_MARK | 1;
     public static final int PROFILE_ACTIVITY_SHOW_IMAGE_OPTION  = PROFILE_ACTIVITY_MARK | 2;
     public static final int PROFILE_ACTIVITY_BACK               = PROFILE_ACTIVITY_MARK | 3;
+    public static final int PROFILE_ACTIVITY_TIME_OUT           = PROFILE_ACTIVITY_MARK | 4;
+    public static final int PROFILE_ACTIVITY_UPDATE_OK          = PROFILE_ACTIVITY_MARK | 5;
+    public static final int PROFILE_ACTIVITY_UPDATE_FAILED      = PROFILE_ACTIVITY_MARK | 6;
 
 
     /***********************************************************************************************

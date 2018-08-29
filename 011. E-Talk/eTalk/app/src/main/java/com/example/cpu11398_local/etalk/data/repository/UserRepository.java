@@ -1,5 +1,7 @@
 package com.example.cpu11398_local.etalk.data.repository;
 
+import android.graphics.Bitmap;
+
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.Optional;
 import io.reactivex.Observable;
@@ -37,6 +39,14 @@ public interface UserRepository {
      * @param update {@code true} or {@code false}.
      */
     void updateNetworkUserActive(String username, Boolean update);
+
+    /**
+     * Upload image to network database.
+     * @param image need to upload.
+     * @param username user need to upload their image.
+     * @return an observable contain link of image.
+     */
+    Single<String> uploadNetworkImage(String username, Bitmap image);
 
     /**
      * Cache user's info when user login to retrieve in the future.

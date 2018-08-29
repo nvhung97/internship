@@ -1,5 +1,7 @@
 package com.example.cpu11398_local.etalk.data.repository.implement;
 
+import android.graphics.Bitmap;
+
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import com.example.cpu11398_local.etalk.data.repository.data_source.CacheSource;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
@@ -39,6 +41,11 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     public void updateNetworkUserActive(String username, Boolean update) {
         networkSource.updateUserActive(username, update);
+    }
+
+    @Override
+    public Single<String> uploadNetworkImage(String username, Bitmap image) {
+        return networkSource.uploadImage(username, image);
     }
 
     @Override

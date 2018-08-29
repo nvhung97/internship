@@ -13,7 +13,6 @@ import com.example.cpu11398_local.etalk.presentation.di.DaggerAppComponent;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.ContentActivity;
 import com.example.cpu11398_local.etalk.presentation.view.login.LoginActivity;
-import com.example.cpu11398_local.etalk.presentation.view.profile.ProfileActivity;
 import com.example.cpu11398_local.etalk.presentation.view.register.RegisterActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
@@ -39,7 +38,6 @@ public class WelcomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        //findViewById(R.id.welcome_activity_btn_login).startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_edit_avatar));
     }
 
     /**

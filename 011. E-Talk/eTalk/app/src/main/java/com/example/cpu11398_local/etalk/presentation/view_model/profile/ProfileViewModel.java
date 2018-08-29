@@ -5,6 +5,7 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -33,7 +34,7 @@ public class ProfileViewModel extends    BaseObservable
 
     @Bindable
     public String getAvatarUrl() {
-        return avatarUrl;
+        return bitmapAvatar != null ? null : avatarUrl;
     }
 
     public void setAvatarUrl(String avatarUrl) {
@@ -134,6 +135,7 @@ public class ProfileViewModel extends    BaseObservable
     public void setNetworkState(boolean networkstate) {
         this.networkAvailable = networkstate;
         notifyPropertyChanged(BR.networkStateNotificationVisibility);
+        notifyPropertyChanged(BR.updateEnable);
     }
 
     /**
@@ -147,9 +149,14 @@ public class ProfileViewModel extends    BaseObservable
     private Context context;
 
     /**
-     * When user request logout, viewModel use {@code logoutUsecase} to perform the action.
+     * ViewModel use {@code getUserInfoUsecase} to load user info.
      */
     private Usecase getUserInfoUsecase;
+
+    /**
+     * When user request update, viewModel use {@code updateUserInfoUsecase} to perform the action.
+     */
+    private Usecase updateUserInfoUsecase;
 
     /**
      * Listen network state to inform user check connection again.
@@ -157,7 +164,7 @@ public class ProfileViewModel extends    BaseObservable
     private NetworkChangeReceiver receiver;
 
     /**
-     * User before update.
+     * User before update. Used to compare to new info if have any change.
      */
     private User currentUser;
 
@@ -183,10 +190,12 @@ public class ProfileViewModel extends    BaseObservable
     @Inject
     public ProfileViewModel(Context context,
                             @Named("GetUserInfoUsecase") Usecase getUserInfoUsecase,
+                            @Named("UpdateUserInfoUsecase") Usecase updateUserInfoUsecase,
                             NetworkChangeReceiver receiver) {
-        this.context            = context;
-        this.getUserInfoUsecase = getUserInfoUsecase;
-        this.receiver           = receiver;
+        this.context                = context;
+        this.getUserInfoUsecase     = getUserInfoUsecase;
+        this.updateUserInfoUsecase  = updateUserInfoUsecase;
+        this.receiver               = receiver;
         this.receiver.initReceiver(this.context, this);
     }
 
@@ -257,19 +266,46 @@ public class ProfileViewModel extends    BaseObservable
     }
 
     /**
+     * Called when user click back arrow on Tool bar.
+     * @param view
+     */
+    public void onBackPressed(View view) {
+        publisher.onNext(Event.create(Event.PROFILE_ACTIVITY_BACK));
+    }
+
+    /**
      * Call when user click button update.
      * @param view
      */
     public void onUpdateRequest(View view) {
-
+        publisher.onNext(Event.create(Event.PROFILE_ACTIVITY_SHOW_LOADING));
+        newUser = new User(
+                name,
+                username,
+                passwordIcon == R.drawable.ic_edit ? currentUser.getPassword() : password,
+                phone,
+                bitmapAvatar == null ? currentUser.getAvatar() : null,
+                System.currentTimeMillis()
+        );
+        updateUserInfoUsecase.execute(
+                new UpdateUserInfoObserver(bitmapAvatar != null),
+                newUser,
+                bitmapAvatar
+        );
     }
 
     @Bindable
     public boolean getUpdateEnable() {
+        if (!networkAvailable) {
+            return false;
+        }
+        if (name.isEmpty() || password.isEmpty() || phone.isEmpty()) {
+            return false;
+        }
         if (bitmapAvatar == null
-                && (name.isEmpty() || name.equals(currentUser.getName()))
-                && (passwordIcon == R.drawable.ic_edit || password.isEmpty())
-                && (phone.isEmpty() || phone.equals(currentUser.getPhone()))) {
+                && name.equals(currentUser.getName())
+                && passwordIcon == R.drawable.ic_edit
+                && phone.equals(currentUser.getPhone())) {
             return false;
         }
         return true;
@@ -291,6 +327,7 @@ public class ProfileViewModel extends    BaseObservable
     @Override
     public void endTask() {
         getUserInfoUsecase.endTask();
+        updateUserInfoUsecase.endTask();
     }
 
     /**
@@ -305,6 +342,49 @@ public class ProfileViewModel extends    BaseObservable
             setName(user.getName());
             setUsername(user.getUsername());
             setPhone(user.getPhone());
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.i("eTalk", e.getMessage());
+        }
+    }
+
+    /**
+     * {@code LoginObserver} is subscribed to usecase to listen event from it.
+     */
+    private class UpdateUserInfoObserver extends DisposableSingleObserver<Boolean> {
+
+        private Handler handler = new Handler();
+
+        public UpdateUserInfoObserver(boolean hasImage) {
+            handler.postDelayed(
+                    () -> {
+                        publisher.onNext(Event.create(Event.PROFILE_ACTIVITY_HIDE_LOADING));
+                        publisher.onNext(Event.create(Event.PROFILE_ACTIVITY_TIME_OUT));
+                        updateUserInfoUsecase.endTask();
+                    },
+                    hasImage ? 1000 * 30 : 1000 * 10
+            );
+        }
+
+        @Override
+        public void onSuccess(Boolean isSuccess) {
+            handler.removeCallbacksAndMessages(null);
+            if (isSuccess) {
+                publisher.onNext(Event.create(Event.PROFILE_ACTIVITY_HIDE_LOADING));
+                publisher.onNext(Event.create(Event.PROFILE_ACTIVITY_UPDATE_OK));
+                currentUser = newUser;
+                newUser = null;
+                bitmapAvatar = null;
+                setPasswordIcon(R.drawable.ic_edit);
+                notifyPropertyChanged(BR.passwordInputType);
+                notifyPropertyChanged(BR.passwordEnable);
+                notifyPropertyChanged(BR.updateEnable);
+            } else {
+                publisher.onNext(Event.create(Event.PROFILE_ACTIVITY_HIDE_LOADING));
+                publisher.onNext(Event.create(Event.PROFILE_ACTIVITY_UPDATE_FAILED));
+            }
         }
 
         @Override

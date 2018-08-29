@@ -12,6 +12,7 @@ import com.example.cpu11398_local.etalk.domain.interactor.GetUserInfoUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LoginUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LogoutUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.RegisterUsecase;
+import com.example.cpu11398_local.etalk.domain.interactor.UpdateUserInfoUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
 import com.example.cpu11398_local.etalk.domain.interactor.WelcomeUsecase;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
@@ -163,6 +164,20 @@ public class AppModule {
     }
 
     @Provides
+    @Named("UpdateUserInfoUsecase")
+    public Usecase provideUpdateUserInfoUsecase(Executor executor,
+                                                Scheduler scheduler,
+                                                CompositeDisposable compositeDisposable,
+                                                UserRepository userRepository) {
+        return new UpdateUserInfoUsecase(
+                executor,
+                scheduler,
+                compositeDisposable,
+                userRepository
+        );
+    }
+
+    @Provides
     @Named("LogoutUsecase")
     public Usecase provideLogoutUsecase(Executor executor,
                                         Scheduler scheduler,
@@ -225,9 +240,10 @@ public class AppModule {
     @Provides
     @Named("ProfileViewModel")
     public ViewModel provideProfileViewModel(Context context,
-                                             @Named("GetUserInfoUsecase") Usecase usecase,
+                                             @Named("GetUserInfoUsecase") Usecase usecase1,
+                                             @Named("UpdateUserInfoUsecase") Usecase usecase2,
                                              NetworkChangeReceiver receiver) {
-        return new ProfileViewModel(context, usecase, receiver);
+        return new ProfileViewModel(context, usecase1, usecase2, receiver);
     }
 
     @Provides

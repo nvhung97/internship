@@ -37,12 +37,14 @@ public class AvatarImageView extends AppCompatImageView {
     }
 
     public void setImageFromUrl(String url) {
-        GlideApp
-                .with(getContext())
-                .load(url)
-                .placeholder(R.drawable.img_avatar_holder)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                //.skipMemoryCache(true)
-                .into(this);
+        if (url != null) {
+            GlideApp
+                    .with(getContext())
+                    .load(url)
+                    .placeholder(R.drawable.img_avatar_holder)
+                    //.diskCacheStrategy(DiskCacheStrategy.NONE)
+                    //.skipMemoryCache(true)
+                    .into(this);
+        }
     }
 }

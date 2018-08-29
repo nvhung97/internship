@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.provider.MediaStore;
@@ -108,22 +109,45 @@ public class Tool {
         );
 
         btn_option_camera.setOnClickListener(view1 -> {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            ((FragmentActivity)context).startActivityForResult(intent, REQUEST_CAMERA_CODE);
             imageOptionDialog.dismiss();
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            ((FragmentActivity) context).startActivityForResult(intent, REQUEST_CAMERA_CODE);
         });
 
         btn_option_gallery.setOnClickListener(view2 -> {
+            imageOptionDialog.dismiss();
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
-            ((FragmentActivity)context).startActivityForResult(
+            ((FragmentActivity) context).startActivityForResult(
                     Intent.createChooser(intent, "Select Image"),
                     REQUEST_GALLERY_CODE
             );
-            imageOptionDialog.dismiss();
         });
 
         return imageOptionDialog;
     }
+
+    /**
+     * Reduce size of image.
+     * @param image image to upload or download.
+     * @return bitmap image after resize.
+     */
+    public static Bitmap resizeImage(Bitmap image, final int MAX_SIZE) {
+
+        int     width       = image.getWidth();
+        int     height      = image.getHeight();
+        float   bitmapRatio = (float) width / (float) height;
+
+        if (bitmapRatio > 1) {
+            height = MAX_SIZE;
+            width  = (int) (height * bitmapRatio);
+        } else {
+            width  = MAX_SIZE;
+            height = (int) (width / bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+
 }
