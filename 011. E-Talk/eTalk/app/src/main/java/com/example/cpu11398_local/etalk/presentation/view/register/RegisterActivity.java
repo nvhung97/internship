@@ -43,6 +43,13 @@ public class RegisterActivity extends BaseActivity {
             WelcomeActivity.getAppComponent(this).inject(this);
         }
         binding.setViewModel((RegisterViewModel)viewModel);
+        addControlKeyboardView(
+                binding.registerActivityEdtName,
+                binding.registerActivityEdtUsername,
+                binding.registerActivityEdtPassword,
+                binding.registerActivityBtnPassword,
+                binding.registerActivityEdtPhone
+        );
     }
 
     @Override

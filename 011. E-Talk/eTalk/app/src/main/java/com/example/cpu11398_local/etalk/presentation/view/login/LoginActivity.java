@@ -43,6 +43,11 @@ public class LoginActivity extends BaseActivity {
             WelcomeActivity.getAppComponent(this).inject(this);
         }
         binding.setViewModel((LoginViewModel)viewModel);
+        addControlKeyboardView(
+                binding.loginActivityEdtUsername,
+                binding.loginActivityEdtPassword,
+                binding.loginActivityBtnPassword
+        );
     }
 
     @Override

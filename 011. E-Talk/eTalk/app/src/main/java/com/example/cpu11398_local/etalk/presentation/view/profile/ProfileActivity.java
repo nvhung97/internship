@@ -4,10 +4,10 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.widget.Toast;
-
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityProfileBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
@@ -38,6 +38,11 @@ public class ProfileActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Tool.setStatusBarHeight(
+                this,
+                findViewById(R.id.profile_activity_status_bar)
+        );
     }
 
     @Override
@@ -48,6 +53,13 @@ public class ProfileActivity extends BaseActivity {
             WelcomeActivity.getAppComponent(this).inject(this);
         }
         binding.setViewModel((ProfileViewModel)viewModel);
+        addControlKeyboardView(
+                binding.profileActivityEdtName,
+                binding.profileActivityEdtUsername,
+                binding.profileActivityEdtPassword,
+                binding.profileActivityBtnPassword,
+                binding.profileActivityEdtPhone
+        );
     }
 
     @Override
@@ -145,6 +157,7 @@ public class ProfileActivity extends BaseActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -155,17 +168,9 @@ public class ProfileActivity extends BaseActivity {
                 binding.profileActivityImgAvatar.setImageBitmap(bitmapAvatar);
             }
             else if (requestCode == REQUEST_GALLERY_CODE) {
-                try {
-                    Bitmap bitmapAvatar = MediaStore
-                            .Images
-                            .Media
-                            .getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                    avatarCopy.copy(bitmapAvatar);
-                    binding.profileActivityImgAvatar.setImageBitmap(bitmapAvatar);
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
+                Bitmap bitmapAvatar = Tool.getImageWithUri(this, data.getData());
+                avatarCopy.copy(bitmapAvatar);
+                binding.profileActivityImgAvatar.setImageBitmap(bitmapAvatar);
             }
         }
     }

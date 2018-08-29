@@ -295,7 +295,11 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 			* http://www.singhajit.com/android-custom-animations/
 			* https://www.journaldev.com/9481/android-animation-example
 9:25 AM 8/27/2018
-	- 
+	- Hoàn thành More Fragment
+5:14 PM 8/29/2018
+	- Hoàn thành Profile usecase
+		+ https://stackoverflow.com/a/31927359
+		+ https://stackoverflow.com/a/49408074
 
 
 

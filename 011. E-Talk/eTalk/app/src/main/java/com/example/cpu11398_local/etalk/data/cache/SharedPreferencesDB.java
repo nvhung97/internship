@@ -74,7 +74,7 @@ public class SharedPreferencesDB implements CacheSource {
                 sharedPref.getString(USERNAME, ""),
                 sharedPref.getString(PASSWORD, ""),
                 sharedPref.getString(PHONE, ""),
-                sharedPref.getString(AVATAR, ""),
+                sharedPref.getString(AVATAR, null),
                 sharedPref.getLong(ACTIVE, 0)
         );
     }

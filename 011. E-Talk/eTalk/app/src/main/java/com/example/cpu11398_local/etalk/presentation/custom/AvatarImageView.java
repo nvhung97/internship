@@ -34,6 +34,7 @@ public class AvatarImageView extends AppCompatImageView {
         setBackground(shape);
         setScaleType(ScaleType.CENTER_CROP);
         setClipToOutline(true);
+        setImageResource(R.drawable.img_avatar_holder);
     }
 
     public void setImageFromUrl(String url) {
@@ -41,7 +42,6 @@ public class AvatarImageView extends AppCompatImageView {
             GlideApp
                     .with(getContext())
                     .load(url)
-                    .placeholder(R.drawable.img_avatar_holder)
                     //.diskCacheStrategy(DiskCacheStrategy.NONE)
                     //.skipMemoryCache(true)
                     .into(this);

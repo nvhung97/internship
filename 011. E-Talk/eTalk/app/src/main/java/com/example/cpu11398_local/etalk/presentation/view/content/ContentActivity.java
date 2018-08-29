@@ -28,7 +28,7 @@ public class ContentActivity extends BaseActivity {
     public ViewModel    viewModel;
 
     private Disposable  disposable;
-    private Dialog dialog;
+    private Dialog      dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +49,7 @@ public class ContentActivity extends BaseActivity {
         }
         binding.setViewModel((ContentViewModel)viewModel);
         binding.setPagerAdapter(new ContentPagerAdapter(getSupportFragmentManager()));
+        addControlKeyboardView(binding.contentActivityEdtSearch);
     }
 
     @Override
