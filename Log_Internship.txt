@@ -300,6 +300,9 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Hoàn thành Profile usecase
 		+ https://stackoverflow.com/a/31927359
 		+ https://stackoverflow.com/a/49408074
+8:21 AM 8/30/2018
+	- Thiết kế giao diện và hiện thực chức năng kết bạn
+		+ https://firebase.google.com/docs/reference/android/com/google/firebase/database/Query
 
 
 
