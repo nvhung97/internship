@@ -300,6 +300,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Hoàn thành Profile usecase
 		+ https://stackoverflow.com/a/31927359
 		+ https://stackoverflow.com/a/49408074
+6:43 PM 8/30/2018
+	- Thiết kế giao diện Add friend.
 
 
 

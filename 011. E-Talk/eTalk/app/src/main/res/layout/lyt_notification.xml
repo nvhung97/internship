@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_background">
+
+    <TextView
+        android:id="@id/notification_title"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/colorBlack"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/colorLightGray"
+        app:layout_constraintBottom_toBottomOf="@id/notification_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/notification_content"/>
+
+    <TextView
+        android:id="@id/notification_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingTop="15dp"
+        android:paddingRight="40dp"
+        android:paddingBottom="10dp"
+        android:gravity="center_vertical"
+        android:textSize="14sp"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintTop_toBottomOf="@id/notification_title"/>
+
+    <Button
+        android:id="@id/notification_positive"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="15dp"
+        android:textSize="14sp"
+        android:textColor="@color/colorETalkClickDark"
+        android:background="@drawable/btn_dialog"
+        android:stateListAnimator="@null"
+        app:layout_constraintTop_toBottomOf="@id/notification_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <Button
+        android:id="@id/notification_negative"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="15dp"
+        android:textSize="14sp"
+        android:textColor="@color/colorBlack"
+        android:background="@drawable/btn_dialog"
+        android:stateListAnimator="@null"
+        app:layout_constraintTop_toBottomOf="@id/notification_content"
+        app:layout_constraintRight_toLeftOf="@id/notification_positive"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

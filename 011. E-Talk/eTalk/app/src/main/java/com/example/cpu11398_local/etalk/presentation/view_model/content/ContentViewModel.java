@@ -180,7 +180,7 @@ public class ContentViewModel implements ViewModel,
                 Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.content_activity_menu_add_friend:
-                Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+                publisher.onNext(Event.create(Event.CONTENT_ACTIVITY_MENU_ADD_FRIEND));
                 break;
             case R.id.content_activity_menu_scan_qr_code:
                 Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();

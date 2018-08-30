@@ -64,4 +64,16 @@
     <string name="profile_activity_update_successfully">Update successfully</string>
     <string name="profile_activity_update_failed">Update failed!\n Check connection again.</string>
 
+    <!--Add friend activity-->
+    <string name="add_friend_activity_txt_title">Add friend</string>
+    <string name="add_friend_activity_txt_input_hint">Add friend by phone number</string>
+    <string name="add_friend_activity_edt_phone_hint">Enter your phone number</string>
+    <string name="add_friend_activity_btn_search">SEARCH</string>
+    <string name="add_friend_activity_btn_add">ADD</string>
+    <string name="add_friend_activity_btn_added">ADDED</string>
+    <string name="add_friend_activity_notification_title">Notification</string>
+    <string name="add_friend_activity_notification_content">This number has not been a registered eTalk account. Invite to join eTalk?</string>
+    <string name="add_friend_activity_notification_positive">YES</string>
+    <string name="add_friend_activity_notification_negative">NO</string>
+
 </resources>
