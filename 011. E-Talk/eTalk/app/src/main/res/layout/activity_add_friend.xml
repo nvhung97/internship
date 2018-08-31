@@ -130,7 +130,7 @@
                     android:layout_height="40dp"
                     android:layout_marginLeft="20dp"
                     android:layout_gravity="center_vertical"
-                    bind:src_from_url="@{viewModel.avatarUrl}"/>
+                    bind:src_from_object="@{viewModel.avatarUrl}"/>
                 <TextView
                     android:id="@id/add_friend_activity_lyt_result_name"
                     android:layout_width="match_parent"
@@ -176,6 +176,7 @@
                     android:text="@string/add_friend_activity_btn_added"
                     android:textColor="@color/colorWhite"
                     android:background="@drawable/btn_added"
+                    android:stateListAnimator="@null"
                     android:visibility="@{viewModel.addedVisibility}"/>
                 <View
                     android:layout_width="match_parent"

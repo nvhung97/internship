@@ -32,14 +32,24 @@ public class ProfileViewModel extends    BaseObservable
      */
     private String avatarUrl = null;
 
-    @Bindable
-    public String getAvatarUrl() {
-        return bitmapAvatar != null ? null : avatarUrl;
-    }
-
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
-        notifyPropertyChanged(BR.avatarUrl);
+        notifyPropertyChanged(BR.avatar);
+    }
+
+    /**
+     * A container contain bitmap avatar from camara or gallery.
+     */
+    private Bitmap bitmapAvatar = null;
+
+    public void setBitmapAvatar(Bitmap bitmapAvatar) {
+        this.bitmapAvatar = bitmapAvatar;
+        notifyPropertyChanged(BR.updateEnable);
+    }
+
+    @Bindable
+    public Object getAvatar() {
+        return bitmapAvatar != null ? bitmapAvatar : avatarUrl;
     }
 
     /**
@@ -139,6 +149,16 @@ public class ProfileViewModel extends    BaseObservable
     }
 
     /**
+     * User before update. Used to compare to new info if have any change.
+     */
+    private User currentUser;
+
+    /**
+     * User after update.
+     */
+    private User newUser;
+
+    /**
      * Publisher will emit event to view. View listen these event via a observer.
      */
     private PublishSubject<Event> publisher = PublishSubject.create();
@@ -162,26 +182,6 @@ public class ProfileViewModel extends    BaseObservable
      * Listen network state to inform user check connection again.
      */
     private NetworkChangeReceiver receiver;
-
-    /**
-     * User before update. Used to compare to new info if have any change.
-     */
-    private User currentUser;
-
-    /**
-     * User after update.
-     */
-    private User newUser;
-
-    /**
-     * A container contain bitmap avatar from camara or gallery.
-     */
-    private Bitmap bitmapAvatar = null;
-
-    public void setBitmapAvatar(Bitmap bitmapAvatar) {
-        this.bitmapAvatar = bitmapAvatar;
-        notifyPropertyChanged(BR.updateEnable);
-    }
 
     /**
      * create new {@code ProfileViewModel} with a context, an usecase to get user info and
@@ -216,10 +216,7 @@ public class ProfileViewModel extends    BaseObservable
     public void onChangeAvatar(View view) {
         publisher.onNext(Event.create(
                 Event.PROFILE_ACTIVITY_SHOW_IMAGE_OPTION,
-                (AvatarCopy) bitmap -> {
-                    bitmapAvatar = bitmap;
-                    notifyPropertyChanged(BR.updateEnable);
-                }
+                (AvatarCopy) this::setBitmapAvatar
         ));
     }
 
@@ -284,8 +281,7 @@ public class ProfileViewModel extends    BaseObservable
                 username,
                 passwordIcon == R.drawable.ic_edit ? currentUser.getPassword() : password,
                 phone,
-                bitmapAvatar == null ? currentUser.getAvatar() : null,
-                System.currentTimeMillis()
+                bitmapAvatar == null ? currentUser.getAvatar() : null
         );
         updateUserInfoUsecase.execute(
                 new UpdateUserInfoObserver(bitmapAvatar != null),

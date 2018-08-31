@@ -80,7 +80,7 @@
                             android:layout_width="70dp"
                             android:layout_height="70dp"
                             android:layout_margin="15dp"
-                            bind:src_from_url="@{viewModel.avatarUrl}"
+                            bind:src_from_object="@{viewModel.avatar}"
                             android:onClick="@{viewModel::onChangeAvatar}"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toLeftOf="parent"/>

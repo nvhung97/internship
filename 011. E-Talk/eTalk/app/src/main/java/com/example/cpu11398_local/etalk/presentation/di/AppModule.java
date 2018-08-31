@@ -8,6 +8,7 @@ import com.example.cpu11398_local.etalk.data.repository.data_source.CacheSource;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
 import com.example.cpu11398_local.etalk.data.repository.implement.UserRepositoryImpl;
 import com.example.cpu11398_local.etalk.domain.executor.TaskExecutor;
+import com.example.cpu11398_local.etalk.domain.interactor.AddFriendUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.FindFriendUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.GetUserInfoUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LoginUsecase;
@@ -180,6 +181,20 @@ public class AppModule {
     }
 
     @Provides
+    @Named("AddFriendUsecase")
+    public Usecase provideAddFriendUsecase(Executor executor,
+                                           Scheduler scheduler,
+                                           CompositeDisposable compositeDisposable,
+                                           UserRepository userRepository) {
+        return new AddFriendUsecase(
+                executor,
+                scheduler,
+                compositeDisposable,
+                userRepository
+        );
+    }
+
+    @Provides
     @Named("UpdateUserInfoUsecase")
     public Usecase provideUpdateUserInfoUsecase(Executor executor,
                                                 Scheduler scheduler,
@@ -273,7 +288,8 @@ public class AppModule {
     public ViewModel provideAddFriendViewModel(Context context,
                                                @Named("GetUserInfoUsecase") Usecase usecase1,
                                                @Named("FindFriendUsecase") Usecase usecase2,
+                                               @Named("AddFriendUsecase") Usecase usecase3,
                                                NetworkChangeReceiver receiver) {
-        return new AddFriendViewModel(context, usecase1, usecase2, receiver);
+        return new AddFriendViewModel(context, usecase1, usecase2, usecase3, receiver);
     }
 }

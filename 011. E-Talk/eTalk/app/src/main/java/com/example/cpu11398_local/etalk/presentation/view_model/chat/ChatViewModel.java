@@ -110,7 +110,7 @@ public class ChatViewModel implements ViewModel {
     }
 
     /**
-     * Called when user click send button to send a message.
+     * Called when user click send button to send a Message.
      * After send current messgase, reset {@code textMessage} to empty.
      * @param view
      */

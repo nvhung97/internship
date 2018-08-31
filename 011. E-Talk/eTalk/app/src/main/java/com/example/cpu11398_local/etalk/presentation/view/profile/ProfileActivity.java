@@ -165,12 +165,10 @@ public class ProfileActivity extends BaseActivity {
             if (requestCode == REQUEST_CAMERA_CODE) {
                 Bitmap bitmapAvatar = (Bitmap)data.getExtras().get("data");
                 avatarCopy.copy(bitmapAvatar);
-                binding.profileActivityImgAvatar.setImageBitmap(bitmapAvatar);
             }
             else if (requestCode == REQUEST_GALLERY_CODE) {
                 Bitmap bitmapAvatar = Tool.getImageWithUri(this, data.getData());
                 avatarCopy.copy(bitmapAvatar);
-                binding.profileActivityImgAvatar.setImageBitmap(bitmapAvatar);
             }
         }
     }

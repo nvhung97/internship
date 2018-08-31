@@ -32,13 +32,17 @@ public class RegisterUsecase implements Usecase {
 
     @Override
     public void execute(Object observer, Object... params) {
-        String name         = (String)params[0];
-        String username     = (String)params[1];
-        String password     = (String)params[2];
-        String phone        = (String)params[3];
+        String name     = (String)params[0];
+        String username = (String)params[1];
+        String password = (String)params[2];
+        String phone    = (String)params[3];
         disposable.add(
                 userRepository
-                        .checkNetworkUserExisted(username, phone)
+                        .getNetworkUser(username)
+                        .zipWith(
+                                userRepository.findNetworkFriendWithPhone(phone),
+                                (user1, user2) -> user1.isPresent() || user2.isPresent()
+                        )
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
                         .subscribeWith(new DisposableSingleObserver<Boolean>() {
@@ -58,9 +62,7 @@ public class RegisterUsecase implements Usecase {
                                                             name,
                                                             username,
                                                             password,
-                                                            phone,
-                                                            null,
-                                                            System.currentTimeMillis()
+                                                            phone
                                                     )
                                             )
                                             .subscribeOn(Schedulers.from(executor))

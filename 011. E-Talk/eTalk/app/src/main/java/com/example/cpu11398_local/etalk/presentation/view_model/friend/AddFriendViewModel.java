@@ -18,6 +18,7 @@ import com.example.cpu11398_local.etalk.utils.Optional;
 import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observer;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.subjects.PublishSubject;
 
@@ -103,6 +104,7 @@ public class AddFriendViewModel extends     BaseObservable
         if (resultUser != null) {
             setAvatarUrl(resultUser.getAvatar());
             setName(resultUser.getName());
+            //TODO: nếu friend đã là bạn thì hiện added
         }
         notifyPropertyChanged(BR.addVisibility);
         notifyPropertyChanged(BR.resultVisibility);
@@ -159,9 +161,14 @@ public class AddFriendViewModel extends     BaseObservable
     private Usecase getUserInfoUsecase;
 
     /**
-     * GViewModel use {@code findFriendUsecase} to find user when user want to add new friend.
+     * ViewModel use {@code findFriendUsecase} to find user when user want to add new friend.
      */
     private Usecase findFriendUsecase;
+
+    /**
+     * ViewModel use {@code addFriendUsecase} to add new friend when user request.
+     */
+    private Usecase addFriendUsecase;
 
     /**
      * Listen network state to inform user check connection again.
@@ -175,10 +182,12 @@ public class AddFriendViewModel extends     BaseObservable
     public AddFriendViewModel(Context context,
                               @Named("GetUserInfoUsecase") Usecase getUserInfoUsecase,
                               @Named("FindFriendUsecase") Usecase findFriendUsecase,
+                              @Named("AddFriendUsecase") Usecase addFriendUsecase,
                               NetworkChangeReceiver receiver) {
         this.context            = context;
         this.getUserInfoUsecase = getUserInfoUsecase;
         this.findFriendUsecase  = findFriendUsecase;
+        this.addFriendUsecase   = addFriendUsecase;
         this.receiver           = receiver;
         this.receiver.initReceiver(this.context, this);
     }
@@ -190,7 +199,7 @@ public class AddFriendViewModel extends     BaseObservable
     @Override
     public void subscribeObserver(Observer<Event> observer) {
         publisher.subscribe(observer);
-        getUserInfoUsecase.execute(new GetUserInfoObserver(), false);
+        getUserInfoUsecase.execute(new GetUserInfoObserver(), true);
     }
 
     /**
@@ -220,11 +229,11 @@ public class AddFriendViewModel extends     BaseObservable
     public void onAddRequest(View view) {
         if (!added) {
             publisher.onNext(Event.create(Event.PROFILE_ACTIVITY_SHOW_LOADING));
-        /*getUserInfoUsecase.execute(
-                new UpdateUserInfoObserver(bitmapAvatar != null),
-                newUser,
-                bitmapAvatar
-        );*/
+            addFriendUsecase.execute(
+                    new AddFriendObserver(),
+                    currentUser,
+                    resultUser
+            );
         }
     }
 
@@ -272,16 +281,21 @@ public class AddFriendViewModel extends     BaseObservable
     public void endTask() {
         getUserInfoUsecase.endTask();
         findFriendUsecase.endTask();
+        addFriendUsecase.endTask();
     }
 
     /**
      * {@code getUserInfoObserver} is subscribed to usecase to listen event from it.
      */
-    private class GetUserInfoObserver extends DisposableSingleObserver<User> {
+    private class GetUserInfoObserver extends DisposableObserver<User> {
+        @Override
+        public void onNext(User user) {
+            currentUser = user;
+        }
 
         @Override
-        public void onSuccess(User user) {
-            currentUser = user;
+        public void onComplete() {
+
         }
 
         @Override
@@ -291,7 +305,7 @@ public class AddFriendViewModel extends     BaseObservable
     }
 
     /**
-     * {@code findFriendObserver} is subscribed to usecase to listen event from it.
+     * {@code FindFriendObserver} is subscribed to usecase to listen event from it.
      */
     private class FindFriendObserver extends DisposableSingleObserver<Optional<User>> {
 
@@ -317,6 +331,41 @@ public class AddFriendViewModel extends     BaseObservable
             } else {
                 publisher.onNext(Event.create(Event.ADD_FRIEND_ACTIVITY_HIDE_LOADING));
                 publisher.onNext(Event.create(Event.ADD_FRIEND_ACTIVITY_NOT_FOUND));
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.i("eTalk", e.getMessage());
+        }
+    }
+
+    /**
+     * {@code AddFriendObserver} is subscribed to usecase to listen event from it.
+     */
+    private class AddFriendObserver extends DisposableSingleObserver<Boolean> {
+
+        private Handler handler = new Handler();
+
+        public AddFriendObserver() {
+            handler.postDelayed(
+                    () -> {
+                        publisher.onNext(Event.create(Event.ADD_FRIEND_ACTIVITY_HIDE_LOADING));
+                        setHintEvent(Event.create(Event.ADD_FRIEND_ACTIVITY_TIMEOUT));
+                        addFriendUsecase.endTask();
+                    },
+                    1000 * 10
+            );
+        }
+
+        @Override
+        public void onSuccess(Boolean isSuccess) {
+            handler.removeCallbacksAndMessages(null);
+            if (isSuccess) {
+                publisher.onNext(Event.create(Event.ADD_FRIEND_ACTIVITY_HIDE_LOADING));
+                setAddedVisibility(true);
+            } else {
+                publisher.onNext(Event.create(Event.ADD_FRIEND_ACTIVITY_HIDE_LOADING));
             }
         }
 

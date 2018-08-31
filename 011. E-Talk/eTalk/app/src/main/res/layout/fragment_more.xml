@@ -30,7 +30,7 @@
                     android:layout_height="40dp"
                     android:layout_marginLeft="20dp"
                     android:layout_gravity="center_vertical"
-                    bind:src_from_url="@{viewModel.avatarUrl}"/>
+                    bind:src_from_object="@{viewModel.avatarUrl}"/>
                 <TextView
                     android:id="@id/more_fragment_btn_my_profile_name"
                     android:layout_width="match_parent"

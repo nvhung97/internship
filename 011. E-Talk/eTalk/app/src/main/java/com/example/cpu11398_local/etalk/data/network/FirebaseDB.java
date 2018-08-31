@@ -2,8 +2,10 @@ package com.example.cpu11398_local.etalk.data.network;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
 import com.example.cpu11398_local.etalk.presentation.model.User;
@@ -19,7 +21,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.io.ByteArrayOutputStream;
 import io.reactivex.Single;
-import io.reactivex.functions.Function;
 
 public class FirebaseDB implements NetworkSource{
 
@@ -52,22 +53,32 @@ public class FirebaseDB implements NetworkSource{
     @SuppressLint("CheckResult")
     @Override
     public Single<Optional<User>> findFriendWithPhone(String phone) {
-        return Single.create(emitter -> emitter.onSuccess(Optional.empty())
-                /*databaseReference
-                        .child(FirebaseTree.Users.NODE_NAME)
-                        .child(username)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                emitter.onSuccess(Optional.of(dataSnapshot.getValue(User.class)));
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Log.i("eTalk" , databaseError.getMessage());
+        return Single.create(emitter ->
+            databaseReference
+                    .child(FirebaseTree.Users.NODE_NAME)
+                    .orderByChild(FirebaseTree.Users.Phone.NODE_NAME)
+                    .equalTo(phone)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                dataSnapshot.getChildren().forEach(each ->
+                                                emitter.onSuccess(
+                                                        Optional.of(each.getValue(User.class))
+                                                )
+                                );
+                            } else {
                                 emitter.onSuccess(Optional.empty());
                             }
-                        })*/
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.i("eTalk" , databaseError.getMessage());
+                            emitter.onSuccess(Optional.empty());
+                        }
+                    })
         );
     }
 
@@ -85,14 +96,6 @@ public class FirebaseDB implements NetworkSource{
                                 emitter.onSuccess(false);
                             }
                         })
-        );
-    }
-
-    @Override
-    public Single<Boolean> checkUserExisted(String username, String phone) {
-        return loadUser(username).zipWith(
-                findFriendWithPhone(phone),
-                (user1, user2) -> user1.isPresent() || user2.isPresent()
         );
     }
 
@@ -132,5 +135,24 @@ public class FirebaseDB implements NetworkSource{
                                     .addOnSuccessListener(uri -> emitter.onSuccess(uri.toString()))
                     );
         });
+    }
+
+    @Override
+    public Single<Boolean> addFriend(String username, String friend_username) {
+        return Single.create(emitter ->
+            databaseReference
+                .child(FirebaseTree.Users.NODE_NAME)
+                .child(username)
+                .child(FirebaseTree.Users.Friends.NODE_NAME)
+                .child(friend_username)
+                .setValue(friend_username, (databaseError, databaseReference) -> {
+                    if (databaseError == null) {
+                        emitter.onSuccess(true);
+                    } else  {
+                        Log.i("eTalk", databaseError.getMessage());
+                        emitter.onSuccess(false);
+                    }
+                })
+        );
     }
 }

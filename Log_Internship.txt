@@ -303,6 +303,14 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 8:21 AM 8/30/2018
 	- Thiết kế giao diện và hiện thực chức năng kết bạn
 		+ https://firebase.google.com/docs/reference/android/com/google/firebase/database/Query
+1:31 PM 8/31/2018
+	- Hoàn thiện chức năng kết bạn
+		+ Cast list child to object
+			* https://stackoverflow.com/a/32888869/9661754
+lưu friend với 4 trường (username, name, phone, avatar) xuống local, lưu conversations và messages xuống local.
+Khi add friend chỉ cần load hết friend lấy danh sách friend username, khi add friend thành công thêm friend mới xuống local và thêm string username của friend mới vào danh sách friend username hiện có trong viewModel.
+Khi login load toàn bộ friend, conversation, message xuống.
+Viết hàm update userinfo để chỉ tác động đến các field info.
 
 
 

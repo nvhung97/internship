@@ -5,7 +5,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.utils.GlideApp;
 
@@ -34,17 +33,15 @@ public class AvatarImageView extends AppCompatImageView {
         setBackground(shape);
         setScaleType(ScaleType.CENTER_CROP);
         setClipToOutline(true);
-        setImageResource(R.drawable.img_avatar_holder);
     }
 
-    public void setImageFromUrl(String url) {
-        if (url != null) {
-            GlideApp
-                    .with(getContext())
-                    .load(url)
-                    //.diskCacheStrategy(DiskCacheStrategy.NONE)
-                    //.skipMemoryCache(true)
-                    .into(this);
-        }
+    public void setImageFromObject(Object object) {
+        GlideApp
+                .with(getContext())
+                .load(object)
+                .placeholder(R.drawable.img_avatar_holder)
+                //.diskCacheStrategy(DiskCacheStrategy.NONE)
+                //.skipMemoryCache(true)
+                .into(this);
     }
 }

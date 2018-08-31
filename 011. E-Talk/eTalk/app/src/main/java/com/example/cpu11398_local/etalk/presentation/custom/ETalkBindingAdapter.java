@@ -124,11 +124,11 @@ public class ETalkBindingAdapter {
     /**
      * Add setter for {@code src_from_url} in {@code AvatarImageView}.
      * @param avatarImageView view need to set image.
-     * @param url used to load image from network using Glide.
+     * @param object used to load image to {@code AvatarImageView}.
      */
-    @BindingAdapter("src_from_url")
-    public static void setImageFromUrl(AvatarImageView avatarImageView, String url) {
-        avatarImageView.setImageFromUrl(url);
+    @BindingAdapter("src_from_object")
+    public static void setImageFromObject(AvatarImageView avatarImageView, Object object) {
+        avatarImageView.setImageFromObject(object);
     }
 
     /**

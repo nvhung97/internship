@@ -39,11 +39,6 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
-    public Single<Boolean> checkNetworkUserExisted(String username, String phone) {
-        return networkSource.checkUserExisted(username, phone);
-    }
-
-    @Override
     public void updateNetworkUserActive(String username, Boolean update) {
         networkSource.updateUserActive(username, update);
     }
@@ -51,6 +46,11 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     public Single<String> uploadNetworkImage(String username, Bitmap image) {
         return networkSource.uploadImage(username, image);
+    }
+
+    @Override
+    public Single<Boolean> addNetworkFriend(String username, String friend_username) {
+        return networkSource.addFriend(username, friend_username);
     }
 
     @Override

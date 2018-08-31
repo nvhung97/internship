@@ -34,15 +34,6 @@ public interface UserRepository {
     Single<Boolean> setNetworkUser(User user);
 
     /**
-     * Check if user with given username exited.
-     * @param username user need to check for existence.
-     * @param phone new user cannot use phone number that exited.
-     * @return an observable contain result of action. {@code true} if user existed,
-     * otherwise {@code false}.
-     */
-    Single<Boolean> checkNetworkUserExisted(String username, String phone);
-
-    /**
      * Schedule update user active time if user logging in. If the second parameter is true,
      * start update. Otherwise stop.
      * @param update {@code true} or {@code false}.
@@ -56,6 +47,15 @@ public interface UserRepository {
      * @return an observable contain link of image.
      */
     Single<String> uploadNetworkImage(String username, Bitmap image);
+
+    /**
+     * Add friend given by {@code friend_username} to user given by {@code username}.
+     * @param username id of user need to add friend.
+     * @param friend_username id of friend.
+     * @return an observable contain result of request. {@code true} if success and
+     * {@code false} if fail.
+     */
+    Single<Boolean> addNetworkFriend(String username, String friend_username);
 
     /**
      * Cache user's info when user login to retrieve in the future.
