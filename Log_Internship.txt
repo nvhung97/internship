@@ -311,6 +311,7 @@ lưu friend với 4 trường (username, name, phone, avatar) xuống local, lư
 Khi add friend chỉ cần load hết friend lấy danh sách friend username, khi add friend thành công thêm friend mới xuống local và thêm string username của friend mới vào danh sách friend username hiện có trong viewModel.
 Khi login load toàn bộ friend, conversation, message xuống.
 Viết hàm update userinfo để chỉ tác động đến các field info.
+Thêm điều kiện để hiện nút add, khi không trùng danh sách đã add.
 
 
 
