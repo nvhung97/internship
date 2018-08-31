@@ -19,6 +19,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.io.ByteArrayOutputStream;
 import io.reactivex.Single;
+import io.reactivex.functions.Function;
 
 public class FirebaseDB implements NetworkSource{
 
@@ -48,6 +49,28 @@ public class FirebaseDB implements NetworkSource{
         );
     }
 
+    @SuppressLint("CheckResult")
+    @Override
+    public Single<Optional<User>> findFriendWithPhone(String phone) {
+        return Single.create(emitter -> emitter.onSuccess(Optional.empty())
+                /*databaseReference
+                        .child(FirebaseTree.Users.NODE_NAME)
+                        .child(username)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                emitter.onSuccess(Optional.of(dataSnapshot.getValue(User.class)));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.i("eTalk" , databaseError.getMessage());
+                                emitter.onSuccess(Optional.empty());
+                            }
+                        })*/
+        );
+    }
+
     @Override
     public Single<Boolean> pushUser(User user) {
         return Single.create(emitter ->
@@ -66,8 +89,11 @@ public class FirebaseDB implements NetworkSource{
     }
 
     @Override
-    public Single<Boolean> checkUserExisted(String username) {
-        return loadUser(username).map(Optional::isPresent);
+    public Single<Boolean> checkUserExisted(String username, String phone) {
+        return loadUser(username).zipWith(
+                findFriendWithPhone(phone),
+                (user1, user2) -> user1.isPresent() || user2.isPresent()
+        );
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.example.cpu11398_local.etalk.data.repository.data_source.CacheSource;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
 import com.example.cpu11398_local.etalk.data.repository.implement.UserRepositoryImpl;
 import com.example.cpu11398_local.etalk.domain.executor.TaskExecutor;
+import com.example.cpu11398_local.etalk.domain.interactor.FindFriendUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.GetUserInfoUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LoginUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LogoutUsecase;
@@ -19,6 +20,7 @@ import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallbac
 import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContentViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.MoreViewModel;
+import com.example.cpu11398_local.etalk.presentation.view_model.friend.AddFriendViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.login.LoginViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.profile.ProfileViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.register.RegisterViewModel;
@@ -164,6 +166,20 @@ public class AppModule {
     }
 
     @Provides
+    @Named("FindFriendUsecase")
+    public Usecase provideFindFriendUsecase(Executor executor,
+                                            Scheduler scheduler,
+                                            CompositeDisposable compositeDisposable,
+                                            UserRepository userRepository) {
+        return new FindFriendUsecase(
+                executor,
+                scheduler,
+                compositeDisposable,
+                userRepository
+        );
+    }
+
+    @Provides
     @Named("UpdateUserInfoUsecase")
     public Usecase provideUpdateUserInfoUsecase(Executor executor,
                                                 Scheduler scheduler,
@@ -250,5 +266,14 @@ public class AppModule {
     @Named("ChatViewModel")
     public ViewModel provideChatViewModel(Context context) {
         return new ChatViewModel(context);
+    }
+
+    @Provides
+    @Named("AddFriendViewModel")
+    public ViewModel provideAddFriendViewModel(Context context,
+                                               @Named("GetUserInfoUsecase") Usecase usecase1,
+                                               @Named("FindFriendUsecase") Usecase usecase2,
+                                               NetworkChangeReceiver receiver) {
+        return new AddFriendViewModel(context, usecase1, usecase2, receiver);
     }
 }

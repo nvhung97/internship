@@ -29,13 +29,18 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
+    public Single<Optional<User>> findNetworkFriendWithPhone(String phone) {
+        return networkSource.findFriendWithPhone(phone);
+    }
+
+    @Override
     public Single<Boolean> setNetworkUser(User user) {
         return networkSource.pushUser(user);
     }
 
     @Override
-    public Single<Boolean> checkNetworkUserExisted(String username) {
-        return networkSource.checkUserExisted(username);
+    public Single<Boolean> checkNetworkUserExisted(String username, String phone) {
+        return networkSource.checkUserExisted(username, phone);
     }
 
     @Override

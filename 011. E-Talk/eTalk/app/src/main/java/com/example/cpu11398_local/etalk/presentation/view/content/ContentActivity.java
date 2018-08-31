@@ -11,6 +11,7 @@ import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityContentBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.ContentPagerAdapter;
+import com.example.cpu11398_local.etalk.presentation.view.friend.AddFriendActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContentViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
@@ -114,10 +115,10 @@ public class ContentActivity extends BaseActivity {
                             (PopupMenu.OnMenuItemClickListener)data[1]
                     );
                     break;
-                /*case Event.CONTENT_ACTIVITY_SHOW_LOADING:
-                    onShowLoading();
+                case Event.CONTENT_ACTIVITY_MENU_ADD_FRIEND:
+                    startActivity(new Intent(ContentActivity.this, AddFriendActivity.class));
                     break;
-                case Event.CONTENT_ACTIVITY_HIDE_LOADING:
+                /*case Event.CONTENT_ACTIVITY_HIDE_LOADING:
                     onHideLoading();
                     break;*/
                 case Event.CONTENT_ACTIVITY_LOGOUT:

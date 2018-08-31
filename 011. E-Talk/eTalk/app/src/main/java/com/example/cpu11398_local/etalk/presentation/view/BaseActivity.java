@@ -66,6 +66,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    /**
+     * When user touch screen - {@code ev} contain {@code ACTION_DOWN}. if coordinator of
+     * touch point is outside all enable view in {@link #lstView}, hide soft keyboard.
+     */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getActionMasked() == MotionEvent.ACTION_DOWN) {

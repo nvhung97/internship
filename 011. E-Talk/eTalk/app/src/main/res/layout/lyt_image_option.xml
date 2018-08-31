@@ -32,7 +32,7 @@
         android:stateListAnimator="@null"
         android:drawableLeft="@drawable/ic_option_camera"
         android:drawablePadding="10dp"
-        android:background="@drawable/btn_image_option"
+        android:background="@drawable/btn_dialog"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="@id/profile_activity_image_option_library"
         app:layout_constraintTop_toBottomOf="@id/profile_activity_image_option_title"/>
@@ -50,7 +50,7 @@
         android:stateListAnimator="@null"
         android:drawableLeft="@drawable/ic_option_library"
         android:drawablePadding="10dp"
-        android:background="@drawable/btn_image_option"
+        android:background="@drawable/btn_dialog"
         app:layout_constraintTop_toBottomOf="@id/profile_activity_image_option_camera"
         app:layout_constraintBottom_toBottomOf="parent"/>
 

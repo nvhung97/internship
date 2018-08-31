@@ -106,6 +106,18 @@ public class ETalkBindingAdapter {
                         break;
                 }
                 break;
+            case R.id.add_friend_activity_txt_input_hint:
+                switch (event.getType()) {
+                    case Event.NONE:
+                        textView.setText(resources.getString(R.string.add_friend_activity_txt_input_hint));
+                        textView.setTextColor(resources.getColor(R.color.colorGray));
+                        break;
+                    case Event.ADD_FRIEND_ACTIVITY_TIMEOUT:
+                        textView.setText(resources.getString(R.string.app_request_timeout));
+                        textView.setTextColor(resources.getColor(R.color.colorRed));
+                        break;
+                }
+                break;
         }
     }
 

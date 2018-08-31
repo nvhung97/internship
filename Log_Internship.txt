@@ -315,6 +315,8 @@ http://sijinjoseph.com/programmer-competency-matrix/
 https://en.wikipedia.org/wiki/Double-checked_locking
 https://github.com/MindorksOpenSource/android-interview-questions
 https://www.deeplearningbook.org/
+https://pegasi.com.vn/job/technical-director-55
+https://www.raywenderlich.com/959-arc-and-memory-management-in-swift
 
 https://www.dkn.tv/doi-song/17-buc-anh-day-xuc-dong-khien-trai-tim-ban-tan-chay-ngay-lap-tuc.html
 https://ins.dkn.tv/giaitri/cam-dong-hinh-anh-ve-8-chu-cho-trung-thanh.html

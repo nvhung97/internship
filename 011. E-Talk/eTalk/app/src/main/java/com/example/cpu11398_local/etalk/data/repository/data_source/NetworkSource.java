@@ -17,6 +17,14 @@ public interface NetworkSource {
     Single<Optional<User>> loadUser(String username);
 
     /**
+     * Load user's info from network base on given {@code phone}.
+     * @param phone used to find user.
+     * @return an observable contain a container {@code Optional} that contain
+     * user's info if exist or contain {@code null}.
+     */
+    Single<Optional<User>> findFriendWithPhone(String phone);
+
+    /**
      * Push new user to network database base on given {@code user}.
      * @param user data need to push to network database.
      * @return an observable contain result of action. {@code true} if successfully,
@@ -27,10 +35,11 @@ public interface NetworkSource {
     /**
      * Check if user with given username exited.
      * @param username user need to check for existence.
+     * @param phone new user cannot use phone number that exited.
      * @return an observable contain result of action. {@code true} if user existed,
      * otherwise {@code false}.
      */
-    Single<Boolean> checkUserExisted(String username);
+    Single<Boolean> checkUserExisted(String username, String phone);
 
     /**
      * Schedule update user active time if user logging in. If the second parameter is true,

@@ -6,6 +6,12 @@
     <item name="loading_icon" type="id"/>
     <item name="loading_message" type="id"/>
 
+    <!--Notification-->
+    <item name="notification_title" type="id"/>
+    <item name="notification_content" type="id"/>
+    <item name="notification_positive" type="id"/>
+    <item name="notification_negative" type="id"/>
+
     <!--Welcome activity-->
     <item name="welcome_activity_btn_login" type="id"/>
     <item name="welcome_activity_btn_register" type="id"/>
@@ -120,5 +126,21 @@
     <item name="profile_activity_image_option_title" type="id"/>
     <item name="profile_activity_image_option_camera" type="id"/>
     <item name="profile_activity_image_option_library" type="id"/>
+
+    <!--Add friend activity-->
+    <item name="add_friend_activity_status_bar" type="id"/>
+    <item name="add_friend_activity_tool_bar" type="id"/>
+    <item name="add_friend_activity_btn_back_arrow" type="id"/>
+    <item name="add_friend_activity_txt_title" type="id"/>
+    <item name="add_friend_activity_txt_no_connection" type="id"/>
+    <item name="add_friend_activity_txt_input_hint" type="id"/>
+    <item name="add_friend_activity_lyt_search" type="id"/>
+    <item name="add_friend_activity_edt_phone" type="id"/>
+    <item name="add_friend_activity_btn_search" type="id"/>
+    <item name="add_friend_activity_lyt_result" type="id"/>
+    <item name="add_friend_activity_lyt_result_avatar" type="id"/>
+    <item name="add_friend_activity_lyt_result_name" type="id"/>
+    <item name="add_friend_activity_lyt_result_phone" type="id"/>
+    <item name="add_friend_activity_lyt_result_add" type="id"/>
 
 </resources>

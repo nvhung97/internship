@@ -43,7 +43,7 @@ public class ProfileViewModel extends    BaseObservable
     }
 
     /**
-     * Binding data between {@code fullname} and Fullname {@code EditText} on view.
+     * Binding data between {@code name} and Fullname {@code EditText} on view.
      */
     private String name = "";
 
@@ -106,7 +106,7 @@ public class ProfileViewModel extends    BaseObservable
     }
 
     /**
-     * Binding data between {@code phoneNumber} and Phone number {@code EditText} on view.
+     * Binding data between {@code phone} and Phone number {@code EditText} on view.
      */
     private String phone = "";
 

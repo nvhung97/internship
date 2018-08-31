@@ -20,8 +20,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import com.example.cpu11398_local.etalk.R;
 import java.lang.reflect.Field;
+import java.util.concurrent.Callable;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class Tool {
@@ -94,6 +96,60 @@ public class Tool {
         dialog.getWindow().setBackgroundDrawable(
                 new ColorDrawable(android.graphics.Color.TRANSPARENT)
         );
+        return dialog;
+    }
+
+    /**
+     * Create new {@code Dialog} to notify something to user.
+     */
+    public static Dialog createNotificationDialog(Context context,
+                                                  String title,
+                                                  String content,
+                                                  String positive,
+                                                  Callable<Void> positiveFunc,
+                                                  String negative,
+                                                  Callable<Void> negativeFunc) {
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(
+                LayoutInflater
+                        .from(context)
+                        .inflate(R.layout.lyt_notification, null)
+        );
+        dialog.setCancelable(true);
+        dialog.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT)
+        );
+        TextView txt_title    = dialog.findViewById(R.id.notification_title);
+        TextView txt_content  = dialog.findViewById(R.id.notification_content);
+        Button   btn_positive = dialog.findViewById(R.id.notification_positive);
+        Button   btn_negative = dialog.findViewById(R.id.notification_negative);
+
+        txt_title.setText(title);
+        txt_content.setText(content);
+        btn_positive.setText(positive);
+        btn_negative.setText(negative);
+
+        btn_positive.setOnClickListener(v -> {
+            dialog.dismiss();
+            try {
+                if (positiveFunc != null) {
+                    positiveFunc.call();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        btn_negative.setOnClickListener(v -> {
+            dialog.dismiss();
+            try {
+                if (negativeFunc != null) {
+                    negativeFunc.call();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
         return dialog;
     }
 

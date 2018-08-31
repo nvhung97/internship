@@ -38,7 +38,7 @@ public class RegisterUsecase implements Usecase {
         String phone        = (String)params[3];
         disposable.add(
                 userRepository
-                        .checkNetworkUserExisted(username)
+                        .checkNetworkUserExisted(username, phone)
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
                         .subscribeWith(new DisposableSingleObserver<Boolean>() {

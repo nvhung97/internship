@@ -25,7 +25,7 @@
     <string name="register_activity_txt_password_hint">Enter password</string>
     <string name="register_activity_txt_phone_hint">Enter phone number</string>
     <string name="register_activity_btn_login">REGISTER</string>
-    <string name="register_activity_register_failed">The username is already in use by another account</string>
+    <string name="register_activity_register_failed">The username or phone number is already in use\nby another account</string>
 
     <!--Content activity-->
     <string name="content_activity_edt_search">Search friends, messages…</string>
@@ -63,5 +63,17 @@
     <string name="profile_activity_request_timeout">Request timeout</string>
     <string name="profile_activity_update_successfully">Update successfully</string>
     <string name="profile_activity_update_failed">Update failed!\n Check connection again.</string>
+
+    <!--Add friend activity-->
+    <string name="add_friend_activity_txt_title">Add friend</string>
+    <string name="add_friend_activity_txt_input_hint">Add friend by phone number</string>
+    <string name="add_friend_activity_edt_phone_hint">Enter your phone number</string>
+    <string name="add_friend_activity_btn_search">SEARCH</string>
+    <string name="add_friend_activity_btn_add">ADD</string>
+    <string name="add_friend_activity_btn_added">ADDED</string>
+    <string name="add_friend_activity_notification_title">Notification</string>
+    <string name="add_friend_activity_notification_content">This number has not been a registered eTalk account. Invite to join eTalk?</string>
+    <string name="add_friend_activity_notification_positive">YES</string>
+    <string name="add_friend_activity_notification_negative">NO</string>
 
 </resources>

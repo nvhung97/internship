@@ -26,5 +26,8 @@ public final class FirebaseTree {
             public static final String PREFIX    = "avatar_";
             public static final String POSTFIX   = ".png";
         }
+        public final class Friends {
+            public static final String NODE_NAME = "friends";
+        }
     }
 }

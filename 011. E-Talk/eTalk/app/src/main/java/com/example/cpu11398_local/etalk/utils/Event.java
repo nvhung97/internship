@@ -22,6 +22,7 @@ public class Event {
      */
     private static final int CONTENT_ACTIVITY_MARK              = 0 << MODE_SHIFT;
     public static final int CONTENT_ACTIVITY_SHOW_POPUP_MENU    = CONTENT_ACTIVITY_MARK | 0;
+    public static final int CONTENT_ACTIVITY_MENU_ADD_FRIEND    = CONTENT_ACTIVITY_MARK | 1;
     /*public static final int CONTENT_ACTIVITY_SHOW_LOADING       = CONTENT_ACTIVITY_MARK | 2;
     public static final int CONTENT_ACTIVITY_HIDE_LOADING       = CONTENT_ACTIVITY_MARK | 3;*/
     public static final int CONTENT_ACTIVITY_LOGOUT             = CONTENT_ACTIVITY_MARK | 4;
@@ -82,6 +83,16 @@ public class Event {
     public static final int PROFILE_ACTIVITY_TIME_OUT           = PROFILE_ACTIVITY_MARK | 4;
     public static final int PROFILE_ACTIVITY_UPDATE_OK          = PROFILE_ACTIVITY_MARK | 5;
     public static final int PROFILE_ACTIVITY_UPDATE_FAILED      = PROFILE_ACTIVITY_MARK | 6;
+
+    /**
+     * Bellow commands for {@code AddFriendActivity}.
+     */
+    private static final int ADD_FRIEND_ACTIVITY_MARK           = 7 << MODE_SHIFT;
+    public static final int ADD_FRIEND_ACTIVITY_BACK            = ADD_FRIEND_ACTIVITY_MARK | 0;
+    public static final int ADD_FRIEND_ACTIVITY_SHOW_LOADING    = ADD_FRIEND_ACTIVITY_MARK | 1;
+    public static final int ADD_FRIEND_ACTIVITY_HIDE_LOADING    = ADD_FRIEND_ACTIVITY_MARK | 2;
+    public static final int ADD_FRIEND_ACTIVITY_NOT_FOUND       = ADD_FRIEND_ACTIVITY_MARK | 3;
+    public static final int ADD_FRIEND_ACTIVITY_TIMEOUT         = ADD_FRIEND_ACTIVITY_MARK | 4;
 
 
     /***********************************************************************************************
