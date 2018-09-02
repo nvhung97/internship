@@ -10,14 +10,13 @@ import android.util.Log;
 import android.view.View;
 import com.example.cpu11398_local.etalk.BR;
 import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
+import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.NetworkChangeReceiver;
 import com.example.cpu11398_local.etalk.utils.Optional;
-
 import java.util.ArrayList;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observer;
@@ -170,6 +169,11 @@ public class AddFriendViewModel extends     BaseObservable
     private Usecase getUserInfoUsecase;
 
     /**
+     * Get current friends.
+     */
+    private Usecase loadFriendUsecase;
+
+    /**
      * ViewModel use {@code findFriendUsecase} to find user when user want to add new friend.
      */
     private Usecase findFriendUsecase;
@@ -190,11 +194,13 @@ public class AddFriendViewModel extends     BaseObservable
     @Inject
     public AddFriendViewModel(Context context,
                               @Named("GetUserInfoUsecase") Usecase getUserInfoUsecase,
+                              @Named("LoadFriendConversationUsecase") Usecase loadFriendUsecase,
                               @Named("FindFriendUsecase") Usecase findFriendUsecase,
                               @Named("AddFriendUsecase") Usecase addFriendUsecase,
                               NetworkChangeReceiver receiver) {
         this.context            = context;
         this.getUserInfoUsecase = getUserInfoUsecase;
+        this.loadFriendUsecase  = loadFriendUsecase;
         this.findFriendUsecase  = findFriendUsecase;
         this.addFriendUsecase   = addFriendUsecase;
         this.receiver           = receiver;
@@ -237,7 +243,7 @@ public class AddFriendViewModel extends     BaseObservable
      */
     public void onAddRequest(View view) {
         if (!added) {
-            publisher.onNext(Event.create(Event.PROFILE_ACTIVITY_SHOW_LOADING));
+            publisher.onNext(Event.create(Event.ADD_FRIEND_ACTIVITY_SHOW_LOADING));
             addFriendUsecase.execute(
                     new AddFriendObserver(),
                     currentUser,
@@ -290,6 +296,7 @@ public class AddFriendViewModel extends     BaseObservable
     @Override
     public void endTask() {
         getUserInfoUsecase.endTask();
+        loadFriendUsecase.endTask();
         findFriendUsecase.endTask();
         addFriendUsecase.endTask();
     }
@@ -301,11 +308,42 @@ public class AddFriendViewModel extends     BaseObservable
         @Override
         public void onSuccess(User user) {
             currentUser = user;
+            loadFriendUsecase.execute(
+                    new LoadFriendObserver(),
+                    user.getUsername()
+            );
         }
 
         @Override
         public void onError(Throwable e) {
             Log.i("eTalk", e.getMessage());
+        }
+    }
+
+    /**
+     * {@code LoadFriendObserver} is subscribed to usecase to listen event from it.
+     */
+    private class LoadFriendObserver extends DisposableObserver<Conversation> {
+        @Override
+        public void onNext(Conversation conversation) {
+            for (String key : conversation.getMembers().keySet()) {
+                if (!key.equals(currentUser.getUsername())) {
+                    if (!currentFriends.contains(key)) {
+                        currentFriends.add(key);
+                    }
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.i("eTalk", e.getMessage());
+        }
+
+        @Override
+        public void onComplete() {
+
         }
     }
 

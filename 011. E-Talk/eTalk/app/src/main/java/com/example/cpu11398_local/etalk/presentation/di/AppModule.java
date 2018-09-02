@@ -13,6 +13,7 @@ import com.example.cpu11398_local.etalk.domain.executor.TaskExecutor;
 import com.example.cpu11398_local.etalk.domain.interactor.AddFriendUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.FindFriendUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.GetUserInfoUsecase;
+import com.example.cpu11398_local.etalk.domain.interactor.LoadFriendConversationUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LoginUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LogoutUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.RegisterUsecase;
@@ -177,6 +178,20 @@ public class AppModule {
     }
 
     @Provides
+    @Named("LoadFriendConversationUsecase")
+    public Usecase provideLoadFriendConversationUsecase(Executor executor,
+                                                        Scheduler scheduler,
+                                                        CompositeDisposable compositeDisposable,
+                                                        ConversationRepository conversationRepository) {
+        return new LoadFriendConversationUsecase(
+                executor,
+                scheduler,
+                compositeDisposable,
+                conversationRepository
+        );
+    }
+
+    @Provides
     @Named("FindFriendUsecase")
     public Usecase provideFindFriendUsecase(Executor executor,
                                             Scheduler scheduler,
@@ -299,9 +314,10 @@ public class AppModule {
     @Named("AddFriendViewModel")
     public ViewModel provideAddFriendViewModel(Context context,
                                                @Named("GetUserInfoUsecase") Usecase usecase1,
-                                               @Named("FindFriendUsecase") Usecase usecase2,
-                                               @Named("AddFriendUsecase") Usecase usecase3,
+                                               @Named("LoadFriendConversationUsecase") Usecase usecase2,
+                                               @Named("FindFriendUsecase") Usecase usecase3,
+                                               @Named("AddFriendUsecase") Usecase usecase4,
                                                NetworkChangeReceiver receiver) {
-        return new AddFriendViewModel(context, usecase1, usecase2, usecase3, receiver);
+        return new AddFriendViewModel(context, usecase1, usecase2, usecase3, usecase4, receiver);
     }
 }
