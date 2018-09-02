@@ -37,7 +37,11 @@ public class UpdateUserInfoUsecase implements Usecase {
             disposable.add(
                     userRepository
                             .setNetworkUser(user)
-                            .doOnSuccess(aBoolean -> userRepository.setCacheUser(user))
+                            .doOnSuccess(isSuccess -> {
+                                if (isSuccess) {
+                                    userRepository.setCacheUser(user);
+                                }
+                            })
                             .subscribeOn(Schedulers.from(executor))
                             .observeOn(scheduler)
                             .subscribeWith((DisposableSingleObserver<Boolean>)observer)
@@ -45,7 +49,7 @@ public class UpdateUserInfoUsecase implements Usecase {
         } else {
             disposable.add(
                     userRepository
-                            .uploadNetworkImage(user.getUsername(), bitmap)
+                            .uploadNetworkAvatar(user.getUsername(), bitmap)
                             .subscribeOn(Schedulers.from(executor))
                             .observeOn(scheduler)
                             .subscribeWith(new DisposableSingleObserver<String>() {
@@ -55,7 +59,11 @@ public class UpdateUserInfoUsecase implements Usecase {
                                     disposable.add(
                                             userRepository
                                                     .setNetworkUser(user)
-                                                    .doOnSuccess(aBoolean -> userRepository.setCacheUser(user))
+                                                    .doOnSuccess(isSuccess -> {
+                                                        if (isSuccess) {
+                                                            userRepository.setCacheUser(user);
+                                                        }
+                                                    })
                                                     .subscribeOn(Schedulers.from(executor))
                                                     .observeOn(scheduler)
                                                     .subscribeWith((DisposableSingleObserver<Boolean>)observer)

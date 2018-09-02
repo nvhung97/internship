@@ -1,7 +1,6 @@
 package com.example.cpu11398_local.etalk.data.repository;
 
 import android.graphics.Bitmap;
-
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.Optional;
 import io.reactivex.Observable;
@@ -23,7 +22,7 @@ public interface UserRepository {
      * @return an observable contain a container {@code Optional} that contain
      * user's info if exist or contain {@code null}.
      */
-    Single<Optional<User>> findNetworkFriendWithPhone(String phone);
+    Single<Optional<User>> findNetworkUserWithPhone(String phone);
 
     /**
      * Push new user to network database base on given {@code user}.
@@ -46,16 +45,7 @@ public interface UserRepository {
      * @param username user need to upload their image.
      * @return an observable contain link of image.
      */
-    Single<String> uploadNetworkImage(String username, Bitmap image);
-
-    /**
-     * Add friend given by {@code friend_username} to user given by {@code username}.
-     * @param username id of user need to add friend.
-     * @param friend_username id of friend.
-     * @return an observable contain result of request. {@code true} if success and
-     * {@code false} if fail.
-     */
-    Single<Boolean> addNetworkFriend(String username, String friend_username);
+    Single<String> uploadNetworkAvatar(String username, Bitmap image);
 
     /**
      * Cache user's info when user login to retrieve in the future.

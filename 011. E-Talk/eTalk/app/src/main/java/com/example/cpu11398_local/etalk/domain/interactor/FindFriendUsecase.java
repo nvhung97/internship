@@ -40,7 +40,7 @@ public class FindFriendUsecase implements Usecase {
             case "phone":
                 disposable.add(
                         userRepository
-                                .findNetworkFriendWithPhone(data)
+                                .findNetworkUserWithPhone(data)
                                 .subscribeOn(Schedulers.from(executor))
                                 .observeOn(scheduler)
                                 .subscribeWith((DisposableSingleObserver<Optional<User>>)observer)

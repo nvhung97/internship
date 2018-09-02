@@ -13,12 +13,12 @@ import io.reactivex.Single;
 
 public class SharedPreferencesDB implements CacheSource {
 
-    private final String FILENAME   = FirebaseTree.NODE_NAME;
-    private final String NAME       = FirebaseTree.Users.Name.NODE_NAME;
-    private final String USERNAME   = FirebaseTree.Users.Username.NODE_NAME;
-    private final String PASSWORD   = FirebaseTree.Users.Password.NODE_NAME;
-    private final String PHONE      = FirebaseTree.Users.Phone.NODE_NAME;
-    private final String AVATAR     = FirebaseTree.Users.Avatar.NODE_NAME;
+    private final String FILENAME   = FirebaseTree.Database.NODE_NAME;
+    private final String NAME       = FirebaseTree.Database.Users.Key.Name.NODE_NAME;
+    private final String USERNAME   = FirebaseTree.Database.Users.Key.Username.NODE_NAME;
+    private final String PASSWORD   = FirebaseTree.Database.Users.Key.Password.NODE_NAME;
+    private final String PHONE      = FirebaseTree.Database.Users.Key.Phone.NODE_NAME;
+    private final String AVATAR     = FirebaseTree.Database.Users.Key.Avatar.NODE_NAME;
 
     private SharedPreferences       sharedPref;
     private Editor                  editor;

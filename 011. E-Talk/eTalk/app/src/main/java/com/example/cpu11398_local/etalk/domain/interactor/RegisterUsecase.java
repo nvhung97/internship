@@ -40,7 +40,7 @@ public class RegisterUsecase implements Usecase {
                 userRepository
                         .getNetworkUser(username)
                         .zipWith(
-                                userRepository.findNetworkFriendWithPhone(phone),
+                                userRepository.findNetworkUserWithPhone(phone),
                                 (user1, user2) -> user1.isPresent() || user2.isPresent()
                         )
                         .subscribeOn(Schedulers.from(executor))

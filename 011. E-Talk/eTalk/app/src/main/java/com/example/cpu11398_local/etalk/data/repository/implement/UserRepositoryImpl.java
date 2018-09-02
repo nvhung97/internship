@@ -1,14 +1,12 @@
 package com.example.cpu11398_local.etalk.data.repository.implement;
 
 import android.graphics.Bitmap;
-
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import com.example.cpu11398_local.etalk.data.repository.data_source.CacheSource;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.Optional;
 import javax.inject.Inject;
-
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
@@ -29,8 +27,8 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
-    public Single<Optional<User>> findNetworkFriendWithPhone(String phone) {
-        return networkSource.findFriendWithPhone(phone);
+    public Single<Optional<User>> findNetworkUserWithPhone(String phone) {
+        return networkSource.findUserWithPhone(phone);
     }
 
     @Override
@@ -44,13 +42,8 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
-    public Single<String> uploadNetworkImage(String username, Bitmap image) {
-        return networkSource.uploadImage(username, image);
-    }
-
-    @Override
-    public Single<Boolean> addNetworkFriend(String username, String friend_username) {
-        return networkSource.addFriend(username, friend_username);
+    public Single<String> uploadNetworkAvatar(String username, Bitmap image) {
+        return networkSource.uploadAvatar(username, image);
     }
 
     @Override

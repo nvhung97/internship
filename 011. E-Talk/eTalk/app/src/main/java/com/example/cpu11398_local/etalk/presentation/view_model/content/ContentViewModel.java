@@ -120,7 +120,7 @@ public class ContentViewModel implements ViewModel,
      * @param view
      */
     public void onAddFriendClick(View view) {
-        Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+        publisher.onNext(Event.create(Event.CONTENT_ACTIVITY_MENU_ADD_FRIEND));
     }
 
     /**

@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
+import com.example.cpu11398_local.etalk.presentation.model.Conversation;
+import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.FirebaseTree;
 import com.example.cpu11398_local.etalk.utils.Optional;
@@ -25,7 +27,7 @@ import io.reactivex.Single;
 public class FirebaseDB implements NetworkSource{
 
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-    private StorageReference  storageReference  = FirebaseStorage.getInstance("gs://etalkchat.appspot.com").getReference();
+    private StorageReference  storageReference  = FirebaseStorage.getInstance(FirebaseTree.Storage.NODE_NAME).getReference();
     private Handler           handler           = new Handler();
 
     @SuppressLint("CheckResult")
@@ -33,7 +35,7 @@ public class FirebaseDB implements NetworkSource{
     public Single<Optional<User>> loadUser(String username) {
         return Single.create(emitter ->
                 databaseReference
-                        .child(FirebaseTree.Users.NODE_NAME)
+                        .child(FirebaseTree.Database.Users.NODE_NAME)
                         .child(username)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -52,11 +54,11 @@ public class FirebaseDB implements NetworkSource{
 
     @SuppressLint("CheckResult")
     @Override
-    public Single<Optional<User>> findFriendWithPhone(String phone) {
+    public Single<Optional<User>> findUserWithPhone(String phone) {
         return Single.create(emitter ->
             databaseReference
-                    .child(FirebaseTree.Users.NODE_NAME)
-                    .orderByChild(FirebaseTree.Users.Phone.NODE_NAME)
+                    .child(FirebaseTree.Database.Users.NODE_NAME)
+                    .orderByChild(FirebaseTree.Database.Users.Key.Phone.NODE_NAME)
                     .equalTo(phone)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -86,7 +88,7 @@ public class FirebaseDB implements NetworkSource{
     public Single<Boolean> pushUser(User user) {
         return Single.create(emitter ->
                 databaseReference
-                        .child(FirebaseTree.Users.NODE_NAME)
+                        .child(FirebaseTree.Database.Users.NODE_NAME)
                         .child(user.getUsername())
                         .setValue(user, (databaseError, databaseReference) -> {
                             if (databaseError == null) {
@@ -106,9 +108,9 @@ public class FirebaseDB implements NetworkSource{
                 @Override
                 public void run() {
                     databaseReference
-                            .child(FirebaseTree.Users.NODE_NAME)
+                            .child(FirebaseTree.Database.Users.NODE_NAME)
                             .child(username)
-                            .child(FirebaseTree.Users.Active.NODE_NAME)
+                            .child(FirebaseTree.Database.Users.Key.Active.NODE_NAME)
                             .setValue(System.currentTimeMillis());
                     handler.postDelayed(this, 1000 * 10); //10 seconds
                 }
@@ -119,17 +121,19 @@ public class FirebaseDB implements NetworkSource{
     }
 
     @Override
-    public Single<String> uploadImage(String username, Bitmap image) {
+    public Single<String> uploadAvatar(String username, Bitmap image) {
         return Single.create(emitter -> {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             Bitmap bitmap = Tool.resizeImage(image, 256);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            String imageName = FirebaseTree.Users.Avatar.PREFIX + username + FirebaseTree.Users.Avatar.POSTFIX;
+            String imageName = username + FirebaseTree.Storage.Avatars.Avatar.POSTFIX;
             storageReference
+                    .child(FirebaseTree.Storage.Avatars.NODE_NAME)
                     .child(imageName)
                     .putBytes(byteArrayOutputStream.toByteArray())
                     .addOnSuccessListener(taskSnapshot ->
                             storageReference
+                                    .child(FirebaseTree.Storage.Avatars.NODE_NAME)
                                     .child(imageName)
                                     .getDownloadUrl()
                                     .addOnSuccessListener(uri -> emitter.onSuccess(uri.toString()))
@@ -138,21 +142,55 @@ public class FirebaseDB implements NetworkSource{
     }
 
     @Override
-    public Single<Boolean> addFriend(String username, String friend_username) {
+    public Single<Boolean> pushRelationship(String username, Conversation conversation) {
         return Single.create(emitter ->
-            databaseReference
-                .child(FirebaseTree.Users.NODE_NAME)
-                .child(username)
-                .child(FirebaseTree.Users.Friends.NODE_NAME)
-                .child(friend_username)
-                .setValue(friend_username, (databaseError, databaseReference) -> {
-                    if (databaseError == null) {
-                        emitter.onSuccess(true);
-                    } else  {
-                        Log.i("eTalk", databaseError.getMessage());
-                        emitter.onSuccess(false);
-                    }
-                })
+                databaseReference
+                        .child(FirebaseTree.Database.Relationships.NODE_NAME)
+                        .child(username)
+                        .child(conversation.getCreator() + conversation.getTime())
+                        .setValue(conversation.getType(), (databaseError, databaseReference) -> {
+                            if (databaseError == null) {
+                                emitter.onSuccess(true);
+                            } else  {
+                                Log.i("eTalk", databaseError.getMessage());
+                                emitter.onSuccess(false);
+                            }
+                        })
+        );
+    }
+
+    @Override
+    public Single<Boolean> pushConversation(Conversation conversation) {
+        return Single.create(emitter ->
+                databaseReference
+                        .child(FirebaseTree.Database.Conversations.NODE_NAME)
+                        .child(conversation.getCreator() + conversation.getTime())
+                        .setValue(conversation, (databaseError, databaseReference) -> {
+                            if (databaseError == null) {
+                                emitter.onSuccess(true);
+                            } else  {
+                                Log.i("eTalk", databaseError.getMessage());
+                                emitter.onSuccess(false);
+                            }
+                        })
+        );
+    }
+
+    @Override
+    public Single<Boolean> pushMessage(String conversationKey, Message message) {
+        return Single.create(emitter ->
+                databaseReference
+                        .child(FirebaseTree.Database.Messages.NODE_NAME)
+                        .child(conversationKey)
+                        .child(message.getSender() + message.getTime())
+                        .setValue(message, (databaseError, databaseReference) -> {
+                            if (databaseError == null) {
+                                emitter.onSuccess(true);
+                            } else  {
+                                Log.i("eTalk", databaseError.getMessage());
+                                emitter.onSuccess(false);
+                            }
+                        })
         );
     }
 }

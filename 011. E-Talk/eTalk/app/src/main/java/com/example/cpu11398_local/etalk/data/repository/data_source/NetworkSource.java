@@ -1,7 +1,8 @@
 package com.example.cpu11398_local.etalk.data.repository.data_source;
 
 import android.graphics.Bitmap;
-
+import com.example.cpu11398_local.etalk.presentation.model.Conversation;
+import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.Optional;
 import io.reactivex.Single;
@@ -22,7 +23,7 @@ public interface NetworkSource {
      * @return an observable contain a container {@code Optional} that contain
      * user's info if exist or contain {@code null}.
      */
-    Single<Optional<User>> findFriendWithPhone(String phone);
+    Single<Optional<User>> findUserWithPhone(String phone);
 
     /**
      * Push new user to network database base on given {@code user}.
@@ -45,14 +46,31 @@ public interface NetworkSource {
      * @param username user need to upload their image.
      * @return an observable contain link of image.
      */
-    Single<String> uploadImage(String username, Bitmap image);
+    Single<String> uploadAvatar(String username, Bitmap image);
 
     /**
-     * Add friend given by {@code friend_username} to user given by {@code username}.
-     * @param username id of user need to add friend.
-     * @param friend_username id of friend.
-     * @return an observable contain result of request. {@code true} if success and
-     * {@code false} if fail.
+     * Push a new relationship to given {@code username} with a {@code conversation}.
+     * @param username user id.
+     * @param conversation used to get key and type.
+     * @return an observable contain result of action. {@code true} if successfully,
+     * otherwise {@code false}.
      */
-    Single<Boolean> addFriend(String username, String friend_username);
+    Single<Boolean> pushRelationship(String username, Conversation conversation);
+
+    /**
+     * Push given {@code conversation} to network.
+     * @param conversation
+     * @return an observable contain result of action. {@code true} if successfully,
+     * otherwise {@code false}.
+     */
+    Single<Boolean> pushConversation(Conversation conversation);
+
+    /**
+     * Push given {@code message} into conversation with {@code conversationKey}.
+     * @param conversationKey
+     * @param message
+     * @return an observable contain result of action. {@code true} if successfully,
+     * otherwise {@code false}.
+     */
+    Single<Boolean> pushMessage(String conversationKey, Message message);
 }

@@ -1,56 +1,50 @@
 package com.example.cpu11398_local.etalk.presentation.model;
 
+import com.google.firebase.database.PropertyName;
 import java.util.Map;
 
 public class Conversation {
 
-    private String              key;
-    private String              type;
+    public static final long GROUP  = 0;
+    public static final long PERSON = 1;
+
+    private long                type;
     private String              name;
+    private String              creator;
+    private long                time;
     private Map<String, Long>   members;
-    private String              messages;
-    private Message             last;
+    private Message             lastMessage;
 
     public Conversation() {
     }
 
-    public Conversation(String key,
-                        String type,
+    public Conversation(long type,
                         String name,
-                        Map<String, Long> members) {
-        this.key        = key;
-        this.type       = type;
-        this.name       = name;
-        this.members    = members;
-    }
-
-    public Conversation(String key,
-                        String type,
-                        String name,
+                        String creator,
                         Map<String, Long> members,
-                        String messages,
-                        Message last) {
-        this.key        = key;
-        this.type       = type;
-        this.name       = name;
-        this.members    = members;
-        this.messages   = messages;
-        this.last       = last;
+                        Message lastMessage) {
+        this(type, name, creator, System.currentTimeMillis(), members, lastMessage);
     }
 
-    public String getKey() {
-        return key;
+    public Conversation(long type,
+                        String name,
+                        String creator,
+                        long time,
+                        Map<String, Long> members,
+                        Message lastMessage) {
+        this.type        = type;
+        this.name        = name;
+        this.creator     = creator;
+        this.time        = time;
+        this.members     = members;
+        this.lastMessage = lastMessage;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getType() {
+    public long getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(long type) {
         this.type = type;
     }
 
@@ -62,6 +56,22 @@ public class Conversation {
         this.name = name;
     }
 
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
     public Map<String, Long> getMembers() {
         return members;
     }
@@ -70,19 +80,13 @@ public class Conversation {
         this.members = members;
     }
 
-    public String getMessages() {
-        return messages;
+    @PropertyName("last_message")
+    public Message getLastMessage() {
+        return lastMessage;
     }
 
-    public void setMessages(String messages) {
-        this.messages = messages;
-    }
-
-    public Message getLast() {
-        return last;
-    }
-
-    public void setLast(Message last) {
-        this.last = last;
+    @PropertyName("last_message")
+    public void setLastMessage(Message lastMessage) {
+        this.lastMessage = lastMessage;
     }
 }

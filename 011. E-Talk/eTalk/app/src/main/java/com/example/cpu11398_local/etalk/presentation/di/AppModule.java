@@ -3,9 +3,11 @@ package com.example.cpu11398_local.etalk.presentation.di;
 import android.content.Context;
 import com.example.cpu11398_local.etalk.data.cache.SharedPreferencesDB;
 import com.example.cpu11398_local.etalk.data.network.FirebaseDB;
+import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import com.example.cpu11398_local.etalk.data.repository.data_source.CacheSource;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
+import com.example.cpu11398_local.etalk.data.repository.implement.ConversationRepositoryImpl;
 import com.example.cpu11398_local.etalk.data.repository.implement.UserRepositoryImpl;
 import com.example.cpu11398_local.etalk.domain.executor.TaskExecutor;
 import com.example.cpu11398_local.etalk.domain.interactor.AddFriendUsecase;
@@ -103,6 +105,12 @@ public class AppModule {
     public UserRepository provideUserRepository(NetworkSource networkSource,
                                                 CacheSource cacheSource) {
         return new UserRepositoryImpl(networkSource, cacheSource);
+    }
+
+    @Provides
+    @Singleton
+    public ConversationRepository provideConversationRepository(NetworkSource networkSource) {
+        return new ConversationRepositoryImpl(networkSource);
     }
 
 

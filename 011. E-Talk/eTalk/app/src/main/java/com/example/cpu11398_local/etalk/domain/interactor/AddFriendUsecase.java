@@ -31,7 +31,7 @@ public class AddFriendUsecase implements Usecase {
     public void execute(Object observer, Object... params) {
         User user   = (User)params[0];
         User friend = (User)params[1];
-        disposable.add(
+        /*disposable.add(
                 userRepository
                         .addNetworkFriend(user.getUsername(), friend.getUsername())
                         .doOnSuccess(isSuccess -> {
@@ -42,7 +42,7 @@ public class AddFriendUsecase implements Usecase {
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
                         .subscribeWith((DisposableSingleObserver<Boolean>)observer)
-        );
+        );*/
     }
 
     @Override
