@@ -5,6 +5,7 @@ import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSourc
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import javax.inject.Inject;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public class ConversationRepositoryImpl  implements ConversationRepository{
@@ -29,5 +30,20 @@ public class ConversationRepositoryImpl  implements ConversationRepository{
     @Override
     public Single<Boolean> pushNetworkMessage(String conversationKey, Message message) {
         return networkSource.pushMessage(conversationKey, message);
+    }
+
+    @Override
+    public Observable<Conversation> loadNetworkRelationships(String username) {
+        return networkSource.loadRelationships(username);
+    }
+
+    @Override
+    public Observable<Conversation> loadNetworkConversation(String conversationKey) {
+        return networkSource.loadConversation(conversationKey);
+    }
+
+    @Override
+    public Observable<Message> loadNetworkMessages(String conversationKey) {
+        return networkSource.loadMessages(conversationKey);
     }
 }

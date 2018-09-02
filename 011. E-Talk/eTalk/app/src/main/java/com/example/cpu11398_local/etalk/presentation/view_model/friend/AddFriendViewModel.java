@@ -15,6 +15,9 @@ import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.NetworkChangeReceiver;
 import com.example.cpu11398_local.etalk.utils.Optional;
+
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observer;
@@ -95,6 +98,11 @@ public class AddFriendViewModel extends     BaseObservable
     private User currentUser = null;
 
     /**
+     * Need for check to avoid add friend again.
+     */
+    private ArrayList<String> currentFriends = new ArrayList<>();
+
+    /**
      * User found via phone number.
      */
     private User resultUser = null;
@@ -104,9 +112,9 @@ public class AddFriendViewModel extends     BaseObservable
         if (resultUser != null) {
             setAvatarUrl(resultUser.getAvatar());
             setName(resultUser.getName());
-            //TODO: nếu friend đã là bạn thì hiện added
+            setAddedVisibility(currentFriends.contains(resultUser.getUsername()));
+            notifyPropertyChanged(BR.addVisibility);
         }
-        notifyPropertyChanged(BR.addVisibility);
         notifyPropertyChanged(BR.resultVisibility);
         notifyPropertyChanged(BR.searchEnable);
     }
@@ -143,6 +151,7 @@ public class AddFriendViewModel extends     BaseObservable
     public void setAddedVisibility(@NonNull boolean added) {
         this.added = added;
         notifyPropertyChanged(BR.addedVisibility);
+        notifyPropertyChanged(BR.addVisibility);
     }
 
     /**
@@ -199,7 +208,7 @@ public class AddFriendViewModel extends     BaseObservable
     @Override
     public void subscribeObserver(Observer<Event> observer) {
         publisher.subscribe(observer);
-        getUserInfoUsecase.execute(new GetUserInfoObserver(), true);
+        getUserInfoUsecase.execute(new GetUserInfoObserver(), false);
     }
 
     /**
@@ -244,7 +253,8 @@ public class AddFriendViewModel extends     BaseObservable
 
     @Bindable
     public int getAddVisibility() {
-        return currentUser != null
+        return !added
+                && currentUser != null
                 && resultUser != null
                 && !currentUser.getUsername().equals(resultUser.getUsername())
                 ? View.VISIBLE
@@ -287,15 +297,10 @@ public class AddFriendViewModel extends     BaseObservable
     /**
      * {@code getUserInfoObserver} is subscribed to usecase to listen event from it.
      */
-    private class GetUserInfoObserver extends DisposableObserver<User> {
+    private class GetUserInfoObserver extends DisposableSingleObserver<User> {
         @Override
-        public void onNext(User user) {
+        public void onSuccess(User user) {
             currentUser = user;
-        }
-
-        @Override
-        public void onComplete() {
-
         }
 
         @Override

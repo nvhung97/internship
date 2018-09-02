@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
@@ -14,6 +15,7 @@ import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.FirebaseTree;
 import com.example.cpu11398_local.etalk.utils.Optional;
 import com.example.cpu11398_local.etalk.utils.Tool;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.io.ByteArrayOutputStream;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public class FirebaseDB implements NetworkSource{
@@ -189,6 +192,86 @@ public class FirebaseDB implements NetworkSource{
                             } else  {
                                 Log.i("eTalk", databaseError.getMessage());
                                 emitter.onSuccess(false);
+                            }
+                        })
+        );
+    }
+
+    @Override
+    public Observable<Conversation> loadRelationships(String username) {
+        return Observable.create(emitter ->
+                databaseReference
+                        .child(FirebaseTree.Database.Relationships.NODE_NAME)
+                        .child(username)
+                        .addChildEventListener(new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                loadConversation(dataSnapshot.getKey()).subscribe(conversation ->
+                                    emitter.onNext(conversation)
+                                );
+                            }
+
+                            @Override
+                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+                            @Override
+                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+
+                            @Override
+                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.i("eTalk", databaseError.getMessage());
+                            }
+                        })
+        );
+    }
+
+    @Override
+    public Observable<Conversation> loadConversation(String conversationKey) {
+        return Observable.create(emitter ->
+                databaseReference
+                        .child(FirebaseTree.Database.Conversations.NODE_NAME)
+                        .child(conversationKey)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                emitter.onNext(dataSnapshot.getValue(Conversation.class));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.i("eTalk", databaseError.getMessage());
+                            }
+                        })
+        );
+    }
+
+    @Override
+    public Observable<Message> loadMessages(String conversationKey) {
+        return Observable.create(emitter ->
+                databaseReference
+                        .child(FirebaseTree.Database.Messages.NODE_NAME)
+                        .child(conversationKey)
+                        .addChildEventListener(new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                emitter.onNext(dataSnapshot.getValue(Message.class));
+                            }
+
+                            @Override
+                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+                            @Override
+                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+
+                            @Override
+                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.i("eTalk", databaseError.getMessage());
                             }
                         })
         );

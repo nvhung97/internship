@@ -5,6 +5,8 @@ import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.Optional;
+
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public interface NetworkSource {
@@ -73,4 +75,25 @@ public interface NetworkSource {
      * otherwise {@code false}.
      */
     Single<Boolean> pushMessage(String conversationKey, Message message);
+
+    /**
+     * Load all conversations of given {@code username}. Observe for changing.
+     * @param username id of user.
+     * @return an observable emit conversations of user.
+     */
+    Observable<Conversation> loadRelationships(String username);
+
+    /**
+     * Load a conversation and observe for changing by given {@code conversationKey}.
+     * @param conversationKey
+     * @return an observable emit result or any change about this conversation.
+     */
+    Observable<Conversation> loadConversation(String conversationKey);
+
+    /**
+     * Load all message of a conversation given by {@code conversationKey}.
+     * @param conversationKey
+     * @return an observable emit result or any new message.
+     */
+    Observable<Message> loadMessages(String conversationKey);
 }

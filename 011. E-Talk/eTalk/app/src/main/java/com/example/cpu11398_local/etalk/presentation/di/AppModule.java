@@ -86,11 +86,13 @@ public class AppModule {
      **********************************************************************************************/
 
     @Provides
+    @Singleton
     public NetworkSource provideNetworkSource() {
         return new FirebaseDB();
     }
 
     @Provides
+    @Singleton
     public CacheSource provideCacheSource(Context context) {
         return new SharedPreferencesDB(context);
     }
@@ -190,15 +192,17 @@ public class AppModule {
 
     @Provides
     @Named("AddFriendUsecase")
-    public Usecase provideAddFriendUsecase(Executor executor,
+    public Usecase provideAddFriendUsecase(Context context,
+                                           Executor executor,
                                            Scheduler scheduler,
                                            CompositeDisposable compositeDisposable,
-                                           UserRepository userRepository) {
+                                           ConversationRepository conversationRepository) {
         return new AddFriendUsecase(
+                context,
                 executor,
                 scheduler,
                 compositeDisposable,
-                userRepository
+                conversationRepository
         );
     }
 
