@@ -49,6 +49,13 @@ public class FindFriendUsecase implements Usecase {
             case "name":
                 break;
             case "username":
+                disposable.add(
+                        userRepository
+                                .getNetworkUser(data)
+                                .subscribeOn(Schedulers.from(executor))
+                                .observeOn(scheduler)
+                                .subscribeWith((DisposableSingleObserver<Optional<User>>)observer)
+                );
                 break;
         }
     }

@@ -1,4 +1,4 @@
-package com.example.cpu11398_local.etalk.presentation.view.profile;
+package com.example.cpu11398_local.etalk.presentation.view.group;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -7,13 +7,14 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v7.widget.LinearLayoutManager;
 import android.widget.Toast;
 import com.example.cpu11398_local.etalk.R;
-import com.example.cpu11398_local.etalk.databinding.ActivityProfileBinding;
+import com.example.cpu11398_local.etalk.databinding.ActivityCreateGroupBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
-import com.example.cpu11398_local.etalk.presentation.view_model.profile.ProfileViewModel;
+import com.example.cpu11398_local.etalk.presentation.view_model.group.CreateGroupViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.Tool;
 import javax.inject.Inject;
@@ -21,18 +22,18 @@ import javax.inject.Named;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
-public class ProfileActivity extends BaseActivity {
+public class CreateGroupActivity extends BaseActivity {
 
     private final int REQUEST_CAMERA_CODE  = 0;
     private final int REQUEST_GALLERY_CODE = 1;
 
     @Inject
-    @Named("ProfileViewModel")
+    @Named("CreateGroupViewModel")
     public ViewModel    viewModel;
 
-    private Disposable                  disposable;
-    private Dialog                      dialog;
-    private ProfileViewModel.AvatarCopy avatarCopy;
+    private Disposable                      disposable;
+    private Dialog                          dialog;
+    private CreateGroupViewModel.AvatarCopy avatarCopy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,30 +41,28 @@ public class ProfileActivity extends BaseActivity {
 
         Tool.setStatusBarHeight(
                 this,
-                findViewById(R.id.profile_activity_status_bar)
+                findViewById(R.id.create_group_activity_status_bar)
         );
     }
 
     @Override
     public void onDataBinding() {
-        ActivityProfileBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_profile);
+        ActivityCreateGroupBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_create_group);
         viewModel = (ViewModel) getLastCustomNonConfigurationInstance();
         if (viewModel == null) {
             WelcomeActivity.getAppComponent(this).inject(this);
         }
-        binding.setViewModel((ProfileViewModel)viewModel);
+        binding.setViewModel((CreateGroupViewModel)viewModel);
+        binding.createGroupActivityRvMember.setLayoutManager(new LinearLayoutManager(this));
+        binding.createGroupActivityRvMember.setHasFixedSize(true);
         addControlKeyboardView(
-                binding.profileActivityEdtName,
-                binding.profileActivityEdtUsername,
-                binding.profileActivityEdtPassword,
-                binding.profileActivityBtnPassword,
-                binding.profileActivityEdtPhone
+                binding.createGroupActivityEdtName
         );
     }
 
     @Override
     public void onSubscribeViewModel() {
-        viewModel.subscribeObserver(new ProfileObserver());
+        viewModel.subscribeObserver(new CreateGroupObserver());
     }
 
     @Override
@@ -94,7 +93,7 @@ public class ProfileActivity extends BaseActivity {
         }
     }
 
-    private class ProfileObserver implements Observer<Event> {
+    private class CreateGroupObserver implements Observer<Event> {
         @Override
         public void onSubscribe(Disposable d) {
             disposable = d;
@@ -104,43 +103,43 @@ public class ProfileActivity extends BaseActivity {
         public void onNext(Event event) {
             Object[] data = event.getData();
             switch (event.getType()) {
-                case Event.PROFILE_ACTIVITY_SHOW_IMAGE_OPTION:
-                    avatarCopy = (ProfileViewModel.AvatarCopy)data[0];
+                case Event.CREATE_GROUP_ACTIVITY_BACK:
+                    onBackPressed();
+                    break;
+                case Event.CREATE_GROUP_ACTIVITY_SHOW_IMAGE_OPTION:
+                    avatarCopy = (CreateGroupViewModel.AvatarCopy)data[0];
                     Tool.createImageOptionDialog(
-                            ProfileActivity.this,
+                            CreateGroupActivity.this,
                             REQUEST_CAMERA_CODE,
                             REQUEST_GALLERY_CODE
                     ).show();
                     break;
-                case Event.PROFILE_ACTIVITY_TIME_OUT:
-                    Toast.makeText(
-                            ProfileActivity.this,
-                            getString(R.string.profile_activity_request_timeout),
-                            Toast.LENGTH_SHORT
-                    ).show();
-                    break;
-                case Event.PROFILE_ACTIVITY_UPDATE_OK:
-                    Toast.makeText(
-                            ProfileActivity.this,
-                            getString(R.string.profile_activity_update_successfully),
-                            Toast.LENGTH_SHORT
-                    ).show();
-                    break;
-                case Event.PROFILE_ACTIVITY_UPDATE_FAILED:
-                    Toast.makeText(
-                            ProfileActivity.this,
-                            getString(R.string.profile_activity_update_failed),
-                            Toast.LENGTH_SHORT
-                    ).show();
-                    break;
-                case Event.PROFILE_ACTIVITY_HIDE_LOADING:
-                    onHideLoading();
-                    break;
-                case Event.PROFILE_ACTIVITY_SHOW_LOADING:
+                case Event.CREATE_GROUP_ACTIVITY_SHOW_LOADING:
                     onShowLoading();
                     break;
-                case Event.PROFILE_ACTIVITY_BACK:
-                    onBackPressed();
+                case Event.CREATE_GROUP_ACTIVITY_HIDE_LOADING:
+                    onHideLoading();
+                    break;
+                case Event.CREATE_GROUP_ACTIVITY_CREATE_OK:
+                    Toast.makeText(
+                            CreateGroupActivity.this,
+                            getString(R.string.create_group_activity_create_successfully),
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    break;
+                case Event.CREATE_GROUP_ACTIVITY_CREATE_FAILED:
+                    Toast.makeText(
+                            CreateGroupActivity.this,
+                            getString(R.string.create_group_activity_create_failed),
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    break;
+                case Event.CREATE_GROUP_ACTIVITY_TIMEOUT:
+                    Toast.makeText(
+                            CreateGroupActivity.this,
+                            getString(R.string.app_request_timeout),
+                            Toast.LENGTH_SHORT
+                    ).show();
                     break;
             }
         }

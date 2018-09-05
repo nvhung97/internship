@@ -25,6 +25,7 @@ import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatViewMod
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContentViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.MoreViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.friend.AddFriendViewModel;
+import com.example.cpu11398_local.etalk.presentation.view_model.group.CreateGroupViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.login.LoginViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.profile.ProfileViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.register.RegisterViewModel;
@@ -319,5 +320,16 @@ public class AppModule {
                                                @Named("AddFriendUsecase") Usecase usecase4,
                                                NetworkChangeReceiver receiver) {
         return new AddFriendViewModel(context, usecase1, usecase2, usecase3, usecase4, receiver);
+    }
+
+    @Provides
+    @Named("CreateGroupViewModel")
+    public ViewModel provideCreateGroupViewModel(Context context,
+                                                 @Named("GetUserInfoUsecase") Usecase usecase1,
+                                                 @Named("LoadFriendConversationUsecase") Usecase usecase2,
+                                                 @Named("FindFriendUsecase") Usecase usecase3/*,
+                                                 @Named("AddFriendUsecase") Usecase usecase4*/,
+                                                 NetworkChangeReceiver receiver) {
+        return new CreateGroupViewModel(context, usecase1, usecase2, usecase3/*, usecase4*/, receiver);
     }
 }

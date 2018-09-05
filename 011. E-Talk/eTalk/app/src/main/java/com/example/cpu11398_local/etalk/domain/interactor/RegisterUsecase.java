@@ -1,7 +1,5 @@
 package com.example.cpu11398_local.etalk.domain.interactor;
 
-import android.annotation.SuppressLint;
-import android.util.Log;
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import java.util.concurrent.Executor;
@@ -45,35 +43,21 @@ public class RegisterUsecase implements Usecase {
                         )
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
-                        .subscribeWith(new DisposableSingleObserver<Boolean>() {
-                            @SuppressLint("CheckResult")
-                            @Override
-                            public void onSuccess(Boolean isExisted) {
-                                if (isExisted) {
-                                    Single
-                                            .just(false)
-                                            .subscribeOn(Schedulers.from(executor))
-                                            .observeOn(scheduler)
-                                            .subscribeWith((DisposableSingleObserver<Boolean>)observer);
-                                } else {
-                                    userRepository
-                                            .setNetworkUser(
-                                                    new User(
-                                                            name,
-                                                            username,
-                                                            password,
-                                                            phone
-                                                    )
-                                            )
-                                            .subscribeOn(Schedulers.from(executor))
-                                            .observeOn(scheduler)
-                                            .subscribeWith((DisposableSingleObserver<Boolean>)observer);
-                                }
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.e("eTalk", e.getMessage());
+                        .subscribe(isExisted -> {
+                            if (isExisted) {
+                                Single
+                                        .just(false)
+                                        .subscribeOn(Schedulers.from(executor))
+                                        .observeOn(scheduler)
+                                        .subscribe((DisposableSingleObserver<Boolean>)observer);
+                            } else {
+                                disposable.add(
+                                        userRepository
+                                                .setNetworkUser(new User(name, username, password, phone))
+                                                .subscribeOn(Schedulers.from(executor))
+                                                .observeOn(scheduler)
+                                                .subscribeWith((DisposableSingleObserver<Boolean>)observer)
+                                );
                             }
                         })
         );

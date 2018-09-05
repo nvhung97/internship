@@ -27,7 +27,7 @@ public class ProfileViewModel extends    BaseObservable
                                          NetworkChangeReceiver.NetworkChangeListener {
 
     /**
-     * Binding data between {@code avatarUrl} and attribute {@code url_from_url} of
+     * Binding data between {@code avatarUrl} and attribute {@code url_from_object} of
      * {@code AvatarImageView}.
      */
     private String avatarUrl = null;

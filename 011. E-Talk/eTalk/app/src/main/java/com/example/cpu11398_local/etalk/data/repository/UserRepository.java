@@ -45,7 +45,7 @@ public interface UserRepository {
      * @param username user need to upload their image.
      * @return an observable contain link of image.
      */
-    Single<String> uploadNetworkAvatar(String username, Bitmap image);
+    Single<String> uploadNetworkUserAvatar(String username, Bitmap image);
 
     /**
      * Cache user's info when user login to retrieve in the future.

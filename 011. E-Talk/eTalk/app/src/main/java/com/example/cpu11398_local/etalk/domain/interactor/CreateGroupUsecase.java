@@ -1,20 +1,23 @@
 package com.example.cpu11398_local.etalk.domain.interactor;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.Executor;
 import javax.inject.Inject;
 import io.reactivex.Scheduler;
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public class AddFriendUsecase implements Usecase {
+public class CreateGroupUsecase implements Usecase {
 
     private Context                 context;
     private Executor                executor;
@@ -23,11 +26,11 @@ public class AddFriendUsecase implements Usecase {
     private ConversationRepository  conversationRepository;
 
     @Inject
-    public AddFriendUsecase(Context context,
-                            Executor executor,
-                            Scheduler scheduler,
-                            CompositeDisposable disposable,
-                            ConversationRepository conversationRepository) {
+    public CreateGroupUsecase(Context context,
+                              Executor executor,
+                              Scheduler scheduler,
+                              CompositeDisposable disposable,
+                              ConversationRepository conversationRepository) {
         this.context                = context;
         this.executor               = executor;
         this.scheduler              = scheduler;
@@ -35,35 +38,44 @@ public class AddFriendUsecase implements Usecase {
         this.conversationRepository = conversationRepository;
     }
 
+    Bitmap       avatar;
+    String       name;
     User         user;
-    User         friend;
+    List<String> friends;
     Message      message;
     Conversation conversation;
     DisposableSingleObserver<Boolean> mObserver;
 
     @Override
     public void execute(Object observer, Object... params) {
-        user   = (User)params[0];
-        friend = (User)params[1];
+        avatar  = (Bitmap)params[0];
+        name    = (String)params[1];
+        user    = (User)params[2];
+        friends = (List<String>)params[3];
         message = new Message(
                 user.getUsername(),
                 context.getString(R.string.app_first_message),
                 Message.TEXT
         );
         conversation = new Conversation(
-                Conversation.PERSON,
-                null,
+                Conversation.GROUP,
+                name,
                 null,
                 user.getUsername(),
                 message.getTime(),
                 new HashMap<String, Long>() {{
-                    put(user.getUsername(), 0L);
-                    put(friend.getUsername(), 0L);
+                    for (String friend : friends) {
+                        put(friend, 0L);
+                    }
                 }},
                 message
         );
         mObserver = (DisposableSingleObserver<Boolean>)observer;
-        pushMessage();
+        if (avatar == null) {
+            pushMessage();
+        } else {
+
+        }
     }
 
     private void pushMessage(){
@@ -98,19 +110,21 @@ public class AddFriendUsecase implements Usecase {
     }
 
     private void createRelationship(){
+        Single<Boolean> result = conversationRepository.pushNetworkRelationship(
+                user.getUsername(),
+                conversation
+        );
+        for (String friend : friends) {
+            result = result.zipWith(
+                    conversationRepository.pushNetworkRelationship(
+                            friend,
+                            conversation
+                    ),
+                    (isSuccess1, isSuccess2) -> isSuccess1 && isSuccess2
+            );
+        }
         disposable.add(
-                conversationRepository
-                        .pushNetworkRelationship(
-                                user.getUsername(),
-                                conversation
-                        )
-                        .zipWith(
-                                conversationRepository.pushNetworkRelationship(
-                                        friend.getUsername(),
-                                        conversation
-                                ),
-                                (isSuccess1, isSuccess2) -> isSuccess1 && isSuccess2
-                        )
+                result
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
                         .subscribeWith(mObserver)

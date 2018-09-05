@@ -177,7 +177,7 @@ public class ContentViewModel implements ViewModel,
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.content_activity_menu_create_group:
-                Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+                publisher.onNext(Event.create(Event.CONTENT_ACTIVITY_MENU_CREATE_GROUP));
                 break;
             case R.id.content_activity_menu_add_friend:
                 publisher.onNext(Event.create(Event.CONTENT_ACTIVITY_MENU_ADD_FRIEND));

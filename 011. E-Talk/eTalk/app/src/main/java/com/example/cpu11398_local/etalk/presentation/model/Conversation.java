@@ -10,6 +10,7 @@ public class Conversation {
 
     private long                type;
     private String              name;
+    private String              avatar;
     private String              creator;
     private long                time;
     private Map<String, Long>   members;
@@ -20,20 +21,23 @@ public class Conversation {
 
     public Conversation(long type,
                         String name,
+                        String avatar,
                         String creator,
                         Map<String, Long> members,
                         Message lastMessage) {
-        this(type, name, creator, System.currentTimeMillis(), members, lastMessage);
+        this(type, name, avatar, creator, System.currentTimeMillis(), members, lastMessage);
     }
 
     public Conversation(long type,
                         String name,
+                        String avatar,
                         String creator,
                         long time,
                         Map<String, Long> members,
                         Message lastMessage) {
         this.type        = type;
         this.name        = name;
+        this.avatar      = avatar;
         this.creator     = creator;
         this.time        = time;
         this.members     = members;
@@ -54,6 +58,14 @@ public class Conversation {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getCreator() {

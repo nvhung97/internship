@@ -48,7 +48,7 @@ public interface NetworkSource {
      * @param username user need to upload their image.
      * @return an observable contain link of image.
      */
-    Single<String> uploadAvatar(String username, Bitmap image);
+    Single<String> uploadUserAvatar(String username, Bitmap image);
 
     /**
      * Push a new relationship to given {@code username} with a {@code conversation}.
