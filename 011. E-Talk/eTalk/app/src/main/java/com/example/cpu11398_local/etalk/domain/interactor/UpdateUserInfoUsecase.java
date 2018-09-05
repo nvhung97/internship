@@ -49,7 +49,7 @@ public class UpdateUserInfoUsecase implements Usecase {
         } else {
             disposable.add(
                     userRepository
-                            .uploadNetworkAvatar(user.getUsername(), bitmap)
+                            .uploadNetworkUserAvatar(user.getUsername(), bitmap)
                             .subscribeOn(Schedulers.from(executor))
                             .observeOn(scheduler)
                             .subscribeWith(new DisposableSingleObserver<String>() {

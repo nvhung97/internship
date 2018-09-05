@@ -124,7 +124,7 @@ public class FirebaseDB implements NetworkSource{
     }
 
     @Override
-    public Single<String> uploadAvatar(String username, Bitmap image) {
+    public Single<String> uploadUserAvatar(String username, Bitmap image) {
         return Single.create(emitter -> {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             Bitmap bitmap = Tool.resizeImage(image, 256);

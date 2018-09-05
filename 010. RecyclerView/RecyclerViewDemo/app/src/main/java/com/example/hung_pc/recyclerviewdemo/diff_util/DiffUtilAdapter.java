@@ -55,7 +55,7 @@ public class DiffUtilAdapter extends RecyclerView.Adapter<DiffUtilAdapter.Vertic
             holder.textView.setText(String.valueOf(payloads.get(0)));
         } else {
             super.onBindViewHolder(holder, position, payloads);
-        }
+        } 
     }
 
     @Override

@@ -23,6 +23,7 @@ public class Event {
     private static final int CONTENT_ACTIVITY_MARK              = 0 << MODE_SHIFT;
     public static final int CONTENT_ACTIVITY_SHOW_POPUP_MENU    = CONTENT_ACTIVITY_MARK | 0;
     public static final int CONTENT_ACTIVITY_MENU_ADD_FRIEND    = CONTENT_ACTIVITY_MARK | 1;
+    public static final int CONTENT_ACTIVITY_MENU_CREATE_GROUP  = CONTENT_ACTIVITY_MARK | 2;
     /*public static final int CONTENT_ACTIVITY_SHOW_LOADING       = CONTENT_ACTIVITY_MARK | 2;
     public static final int CONTENT_ACTIVITY_HIDE_LOADING       = CONTENT_ACTIVITY_MARK | 3;*/
     public static final int CONTENT_ACTIVITY_LOGOUT             = CONTENT_ACTIVITY_MARK | 4;
@@ -93,6 +94,18 @@ public class Event {
     public static final int ADD_FRIEND_ACTIVITY_HIDE_LOADING    = ADD_FRIEND_ACTIVITY_MARK | 2;
     public static final int ADD_FRIEND_ACTIVITY_NOT_FOUND       = ADD_FRIEND_ACTIVITY_MARK | 3;
     public static final int ADD_FRIEND_ACTIVITY_TIMEOUT         = ADD_FRIEND_ACTIVITY_MARK | 4;
+
+    /**
+     * Bellow commands for {@code CreateGroupActivity}.
+     */
+    private static final int CREATE_GROUP_ACTIVITY_MARK             = 8 << MODE_SHIFT;
+    public static final int CREATE_GROUP_ACTIVITY_BACK              = CREATE_GROUP_ACTIVITY_MARK | 0;
+    public static final int CREATE_GROUP_ACTIVITY_SHOW_LOADING      = CREATE_GROUP_ACTIVITY_MARK | 1;
+    public static final int CREATE_GROUP_ACTIVITY_HIDE_LOADING      = CREATE_GROUP_ACTIVITY_MARK | 2;
+    public static final int CREATE_GROUP_ACTIVITY_SHOW_IMAGE_OPTION = CREATE_GROUP_ACTIVITY_MARK | 3;
+    public static final int CREATE_GROUP_ACTIVITY_CREATE_OK         = CREATE_GROUP_ACTIVITY_MARK | 4;
+    public static final int CREATE_GROUP_ACTIVITY_CREATE_FAILED     = CREATE_GROUP_ACTIVITY_MARK | 5;
+    public static final int CREATE_GROUP_ACTIVITY_TIMEOUT           = CREATE_GROUP_ACTIVITY_MARK | 6;
 
 
     /***********************************************************************************************

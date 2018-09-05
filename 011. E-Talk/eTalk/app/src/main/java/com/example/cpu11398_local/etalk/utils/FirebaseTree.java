@@ -90,5 +90,14 @@ public final class FirebaseTree {
                 public static final String POSTFIX = ".png";
             }
         }
+
+        public final class Conversation {
+            public static final String NODE_NAME = "conversations";
+            public final class Key {
+                public final class Avatar {
+                    public static final String NODE_NAME = "avatar";
+                }
+            }
+        }
     }
 }

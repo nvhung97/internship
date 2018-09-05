@@ -77,4 +77,12 @@
     <string name="add_friend_activity_notification_positive">YES</string>
     <string name="add_friend_activity_notification_negative">NO</string>
 
+    <!--Create group activity-->
+    <string name="create_group_activity_txt_title">New Group</string>
+    <string name="create_group_activity_btn_create">Create</string>
+    <string name="create_group_activity_edt_name_hint">Set group name</string>
+    <string name="create_group_activity_txt_member_title">Select members</string>
+    <string name="create_group_activity_create_successfully">Create successfully</string>
+    <string name="create_group_activity_create_failed">Create failed</string>
+
 </resources>

@@ -11,4 +11,26 @@
                 android:radius="50dp" />
         </shape>
     </item>
+    <item android:state_enabled="true">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" >
+            <solid
+                android:color="@color/colorTransparent"/>
+            <stroke
+                android:width="10dp"
+                android:color="@color/colorTransparent"/>
+            <corners
+                android:radius="50dp" />
+        </shape>
+    </item>
+    <item android:state_enabled="false">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" >
+            <solid
+                android:color="@color/colorTransparent"/>
+            <stroke
+                android:width="10dp"
+                android:color="@color/colorTransparent"/>
+            <corners
+                android:radius="50dp" />
+        </shape>
+    </item>
 </selector>

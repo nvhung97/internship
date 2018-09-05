@@ -42,8 +42,8 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
-    public Single<String> uploadNetworkAvatar(String username, Bitmap image) {
-        return networkSource.uploadAvatar(username, image);
+    public Single<String> uploadNetworkUserAvatar(String username, Bitmap image) {
+        return networkSource.uploadUserAvatar(username, image);
     }
 
     @Override

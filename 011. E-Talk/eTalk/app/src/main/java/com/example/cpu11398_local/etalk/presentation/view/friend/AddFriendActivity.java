@@ -28,6 +28,11 @@ public class AddFriendActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Tool.setStatusBarHeight(
+                this,
+                findViewById(R.id.add_friend_activity_status_bar)
+        );
     }
 
     @Override

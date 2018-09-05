@@ -3,6 +3,7 @@ package com.example.cpu11398_local.etalk.presentation.custom;
 import android.content.res.Resources;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
@@ -139,5 +140,15 @@ public class ETalkBindingAdapter {
     @BindingAdapter("anim")
     public static void setAnimation(View view, Animation animation) {
         view.startAnimation(animation);
+    }
+
+    /**
+     * Set adapter for a {@code RecyclerView} with attribute {@code setRecyclerViewAdapter}.
+     * @param rv recyclerView need to set adapter.
+     * @param adapter adapter set to rv.
+     */
+    @BindingAdapter("setRecyclerViewAdapter")
+    public static void setRecyclerViewAdapter(RecyclerView rv, RecyclerView.Adapter adapter) {
+        rv.setAdapter(adapter);
     }
 }
