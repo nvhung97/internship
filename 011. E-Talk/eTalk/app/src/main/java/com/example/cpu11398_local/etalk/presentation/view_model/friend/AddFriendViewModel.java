@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import com.example.cpu11398_local.etalk.BR;
+import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.User;
@@ -373,7 +374,11 @@ public class AddFriendViewModel extends     BaseObservable
                 setResultUser(user.get());
             } else {
                 publisher.onNext(Event.create(Event.ADD_FRIEND_ACTIVITY_HIDE_LOADING));
-                publisher.onNext(Event.create(Event.ADD_FRIEND_ACTIVITY_NOT_FOUND));
+                publisher.onNext(Event.create(
+                        Event.ADD_FRIEND_ACTIVITY_NOT_FOUND,
+                        phone,
+                        currentUser.getName() + " " + context.getString(R.string.add_friend_activity_sms_invitation)
+                ));
             }
         }
 

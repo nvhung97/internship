@@ -1,7 +1,9 @@
 package com.example.cpu11398_local.etalk.presentation.view.friend;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityAddFriendBinding;
@@ -74,13 +76,21 @@ public class AddFriendActivity extends BaseActivity {
         }
     }
 
-    private void onShowNotification() {
+    private void onShowNotification(String phone, String content) {
         Tool.createNotificationDialog(
                 this,
                 getString(R.string.add_friend_activity_notification_title),
                 getString(R.string.add_friend_activity_notification_content),
                 getString(R.string.add_friend_activity_notification_positive),
-                null,
+                () -> {
+                    Intent smsIntent = new Intent(
+                            Intent.ACTION_SENDTO,
+                            Uri.parse("smsto:" + phone)
+                    );
+                    smsIntent.putExtra("sms_body", content);
+                    startActivity(smsIntent);
+                    return null;
+                },
                 getString(R.string.add_friend_activity_notification_negative),
                 null
         ).show();
@@ -106,7 +116,7 @@ public class AddFriendActivity extends BaseActivity {
                     onHideLoading();
                     break;
                 case Event.ADD_FRIEND_ACTIVITY_NOT_FOUND:
-                    onShowNotification();
+                    onShowNotification((String)data[0], (String)data[1]);
                     break;
             }
         }

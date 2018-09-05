@@ -76,5 +76,6 @@
     <string name="add_friend_activity_notification_content">This number has not been a registered eTalk account. Invite to join eTalk?</string>
     <string name="add_friend_activity_notification_positive">YES</string>
     <string name="add_friend_activity_notification_negative">NO</string>
+    <string name="add_friend_activity_sms_invitation">invited you to install eTalk.</string>
 
 </resources>
