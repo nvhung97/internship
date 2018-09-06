@@ -309,6 +309,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 			* https://stackoverflow.com/a/32888869/9661754
 		+ Send SMS
 			* https://developer.android.com/guide/components/intents-common
+11:14 AM 9/5/2018
+	- Hoàn thiện chức năng tạo nhóm.
 
 
 
