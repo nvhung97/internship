@@ -2,4 +2,5 @@
 <resources>
     <dimen name="content_activity_tab_icon_padding">15dp</dimen>
     <dimen name="content_activity_tab_icon_padding_selected">7dp</dimen>
+    <dimen name="divider_padding_left">80dp</dimen>
 </resources>

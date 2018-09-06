@@ -274,7 +274,7 @@ public class FirebaseDB implements NetworkSource{
     }
 
     @Override
-    public Observable<Message> loadMessages(String conversationKey) {
+    public Observable<Message> loadMessages(String conversationKey, String username) {
         return Observable.create(emitter ->
                 databaseReference
                         .child(FirebaseTree.Database.Messages.NODE_NAME)
@@ -283,6 +283,12 @@ public class FirebaseDB implements NetworkSource{
                             @Override
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                                 emitter.onNext(dataSnapshot.getValue(Message.class));
+                                databaseReference
+                                        .child(FirebaseTree.Database.Conversations.NODE_NAME)
+                                        .child(conversationKey)
+                                        .child(FirebaseTree.Database.Conversations.Key.Members.NODE_NAME)
+                                        .child(username)
+                                        .setValue(System.currentTimeMillis());
                             }
 
                             @Override

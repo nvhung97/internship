@@ -20,6 +20,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="Messages"/>
+        <include layout="@layout/lyt_row_group_chat"/>
 
     </FrameLayout>
 </layout>

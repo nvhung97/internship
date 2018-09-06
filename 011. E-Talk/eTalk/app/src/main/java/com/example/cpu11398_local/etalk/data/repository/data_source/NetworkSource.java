@@ -103,5 +103,5 @@ public interface NetworkSource {
      * @param conversationKey
      * @return an observable emit result or any new message.
      */
-    Observable<Message> loadMessages(String conversationKey);
+    Observable<Message> loadMessages(String conversationKey, String username);
 }

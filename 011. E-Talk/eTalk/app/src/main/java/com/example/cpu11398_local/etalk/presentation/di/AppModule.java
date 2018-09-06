@@ -23,6 +23,7 @@ import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
 import com.example.cpu11398_local.etalk.domain.interactor.WelcomeUsecase;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
 import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatViewModel;
+import com.example.cpu11398_local.etalk.presentation.view_model.content.ContactViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContentViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.MoreViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.friend.AddFriendViewModel;
@@ -303,6 +304,16 @@ public class AppModule {
         ContentViewModel contentViewModel = new ContentViewModel(context, usecase, receiver);
         viewModelCallback = contentViewModel;
         return contentViewModel;
+    }
+
+    @Provides
+    @Named("ContactViewModel")
+    public ViewModel provideContactViewModel(Context context,
+                                             ViewModelCallback viewModelCallback,
+                                             @Named("GetUserInfoUsecase") Usecase usecase1,
+                                             @Named("LoadFriendConversationUsecase") Usecase usecase2,
+                                             @Named("FindFriendUsecase") Usecase usecase3) {
+        return new ContactViewModel(context, viewModelCallback, usecase1, usecase2, usecase3);
     }
 
     @Provides

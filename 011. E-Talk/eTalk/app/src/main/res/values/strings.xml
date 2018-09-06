@@ -52,6 +52,9 @@
     <string name="more_fragment_btn_taxi">Taxi</string>
     <string name="more_fragment_btn_logout">Logout</string>
 
+    <!--Contact fragment-->
+    <string name="contact_fragment_txt_title">All contacts</string>
+
     <!--Chat activity-->
     <string name="chat_activity_edt_message">Message</string>
 

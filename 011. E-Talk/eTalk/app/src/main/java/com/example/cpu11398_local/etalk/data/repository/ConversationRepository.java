@@ -62,5 +62,5 @@ public interface ConversationRepository {
      * @param conversationKey
      * @return an observable emit result or any new message.
      */
-    Observable<Message> loadNetworkMessages(String conversationKey);
+    Observable<Message> loadNetworkMessages(String conversationKey, String username);
 }

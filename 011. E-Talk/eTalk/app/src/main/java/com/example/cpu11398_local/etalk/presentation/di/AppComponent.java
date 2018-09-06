@@ -2,6 +2,7 @@ package com.example.cpu11398_local.etalk.presentation.di;
 
 import com.example.cpu11398_local.etalk.presentation.view.chat.ChatActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.ContentActivity;
+import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.contacts.ContactsFragment;
 import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.more.MoreFragment;
 import com.example.cpu11398_local.etalk.presentation.view.friend.AddFriendActivity;
 import com.example.cpu11398_local.etalk.presentation.view.group.CreateGroupActivity;
@@ -23,6 +24,7 @@ public interface AppComponent {
     void inject(LoginActivity loginActivity);
 
     void inject(ContentActivity contentActivity);
+    void inject(ContactsFragment contactsFragment);
     void inject(MoreFragment moreFragment);
 
     void inject(ProfileActivity profileActivity);

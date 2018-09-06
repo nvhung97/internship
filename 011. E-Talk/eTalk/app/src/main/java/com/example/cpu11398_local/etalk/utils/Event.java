@@ -107,6 +107,12 @@ public class Event {
     public static final int CREATE_GROUP_ACTIVITY_CREATE_FAILED     = CREATE_GROUP_ACTIVITY_MARK | 5;
     public static final int CREATE_GROUP_ACTIVITY_TIMEOUT           = CREATE_GROUP_ACTIVITY_MARK | 6;
 
+    /**
+     * Bellow commands for {@code ContactFragment}.
+     */
+    private static final int CONTACT_FRAGMENT_MARK  = 9 << MODE_SHIFT;
+    public static final int CONTACT_FRAGMENT_CHAT   = CONTACT_FRAGMENT_MARK | 0;
+
 
     /***********************************************************************************************
      * Class implementation.

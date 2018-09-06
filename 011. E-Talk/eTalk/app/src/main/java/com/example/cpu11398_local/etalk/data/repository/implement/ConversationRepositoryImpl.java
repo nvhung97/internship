@@ -50,7 +50,7 @@ public class ConversationRepositoryImpl  implements ConversationRepository{
     }
 
     @Override
-    public Observable<Message> loadNetworkMessages(String conversationKey) {
-        return networkSource.loadMessages(conversationKey);
+    public Observable<Message> loadNetworkMessages(String conversationKey, String username) {
+        return networkSource.loadMessages(conversationKey, username);
     }
 }

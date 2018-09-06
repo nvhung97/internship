@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/lyt_row_contact"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@drawable/btn_tab_more">
+    <com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView
+        android:id="@id/lyt_row_contact_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:layout_gravity="center_vertical"/>
+    <TextView
+        android:id="@id/lyt_row_contact_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="90dp"
+        android:textColor="@color/colorBlack"
+        android:maxLines="1"
+        android:textSize="16sp"/>
+    <ImageButton
+        android:id="@id/lyt_row_contact_voice_call"
+        android:layout_width="40dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_vertical|right"
+        android:padding="10dp"
+        android:layout_marginRight="45dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_contact_voice_call"
+        android:background="@drawable/btn_contact"/>
+    <ImageButton
+        android:id="@id/lyt_row_contact_video_call"
+        android:layout_width="40dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_vertical|right"
+        android:padding="10dp"
+        android:layout_marginRight="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_contact_video_call"
+        android:background="@drawable/btn_contact"/>
+</FrameLayout>
