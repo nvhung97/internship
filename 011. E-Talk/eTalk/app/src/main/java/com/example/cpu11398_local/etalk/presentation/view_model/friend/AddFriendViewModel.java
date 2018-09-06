@@ -215,7 +215,9 @@ public class AddFriendViewModel extends     BaseObservable
     @Override
     public void subscribeObserver(Observer<Event> observer) {
         publisher.subscribe(observer);
-        getUserInfoUsecase.execute(new GetUserInfoObserver(), false);
+        if (currentUser == null) {
+            getUserInfoUsecase.execute(new GetUserInfoObserver(), false);
+        }
     }
 
     /**

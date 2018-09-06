@@ -91,11 +91,12 @@ public final class FirebaseTree {
             }
         }
 
-        public final class Conversation {
+        public final class Conversations {
             public static final String NODE_NAME = "conversations";
             public final class Key {
                 public final class Avatar {
                     public static final String NODE_NAME = "avatar";
+                    public static final String POSTFIX = ".png";
                 }
             }
         }

@@ -1,5 +1,7 @@
 package com.example.cpu11398_local.etalk.data.repository.implement;
 
+import android.graphics.Bitmap;
+
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
@@ -30,6 +32,11 @@ public class ConversationRepositoryImpl  implements ConversationRepository{
     @Override
     public Single<Boolean> pushNetworkMessage(String conversationKey, Message message) {
         return networkSource.pushMessage(conversationKey, message);
+    }
+
+    @Override
+    public Single<String> uploadNetworkGroupAvatar(String conversationKey, Bitmap image) {
+        return networkSource.uploadGroupAvatar(conversationKey, image);
     }
 
     @Override

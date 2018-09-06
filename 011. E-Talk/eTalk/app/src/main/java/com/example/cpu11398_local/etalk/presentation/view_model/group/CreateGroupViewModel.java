@@ -6,6 +6,7 @@ import android.databinding.Bindable;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import com.example.cpu11398_local.etalk.BR;
@@ -18,7 +19,6 @@ import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.NetworkChangeReceiver;
 import com.example.cpu11398_local.etalk.utils.Optional;
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -169,12 +169,17 @@ public class CreateGroupViewModel extends    BaseObservable
     private Usecase findFriendUsecase;
 
     /**
+     * ViewModel use {@code createGroupUsecase} to create a new group.
+     */
+    private Usecase createGroupUsecase;
+
+    /**
      * Listen network state to inform user check connection again.
      */
     private NetworkChangeReceiver receiver;
 
     /**
-     * create new {@code ProfileViewModel} with a context, an usecase to get user info and
+     * create new {@code CreateGroupViewModel} with a context, an usecase to get user info and
      * a network change receiver.
      */
     @Inject
@@ -182,11 +187,13 @@ public class CreateGroupViewModel extends    BaseObservable
                                 @Named("GetUserInfoUsecase") Usecase getUserInfoUsecase,
                                 @Named("LoadFriendConversationUsecase") Usecase loadFriendConversationUsecase,
                                 @Named("FindFriendUsecase") Usecase findFriendUsecase,
+                                @Named("CreateGroupUsecase") Usecase createGroupUsecase,
                                 NetworkChangeReceiver receiver) {
         this.context                        = context;
         this.getUserInfoUsecase             = getUserInfoUsecase;
         this.loadFriendConversationUsecase  = loadFriendConversationUsecase;
         this.findFriendUsecase              = findFriendUsecase;
+        this.createGroupUsecase             = createGroupUsecase;
         this.receiver                       = receiver;
         this.receiver.initReceiver(this.context, this);
     }
@@ -198,7 +205,9 @@ public class CreateGroupViewModel extends    BaseObservable
     @Override
     public void subscribeObserver(Observer<Event> observer) {
         publisher.subscribe(observer);
-        getUserInfoUsecase.execute(new GetUserInfoObserver(), false);
+        if (currentUser == null) {
+            getUserInfoUsecase.execute(new GetUserInfoObserver(), false);
+        }
     }
 
 
@@ -215,6 +224,14 @@ public class CreateGroupViewModel extends    BaseObservable
      * @param view
      */
     public void onCreateGroup(View view) {
+        publisher.onNext(Event.create(Event.CREATE_GROUP_ACTIVITY_SHOW_LOADING));
+        createGroupUsecase.execute(
+                new CreateGroupObserver(),
+                avatar,
+                name,
+                currentUser,
+                selected
+        );
     }
 
     @Bindable
@@ -253,6 +270,7 @@ public class CreateGroupViewModel extends    BaseObservable
         getUserInfoUsecase.endTask();
         loadFriendConversationUsecase.endTask();
         findFriendUsecase.endTask();
+        createGroupUsecase.endTask();
     }
 
     /**
@@ -335,6 +353,41 @@ public class CreateGroupViewModel extends    BaseObservable
     }
 
     /**
+     * {@code CreateGroupObserver} is subscribed to usecase to listen event from it.
+     */
+    private class CreateGroupObserver extends DisposableSingleObserver<Boolean> {
+
+        private Handler handler = new Handler();
+
+        public CreateGroupObserver() {
+            handler.postDelayed(
+                    () -> {
+                        publisher.onNext(Event.create(Event.CREATE_GROUP_ACTIVITY_HIDE_LOADING));
+                        publisher.onNext(Event.create(Event.CREATE_GROUP_ACTIVITY_TIMEOUT));
+                        createGroupUsecase.endTask();
+                    },
+                    avatar == null ? 1000 * 10 : 1000 * 30
+            );
+        }
+
+        @Override
+        public void onSuccess(Boolean isSuccess) {
+            handler.removeCallbacksAndMessages(null);
+            if (isSuccess) {
+                publisher.onNext(Event.create(Event.CREATE_GROUP_ACTIVITY_CREATE_OK));
+            } else {
+                publisher.onNext(Event.create(Event.CREATE_GROUP_ACTIVITY_HIDE_LOADING));
+                publisher.onNext(Event.create(Event.CREATE_GROUP_ACTIVITY_CREATE_FAILED));
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.i("eTalk", e.getMessage());
+        }
+    }
+
+    /**
      * A callback to update {@link #avatar} when user change avatar that
      * get from camera or gallery.
      */
@@ -342,6 +395,9 @@ public class CreateGroupViewModel extends    BaseObservable
         void copy(Bitmap bitmap);
     }
 
+    /**
+     * A callback used to update selected friend when user click them on {@code RecyclerView}.
+     */
     public interface SelectedCallback {
         void select(String username);
         boolean isSelected(String username);

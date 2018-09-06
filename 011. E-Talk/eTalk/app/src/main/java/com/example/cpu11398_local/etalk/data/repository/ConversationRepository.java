@@ -1,5 +1,7 @@
 package com.example.cpu11398_local.etalk.data.repository;
 
+import android.graphics.Bitmap;
+
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import io.reactivex.Observable;
@@ -32,6 +34,14 @@ public interface ConversationRepository {
      * otherwise {@code false}.
      */
     Single<Boolean> pushNetworkMessage(String conversationKey, Message message);
+
+    /**
+     * Upload avatar of conversation to network database.
+     * @param image need to upload.
+     * @param conversationKey conversation need to upload avatar.
+     * @return an observable contain link of image.
+     */
+    Single<String> uploadNetworkGroupAvatar(String conversationKey, Bitmap image);
 
     /**
      * Load all conversations of given {@code username}. Observe for changing.

@@ -41,7 +41,7 @@ public class ChatActivity extends BaseActivity {
             WelcomeActivity.getAppComponent(this).inject(this);
         }
         binding.setViewModel((ChatViewModel) viewModel);
-        addControlKeyboardView(binding.chatActivityEdtMessage);
+        addControlKeyboardView(binding.chatActivityLytMessage);
     }
 
     @Override

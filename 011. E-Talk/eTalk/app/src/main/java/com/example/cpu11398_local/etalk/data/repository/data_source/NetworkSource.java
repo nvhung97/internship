@@ -43,9 +43,9 @@ public interface NetworkSource {
     void updateUserActive(String username, Boolean update);
 
     /**
-     * Upload image to network database.
+     * Upload avatar of user to network database.
      * @param image need to upload.
-     * @param username user need to upload their image.
+     * @param username user need to upload avatar.
      * @return an observable contain link of image.
      */
     Single<String> uploadUserAvatar(String username, Bitmap image);
@@ -75,6 +75,14 @@ public interface NetworkSource {
      * otherwise {@code false}.
      */
     Single<Boolean> pushMessage(String conversationKey, Message message);
+
+    /**
+     * Upload avatar of conversation to network database.
+     * @param image need to upload.
+     * @param conversationKey conversation need to upload avatar.
+     * @return an observable contain link of image.
+     */
+    Single<String> uploadGroupAvatar(String conversationKey, Bitmap image);
 
     /**
      * Load all conversations of given {@code username}. Observe for changing.

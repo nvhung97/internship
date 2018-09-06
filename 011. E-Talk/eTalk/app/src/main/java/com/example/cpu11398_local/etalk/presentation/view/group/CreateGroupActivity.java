@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityCreateGroupBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
+import com.example.cpu11398_local.etalk.presentation.view.chat.ChatActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.group.CreateGroupViewModel;
@@ -121,11 +122,13 @@ public class CreateGroupActivity extends BaseActivity {
                     onHideLoading();
                     break;
                 case Event.CREATE_GROUP_ACTIVITY_CREATE_OK:
-                    Toast.makeText(
-                            CreateGroupActivity.this,
-                            getString(R.string.create_group_activity_create_successfully),
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    startActivity(
+                            new Intent(
+                                    CreateGroupActivity.this,
+                                    ChatActivity.class
+                            )
+                    );
+                    finish();
                     break;
                 case Event.CREATE_GROUP_ACTIVITY_CREATE_FAILED:
                     Toast.makeText(

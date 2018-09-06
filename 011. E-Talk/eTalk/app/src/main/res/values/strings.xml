@@ -83,7 +83,6 @@
     <string name="create_group_activity_btn_create">Create</string>
     <string name="create_group_activity_edt_name_hint">Set group name</string>
     <string name="create_group_activity_txt_member_title">Select members</string>
-    <string name="create_group_activity_create_successfully">Create successfully</string>
     <string name="create_group_activity_create_failed">Create failed</string>
 
 </resources>

@@ -11,6 +11,7 @@ import com.example.cpu11398_local.etalk.data.repository.implement.ConversationRe
 import com.example.cpu11398_local.etalk.data.repository.implement.UserRepositoryImpl;
 import com.example.cpu11398_local.etalk.domain.executor.TaskExecutor;
 import com.example.cpu11398_local.etalk.domain.interactor.AddFriendUsecase;
+import com.example.cpu11398_local.etalk.domain.interactor.CreateGroupUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.FindFriendUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.GetUserInfoUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LoadFriendConversationUsecase;
@@ -223,6 +224,22 @@ public class AppModule {
     }
 
     @Provides
+    @Named("CreateGroupUsecase")
+    public Usecase provideCreateGroupUsecase(Context context,
+                                             Executor executor,
+                                             Scheduler scheduler,
+                                             CompositeDisposable compositeDisposable,
+                                             ConversationRepository conversationRepository) {
+        return new CreateGroupUsecase(
+                context,
+                executor,
+                scheduler,
+                compositeDisposable,
+                conversationRepository
+        );
+    }
+
+    @Provides
     @Named("UpdateUserInfoUsecase")
     public Usecase provideUpdateUserInfoUsecase(Executor executor,
                                                 Scheduler scheduler,
@@ -327,9 +344,9 @@ public class AppModule {
     public ViewModel provideCreateGroupViewModel(Context context,
                                                  @Named("GetUserInfoUsecase") Usecase usecase1,
                                                  @Named("LoadFriendConversationUsecase") Usecase usecase2,
-                                                 @Named("FindFriendUsecase") Usecase usecase3/*,
-                                                 @Named("AddFriendUsecase") Usecase usecase4*/,
+                                                 @Named("FindFriendUsecase") Usecase usecase3,
+                                                 @Named("CreateGroupUsecase") Usecase usecase4,
                                                  NetworkChangeReceiver receiver) {
-        return new CreateGroupViewModel(context, usecase1, usecase2, usecase3/*, usecase4*/, receiver);
+        return new CreateGroupViewModel(context, usecase1, usecase2, usecase3, usecase4, receiver);
     }
 }

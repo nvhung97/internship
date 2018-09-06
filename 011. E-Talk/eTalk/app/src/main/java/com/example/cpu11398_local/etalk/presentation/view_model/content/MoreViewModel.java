@@ -92,7 +92,9 @@ public class MoreViewModel extends BaseObservable implements ViewModel{
     @Override
     public void subscribeObserver(Observer<Event> observer) {
         publisher.subscribe(observer);
-        getUserInfoUsecase.execute(new GetUserInfoUsecaseObserver(),true);
+        if (name.isEmpty() && avatarUrl == null) {
+            getUserInfoUsecase.execute(new GetUserInfoUsecaseObserver(), true);
+        }
     }
 
     /**

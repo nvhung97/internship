@@ -198,6 +198,31 @@ public class FirebaseDB implements NetworkSource{
     }
 
     @Override
+    public Single<String> uploadGroupAvatar(String conversationKey, Bitmap image) {
+        return Single.create(emitter -> {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            Bitmap bitmap = Tool.resizeImage(image, 256);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            String imageName = conversationKey + FirebaseTree.Storage.Conversations.Key.Avatar.POSTFIX;
+            storageReference
+                    .child(FirebaseTree.Storage.Conversations.NODE_NAME)
+                    .child(conversationKey)
+                    .child(FirebaseTree.Storage.Conversations.Key.Avatar.NODE_NAME)
+                    .child(imageName)
+                    .putBytes(byteArrayOutputStream.toByteArray())
+                    .addOnSuccessListener(taskSnapshot ->
+                            storageReference
+                                    .child(FirebaseTree.Storage.Conversations.NODE_NAME)
+                                    .child(conversationKey)
+                                    .child(FirebaseTree.Storage.Conversations.Key.Avatar.NODE_NAME)
+                                    .child(imageName)
+                                    .getDownloadUrl()
+                                    .addOnSuccessListener(uri -> emitter.onSuccess(uri.toString()))
+                    );
+        });
+    }
+
+    @Override
     public Observable<Conversation> loadRelationships(String username) {
         return Observable.create(emitter ->
                 databaseReference
