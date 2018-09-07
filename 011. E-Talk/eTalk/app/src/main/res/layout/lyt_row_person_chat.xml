@@ -47,6 +47,6 @@
         android:maxLines="1"
         android:textSize="15sp"
         android:ellipsize="end"
-        android:layout_gravity="top"
+        android:gravity="center_vertical"
         android:text="Không có gì quý hơn độc lập tự do hạnh phúc"/>
 </FrameLayout>
