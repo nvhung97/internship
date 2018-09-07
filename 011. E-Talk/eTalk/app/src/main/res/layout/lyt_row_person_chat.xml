@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@id/lyt_row_contact"
+    android:id="@id/lyt_row_message_person"
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:clickable="true"
     android:focusable="true"
     android:background="@drawable/btn_tab_more">
     <com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView
-        android:id="@id/lyt_row_contact_avatar"
+        android:id="@id/lyt_row_message_person_avatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginLeft="15dp"
-        android:src="@drawable/img_avatar_holder"
         android:layout_gravity="center_vertical"/>
     <TextView
-        android:id="@id/lyt_row_contact_name"
+        android:id="@id/lyt_row_message_person_name"
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:layout_marginLeft="80dp"
@@ -24,10 +23,9 @@
         android:textColor="@color/colorBlack"
         android:maxLines="1"
         android:textSize="16sp"
-        android:gravity="bottom"
-        android:text="Nguyễn Thị Trần Bảo Bảo"/>
+        android:gravity="bottom"/>
     <TextView
-        android:id="@+id/lyt_đrow_contact_name"
+        android:id="@+id/lyt_row_message_person_time"
         android:layout_width="70dp"
         android:layout_height="20dp"
         android:layout_gravity="right"
@@ -35,10 +33,9 @@
         android:layout_marginRight="15dp"
         android:gravity="right"
         android:maxLines="1"
-        android:textSize="13sp"
-        android:text="30 minutes"/>
+        android:textSize="13sp"/>
     <TextView
-        android:id="@+id/lyt_row_contact_nme"
+        android:id="@+id/lyt_row_message_person_message"
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:layout_marginLeft="80dp"
@@ -47,6 +44,5 @@
         android:maxLines="1"
         android:textSize="15sp"
         android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:text="Không có gì quý hơn độc lập tự do hạnh phúc"/>
+        android:gravity="center_vertical"/>
 </FrameLayout>

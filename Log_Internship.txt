@@ -311,6 +311,12 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 			* https://developer.android.com/guide/components/intents-common
 11:14 AM 9/5/2018
 	- Hoàn thiện chức năng tạo nhóm.
+6:25 PM 9/6/2018
+	- Hoàn thiện chức năng xem danh sách bạn bè.
+4:51 PM 9/7/2018
+	- Tìm hiểu chỉ thực hiện load dữ liệu ở ContentActivity, emit value sang các fragment.
+		+ Map to List using filter
+			* https://stackoverflow.com/a/45177261
 
 
 

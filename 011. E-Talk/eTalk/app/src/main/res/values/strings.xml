@@ -42,6 +42,12 @@
     <string name="content_activity_menu_etalk_calendar">eTalk Calender</string>
     <string name="content_activity_menu_logout">Log out</string>
 
+    <!--Contact fragment-->
+    <string name="contact_fragment_txt_title">All contacts</string>
+
+    <!--Group fragment-->
+    <string name="group_fragment_txt_title">Joined groups</string>
+
     <!--More fragment-->
     <string name="more_fragment_btn_profile">My profile</string>
     <string name="more_fragment_btn_nearby">People nearby</string>
@@ -51,9 +57,6 @@
     <string name="more_fragment_btn_channel">Channel</string>
     <string name="more_fragment_btn_taxi">Taxi</string>
     <string name="more_fragment_btn_logout">Logout</string>
-
-    <!--Contact fragment-->
-    <string name="contact_fragment_txt_title">All contacts</string>
 
     <!--Chat activity-->
     <string name="chat_activity_edt_message">Message</string>

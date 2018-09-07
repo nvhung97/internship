@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.view.content.pager_page.groups.GroupsFragment">
+    xmlns:bind="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.cpu11398_local.etalk.presentation.view_model.content.GroupViewModel"/>
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Groups"/>
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <TextView
+            android:id="@id/contact_fragment_txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:text="@string/group_fragment_txt_title"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            android:paddingLeft="15dp"
+            android:background="@color/colorWhite"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@id/group_fragment_rv_group"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="40dp"/>
+    </FrameLayout>
+</layout>

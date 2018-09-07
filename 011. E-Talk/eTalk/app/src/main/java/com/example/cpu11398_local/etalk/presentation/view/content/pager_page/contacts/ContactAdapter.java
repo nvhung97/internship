@@ -64,4 +64,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     public int getItemCount() {
         return friends.size();
     }
+
+
 }

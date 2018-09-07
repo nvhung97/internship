@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@id/lyt_row_contact"
+    android:id="@id/lyt_row_message_group"
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:clickable="true"
     android:focusable="true"
     android:background="@drawable/btn_tab_more">
     <TextView
-        android:id="@+id/avatar4"
+        android:id="@id/lyt_row_message_group_number"
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:layout_marginLeft="39dp"
         android:layout_marginTop="39dp"
-        android:text="00"
         android:gravity="center"
         android:background="@drawable/img_rounded_group_number"/>
     <View
@@ -23,12 +22,11 @@
         android:layout_marginTop="37dp"
         android:background="@drawable/img_rounded_corners"/>
     <com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView
-        android:id="@+id/avatar3"
+        android:id="@id/lyt_row_message_group_avatar3"
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="39dp"
-        android:src="@drawable/img_avatar_holder"/>
+        android:layout_marginTop="39dp"/>
     <View
         android:layout_width="30dp"
         android:layout_height="30dp"
@@ -36,12 +34,11 @@
         android:layout_marginTop="13dp"
         android:background="@drawable/img_rounded_corners"/>
     <com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView
-        android:id="@+id/avatar2"
+        android:id="@id/lyt_row_message_group_avatar2"
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:layout_marginLeft="39dp"
-        android:layout_marginTop="15dp"
-        android:src="@drawable/img_avatar_holder"/>
+        android:layout_marginTop="15dp"/>
     <View
         android:layout_width="30dp"
         android:layout_height="30dp"
@@ -49,14 +46,13 @@
         android:layout_marginTop="13dp"
         android:background="@drawable/img_rounded_corners"/>
     <com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView
-        android:id="@+id/avatar1"
+        android:id="@id/lyt_row_message_group_avatar1"
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
-        android:src="@drawable/img_avatar_holder"/>
+        android:layout_marginTop="15dp"/>
     <TextView
-        android:id="@id/lyt_row_contact_name"
+        android:id="@id/lyt_row_message_group_name"
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:layout_marginLeft="80dp"
@@ -65,10 +61,9 @@
         android:textColor="@color/colorBlack"
         android:maxLines="1"
         android:textSize="16sp"
-        android:gravity="bottom"
-        android:text="Nguyễn Thị Trần Bảo Bảo"/>
+        android:gravity="bottom"/>
     <TextView
-        android:id="@+id/lyt_đrow_contact_name"
+        android:id="@+id/lyt_row_message_group_time"
         android:layout_width="70dp"
         android:layout_height="20dp"
         android:layout_gravity="right"
@@ -76,10 +71,9 @@
         android:layout_marginRight="15dp"
         android:gravity="right"
         android:maxLines="1"
-        android:textSize="13sp"
-        android:text="30 minutes"/>
+        android:textSize="13sp"/>
     <TextView
-        android:id="@+id/lyt_row_contact_nme"
+        android:id="@+id/lyt_row_message_group_message"
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:layout_marginLeft="80dp"
@@ -88,6 +82,5 @@
         android:maxLines="1"
         android:textSize="15sp"
         android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:text="Không có gì quý hơn độc lập tự do hạnh phúc"/>
+        android:gravity="center_vertical"/>
 </FrameLayout>

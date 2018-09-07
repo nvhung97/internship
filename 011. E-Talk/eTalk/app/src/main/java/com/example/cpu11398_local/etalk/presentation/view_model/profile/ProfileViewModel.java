@@ -45,6 +45,7 @@ public class ProfileViewModel extends    BaseObservable
     public void setBitmapAvatar(Bitmap bitmapAvatar) {
         this.bitmapAvatar = bitmapAvatar;
         notifyPropertyChanged(BR.updateEnable);
+        notifyPropertyChanged(BR.avatar);
     }
 
     @Bindable

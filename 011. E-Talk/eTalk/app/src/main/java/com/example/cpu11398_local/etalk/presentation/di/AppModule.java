@@ -14,6 +14,7 @@ import com.example.cpu11398_local.etalk.domain.interactor.AddFriendUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.CreateGroupUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.FindFriendUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.GetUserInfoUsecase;
+import com.example.cpu11398_local.etalk.domain.interactor.LoadConversationUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LoadFriendConversationUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LoginUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LogoutUsecase;
@@ -187,6 +188,20 @@ public class AppModule {
                                                         CompositeDisposable compositeDisposable,
                                                         ConversationRepository conversationRepository) {
         return new LoadFriendConversationUsecase(
+                executor,
+                scheduler,
+                compositeDisposable,
+                conversationRepository
+        );
+    }
+
+    @Provides
+    @Named("LoadConversationUsecase")
+    public Usecase provideLoadConversationUsecase(Executor executor,
+                                                  Scheduler scheduler,
+                                                  CompositeDisposable compositeDisposable,
+                                                  ConversationRepository conversationRepository) {
+        return new LoadConversationUsecase(
                 executor,
                 scheduler,
                 compositeDisposable,

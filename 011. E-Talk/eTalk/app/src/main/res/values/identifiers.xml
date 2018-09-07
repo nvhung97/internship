@@ -78,6 +78,33 @@
     <item name="content_activity_menu_etalk_for_desktop" type="id"/>
     <item name="content_activity_menu_etalk_calendar" type="id"/>
 
+    <!--Messages fragment-->
+    <item name="lyt_row_message_person" type="id"/>
+    <item name="lyt_row_message_person_avatar" type="id"/>
+    <item name="lyt_row_message_person_name" type="id"/>
+    <item name="lyt_row_message_person_message" type="id"/>
+    <item name="lyt_row_message_person_time" type="id"/>
+    <item name="lyt_row_message_group" type="id"/>
+    <item name="lyt_row_message_group_avatar1" type="id"/>
+    <item name="lyt_row_message_group_avatar2" type="id"/>
+    <item name="lyt_row_message_group_avatar3" type="id"/>
+    <item name="lyt_row_message_group_number" type="id"/>
+    <item name="lyt_row_message_group_name" type="id"/>
+    <item name="lyt_row_message_group_message" type="id"/>
+    <item name="lyt_row_message_group_time" type="id"/>
+
+    <!--Contact fragment-->
+    <item name="contact_fragment_txt_title" type="id"/>
+    <item name="contact_fragment_rv_contact" type="id"/>
+    <item name="lyt_row_contact" type="id"/>
+    <item name="lyt_row_contact_avatar" type="id"/>
+    <item name="lyt_row_contact_name" type="id"/>
+    <item name="lyt_row_contact_voice_call" type="id"/>
+    <item name="lyt_row_contact_video_call" type="id"/>group_fragment_rv_contact
+
+    <!--Group fragment-->
+    <item name="group_fragment_rv_group" type="id"/>
+
     <!--More fragment-->
     <item name="more_fragment_btn_my_profile" type="id"/>
     <item name="more_fragment_btn_my_profile_avatar" type="id"/>
@@ -89,18 +116,6 @@
     <item name="more_fragment_btn_channel" type="id"/>
     <item name="more_fragment_btn_taxi" type="id"/>
     <item name="more_fragment_btn_logout" type="id"/>
-
-    <!--Contact fragment-->
-    <item name="contact_fragment_txt_title" type="id"/>
-    <item name="contact_fragment_rv_contact" type="id"/>
-    <item name="lyt_row_contact" type="id"/>
-    <item name="lyt_row_contact_avatar" type="id"/>
-    <item name="lyt_row_contact_name" type="id"/>
-    <item name="lyt_row_contact_voice_call" type="id"/>
-    <item name="lyt_row_contact_video_call" type="id"/>
-
-    <!--Messages fragment them id vao lyt_row_person_chat-->
-
 
     <!--Chat activity-->
     <item name="chat_activity_status_bar" type="id"/>
