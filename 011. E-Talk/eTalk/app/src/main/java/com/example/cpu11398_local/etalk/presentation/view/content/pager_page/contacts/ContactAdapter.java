@@ -10,13 +10,17 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView;
+import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContactViewModel;
 import java.util.List;
+import java.util.Map;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
 
-    private List<User> friends;
+    private User                            currentUser;
+    private List<Conversation>              conversations;
+    private Map<String, User>               friends;
     private ContactViewModel.ActionCallback actionCallback;
 
     public class ContactViewHolder extends RecyclerView.ViewHolder {
@@ -35,7 +39,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         }
     }
 
-    public ContactAdapter(List<User> friends, ContactViewModel.ActionCallback actionCallback) {
+    public ContactAdapter(User currentUser,
+                          List<Conversation> conversations,
+                          Map<String, User> friends,
+                          ContactViewModel.ActionCallback actionCallback) {
+        this.currentUser    = currentUser;
+        this.conversations  = conversations;
         this.friends        = friends;
         this.actionCallback = actionCallback;
     }
@@ -52,18 +61,26 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
 
     @Override
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
-        User friend = friends.get(position);
-        holder.avatar.setImageFromObject(friend.getAvatar());
-        holder.name.setText(friend.getName());
-        holder.row.setOnClickListener(v -> actionCallback.chatWith(friend));
-        holder.voiceCall.setOnClickListener(v -> actionCallback.voiceCallWith(friend));
-        holder.videoCall.setOnClickListener(v -> actionCallback.videoCallWith(friend));
+        User friend = null;
+        for (String key : conversations.get(position).getMembers().keySet()) {
+            if (!key.equals(currentUser.getUsername())) {
+                if (friends.containsKey(key)) {
+                    friend = friends.get(key);
+                }
+                break;
+            }
+        }
+        if (friend != null) {
+            holder.avatar.setImageFromObject(friend.getAvatar());
+            holder.name.setText(friend.getName());
+            holder.row.setOnClickListener(v -> actionCallback.chatWith(conversations.get(position)));
+            holder.voiceCall.setOnClickListener(v -> actionCallback.voiceCallWith(conversations.get(position)));
+            holder.videoCall.setOnClickListener(v -> actionCallback.videoCallWith(conversations.get(position)));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return friends.size();
+        return conversations.size();
     }
-
-
 }

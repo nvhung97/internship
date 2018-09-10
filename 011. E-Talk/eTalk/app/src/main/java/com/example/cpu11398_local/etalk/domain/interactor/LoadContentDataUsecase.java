@@ -105,7 +105,6 @@ public class LoadContentDataUsecase implements Usecase {
                                     new ArrayList<>(conversations.values())
                             )
                     );
-
                 });
     }
 
@@ -114,19 +113,19 @@ public class LoadContentDataUsecase implements Usecase {
     private void loadFriends(Conversation conversation, ObservableEmitter<Event> emitter) {
         conversation.getMembers().forEach((key, time) -> {
             if (!friends.containsKey(key) && !key.equals(currentUser.getUsername())) {
-                friends.put(
-                        key,
-                        new User("", "", "", "", null, 0L)
-                );
                 userRepository
                         .loadNetworlChangeableUser(key)
                         .subscribe(friend -> {
                             if (friend.isPresent()) {
-                                friends.replace(key, friend.get());
+                                if (friends.containsKey(key)) {
+                                    friends.replace(key, friend.get());
+                                } else {
+                                    friends.put(key, friend.get());
+                                }
                                 emitter.onNext(
                                         Event.create(
                                                 Event.CONTENT_ACTIVITY_EMIT_FRIENDS,
-                                                new ArrayList<>(friends.values())
+                                                new HashMap<>(friends)
                                         )
                                 );
                             }

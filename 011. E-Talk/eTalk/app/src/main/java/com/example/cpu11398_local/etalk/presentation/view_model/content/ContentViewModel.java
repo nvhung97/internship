@@ -20,9 +20,10 @@ import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallbac
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.NetworkChangeReceiver;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observer;
@@ -39,7 +40,7 @@ public class ContentViewModel implements ViewModel,
      */
     private User                currentUser     = null;
     private List<Conversation>  conversations   = new ArrayList<>();
-    private List<User>          friends         = new ArrayList<>();
+    private Map<String, User>   friends         = new HashMap<>();
 
     /**
      * Determine which tab is selected to change layout.
@@ -63,9 +64,9 @@ public class ContentViewModel implements ViewModel,
      */
     private PublishSubject<Event> messagesPublisher = PublishSubject.create();
     private PublishSubject<Event> contactsPublisher = PublishSubject.create();
-    private PublishSubject<Event> groupsPublisher = PublishSubject.create();
+    private PublishSubject<Event> groupsPublisher   = PublishSubject.create();
     private PublishSubject<Event> timelinePublisher = PublishSubject.create();
-    private PublishSubject<Event> morePublisher = PublishSubject.create();
+    private PublishSubject<Event> morePublisher     = PublishSubject.create();
 
     /**
      * Context is used to get resource or toast something on screen.
@@ -243,10 +244,26 @@ public class ContentViewModel implements ViewModel,
     @Override
     public void onNetworkChange(boolean networkState) {
         isNetworkAvailable.set(networkState);
-        messagesPublisher.onNext(Event.create(
+        /*messagesPublisher.onNext(Event.create(
+                Event.CONTENT_ACTIVITY_EMIT_NETWORK_STATUS,
+                networkState
+        ));*/
+        contactsPublisher.onNext(Event.create(
                 Event.CONTENT_ACTIVITY_EMIT_NETWORK_STATUS,
                 networkState
         ));
+        /*groupsPublisher.onNext(Event.create(
+                Event.CONTENT_ACTIVITY_EMIT_NETWORK_STATUS,
+                networkState
+        ));
+        timelinePublisher.onNext(Event.create(
+                Event.CONTENT_ACTIVITY_EMIT_NETWORK_STATUS,
+                networkState
+        ));
+        morePublisher.onNext(Event.create(
+                Event.CONTENT_ACTIVITY_EMIT_NETWORK_STATUS,
+                networkState
+        ));*/
     }
 
     /**
@@ -256,13 +273,13 @@ public class ContentViewModel implements ViewModel,
     @Override
     public void onChildViewModelSubscribeObserver(Observer<Event> observer, int code) {
         switch (code) {
-            case ViewModelCallback.MESSAGES:
+            /*case ViewModelCallback.MESSAGES:
                 messagesPublisher.subscribe(observer);
-                break;
+                break;*/
             case ViewModelCallback.CONTACTS:
                 contactsPublisher.subscribe(observer);
                 break;
-            case ViewModelCallback.GROUPS:
+            /*case ViewModelCallback.GROUPS:
                 groupsPublisher.subscribe(observer);
                 break;
             case ViewModelCallback.TIMELINE:
@@ -270,7 +287,7 @@ public class ContentViewModel implements ViewModel,
                 break;
             case ViewModelCallback.MORE:
                 morePublisher.subscribe(observer);
-                break;
+                break;*/
         }
     }
 
@@ -324,60 +341,52 @@ public class ContentViewModel implements ViewModel,
             switch (event.getType()) {
                 case Event.CONTENT_ACTIVITY_EMIT_USER:
                     currentUser = (User)data[0];
-                    messagesPublisher.onNext(Event.create(
+                    /*messagesPublisher.onNext(Event.create(
                             Event.CONTENT_ACTIVITY_EMIT_USER,
                             currentUser
-                    ));
+                    ));*/
                     contactsPublisher.onNext(Event.create(
                             Event.CONTENT_ACTIVITY_EMIT_USER,
                             currentUser
                     ));
-                    groupsPublisher.onNext(Event.create(
+                    /*groupsPublisher.onNext(Event.create(
                             Event.CONTENT_ACTIVITY_EMIT_USER,
                             currentUser
                     ));
                     morePublisher.onNext(Event.create(
                             Event.CONTENT_ACTIVITY_EMIT_USER,
                             currentUser
-                    ));
+                    ));*/
                     break;
                 case Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS:
                     conversations = (List<Conversation>)data[0];
-                    messagesPublisher.onNext(
-                            Event.create(
-                                    Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS,
-                                    conversations
-                            )
-                    );
-                    contactsPublisher.onNext(
-                            Event.create(
-                                    Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS,
-                                    getFriendConversations()
-                            ));
-                    groupsPublisher.onNext(
-                            Event.create(
-                                    Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS,
-                                    getGroupConversations()
-                            ));
+                    /*messagesPublisher.onNext(Event.create(
+                            Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS,
+                            conversations
+                    ));*/
+                    contactsPublisher.onNext(Event.create(
+                            Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS,
+                            getFriendConversations()
+                    ));
+                    /*groupsPublisher.onNext(Event.create(
+                            Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS,
+                            getGroupConversations()
+                    ));*/
                     break;
                 case Event.CONTENT_ACTIVITY_EMIT_FRIENDS:
-                    friends = (List<User>)data[0];
-                    messagesPublisher.onNext(
-                            Event.create(
-                                    Event.CONTENT_ACTIVITY_EMIT_FRIENDS,
-                                    friends
-                            )
-                    );
-                    contactsPublisher.onNext(
-                            Event.create(
-                                    Event.CONTENT_ACTIVITY_EMIT_FRIENDS,
-                                    friends
-                            ));
-                    groupsPublisher.onNext(
-                            Event.create(
-                                    Event.CONTENT_ACTIVITY_EMIT_FRIENDS,
-                                    friends
-                            ));
+                    friends = (HashMap<String, User>)data[0];
+                    /*messagesPublisher.onNext(Event.create(
+                            Event.CONTENT_ACTIVITY_EMIT_FRIENDS,
+                            friends
+                    ));*/
+                    contactsPublisher.onNext(Event.create(
+                            Event.CONTENT_ACTIVITY_EMIT_FRIENDS,
+                            friends
+                    ));
+                    /*groupsPublisher.onNext(Event.create(
+                            Event.CONTENT_ACTIVITY_EMIT_FRIENDS,
+                            friends
+                    ));*/
             }
         }
 

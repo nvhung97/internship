@@ -342,11 +342,8 @@ public class AppModule {
     @Provides
     @Named("ContactViewModel")
     public ViewModel provideContactViewModel(Context context,
-                                             ViewModelCallback viewModelCallback,
-                                             @Named("GetUserInfoUsecase") Usecase usecase1,
-                                             @Named("LoadFriendConversationUsecase") Usecase usecase2,
-                                             @Named("FindFriendUsecase") Usecase usecase3) {
-        return new ContactViewModel(context, viewModelCallback, usecase1, usecase2, usecase3);
+                                             ViewModelCallback viewModelCallback) {
+        return new ContactViewModel(context, viewModelCallback);
     }
 
     @Provides
