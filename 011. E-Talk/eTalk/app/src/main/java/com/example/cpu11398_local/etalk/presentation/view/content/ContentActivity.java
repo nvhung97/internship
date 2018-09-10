@@ -122,9 +122,6 @@ public class ContentActivity extends BaseActivity {
                 case Event.CONTENT_ACTIVITY_MENU_CREATE_GROUP:
                     startActivity(new Intent(ContentActivity.this, CreateGroupActivity.class));
                     break;
-                /*case Event.CONTENT_ACTIVITY_HIDE_LOADING:
-                    onHideLoading();
-                    break;*/
                 case Event.CONTENT_ACTIVITY_LOGOUT:
                     onLogout();
                     break;

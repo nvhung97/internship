@@ -20,13 +20,15 @@ public class Event {
     /**
      * Bellow commands for {@code ContentActivity}.
      */
-    private static final int CONTENT_ACTIVITY_MARK              = 0 << MODE_SHIFT;
-    public static final int CONTENT_ACTIVITY_SHOW_POPUP_MENU    = CONTENT_ACTIVITY_MARK | 0;
-    public static final int CONTENT_ACTIVITY_MENU_ADD_FRIEND    = CONTENT_ACTIVITY_MARK | 1;
-    public static final int CONTENT_ACTIVITY_MENU_CREATE_GROUP  = CONTENT_ACTIVITY_MARK | 2;
-    /*public static final int CONTENT_ACTIVITY_SHOW_LOADING       = CONTENT_ACTIVITY_MARK | 2;
-    public static final int CONTENT_ACTIVITY_HIDE_LOADING       = CONTENT_ACTIVITY_MARK | 3;*/
-    public static final int CONTENT_ACTIVITY_LOGOUT             = CONTENT_ACTIVITY_MARK | 4;
+    private static final int CONTENT_ACTIVITY_MARK                      = 0 << MODE_SHIFT;
+    public static final int CONTENT_ACTIVITY_SHOW_POPUP_MENU            = CONTENT_ACTIVITY_MARK | 0;
+    public static final int CONTENT_ACTIVITY_MENU_ADD_FRIEND            = CONTENT_ACTIVITY_MARK | 1;
+    public static final int CONTENT_ACTIVITY_MENU_CREATE_GROUP          = CONTENT_ACTIVITY_MARK | 2;
+    public static final int CONTENT_ACTIVITY_LOGOUT                     = CONTENT_ACTIVITY_MARK | 3;
+    public static final int CONTENT_ACTIVITY_EMIT_NETWORK_STATUS        = CONTENT_ACTIVITY_MARK | 4;
+    public static final int CONTENT_ACTIVITY_EMIT_USER                  = CONTENT_ACTIVITY_MARK | 5;
+    public static final int CONTENT_ACTIVITY_EMIT_FRIENDS               = CONTENT_ACTIVITY_MARK | 6;
+    public static final int CONTENT_ACTIVITY_EMIT_CONVERSATIONS         = CONTENT_ACTIVITY_MARK | 7;
 
     /**
      * Bellow commands for {@code ChatActivity}.

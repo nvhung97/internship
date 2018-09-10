@@ -57,6 +57,28 @@ public class FirebaseDB implements NetworkSource{
 
     @SuppressLint("CheckResult")
     @Override
+    public Observable<Optional<User>> loadChangeableUser(String username) {
+        return Observable.create(emitter ->
+                databaseReference
+                        .child(FirebaseTree.Database.Users.NODE_NAME)
+                        .child(username)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                emitter.onNext(Optional.of(dataSnapshot.getValue(User.class)));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.i("eTalk" , databaseError.getMessage());
+                                emitter.onNext(Optional.empty());
+                            }
+                        })
+        );
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
     public Single<Optional<User>> findUserWithPhone(String phone) {
         return Single.create(emitter ->
             databaseReference

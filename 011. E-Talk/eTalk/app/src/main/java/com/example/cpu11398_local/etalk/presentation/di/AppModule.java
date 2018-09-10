@@ -14,6 +14,7 @@ import com.example.cpu11398_local.etalk.domain.interactor.AddFriendUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.CreateGroupUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.FindFriendUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.GetUserInfoUsecase;
+import com.example.cpu11398_local.etalk.domain.interactor.LoadContentDataUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LoadConversationUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LoadFriendConversationUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.LoginUsecase;
@@ -196,6 +197,22 @@ public class AppModule {
     }
 
     @Provides
+    @Named("LoadContentDataUsecase")
+    public Usecase provideLoadContentDataUsecase(Executor executor,
+                                                 Scheduler scheduler,
+                                                 CompositeDisposable compositeDisposable,
+                                                 UserRepository userRepository,
+                                                 ConversationRepository conversationRepository) {
+        return new LoadContentDataUsecase(
+                executor,
+                scheduler,
+                compositeDisposable,
+                userRepository,
+                conversationRepository
+        );
+    }
+
+    @Provides
     @Named("LoadConversationUsecase")
     public Usecase provideLoadConversationUsecase(Executor executor,
                                                   Scheduler scheduler,
@@ -314,9 +331,10 @@ public class AppModule {
     @Provides
     @Named("ContentViewModel")
     public ViewModel provideContentViewModel(Context context,
-                                             @Named("LogoutUsecase") Usecase usecase,
+                                             @Named("LoadContentDataUsecase") Usecase usecase1,
+                                             @Named("LogoutUsecase") Usecase usecase2,
                                              NetworkChangeReceiver receiver) {
-        ContentViewModel contentViewModel = new ContentViewModel(context, usecase, receiver);
+        ContentViewModel contentViewModel = new ContentViewModel(context, usecase1, usecase2, receiver);
         viewModelCallback = contentViewModel;
         return contentViewModel;
     }

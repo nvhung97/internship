@@ -20,6 +20,15 @@ public interface NetworkSource {
     Single<Optional<User>> loadUser(String username);
 
     /**
+     * Load user's info from network base on given {@code username} and update if it have
+     * any changing.
+     * @param username used as identifier to load info of user.
+     * @return an observable contain a container {@code Optional} that contain
+     * user's info if exist or contain {@code null}.
+     */
+    Observable<Optional<User>> loadChangeableUser(String username);
+
+    /**
      * Load user's info from network base on given {@code phone}.
      * @param phone used to find user.
      * @return an observable contain a container {@code Optional} that contain

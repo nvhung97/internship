@@ -27,6 +27,11 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
+    public Observable<Optional<User>> loadNetworlChangeableUser(String username) {
+        return networkSource.loadChangeableUser(username);
+    }
+
+    @Override
     public Single<Optional<User>> findNetworkUserWithPhone(String phone) {
         return networkSource.findUserWithPhone(phone);
     }

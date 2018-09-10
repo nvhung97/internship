@@ -158,7 +158,7 @@ public class MoreViewModel extends BaseObservable implements ViewModel{
      * @param view
      */
     public void onLogout(View view) {
-        viewModelCallback.onNewEvent(Event.create(Event.MORE_FRAGMENT_LOGOUT));
+        viewModelCallback.onHelp(Event.create(Event.MORE_FRAGMENT_LOGOUT));
     }
 
     /**
