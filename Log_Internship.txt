@@ -317,6 +317,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Tìm hiểu chỉ thực hiện load dữ liệu ở ContentActivity, emit value sang các fragment.
 		+ Map to List using filter
 			* https://stackoverflow.com/a/45177261
+7:53 PM 9/10/2018
+	- Đưa load dữ liệu về content activity, emit value sang các fragment.
 
 
 

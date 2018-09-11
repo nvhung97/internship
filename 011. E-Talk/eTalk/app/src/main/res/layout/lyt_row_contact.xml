@@ -13,6 +13,12 @@
         android:layout_height="50dp"
         android:layout_marginLeft="15dp"
         android:layout_gravity="center_vertical"/>
+    <com.example.cpu11398_local.etalk.presentation.custom.StatusView
+        android:id="@id/lyt_row_contact_status"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="39dp"
+        android:layout_marginLeft="49dp"/>
     <TextView
         android:id="@id/lyt_row_contact_name"
         android:layout_width="match_parent"

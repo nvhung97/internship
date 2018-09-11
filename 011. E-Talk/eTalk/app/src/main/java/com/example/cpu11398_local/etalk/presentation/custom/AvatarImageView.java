@@ -29,7 +29,7 @@ public class AvatarImageView extends AppCompatImageView {
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
         shape.setCornerRadius(Float.MAX_VALUE);
-        shape.setColor(getContext().getResources().getColor(R.color.colorWhite));
+        shape.setColor(getContext().getResources().getColor(R.color.colorLightGray));
         setBackground(shape);
         setScaleType(ScaleType.CENTER_CROP);
         setClipToOutline(true);

@@ -7,6 +7,7 @@
     <color name="colorSearchHint">#74C9FF</color>
     <color name="colorTabSelected">#1493FC</color>
     <color name="colorRed">#FF0000</color>
+    <color name="colorGreen">#4cce19</color>
     <color name="colorNoConnection">#EDEDED</color>
     <color name="colorNoConnectionDivider">#DADADA</color>
 

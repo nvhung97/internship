@@ -98,6 +98,7 @@
     <item name="contact_fragment_rv_contact" type="id"/>
     <item name="lyt_row_contact" type="id"/>
     <item name="lyt_row_contact_avatar" type="id"/>
+    <item name="lyt_row_contact_status" type="id"/>
     <item name="lyt_row_contact_name" type="id"/>
     <item name="lyt_row_contact_voice_call" type="id"/>
     <item name="lyt_row_contact_video_call" type="id"/>group_fragment_rv_contact
