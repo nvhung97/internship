@@ -68,20 +68,22 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
 
     @Override
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
-        User friend = null;
-        for (String key : conversations.get(position).getMembers().keySet()) {
-            if (!key.equals(currentUser.getUsername())) {
-                friend = friends.get(key);
-                break;
+        if (currentUser != null) {
+            User friend = null;
+            for (String key : conversations.get(position).getMembers().keySet()) {
+                if (!key.equals(currentUser.getUsername())) {
+                    friend = friends.get(key);
+                    break;
+                }
             }
-        }
-        if (friend != null) {
-            holder.avatar.setImageFromObject(friend.getAvatar());
-            holder.status.setStatus(friend.getActive());
-            holder.name.setText(friend.getName());
-            holder.row.setOnClickListener(v -> actionCallback.chatWith(conversations.get(position)));
-            holder.voiceCall.setOnClickListener(v -> actionCallback.voiceCallWith(conversations.get(position)));
-            holder.videoCall.setOnClickListener(v -> actionCallback.videoCallWith(conversations.get(position)));
+            if (friend != null) {
+                holder.avatar.setImageFromObject(friend.getAvatar());
+                holder.status.setStatus(friend.getActive());
+                holder.name.setText(friend.getName());
+                holder.row.setOnClickListener(v -> actionCallback.chatWith(conversations.get(position)));
+                holder.voiceCall.setOnClickListener(v -> actionCallback.voiceCallWith(conversations.get(position)));
+                holder.videoCall.setOnClickListener(v -> actionCallback.videoCallWith(conversations.get(position)));
+            }
         }
     }
 

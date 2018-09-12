@@ -15,10 +15,27 @@ import com.example.cpu11398_local.etalk.utils.Event;
 import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.subjects.PublishSubject;
 
 public class MoreViewModel extends BaseObservable implements ViewModel{
+
+    /**
+     * Used to dispose observer when activity destroyed.
+     */
+    private Disposable disposable;
+
+    /**
+     * Current user to get friend from conversation.
+     */
+    private User currentUser;
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+        setAvatarUrl(currentUser.getAvatar());
+        setName(currentUser.getName());
+    }
 
     /**
      * Binding data between {@code avatarUrl} and attribute {@code url_from_url} of
@@ -68,21 +85,18 @@ public class MoreViewModel extends BaseObservable implements ViewModel{
     private ViewModelCallback viewModelCallback;
 
     /**
-     * ViewModel use {@code getUserInfoUsecase} to load user info.
-     */
-    private Usecase getUserInfoUsecase;
-
-    /**
      * Create new {@code MoreViewModel} with a {@code Context}, a {@code ViewModelCallback} and
      * an usecase for loading user info.
      */
     @Inject
     public MoreViewModel(Context context,
-                         ViewModelCallback viewModelCallback,
-                         @Named("GetUserInfoUsecase") Usecase getUserInfoUsecase) {
+                         ViewModelCallback viewModelCallback) {
         this.context            = context;
         this.viewModelCallback  = viewModelCallback;
-        this.getUserInfoUsecase = getUserInfoUsecase;
+        this.viewModelCallback.onChildViewModelSubscribeObserver(
+                new MoreObserver(),
+                ViewModelCallback.MORE
+        );
     }
 
     /**
@@ -92,9 +106,6 @@ public class MoreViewModel extends BaseObservable implements ViewModel{
     @Override
     public void subscribeObserver(Observer<Event> observer) {
         publisher.subscribe(observer);
-        if (name.isEmpty() && avatarUrl == null) {
-            getUserInfoUsecase.execute(new GetUserInfoUsecaseObserver(), true);
-        }
     }
 
     /**
@@ -166,25 +177,38 @@ public class MoreViewModel extends BaseObservable implements ViewModel{
      */
     @Override
     public void endTask() {
-        getUserInfoUsecase.endTask();
+        if (!disposable.isDisposed()){
+            disposable.dispose();
+        }
     }
 
     /**
-     * {@code GetUserInfoUsecaseObserver} is subscribed to usecase to listen event from it.
+     * {@code MoreObserver} is subscribed to parent viewModel to listen event from it.
      */
-    private class GetUserInfoUsecaseObserver extends DisposableObserver<User> {
+    private class MoreObserver implements Observer<Event> {
         @Override
-        public void onNext(User user) {
-            setName(user.getName());
-            setAvatarUrl(user.getAvatar());
+        public void onSubscribe(Disposable d) {
+            disposable = d;
+        }
+
+        @Override
+        public void onNext(Event event) {
+            Object[] data = event.getData();
+            switch (event.getType()) {
+                case Event.CONTENT_ACTIVITY_EMIT_USER:
+                    setCurrentUser((User)data[0]);
+                    break;
+            }
         }
 
         @Override
         public void onError(Throwable e) {
-            Log.i("eTalk", e.getMessage());
+
         }
 
         @Override
-        public void onComplete() {}
+        public void onComplete() {
+
+        }
     }
 }

@@ -29,6 +29,7 @@ public class Event {
     public static final int CONTENT_ACTIVITY_EMIT_USER                  = CONTENT_ACTIVITY_MARK | 5;
     public static final int CONTENT_ACTIVITY_EMIT_FRIENDS               = CONTENT_ACTIVITY_MARK | 6;
     public static final int CONTENT_ACTIVITY_EMIT_CONVERSATIONS         = CONTENT_ACTIVITY_MARK | 7;
+    public static final int CONTENT_ACTIVITY_EMIT_ALl                   = CONTENT_ACTIVITY_MARK | 8;
 
     /**
      * Bellow commands for {@code ChatActivity}.

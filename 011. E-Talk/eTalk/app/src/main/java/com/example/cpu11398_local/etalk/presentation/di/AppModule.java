@@ -349,9 +349,8 @@ public class AppModule {
     @Provides
     @Named("MoreViewModel")
     public ViewModel provideMoreViewModel(Context context,
-                                          ViewModelCallback viewModelCallback,
-                                          @Named("GetUserInfoUsecase") Usecase usecase) {
-        return new MoreViewModel(context, viewModelCallback, usecase);
+                                          ViewModelCallback viewModelCallback) {
+        return new MoreViewModel(context, viewModelCallback);
     }
 
     @Provides

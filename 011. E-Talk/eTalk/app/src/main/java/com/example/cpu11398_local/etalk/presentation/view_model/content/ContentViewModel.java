@@ -1,8 +1,9 @@
 package com.example.cpu11398_local.etalk.presentation.view_model.content;
 
 import android.content.Context;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.databinding.ObservableBoolean;
-import android.databinding.ObservableInt;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.Toast;
+import com.example.cpu11398_local.etalk.BR;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
@@ -30,7 +32,8 @@ import io.reactivex.Observer;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.subjects.PublishSubject;
 
-public class ContentViewModel implements ViewModel,
+public class ContentViewModel extends    BaseObservable
+                              implements ViewModel,
                                          ViewModelCallback,
                                          PopupMenu.OnMenuItemClickListener,
                                          ViewPager.OnPageChangeListener,
@@ -46,7 +49,19 @@ public class ContentViewModel implements ViewModel,
      * Determine which tab is selected to change layout.
      * Value reassigned in {@link #onTabClick(View)}.
      */
-    public ObservableInt currentTab = new ObservableInt(0);
+    private int currentTab = 0;
+
+    @Bindable
+    public int getCurrentTab() {
+        return currentTab;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setCurrentTab(int currentTab) {
+        this.currentTab = currentTab;
+        notifyPropertyChanged(BR.currentTab);
+        emit();
+    }
 
     /**
      * Binding data between {@code networkAvailable} and {@code TextView} for inform
@@ -120,22 +135,23 @@ public class ContentViewModel implements ViewModel,
      * corresponding to {@code view} as tab is clicked.
      * @param view
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void onTabClick(View view) {
         switch (view.getId()) {
             case R.id.content_activity_tab_messages:
-                currentTab.set(0);
+                setCurrentTab(0);
                 break;
             case R.id.content_activity_tab_contacts:
-                currentTab.set(1);
+                setCurrentTab(1);
                 break;
             case R.id.content_activity_tab_groups:
-                currentTab.set(2);
+                setCurrentTab(2);
                 break;
             case R.id.content_activity_tab_timeline:
-                currentTab.set(3);
+                setCurrentTab(3);
                 break;
             case R.id.content_activity_tab_more:
-                currentTab.set(4);
+                setCurrentTab(4);
                 break;
         }
     }
@@ -284,10 +300,10 @@ public class ContentViewModel implements ViewModel,
                 break;
             case ViewModelCallback.TIMELINE:
                 timelinePublisher.subscribe(observer);
-                break;
+                break;*/
             case ViewModelCallback.MORE:
                 morePublisher.subscribe(observer);
-                break;*/
+                break;
         }
     }
 
@@ -310,9 +326,10 @@ public class ContentViewModel implements ViewModel,
      * reassign {@code currentTab}.
      * @param position
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onPageSelected(int position) {
-        currentTab.set(position);
+        setCurrentTab(position);
     }
 
     @Override
@@ -341,69 +358,17 @@ public class ContentViewModel implements ViewModel,
             switch (event.getType()) {
                 case Event.CONTENT_ACTIVITY_EMIT_USER:
                     currentUser = (User)data[0];
-                    /*messagesPublisher.onNext(Event.create(
-                            Event.CONTENT_ACTIVITY_EMIT_USER,
-                            currentUser
-                    ));*/
-                    contactsPublisher.onNext(Event.create(
-                            Event.CONTENT_ACTIVITY_EMIT_USER,
-                            currentUser
-                    ));
-                    /*groupsPublisher.onNext(Event.create(
-                            Event.CONTENT_ACTIVITY_EMIT_USER,
-                            currentUser
-                    ));
-                    morePublisher.onNext(Event.create(
-                            Event.CONTENT_ACTIVITY_EMIT_USER,
-                            currentUser
-                    ));*/
+                    emitUser();
                     break;
                 case Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS:
                     conversations = (List<Conversation>)data[0];
-                    /*messagesPublisher.onNext(Event.create(
-                            Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS,
-                            conversations
-                    ));*/
-                    contactsPublisher.onNext(Event.create(
-                            Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS,
-                            getFriendConversations()
-                    ));
-                    /*groupsPublisher.onNext(Event.create(
-                            Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS,
-                            getGroupConversations()
-                    ));*/
+                    emitConversations();
                     break;
                 case Event.CONTENT_ACTIVITY_EMIT_FRIENDS:
                     friends = (HashMap<String, User>)data[0];
-                    /*messagesPublisher.onNext(Event.create(
-                            Event.CONTENT_ACTIVITY_EMIT_FRIENDS,
-                            friends
-                    ));*/
-                    contactsPublisher.onNext(Event.create(
-                            Event.CONTENT_ACTIVITY_EMIT_FRIENDS,
-                            friends
-                    ));
-                    /*groupsPublisher.onNext(Event.create(
-                            Event.CONTENT_ACTIVITY_EMIT_FRIENDS,
-                            friends
-                    ));*/
+                    emitFriends();
+                    break;
             }
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        private List<Conversation> getFriendConversations() {
-            return conversations
-                    .stream()
-                    .filter(conversation -> conversation.getType() == Conversation.PERSON)
-                    .collect(Collectors.toList());
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        private List<Conversation> getGroupConversations() {
-            return conversations
-                    .stream()
-                    .filter(conversation -> conversation.getType() == Conversation.GROUP)
-                    .collect(Collectors.toList());
         }
 
         @Override
@@ -415,5 +380,109 @@ public class ContentViewModel implements ViewModel,
         public void onComplete() {
 
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void emit() {
+        switch (currentTab) {
+            case 0:
+                break;
+            case 1:
+                contactsPublisher.onNext(Event.create(
+                        Event.CONTENT_ACTIVITY_EMIT_ALl,
+                        currentUser,
+                        conversations,
+                        friends
+                ));
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                morePublisher.onNext(Event.create(
+                        Event.CONTENT_ACTIVITY_EMIT_USER,
+                        currentUser
+                ));
+                break;
+        }
+    }
+
+    private void emitUser() {
+        switch (currentTab) {
+            case 0:
+                break;
+            case 1:
+                contactsPublisher.onNext(Event.create(
+                        Event.CONTENT_ACTIVITY_EMIT_USER,
+                        currentUser
+                ));
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                morePublisher.onNext(Event.create(
+                        Event.CONTENT_ACTIVITY_EMIT_USER,
+                        currentUser
+                ));
+                break;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void emitConversations() {
+        switch (currentTab) {
+            case 0:
+                break;
+            case 1:
+                contactsPublisher.onNext(Event.create(
+                    Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS,
+                    getFriendConversations()
+                ));
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
+    }
+
+    private void emitFriends() {
+        switch (currentTab) {
+            case 0:
+                break;
+            case 1:
+                contactsPublisher.onNext(Event.create(
+                        Event.CONTENT_ACTIVITY_EMIT_FRIENDS,
+                        friends
+                ));
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private List<Conversation> getFriendConversations() {
+        return conversations
+                .stream()
+                .filter(conversation -> conversation.getType() == Conversation.PERSON)
+                .collect(Collectors.toList());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private List<Conversation> getGroupConversations() {
+        return conversations
+                .stream()
+                .filter(conversation -> conversation.getType() == Conversation.GROUP)
+                .collect(Collectors.toList());
     }
 }

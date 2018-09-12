@@ -132,6 +132,11 @@ public class ContactViewModel extends BaseObservable implements ViewModel {
             switch (event.getType()) {
                 case Event.CONTENT_ACTIVITY_EMIT_USER:
                     currentUser = (User)data[0];
+                    adapter.onNewData(
+                        currentUser,
+                        conversations,
+                        friends
+                    );
                     break;
                 case Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS:
                     conversations = sortByName((List<Conversation>)data[0]);
@@ -150,8 +155,17 @@ public class ContactViewModel extends BaseObservable implements ViewModel {
                             friends
                     );
                     break;
+                case Event.CONTENT_ACTIVITY_EMIT_ALl:
+                    currentUser     = (User)data[0];
+                    conversations   = sortByName((List<Conversation>)data[1]);
+                    friends         = (Map<String, User>)data[2];
+                    adapter.onNewData(
+                            currentUser,
+                            conversations,
+                            friends
+                    );
+                    break;
             }
-            adapter.notifyDataSetChanged();
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
