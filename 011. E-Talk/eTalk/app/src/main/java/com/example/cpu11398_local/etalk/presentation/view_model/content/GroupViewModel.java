@@ -114,29 +114,17 @@ public class GroupViewModel extends BaseObservable implements ViewModel {
         public void onNext(Event event) {
             Object[] data = event.getData();
             switch (event.getType()) {
-                case Event.CONTENT_ACTIVITY_EMIT_ALl:
-                    conversations   = sortByTime((List<Conversation>)data[0]);
-                    friends         = (Map<String, User>)data[1];
+                case Event.CONTENT_ACTIVITY_EMIT_DATA:
+                    User user       = (User)data[0];
+                    conversations   = (List<Conversation>)data[1];
+                    friends         = new HashMap<>((Map<String, User>)data[2]);
+                    friends.put(user.getUsername(), user);
                     adapter.onNewData(
                             conversations,
                             friends
                     );
                     break;
             }
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        private List<Conversation> sortByTime(List<Conversation> conversations) {
-            conversations.sort((conversation1, conversation2) -> {
-                if (conversation1.getLastMessage().getTime() > conversation2.getLastMessage().getTime()) {
-                    return -1;
-                } else if (conversation1.getLastMessage().getTime() == conversation2.getLastMessage().getTime()) {
-                    return 0;
-                } else {
-                    return 1;
-                }
-            });
-            return conversations;
         }
 
         @Override

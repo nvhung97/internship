@@ -11,9 +11,11 @@ import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.Event;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.Executor;
 import javax.inject.Inject;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
@@ -61,21 +63,7 @@ public class LoadContentDataUsecase implements Usecase {
     private Observable<Event> buildObservable() {
         return Observable
                 .create(emitter -> {
-                    handler.postDelayed(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    emitter.onNext(Event.create(
-                                            Event.CONTENT_ACTIVITY_EMIT_ALl,
-                                            currentUser,
-                                            new ArrayList<>(conversations.values()),
-                                            new HashMap<>(friends)
-                                    ));
-                                    handler.postDelayed(this, 5000);
-                                }
-                            },
-                            5000
-                    );
+                    runHandler(emitter);
                     loadUser()
                             .subscribe(user -> {
                                 if (currentUser == null) {
@@ -86,6 +74,33 @@ public class LoadContentDataUsecase implements Usecase {
                                 }
                             });
                 });
+    }
+
+    private void runHandler(ObservableEmitter<Event> emitter) {
+        handler.postDelayed(
+                new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void run() {
+                        List<Conversation> conversationsVal = new ArrayList<>(conversations.values());
+                        conversationsVal.sort((conversation1, conversation2) -> {
+                            long time1 = conversation1.getLastMessage().getTime();
+                            long time2 = conversation2.getLastMessage().getTime();
+                            if (time1 > time2) return -1;
+                            if (time1 < time2) return 1;
+                            return 0;
+                        });
+                        emitter.onNext(Event.create(
+                                Event.CONTENT_ACTIVITY_EMIT_DATA,
+                                currentUser,
+                                conversationsVal,
+                                new HashMap<>(friends)
+                        ));
+                        handler.postDelayed(this, 5000);
+                    }
+                },
+                5000
+        );
     }
 
     private Observable<User> loadUser() {
@@ -135,6 +150,7 @@ public class LoadContentDataUsecase implements Usecase {
 
     @Override
     public void endTask() {
+        handler.removeCallbacksAndMessages(null);
         if (disposable.size() > 0) {
             disposable.clear();
         }

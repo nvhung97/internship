@@ -9,6 +9,12 @@
     <string name="app_sound">[Record]</string>
     <string name="app_video">[Video]</string>
     <string name="app_file">[File]</string>
+    <string name="app_time_day">day</string>
+    <string name="app_time_days">days</string>
+    <string name="app_time_hour">hour</string>
+    <string name="app_time_hours">hours</string>
+    <string name="app_time_minute">minute</string>
+    <string name="app_time_minutes">minutes</string>
 
     <!--Welcome activity-->
     <string name="welcome_activity_btn_login">LOGIN</string>

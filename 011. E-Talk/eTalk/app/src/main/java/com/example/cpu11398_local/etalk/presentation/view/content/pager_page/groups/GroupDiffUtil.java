@@ -97,9 +97,9 @@ public class GroupDiffUtil extends DiffUtil.Callback{
             bundle.putString("name", newConversation.getName());
         }
         if (oldConversation.getAvatar() == null && newConversation.getAvatar() != null) {
-            bundle.putString("avatar0", newConversation.getAvatar());
+            bundle.putString("avatar", newConversation.getAvatar());
         } else if (oldConversation.getAvatar() != null && !oldConversation.getAvatar().equals(newConversation.getAvatar())) {
-            bundle.putString("avatar0", newConversation.getAvatar());
+            bundle.putString("avatar", newConversation.getAvatar());
         } else {
             List<String> oldKeyFriends = new ArrayList<>(oldConversation.getMembers().keySet());
             List<String> newKeyFriends = new ArrayList<>(newConversation.getMembers().keySet());

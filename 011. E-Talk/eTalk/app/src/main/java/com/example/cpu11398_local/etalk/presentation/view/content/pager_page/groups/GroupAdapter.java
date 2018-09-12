@@ -24,15 +24,48 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder>{
+public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
+
+    private final int SINGLE_AVATAR     = 0;
+    private final int MULTIPLE_AVATAR   = 1;
 
     private List<Conversation>              conversations;
     private Map<String, User>               friends;
     private GroupViewModel.ActionCallback   actionCallback;
 
-    public class GroupViewHolder extends RecyclerView.ViewHolder {
+    public abstract class GroupViewHolder extends RecyclerView.ViewHolder {
+        public GroupViewHolder(View view) {
+            super(view);
+        }
+        public abstract void bindView(Conversation conversation);
+    }
+
+    public class SingleAvatarViewHolder extends GroupViewHolder {
         public FrameLayout      row;
-        public AvatarImageView  avatar0;
+        public AvatarImageView  avatar;
+        public TextView         name;
+        public ShortMessage     data;
+        public TimeTextView     time;
+        public SingleAvatarViewHolder(View itemView) {
+            super(itemView);
+            row     = itemView.findViewById(R.id.lyt_row_message_person);
+            avatar  = itemView.findViewById(R.id.lyt_row_message_person_avatar);
+            name    = itemView.findViewById(R.id.lyt_row_message_person_name);
+            data    = itemView.findViewById(R.id.lyt_row_message_person_message);
+            time    = itemView.findViewById(R.id.lyt_row_message_person_time);
+        }
+        @Override
+        public void bindView(Conversation conversation) {
+            row.setOnClickListener(v -> actionCallback.chatWith(conversation));
+            avatar.setImageFromObject(conversation.getAvatar());
+            name.setText(conversation.getName());
+            data.setData(conversation.getLastMessage().getData());
+            time.setTime(conversation.getLastMessage().getTime());
+        }
+    }
+
+    public class MultipleAvatarViewHolder extends GroupViewHolder {
+        public FrameLayout      row;
         public AvatarImageView  avatar1;
         public AvatarImageView  avatar2;
         public AvatarImageView  avatar3;
@@ -40,17 +73,34 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         public TextView         name;
         public ShortMessage     data;
         public TimeTextView     time;
-        public GroupViewHolder(View itemView) {
+        public MultipleAvatarViewHolder(View itemView) {
             super(itemView);
-            row         = itemView.findViewById(R.id.lyt_row_message_group);
-            avatar0     = itemView.findViewById(R.id.lyt_row_message_group_avatar0);
-            avatar1     = itemView.findViewById(R.id.lyt_row_message_group_avatar1);
-            avatar2     = itemView.findViewById(R.id.lyt_row_message_group_avatar2);
-            avatar3     = itemView.findViewById(R.id.lyt_row_message_group_avatar3);
-            number      = itemView.findViewById(R.id.lyt_row_message_group_number);
-            name        = itemView.findViewById(R.id.lyt_row_message_group_name);
-            data        = itemView.findViewById(R.id.lyt_row_message_group_message);
-            time        = itemView.findViewById(R.id.lyt_row_message_group_time);
+            row     = itemView.findViewById(R.id.lyt_row_message_group);
+            avatar1 = itemView.findViewById(R.id.lyt_row_message_group_avatar1);
+            avatar2 = itemView.findViewById(R.id.lyt_row_message_group_avatar2);
+            avatar3 = itemView.findViewById(R.id.lyt_row_message_group_avatar3);
+            number  = itemView.findViewById(R.id.lyt_row_message_group_number);
+            name    = itemView.findViewById(R.id.lyt_row_message_group_name);
+            data    = itemView.findViewById(R.id.lyt_row_message_group_message);
+            time    = itemView.findViewById(R.id.lyt_row_message_group_time);
+        }
+        @Override
+        public void bindView(Conversation conversation) {
+            row.setOnClickListener(v -> actionCallback.chatWith(conversation));
+            name.setText(conversation.getName());
+            data.setData(conversation.getLastMessage().getData());
+            time.setTime(conversation.getLastMessage().getTime());
+            number.setText(String.valueOf(conversation.getMembers().size()));
+            List<String> keyFriends = new ArrayList<>(conversation.getMembers().keySet());
+            if (friends.get(keyFriends.get(0)) != null) {
+                avatar1.setImageFromObject(friends.get(keyFriends.get(0)).getAvatar());
+            }
+            if (friends.get(keyFriends.get(1)) != null) {
+                avatar2.setImageFromObject(friends.get(keyFriends.get(1)).getAvatar());
+            }
+            if (friends.get(keyFriends.get(2)) != null) {
+                avatar3.setImageFromObject(friends.get(keyFriends.get(2)).getAvatar());
+            }
         }
     }
 
@@ -62,10 +112,25 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         this.actionCallback = actionCallback;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (conversations.get(position).getAvatar() == null) {
+            return MULTIPLE_AVATAR;
+        }
+        return SINGLE_AVATAR;
+    }
+
     @NonNull
     @Override
     public GroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new GroupViewHolder(
+        if (viewType == SINGLE_AVATAR) {
+            return new SingleAvatarViewHolder(
+                    LayoutInflater
+                            .from(parent.getContext())
+                            .inflate(R.layout.lyt_row_person_chat, parent, false)
+            );
+        }
+        return new MultipleAvatarViewHolder(
                 LayoutInflater
                         .from(parent.getContext())
                         .inflate(R.layout.lyt_row_group_chat, parent, false)
@@ -74,90 +139,60 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
     @Override
     public void onBindViewHolder(@NonNull GroupViewHolder holder, int position) {
-        Conversation conversation = conversations.get(position);
-        if (conversation.getAvatar() != null) {
-            holder.avatar0.setImageFromObject(conversation.getAvatar());
-            holder.avatar0.setVisibility(View.VISIBLE);
-            holder.avatar1.setVisibility(View.INVISIBLE);
-            holder.avatar2.setVisibility(View.INVISIBLE);
-            holder.avatar3.setVisibility(View.INVISIBLE);
-            holder.number.setVisibility(View.INVISIBLE);
-        } else {
-            List<String> keyFriends = new ArrayList<>(conversation.getMembers().keySet());
-            if (friends.get(keyFriends.get(0)) != null) {
-                holder.avatar1.setImageFromObject(friends.get(keyFriends.get(0)).getAvatar());
-            }
-            if (friends.get(keyFriends.get(1)) != null) {
-                holder.avatar2.setImageFromObject(friends.get(keyFriends.get(1)).getAvatar());
-            }
-            if (friends.get(keyFriends.get(2)) != null) {
-                holder.avatar3.setImageFromObject(friends.get(keyFriends.get(2)).getAvatar());
-            }
-            holder.number.setText(String.valueOf(conversation.getMembers().size()));
-            holder.avatar0.setVisibility(View.INVISIBLE);
-            holder.avatar1.setVisibility(View.VISIBLE);
-            holder.avatar2.setVisibility(View.VISIBLE);
-            holder.avatar3.setVisibility(View.VISIBLE);
-            holder.number.setVisibility(View.VISIBLE);
-        }
-        holder.name.setText(conversation.getName());
-        holder.data.setData(conversation.getLastMessage().getData());
-        holder.time.setTime(conversation.getLastMessage().getTime());
-        holder.row.setOnClickListener(v -> actionCallback.chatWith(conversation));
+        holder.bindView(conversations.get(position));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull GroupViewHolder holder, int position, @NonNull List<Object> payloads) {
+    public void onBindViewHolder(@NonNull GroupViewHolder abstractHolder, int position, @NonNull List<Object> payloads) {
         if (payloads.isEmpty()) {
-            super.onBindViewHolder(holder, position, payloads);
+            super.onBindViewHolder(abstractHolder, position, payloads);
         } else {
             Bundle bundle = (Bundle)payloads.get(0);
-            for (String key : bundle.keySet()) {
-                switch (key) {
-                    case "data":
-                        holder.data.setData(bundle.getString(key));
-                        break;
-                    case "time":
-                        holder.time.setTime(bundle.getLong(key));
-                        break;
-                    case "name":
-                        holder.number.setText(bundle.getString(key));
-                        break;
-                    case "avatar0":
-                        holder.avatar0.setImageFromObject(bundle.getString(key));
-                        holder.avatar0.setVisibility(View.VISIBLE);
-                        holder.avatar1.setVisibility(View.INVISIBLE);
-                        holder.avatar2.setVisibility(View.INVISIBLE);
-                        holder.avatar3.setVisibility(View.INVISIBLE);
-                        holder.number.setVisibility(View.INVISIBLE);
-                        break;
-                    case "avatar1":
-                        holder.avatar1.setImageFromObject(bundle.getString(key));
-                        holder.avatar0.setVisibility(View.INVISIBLE);
-                        holder.avatar1.setVisibility(View.VISIBLE);
-                        holder.avatar2.setVisibility(View.VISIBLE);
-                        holder.avatar3.setVisibility(View.VISIBLE);
-                        holder.number.setVisibility(View.VISIBLE);
-                        break;
-                    case "avatar2":
-                        holder.avatar2.setImageFromObject(bundle.getString(key));
-                        holder.avatar0.setVisibility(View.INVISIBLE);
-                        holder.avatar1.setVisibility(View.VISIBLE);
-                        holder.avatar2.setVisibility(View.VISIBLE);
-                        holder.avatar3.setVisibility(View.VISIBLE);
-                        holder.number.setVisibility(View.VISIBLE);
-                        break;
-                    case "avatar3":
-                        holder.avatar3.setImageFromObject(bundle.getString(key));
-                        holder.avatar0.setVisibility(View.INVISIBLE);
-                        holder.avatar1.setVisibility(View.VISIBLE);
-                        holder.avatar2.setVisibility(View.VISIBLE);
-                        holder.avatar3.setVisibility(View.VISIBLE);
-                        holder.number.setVisibility(View.VISIBLE);
-                        break;
-                    case "number":
-                        holder.number.setText(String.valueOf(bundle.getLong(key)));
-                        break;
+            if (abstractHolder.getItemViewType() == SINGLE_AVATAR) {
+                SingleAvatarViewHolder holder = (SingleAvatarViewHolder)abstractHolder;
+                for (String key : bundle.keySet()) {
+                    switch (key) {
+                        case "data":
+                            holder.data.setData(bundle.getString(key));
+                            break;
+                        case "time":
+                            holder.time.setTime(bundle.getLong(key));
+                            break;
+                        case "name":
+                            holder.name.setText(bundle.getString(key));
+                            break;
+                        case "avatar":
+                            holder.avatar.setImageFromObject(bundle.getString(key));
+                            break;
+                    }
+                }
+            }
+            else {
+                MultipleAvatarViewHolder holder = (MultipleAvatarViewHolder)abstractHolder;
+                for (String key : bundle.keySet()) {
+                    switch (key) {
+                        case "data":
+                            holder.data.setData(bundle.getString(key));
+                            break;
+                        case "time":
+                            holder.time.setTime(bundle.getLong(key));
+                            break;
+                        case "name":
+                            holder.name.setText(bundle.getString(key));
+                            break;
+                        case "avatar1":
+                            holder.avatar1.setImageFromObject(bundle.getString(key));
+                            break;
+                        case "avatar2":
+                            holder.avatar2.setImageFromObject(bundle.getString(key));
+                            break;
+                        case "avatar3":
+                            holder.avatar3.setImageFromObject(bundle.getString(key));
+                            break;
+                        case "number":
+                            holder.number.setText(String.valueOf(bundle.getLong(key)));
+                            break;
+                    }
                 }
             }
         }

@@ -85,7 +85,6 @@
     <item name="lyt_row_message_person_message" type="id"/>
     <item name="lyt_row_message_person_time" type="id"/>
     <item name="lyt_row_message_group" type="id"/>
-    <item name="lyt_row_message_group_avatar0" type="id"/>
     <item name="lyt_row_message_group_avatar1" type="id"/>
     <item name="lyt_row_message_group_avatar2" type="id"/>
     <item name="lyt_row_message_group_avatar3" type="id"/>

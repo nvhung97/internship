@@ -1,8 +1,6 @@
 package com.example.cpu11398_local.etalk.presentation.view_model.content;
 
 import android.content.Context;
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableInt;
 import android.os.Build;
@@ -13,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.Toast;
-import com.example.cpu11398_local.etalk.BR;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
@@ -324,7 +321,7 @@ public class ContentViewModel implements ViewModel,
         public void onNext(Event event) {
             Object[] data = event.getData();
             switch (event.getType()) {
-                case Event.CONTENT_ACTIVITY_EMIT_ALl:
+                case Event.CONTENT_ACTIVITY_EMIT_DATA:
                     currentUser     = (User)data[0];
                     conversations   = (List<Conversation>)data[1];
                     friends         = (Map<String, User>)data[2];
@@ -351,7 +348,7 @@ public class ContentViewModel implements ViewModel,
                 break;
             case 1:
                 contactsPublisher.onNext(Event.create(
-                        Event.CONTENT_ACTIVITY_EMIT_ALl,
+                        Event.CONTENT_ACTIVITY_EMIT_DATA,
                         currentUser,
                         getFriendConversations(),
                         friends
@@ -359,7 +356,8 @@ public class ContentViewModel implements ViewModel,
                 break;
             case 2:
                 groupsPublisher.onNext(Event.create(
-                        Event.CONTENT_ACTIVITY_EMIT_ALl,
+                        Event.CONTENT_ACTIVITY_EMIT_DATA,
+                        currentUser,
                         getGroupConversations(),
                         friends
                 ));
@@ -368,7 +366,7 @@ public class ContentViewModel implements ViewModel,
                 break;
             case 4:
                 morePublisher.onNext(Event.create(
-                        Event.CONTENT_ACTIVITY_EMIT_ALl,
+                        Event.CONTENT_ACTIVITY_EMIT_DATA,
                         currentUser
                 ));
                 break;

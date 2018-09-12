@@ -5,6 +5,7 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.widget.Toast;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.User;
@@ -130,10 +131,10 @@ public class ContactViewModel extends BaseObservable implements ViewModel {
         public void onNext(Event event) {
             Object[] data = event.getData();
             switch (event.getType()) {
-                case Event.CONTENT_ACTIVITY_EMIT_ALl:
+                case Event.CONTENT_ACTIVITY_EMIT_DATA:
                     currentUser     = (User)data[0];
-                    conversations   = sortByName((List<Conversation>)data[1]);
                     friends         = (Map<String, User>)data[2];
+                    conversations   = sortByName((List<Conversation>)data[1]);
                     adapter.onNewData(
                             currentUser,
                             conversations,

@@ -3,20 +3,17 @@ package com.example.cpu11398_local.etalk.presentation.view_model.content;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.example.cpu11398_local.etalk.BR;
-import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
 import com.example.cpu11398_local.etalk.utils.Event;
 import javax.inject.Inject;
-import javax.inject.Named;
+
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.subjects.PublishSubject;
 
 public class MoreViewModel extends BaseObservable implements ViewModel{
@@ -195,7 +192,7 @@ public class MoreViewModel extends BaseObservable implements ViewModel{
         public void onNext(Event event) {
             Object[] data = event.getData();
             switch (event.getType()) {
-                case Event.CONTENT_ACTIVITY_EMIT_ALl:
+                case Event.CONTENT_ACTIVITY_EMIT_DATA:
                     setCurrentUser((User)data[0]);
                     break;
             }
