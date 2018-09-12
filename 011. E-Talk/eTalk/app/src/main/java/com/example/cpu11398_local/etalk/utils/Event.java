@@ -25,11 +25,7 @@ public class Event {
     public static final int CONTENT_ACTIVITY_MENU_ADD_FRIEND            = CONTENT_ACTIVITY_MARK | 1;
     public static final int CONTENT_ACTIVITY_MENU_CREATE_GROUP          = CONTENT_ACTIVITY_MARK | 2;
     public static final int CONTENT_ACTIVITY_LOGOUT                     = CONTENT_ACTIVITY_MARK | 3;
-    public static final int CONTENT_ACTIVITY_EMIT_NETWORK_STATUS        = CONTENT_ACTIVITY_MARK | 4;
-    public static final int CONTENT_ACTIVITY_EMIT_USER                  = CONTENT_ACTIVITY_MARK | 5;
-    public static final int CONTENT_ACTIVITY_EMIT_FRIENDS               = CONTENT_ACTIVITY_MARK | 6;
-    public static final int CONTENT_ACTIVITY_EMIT_CONVERSATIONS         = CONTENT_ACTIVITY_MARK | 7;
-    public static final int CONTENT_ACTIVITY_EMIT_ALl                   = CONTENT_ACTIVITY_MARK | 8;
+    public static final int CONTENT_ACTIVITY_EMIT_ALl                   = CONTENT_ACTIVITY_MARK | 4;
 
     /**
      * Bellow commands for {@code ChatActivity}.
@@ -115,6 +111,12 @@ public class Event {
      */
     private static final int CONTACT_FRAGMENT_MARK  = 9 << MODE_SHIFT;
     public static final int CONTACT_FRAGMENT_CHAT   = CONTACT_FRAGMENT_MARK | 0;
+
+    /**
+     * Bellow commands for {@code GroupFragment}.
+     */
+    private static final int GROUP_FRAGMENT_MARK  = 10 << MODE_SHIFT;
+    public static final int GROUP_FRAGMENT_CHAT   = GROUP_FRAGMENT_MARK | 0;
 
 
     /***********************************************************************************************

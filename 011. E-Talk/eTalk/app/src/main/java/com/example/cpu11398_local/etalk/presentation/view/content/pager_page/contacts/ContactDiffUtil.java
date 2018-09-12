@@ -1,5 +1,7 @@
 package com.example.cpu11398_local.etalk.presentation.view.content.pager_page.contacts;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.User;
@@ -66,5 +68,39 @@ public class ContactDiffUtil extends DiffUtil.Callback{
             return true;
         }
         return false;
+    }
+
+    @Nullable
+    @Override
+    public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+        User oldFriend = null;
+        User newFriend = null;
+        Bundle bundle  = new Bundle();
+        for (String key : oldConversations.get(oldItemPosition).getMembers().keySet()) {
+            if (!key.equals(currentUser.getUsername())) {
+                oldFriend = oldFriends.get(key);
+                break;
+            }
+        }
+        for (String key : newConversations.get(newItemPosition).getMembers().keySet()) {
+            if (!key.equals(currentUser.getUsername())) {
+                newFriend = newFriends.get(key);
+                break;
+            }
+        }
+        if (oldFriend == null || newFriend == null) {
+            return null;
+        } else {
+            if (!oldFriend.getAvatar().equals(newFriend.getAvatar())) {
+                bundle.putString("avatar", newFriend.getAvatar());
+            }
+            if (!oldFriend.getName().equals(newFriend.getName())) {
+                bundle.putString("name", newFriend.getName());
+            }
+            if (oldFriend.getActive() != newFriend.getActive()) {
+                bundle.putLong("active", newFriend.getActive());
+            }
+            return bundle;
+        }
     }
 }

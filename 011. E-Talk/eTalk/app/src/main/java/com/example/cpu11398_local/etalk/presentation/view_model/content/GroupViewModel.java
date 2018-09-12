@@ -3,54 +3,47 @@ package com.example.cpu11398_local.etalk.presentation.view_model.content;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.util.Log;
-import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.User;
+import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.groups.GroupAdapter;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
 import com.example.cpu11398_local.etalk.utils.Event;
-import com.example.cpu11398_local.etalk.utils.Optional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
-import javax.inject.Named;
 import io.reactivex.Observer;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 
-public class GroupViewModel extends BaseObservable /*implements ViewModel */{
+public class GroupViewModel extends BaseObservable implements ViewModel {
 
     /**
-     * Current user to get friend from conversation.
-     *//*
-    private User currentUser;
+     * Used to dispose observer when activity destroyed.
+     */
+    private Disposable disposable;
 
-    *//**
-     * Container contain all friends in groups.
-     *//*
+    /**
+     * Container contain current friend.
+     */
     private Map<String, User> friends = new HashMap<>();
 
-    *//**
-     * Container contain group conversations.
-     *//*
+    /**
+     * Container contain friend conversations.
+     */
     private List<Conversation> conversations = new ArrayList<>();
 
-    *//**
-     * Container contain group conversations key.
-     *//*
-    private List<String> conversationKey = new ArrayList<>();
-
-    *//**
+    /**
      * Binding {@code adapter} and {@code RecyclerView} for contacts on view.
-     *//*
+     */
     private GroupAdapter adapter = new GroupAdapter(conversations, friends, new ActionCallback() {
         @Override
         public void chatWith(Conversation conversation) {
-            publisher.onNext(Event.create(Event.CONTACT_FRAGMENT_CHAT));
+            publisher.onNext(Event.create(Event.GROUP_FRAGMENT_CHAT));
         }
     });
 
@@ -59,119 +52,96 @@ public class GroupViewModel extends BaseObservable /*implements ViewModel */{
         return adapter;
     }
 
-    *//**
+    /**
      * Publisher will emit event to view. View listen these event via a observer.
-     *//*
+     */
     private PublishSubject<Event> publisher = PublishSubject.create();
 
-    *//**
+    /**
      * Context is used to get resource or toast something on screen.
-     *//*
+     */
     private Context context;
 
-    *//**
+    /**
      * Listener from viewModel parent.
-     *//*
+     */
     private ViewModelCallback viewModelCallback;
 
-    *//**
-     * ViewModel use {@code getUserInfoUsecase} to load user info.
-     *//*
-    private Usecase getUserInfoUsecase;
-
-    *//**
-     * ViewModel use {@code loadFriendConversationUsecase} to load group conversation info.
-     *//*
-    private Usecase loadGroupConversationUsecase;
-
-    *//**
-     * ViewModel use {@code findFriendUsecase} to load friend info.
-     *//*
-    private Usecase findFriendUsecase;
-
-    *//**
-     * Create new {@code ContactViewModel} with a {@code Context}, a {@code ViewModelCallback} and
-     * an usecase for loading user info.
-     *//*
+    /**
+     * Create new {@code GroupViewModel} with a {@code Context}, a {@code ViewModelCallback}.
+     */
     @Inject
     public GroupViewModel(Context context,
-                          ViewModelCallback viewModelCallback,
-                          @Named("GetUserInfoUsecase") Usecase getUserInfoUsecase,
-                          @Named("LoadGroupConversationUsecase") Usecase loadGroupConversationUsecase,
-                          @Named("FindFriendUsecase") Usecase findFriendUsecase) {
+                          ViewModelCallback viewModelCallback) {
         this.context                        = context;
         this.viewModelCallback              = viewModelCallback;
-        this.getUserInfoUsecase             = getUserInfoUsecase;
-        this.loadGroupConversationUsecase   = loadGroupConversationUsecase;
-        this.findFriendUsecase              = findFriendUsecase;
+        this.viewModelCallback.onChildViewModelSubscribeObserver(
+                new GroupObserver(),
+                ViewModelCallback.GROUPS
+        );
     }
 
-    *//**
+    /**
      * Called when view subscribe an observer to this viewModel.
      * @param observer listen event from ViewModel
-     *//*
+     */
     @Override
     public void subscribeObserver(Observer<Event> observer) {
         publisher.subscribe(observer);
-        if (currentUser == null) {
-            getUserInfoUsecase.execute(new GetUserInfoObserver(), false);
-        }
     }
 
-    *//**
+    /**
      * Called when this viewModel destroyed to inform usecase stop current task.
-     *//*
+     */
     @Override
     public void endTask() {
-        getUserInfoUsecase.endTask();
-        loadGroupConversationUsecase.endTask();
-        findFriendUsecase.endTask();
-    }
-
-    *//**
-     * {@code getUserInfoObserver} is subscribed to usecase to listen event from it.
-     *//*
-    private class GetUserInfoObserver extends DisposableSingleObserver<User> {
-
-        @Override
-        public void onSuccess(User user) {
-            currentUser = user;
-            loadGroupConversationUsecase.execute(
-                    new LoadGroupConversationObserver(),
-                    user.getUsername()
-            );
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            Log.i("eTalk", e.getMessage());
+        if (!disposable.isDisposed()){
+            disposable.dispose();
         }
     }
 
-    *//**
-     * {@code LoadGroupConversationObserver} is subscribed to usecase to listen event from it.
-     *//*
-    private class LoadGroupConversationObserver extends DisposableObserver<Conversation> {
+    /**
+     * {@code GroupObserver} is subscribed to parent viewModel to listen event from it.
+     */
+    private class GroupObserver implements Observer<Event> {
         @Override
-        public void onNext(Conversation conversation) {
-            for (String key : conversation.getMembers().keySet()) {
-                if (key.equals(currentUser.getUsername())) continue;
-                if (!key.equals(currentUser.getUsername())) {
-                    if (!conversationKey.contains(key)) {
-                        findFriendUsecase.execute(
-                                new FindFriendObserver(conversation),
-                                key,
-                                "username"
-                        );
-                    }
+        public void onSubscribe(Disposable d) {
+            disposable = d;
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        public void onNext(Event event) {
+            Object[] data = event.getData();
+            switch (event.getType()) {
+                case Event.CONTENT_ACTIVITY_EMIT_ALl:
+                    conversations   = sortByTime((List<Conversation>)data[0]);
+                    friends         = (Map<String, User>)data[1];
+                    adapter.onNewData(
+                            conversations,
+                            friends
+                    );
                     break;
-                }
             }
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        private List<Conversation> sortByTime(List<Conversation> conversations) {
+            conversations.sort((conversation1, conversation2) -> {
+                if (conversation1.getLastMessage().getTime() > conversation2.getLastMessage().getTime()) {
+                    return -1;
+                } else if (conversation1.getLastMessage().getTime() == conversation2.getLastMessage().getTime()) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            });
+            return conversations;
+        }
+
         @Override
         public void onError(Throwable e) {
-            Log.i("eTalk", e.getMessage());
+
         }
 
         @Override
@@ -180,36 +150,10 @@ public class GroupViewModel extends BaseObservable /*implements ViewModel */{
         }
     }
 
-    *//**
-     * {@code FindFriendObserver} is subscribed to usecase to listen event from it.
-     *//*
-    private class FindFriendObserver extends DisposableSingleObserver<Optional<User>> {
-
-        private Conversation conversation;
-
-        public FindFriendObserver(Conversation conversation) {
-            this.conversation = conversation;
-        }
-
-        @Override
-        public void onSuccess(Optional<User> user) {
-            if (user.isPresent()) {
-                friends.add(user.get());
-                conversationMap.put(user.get().getUsername(), conversation);
-                adapter.notifyItemInserted(friends.size() - 1);
-            }
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            Log.i("eTalk", e.getMessage());
-        }
-    }
-
-    *//**
+    /**
      * A callback to get action when user click item on {@code RecyclerView}.
-     *//*
+     */
     public interface ActionCallback {
         void chatWith(Conversation conversation);
-    }*/
+    }
 }

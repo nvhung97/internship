@@ -285,6 +285,7 @@ public class FirebaseDB implements NetworkSource{
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 emitter.onNext(dataSnapshot.getValue(Conversation.class));
+                                Log.e("Test", dataSnapshot.toString());
                             }
 
                             @Override

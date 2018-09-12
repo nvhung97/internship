@@ -51,6 +51,12 @@
         android:layout_height="26dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"/>
+    <com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView
+        android:id="@id/lyt_row_message_group_avatar0"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:layout_gravity="center_vertical"/>
     <TextView
         android:id="@id/lyt_row_message_group_name"
         android:layout_width="match_parent"
@@ -62,7 +68,7 @@
         android:maxLines="1"
         android:textSize="16sp"
         android:gravity="bottom"/>
-    <TextView
+    <com.example.cpu11398_local.etalk.presentation.custom.TimeTextView
         android:id="@+id/lyt_row_message_group_time"
         android:layout_width="70dp"
         android:layout_height="20dp"
@@ -72,7 +78,7 @@
         android:gravity="right"
         android:maxLines="1"
         android:textSize="13sp"/>
-    <TextView
+    <com.example.cpu11398_local.etalk.presentation.custom.ShortMessage
         android:id="@+id/lyt_row_message_group_message"
         android:layout_width="match_parent"
         android:layout_height="25dp"

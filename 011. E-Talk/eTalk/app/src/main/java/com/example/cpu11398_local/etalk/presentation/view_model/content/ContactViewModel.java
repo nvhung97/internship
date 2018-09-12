@@ -130,31 +130,6 @@ public class ContactViewModel extends BaseObservable implements ViewModel {
         public void onNext(Event event) {
             Object[] data = event.getData();
             switch (event.getType()) {
-                case Event.CONTENT_ACTIVITY_EMIT_USER:
-                    currentUser = (User)data[0];
-                    adapter.onNewData(
-                        currentUser,
-                        conversations,
-                        friends
-                    );
-                    break;
-                case Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS:
-                    conversations = sortByName((List<Conversation>)data[0]);
-                    adapter.onNewData(
-                            currentUser,
-                            conversations,
-                            friends
-                    );
-                    break;
-                case Event.CONTENT_ACTIVITY_EMIT_FRIENDS:
-                    friends = (Map<String, User>)data[0];
-                    conversations = sortByName(conversations);
-                    adapter.onNewData(
-                            currentUser,
-                            conversations,
-                            friends
-                    );
-                    break;
                 case Event.CONTENT_ACTIVITY_EMIT_ALl:
                     currentUser     = (User)data[0];
                     conversations   = sortByName((List<Conversation>)data[1]);

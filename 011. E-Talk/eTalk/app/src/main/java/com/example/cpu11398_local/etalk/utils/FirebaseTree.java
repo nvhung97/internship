@@ -68,6 +68,11 @@ public final class FirebaseTree {
                     }
                     public final class Data {
                         public static final String NODE_NAME = "data";
+                        public static final String TEXT      = "te";
+                        public static final String IMAGE     = "im";
+                        public static final String SOUND     = "so";
+                        public static final String VIDEO     = "vi";
+                        public static final String FILE      = "fi";
                     }
                     public final class Time {
                         public static final String NODE_NAME = "time";

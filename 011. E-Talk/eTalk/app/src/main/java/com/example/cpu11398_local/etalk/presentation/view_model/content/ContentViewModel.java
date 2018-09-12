@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.ObservableBoolean;
+import android.databinding.ObservableInt;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
@@ -32,8 +33,7 @@ import io.reactivex.Observer;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.subjects.PublishSubject;
 
-public class ContentViewModel extends    BaseObservable
-                              implements ViewModel,
+public class ContentViewModel implements ViewModel,
                                          ViewModelCallback,
                                          PopupMenu.OnMenuItemClickListener,
                                          ViewPager.OnPageChangeListener,
@@ -49,19 +49,7 @@ public class ContentViewModel extends    BaseObservable
      * Determine which tab is selected to change layout.
      * Value reassigned in {@link #onTabClick(View)}.
      */
-    private int currentTab = 0;
-
-    @Bindable
-    public int getCurrentTab() {
-        return currentTab;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setCurrentTab(int currentTab) {
-        this.currentTab = currentTab;
-        notifyPropertyChanged(BR.currentTab);
-        emit();
-    }
+    public ObservableInt currentTab = new ObservableInt(0);
 
     /**
      * Binding data between {@code networkAvailable} and {@code TextView} for inform
@@ -139,19 +127,19 @@ public class ContentViewModel extends    BaseObservable
     public void onTabClick(View view) {
         switch (view.getId()) {
             case R.id.content_activity_tab_messages:
-                setCurrentTab(0);
+                currentTab.set(0);
                 break;
             case R.id.content_activity_tab_contacts:
-                setCurrentTab(1);
+                currentTab.set(1);
                 break;
             case R.id.content_activity_tab_groups:
-                setCurrentTab(2);
+                currentTab.set(2);
                 break;
             case R.id.content_activity_tab_timeline:
-                setCurrentTab(3);
+                currentTab.set(3);
                 break;
             case R.id.content_activity_tab_more:
-                setCurrentTab(4);
+                currentTab.set(4);
                 break;
         }
     }
@@ -260,26 +248,6 @@ public class ContentViewModel extends    BaseObservable
     @Override
     public void onNetworkChange(boolean networkState) {
         isNetworkAvailable.set(networkState);
-        /*messagesPublisher.onNext(Event.create(
-                Event.CONTENT_ACTIVITY_EMIT_NETWORK_STATUS,
-                networkState
-        ));*/
-        contactsPublisher.onNext(Event.create(
-                Event.CONTENT_ACTIVITY_EMIT_NETWORK_STATUS,
-                networkState
-        ));
-        /*groupsPublisher.onNext(Event.create(
-                Event.CONTENT_ACTIVITY_EMIT_NETWORK_STATUS,
-                networkState
-        ));
-        timelinePublisher.onNext(Event.create(
-                Event.CONTENT_ACTIVITY_EMIT_NETWORK_STATUS,
-                networkState
-        ));
-        morePublisher.onNext(Event.create(
-                Event.CONTENT_ACTIVITY_EMIT_NETWORK_STATUS,
-                networkState
-        ));*/
     }
 
     /**
@@ -295,10 +263,10 @@ public class ContentViewModel extends    BaseObservable
             case ViewModelCallback.CONTACTS:
                 contactsPublisher.subscribe(observer);
                 break;
-            /*case ViewModelCallback.GROUPS:
+            case ViewModelCallback.GROUPS:
                 groupsPublisher.subscribe(observer);
                 break;
-            case ViewModelCallback.TIMELINE:
+            /*case ViewModelCallback.TIMELINE:
                 timelinePublisher.subscribe(observer);
                 break;*/
             case ViewModelCallback.MORE:
@@ -329,7 +297,7 @@ public class ContentViewModel extends    BaseObservable
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onPageSelected(int position) {
-        setCurrentTab(position);
+        currentTab.set(position);
     }
 
     @Override
@@ -356,17 +324,11 @@ public class ContentViewModel extends    BaseObservable
         public void onNext(Event event) {
             Object[] data = event.getData();
             switch (event.getType()) {
-                case Event.CONTENT_ACTIVITY_EMIT_USER:
-                    currentUser = (User)data[0];
-                    emitUser();
-                    break;
-                case Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS:
-                    conversations = (List<Conversation>)data[0];
-                    emitConversations();
-                    break;
-                case Event.CONTENT_ACTIVITY_EMIT_FRIENDS:
-                    friends = (HashMap<String, User>)data[0];
-                    emitFriends();
+                case Event.CONTENT_ACTIVITY_EMIT_ALl:
+                    currentUser     = (User)data[0];
+                    conversations   = (List<Conversation>)data[1];
+                    friends         = (Map<String, User>)data[2];
+                    emit();
                     break;
             }
         }
@@ -384,88 +346,31 @@ public class ContentViewModel extends    BaseObservable
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void emit() {
-        switch (currentTab) {
+        switch (currentTab.get()) {
             case 0:
                 break;
             case 1:
                 contactsPublisher.onNext(Event.create(
                         Event.CONTENT_ACTIVITY_EMIT_ALl,
                         currentUser,
-                        conversations,
+                        getFriendConversations(),
                         friends
                 ));
                 break;
             case 2:
+                groupsPublisher.onNext(Event.create(
+                        Event.CONTENT_ACTIVITY_EMIT_ALl,
+                        getGroupConversations(),
+                        friends
+                ));
                 break;
             case 3:
                 break;
             case 4:
                 morePublisher.onNext(Event.create(
-                        Event.CONTENT_ACTIVITY_EMIT_USER,
+                        Event.CONTENT_ACTIVITY_EMIT_ALl,
                         currentUser
                 ));
-                break;
-        }
-    }
-
-    private void emitUser() {
-        switch (currentTab) {
-            case 0:
-                break;
-            case 1:
-                contactsPublisher.onNext(Event.create(
-                        Event.CONTENT_ACTIVITY_EMIT_USER,
-                        currentUser
-                ));
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                morePublisher.onNext(Event.create(
-                        Event.CONTENT_ACTIVITY_EMIT_USER,
-                        currentUser
-                ));
-                break;
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void emitConversations() {
-        switch (currentTab) {
-            case 0:
-                break;
-            case 1:
-                contactsPublisher.onNext(Event.create(
-                    Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS,
-                    getFriendConversations()
-                ));
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-        }
-    }
-
-    private void emitFriends() {
-        switch (currentTab) {
-            case 0:
-                break;
-            case 1:
-                contactsPublisher.onNext(Event.create(
-                        Event.CONTENT_ACTIVITY_EMIT_FRIENDS,
-                        friends
-                ));
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
                 break;
         }
     }

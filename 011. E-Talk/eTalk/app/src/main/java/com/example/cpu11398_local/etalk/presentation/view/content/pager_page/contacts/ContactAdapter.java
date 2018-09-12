@@ -1,5 +1,7 @@
 package com.example.cpu11398_local.etalk.presentation.view.content.pager_page.contacts;
 
+import android.annotation.SuppressLint;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -88,36 +90,53 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     }
 
     @Override
+    public void onBindViewHolder(@NonNull ContactViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads);
+        } else {
+            Bundle bundle = (Bundle)payloads.get(0);
+            for (String key : bundle.keySet()) {
+                switch (key) {
+                    case "avatar":
+                        holder.avatar.setImageFromObject(bundle.getString(key));
+                        break;
+                    case "name":
+                        holder.name.setText(bundle.getString(key));
+                        break;
+                    case "active":
+                        holder.status.setStatus(bundle.getLong(key));
+                        break;
+                }
+            }
+        }
+    }
+
+    @Override
     public int getItemCount() {
         return conversations.size();
     }
 
-    private boolean allowUpdate = true;
-
+    @SuppressLint("CheckResult")
     public void onNewData(User currentUser,
                           List<Conversation> conversations,
                           Map<String, User> friends) {
-        if (allowUpdate) {
-            allowUpdate = false;
-            Single
-                    .just(DiffUtil.calculateDiff(
-                            new ContactDiffUtil(
-                                    currentUser,
-                                    this.conversations,
-                                    this.friends,
-                                    conversations,
-                                    friends
-                            )
-                    ))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(diffResult -> {
-                        this.currentUser    = currentUser;
-                        this.conversations  = conversations;
-                        this.friends        = friends;
-                        diffResult.dispatchUpdatesTo(this);
-                        allowUpdate = true;
-                    });
-        }
+        Single
+                .just(DiffUtil.calculateDiff(
+                        new ContactDiffUtil(
+                                currentUser,
+                                this.conversations,
+                                this.friends,
+                                conversations,
+                                friends
+                        )
+                ))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(diffResult -> {
+                    this.currentUser    = currentUser;
+                    this.conversations  = conversations;
+                    this.friends        = friends;
+                    diffResult.dispatchUpdatesTo(this);
+                });
     }
 }

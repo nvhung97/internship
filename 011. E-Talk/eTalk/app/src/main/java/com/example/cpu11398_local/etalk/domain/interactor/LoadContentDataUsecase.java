@@ -2,6 +2,7 @@ package com.example.cpu11398_local.etalk.domain.interactor;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
@@ -13,7 +14,6 @@ import java.util.HashMap;
 import java.util.concurrent.Executor;
 import javax.inject.Inject;
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
@@ -21,6 +21,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class LoadContentDataUsecase implements Usecase {
 
+    private Handler                 handler;
     private Executor                executor;
     private Scheduler               scheduler;
     private CompositeDisposable     disposable;
@@ -33,6 +34,7 @@ public class LoadContentDataUsecase implements Usecase {
                                   CompositeDisposable disposable,
                                   UserRepository userRepository,
                                   ConversationRepository conversationRepository) {
+        this.handler                = new Handler();
         this.executor               = executor;
         this.scheduler              = scheduler;
         this.disposable             = disposable;
@@ -58,23 +60,32 @@ public class LoadContentDataUsecase implements Usecase {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private Observable<Event> buildObservable() {
         return Observable
-                .create(emitter ->
+                .create(emitter -> {
+                    handler.postDelayed(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    emitter.onNext(Event.create(
+                                            Event.CONTENT_ACTIVITY_EMIT_ALl,
+                                            currentUser,
+                                            new ArrayList<>(conversations.values()),
+                                            new HashMap<>(friends)
+                                    ));
+                                    handler.postDelayed(this, 5000);
+                                }
+                            },
+                            5000
+                    );
                     loadUser()
                             .subscribe(user -> {
-                                emitter.onNext(
-                                        Event.create(
-                                                Event.CONTENT_ACTIVITY_EMIT_USER,
-                                                user
-                                        )
-                                );
                                 if (currentUser == null) {
                                     currentUser = user;
-                                    loadConversation(emitter);
+                                    loadConversation();
                                 } else {
                                     currentUser = user;
                                 }
-                            })
-                );
+                            });
+                });
     }
 
     private Observable<User> loadUser() {
@@ -83,7 +94,7 @@ public class LoadContentDataUsecase implements Usecase {
 
     @SuppressLint("CheckResult")
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void loadConversation(ObservableEmitter<Event> emitter) {
+    private void loadConversation() {
         conversationRepository
                 .loadNetworkRelationships(currentUser.getUsername())
                 .subscribe(conversation -> {
@@ -98,19 +109,13 @@ public class LoadContentDataUsecase implements Usecase {
                                 conversation
                         );
                     }
-                    loadFriends(conversation, emitter);
-                    emitter.onNext(
-                            Event.create(
-                                    Event.CONTENT_ACTIVITY_EMIT_CONVERSATIONS,
-                                    new ArrayList<>(conversations.values())
-                            )
-                    );
+                    loadFriends(conversation);
                 });
     }
 
     @SuppressLint("CheckResult")
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void loadFriends(Conversation conversation, ObservableEmitter<Event> emitter) {
+    private void loadFriends(Conversation conversation) {
         conversation.getMembers().forEach((key, time) -> {
             if (!friends.containsKey(key) && !key.equals(currentUser.getUsername())) {
                 userRepository
@@ -122,12 +127,6 @@ public class LoadContentDataUsecase implements Usecase {
                                 } else {
                                     friends.put(key, friend.get());
                                 }
-                                emitter.onNext(
-                                        Event.create(
-                                                Event.CONTENT_ACTIVITY_EMIT_FRIENDS,
-                                                new HashMap<>(friends)
-                                        )
-                                );
                             }
                         });
             }

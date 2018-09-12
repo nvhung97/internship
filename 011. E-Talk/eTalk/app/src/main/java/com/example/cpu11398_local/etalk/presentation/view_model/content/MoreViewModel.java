@@ -195,7 +195,7 @@ public class MoreViewModel extends BaseObservable implements ViewModel{
         public void onNext(Event event) {
             Object[] data = event.getData();
             switch (event.getType()) {
-                case Event.CONTENT_ACTIVITY_EMIT_USER:
+                case Event.CONTENT_ACTIVITY_EMIT_ALl:
                     setCurrentUser((User)data[0]);
                     break;
             }
