@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.FragmentContactsBinding;
 import com.example.cpu11398_local.etalk.presentation.view.chat.ChatActivity;
@@ -30,6 +32,7 @@ public class ContactsFragment extends Fragment {
     public ViewModel viewModel;
 
     private Disposable  disposable;
+    private ProgressBar progressBar;
 
 
     public ContactsFragment() {
@@ -57,6 +60,7 @@ public class ContactsFragment extends Fragment {
                 )
         );
         binding.contactFragmentRvContact.setHasFixedSize(true);
+        progressBar = binding.contactFragmentLoading;
         return binding.getRoot();
     }
 
@@ -92,6 +96,9 @@ public class ContactsFragment extends Fragment {
             switch (event.getType()) {
                 case Event.CONTACT_FRAGMENT_CHAT:
                     startActivity(new Intent(getActivity(), ChatActivity.class));
+                    break;
+                case Event.CONTACT_FRAGMENT_HIDE_PROGRESS_BAR:
+                    progressBar.setVisibility(View.GONE);
                     break;
             }
         }

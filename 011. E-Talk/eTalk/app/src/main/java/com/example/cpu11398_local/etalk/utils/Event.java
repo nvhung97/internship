@@ -68,9 +68,10 @@ public class Event {
     /**
      * Bellow commands for {@code MoreFragment}.
      */
-    private static final int MORE_FRAGMENT_MARK         = 5 << MODE_SHIFT;
-    public static final int MORE_FRAGMENT_MY_PRORILE    = MORE_FRAGMENT_MARK | 0;
-    public static final int MORE_FRAGMENT_LOGOUT        = MORE_FRAGMENT_MARK | 1;
+    private static final int MORE_FRAGMENT_MARK             = 5 << MODE_SHIFT;
+    public static final int MORE_FRAGMENT_MY_PRORILE        = MORE_FRAGMENT_MARK | 0;
+    public static final int MORE_FRAGMENT_LOGOUT            = MORE_FRAGMENT_MARK | 1;
+    public static final int MORE_FRAGMENT_HIDE_PROGRESS_BAR = MORE_FRAGMENT_MARK | 2;
 
     /**
      * Bellow commands for {@code Profile acticity}.
@@ -109,14 +110,16 @@ public class Event {
     /**
      * Bellow commands for {@code ContactFragment}.
      */
-    private static final int CONTACT_FRAGMENT_MARK  = 9 << MODE_SHIFT;
-    public static final int CONTACT_FRAGMENT_CHAT   = CONTACT_FRAGMENT_MARK | 0;
+    private static final int CONTACT_FRAGMENT_MARK              = 9 << MODE_SHIFT;
+    public static final int CONTACT_FRAGMENT_CHAT               = CONTACT_FRAGMENT_MARK | 0;
+    public static final int CONTACT_FRAGMENT_HIDE_PROGRESS_BAR  = CONTACT_FRAGMENT_MARK | 1;
 
     /**
      * Bellow commands for {@code GroupFragment}.
      */
-    private static final int GROUP_FRAGMENT_MARK  = 10 << MODE_SHIFT;
-    public static final int GROUP_FRAGMENT_CHAT   = GROUP_FRAGMENT_MARK | 0;
+    private static final int GROUP_FRAGMENT_MARK                = 10 << MODE_SHIFT;
+    public static final int GROUP_FRAGMENT_CHAT                 = GROUP_FRAGMENT_MARK | 0;
+    public static final int GROUP_FRAGMENT_HIDE_PROGRESS_BAR    = GROUP_FRAGMENT_MARK | 1;
 
 
     /***********************************************************************************************

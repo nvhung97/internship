@@ -96,6 +96,7 @@
     <!--Contact fragment-->
     <item name="contact_fragment_txt_title" type="id"/>
     <item name="contact_fragment_rv_contact" type="id"/>
+    <item name="contact_fragment_loading" type="id"/>
     <item name="lyt_row_contact" type="id"/>
     <item name="lyt_row_contact_avatar" type="id"/>
     <item name="lyt_row_contact_status" type="id"/>
@@ -104,12 +105,15 @@
     <item name="lyt_row_contact_video_call" type="id"/>group_fragment_rv_contact
 
     <!--Group fragment-->
+    <item name="group_fragment_txt_title" type="id"/>
     <item name="group_fragment_rv_group" type="id"/>
+    <item name="group_fragment_loading" type="id"/>
 
     <!--More fragment-->
     <item name="more_fragment_btn_my_profile" type="id"/>
     <item name="more_fragment_btn_my_profile_avatar" type="id"/>
     <item name="more_fragment_btn_my_profile_name" type="id"/>
+    <item name="more_fragment_loading" type="id"/>
     <item name="more_fragment_btn_people_nearby" type="id"/>
     <item name="more_fragment_btn_chat_rooms" type="id"/>
     <item name="more_fragment_btn_shop" type="id"/>

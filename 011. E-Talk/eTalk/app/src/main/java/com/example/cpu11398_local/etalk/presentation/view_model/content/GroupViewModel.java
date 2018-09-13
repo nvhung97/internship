@@ -123,6 +123,7 @@ public class GroupViewModel extends BaseObservable implements ViewModel {
                             conversations,
                             friends
                     );
+                    publisher.onNext(Event.create(Event.GROUP_FRAGMENT_HIDE_PROGRESS_BAR));
                     break;
             }
         }

@@ -9,10 +9,9 @@ import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.Event;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -82,18 +81,16 @@ public class LoadContentDataUsecase implements Usecase {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void run() {
-                        List<Conversation> conversationsVal = new ArrayList<>(conversations.values());
-                        conversationsVal.sort((conversation1, conversation2) -> {
-                            long time1 = conversation1.getLastMessage().getTime();
-                            long time2 = conversation2.getLastMessage().getTime();
-                            if (time1 > time2) return -1;
-                            if (time1 < time2) return 1;
-                            return 0;
-                        });
                         emitter.onNext(Event.create(
                                 Event.CONTENT_ACTIVITY_EMIT_DATA,
                                 currentUser,
-                                conversationsVal,
+                                conversations.entrySet().stream().sorted((e1, e2) -> {
+                                    long time1 = e1.getValue().getLastMessage().getTime();
+                                    long time2 = e2.getValue().getLastMessage().getTime();
+                                    if (time1 > time2) return -1;
+                                    if (time1 < time2) return 1;
+                                    return 0;
+                                }).map(e -> e.getValue()).collect(Collectors.toList()),
                                 new HashMap<>(friends)
                         ));
                         handler.postDelayed(this, 5000);

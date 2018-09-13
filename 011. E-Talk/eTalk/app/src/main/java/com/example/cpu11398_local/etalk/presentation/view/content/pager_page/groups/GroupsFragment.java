@@ -1,5 +1,6 @@
 package com.example.cpu11398_local.etalk.presentation.view.content.pager_page.groups;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,8 +8,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.FragmentGroupsBinding;
+import com.example.cpu11398_local.etalk.presentation.view.chat.ChatActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.GroupViewModel;
@@ -28,6 +32,7 @@ public class GroupsFragment extends Fragment {
     public ViewModel viewModel;
 
     private Disposable disposable;
+    private ProgressBar progressBar;
 
     public GroupsFragment() {
         // Required empty public constructor
@@ -54,6 +59,7 @@ public class GroupsFragment extends Fragment {
                 )
         );
         binding.groupFragmentRvGroup.setHasFixedSize(true);
+        progressBar = binding.groupFragmentLoading;
         return binding.getRoot();
     }
 
@@ -87,6 +93,12 @@ public class GroupsFragment extends Fragment {
         public void onNext(Event event) {
             Object[] data = event.getData();
             switch (event.getType()) {
+                case Event.GROUP_FRAGMENT_CHAT:
+                    startActivity(new Intent(getActivity(), ChatActivity.class));
+                    break;
+                case Event.GROUP_FRAGMENT_HIDE_PROGRESS_BAR:
+                    progressBar.setVisibility(View.GONE);
+                    break;
             }
         }
 

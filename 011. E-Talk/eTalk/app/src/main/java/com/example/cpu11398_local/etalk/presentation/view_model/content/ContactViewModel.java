@@ -140,6 +140,7 @@ public class ContactViewModel extends BaseObservable implements ViewModel {
                             conversations,
                             friends
                     );
+                    publisher.onNext(Event.create(Event.CONTACT_FRAGMENT_HIDE_PROGRESS_BAR));
                     break;
             }
         }

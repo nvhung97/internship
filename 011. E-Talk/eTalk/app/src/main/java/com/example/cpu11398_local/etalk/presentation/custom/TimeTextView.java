@@ -71,6 +71,5 @@ public class TimeTextView extends android.support.v7.widget.AppCompatTextView{
         }
 
         setText(textTime);
-        Log.e("Test", textTime);
     }
 }

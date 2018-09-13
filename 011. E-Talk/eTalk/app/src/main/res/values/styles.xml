@@ -16,4 +16,9 @@
         <item name="android:dropDownVerticalOffset">10dp</item>
     </style>
 
+    <!--Gray circle progress bar-->
+    <style name="AppTheme.GrayProgressBar" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/colorGray</item>
+    </style>
+
 </resources>

@@ -48,6 +48,13 @@
                     android:gravity="top"
                     android:text="@string/more_fragment_btn_profile"
                     android:textSize="14dp"/>
+                <ProgressBar
+                    android:id="@id/more_fragment_loading"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_gravity="center_vertical|right"
+                    android:theme="@style/AppTheme.GrayProgressBar"/>
             </FrameLayout>
             <FrameLayout
                 android:id="@id/more_fragment_btn_people_nearby"

@@ -194,6 +194,7 @@ public class MoreViewModel extends BaseObservable implements ViewModel{
             switch (event.getType()) {
                 case Event.CONTENT_ACTIVITY_EMIT_DATA:
                     setCurrentUser((User)data[0]);
+                    publisher.onNext(Event.create(Event.MORE_FRAGMENT_HIDE_PROGRESS_BAR));
                     break;
             }
         }

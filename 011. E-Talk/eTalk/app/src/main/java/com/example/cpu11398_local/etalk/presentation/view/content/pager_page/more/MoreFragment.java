@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.FragmentMoreBinding;
 import com.example.cpu11398_local.etalk.presentation.view.profile.ProfileActivity;
@@ -29,6 +31,7 @@ public class MoreFragment extends Fragment {
     public ViewModel    viewModel;
 
     private Disposable  disposable;
+    private ProgressBar progressBar;
 
     public MoreFragment() {
         // Required empty public constructor
@@ -39,14 +42,15 @@ public class MoreFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         WelcomeActivity.getAppComponent(getContext()).inject(this);
-        FragmentMoreBinding fragmentMoreBinding = DataBindingUtil.inflate(
+        FragmentMoreBinding binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.fragment_more,
                 container,
                 false
         );
-        fragmentMoreBinding.setViewModel((MoreViewModel)viewModel);
-        return fragmentMoreBinding.getRoot();
+        binding.setViewModel((MoreViewModel)viewModel);
+        progressBar = binding.moreFragmentLoading;
+        return binding.getRoot();
     }
 
     @Override
@@ -81,6 +85,9 @@ public class MoreFragment extends Fragment {
             switch (event.getType()) {
                 case Event.MORE_FRAGMENT_MY_PRORILE:
                     startActivity(new Intent(getActivity(), ProfileActivity.class));
+                    break;
+                case Event.MORE_FRAGMENT_HIDE_PROGRESS_BAR:
+                    progressBar.setVisibility(View.GONE);
                     break;
             }
         }
