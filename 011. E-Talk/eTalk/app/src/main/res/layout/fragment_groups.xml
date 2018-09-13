@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:text="@string/group_fragment_txt_title"
+            android:text="@{viewModel.title}"
             android:textColor="@color/colorBlack"
             android:textStyle="bold"
             android:paddingLeft="15dp"

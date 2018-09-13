@@ -50,7 +50,7 @@ public class GroupDiffUtil extends DiffUtil.Callback{
                 .equals((newConversation.getLastMessage().getSender() + newConversation.getLastMessage().getTime()))) {
             return false;
         }
-        if (!newConversation.getName().equals(newConversation.getName())) {
+        if (!oldConversation.getName().equals(newConversation.getName())) {
             return false;
         }
         if (oldConversation.getAvatar() == null && newConversation.getAvatar() != null) {
@@ -93,7 +93,7 @@ public class GroupDiffUtil extends DiffUtil.Callback{
             bundle.putString("data", newConversation.getLastMessage().getData());
             bundle.putLong("time", newConversation.getLastMessage().getTime());
         }
-        if (!newConversation.getName().equals(newConversation.getName())) {
+        if (!oldConversation.getName().equals(newConversation.getName())) {
             bundle.putString("name", newConversation.getName());
         }
         if (oldConversation.getAvatar() == null && newConversation.getAvatar() != null) {

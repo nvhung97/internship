@@ -254,9 +254,9 @@ public class ContentViewModel implements ViewModel,
     @Override
     public void onChildViewModelSubscribeObserver(Observer<Event> observer, int code) {
         switch (code) {
-            /*case ViewModelCallback.MESSAGES:
+            case ViewModelCallback.MESSAGES:
                 messagesPublisher.subscribe(observer);
-                break;*/
+                break;
             case ViewModelCallback.CONTACTS:
                 contactsPublisher.subscribe(observer);
                 break;
@@ -345,6 +345,12 @@ public class ContentViewModel implements ViewModel,
     private void emit() {
         switch (currentTab.get()) {
             case 0:
+                messagesPublisher.onNext(Event.create(
+                        Event.CONTENT_ACTIVITY_EMIT_DATA,
+                        currentUser,
+                        conversations,
+                        friends
+                ));
                 break;
             case 1:
                 contactsPublisher.onNext(Event.create(

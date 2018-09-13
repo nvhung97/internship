@@ -319,6 +319,10 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 			* https://stackoverflow.com/a/45177261
 7:53 PM 9/10/2018
 	- Đưa load dữ liệu về content activity, emit value sang các fragment.
+2:00 PM 9/12/2018
+	- Hoàn thiện group fragment
+2:00 PM 9/13/2018
+	- Hoàn thiện Message fragment
 
 
 

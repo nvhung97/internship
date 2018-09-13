@@ -9,21 +9,21 @@ import android.view.View;
 
 import com.example.cpu11398_local.etalk.R;
 
-public class StatusView extends View{
+public class StatusCircleView extends View{
 
     private Handler handler = new Handler();
 
-    public StatusView(Context context) {
+    public StatusCircleView(Context context) {
         super(context);
         init();
     }
 
-    public StatusView(Context context, @Nullable AttributeSet attrs) {
+    public StatusCircleView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public StatusView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public StatusCircleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

@@ -28,6 +28,7 @@ import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatViewMod
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContactViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContentViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.GroupViewModel;
+import com.example.cpu11398_local.etalk.presentation.view_model.content.MessageViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.MoreViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.friend.AddFriendViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.group.CreateGroupViewModel;
@@ -338,6 +339,13 @@ public class AppModule {
         ContentViewModel contentViewModel = new ContentViewModel(context, usecase1, usecase2, receiver);
         viewModelCallback = contentViewModel;
         return contentViewModel;
+    }
+
+    @Provides
+    @Named("MessageViewModel")
+    public ViewModel provideMessageViewModel(Context context,
+                                             ViewModelCallback viewModelCallback) {
+        return new MessageViewModel(context, viewModelCallback);
     }
 
     @Provides

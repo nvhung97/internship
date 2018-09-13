@@ -15,6 +15,9 @@
     <string name="app_time_hours">hours</string>
     <string name="app_time_minute">minute</string>
     <string name="app_time_minutes">minutes</string>
+    <string name="app_members">members</string>
+    <string name="app_online">Online</string>
+    <string name="app_offline">Offline</string>
 
     <!--Welcome activity-->
     <string name="welcome_activity_btn_login">LOGIN</string>

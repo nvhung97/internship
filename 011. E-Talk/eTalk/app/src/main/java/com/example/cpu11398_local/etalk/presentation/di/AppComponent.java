@@ -4,6 +4,7 @@ import com.example.cpu11398_local.etalk.presentation.view.chat.ChatActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.ContentActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.contacts.ContactsFragment;
 import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.groups.GroupsFragment;
+import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.messages.MessagesFragment;
 import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.more.MoreFragment;
 import com.example.cpu11398_local.etalk.presentation.view.friend.AddFriendActivity;
 import com.example.cpu11398_local.etalk.presentation.view.group.CreateGroupActivity;
@@ -25,6 +26,7 @@ public interface AppComponent {
     void inject(LoginActivity loginActivity);
 
     void inject(ContentActivity contentActivity);
+    void inject(MessagesFragment messagesFragment);
     void inject(ContactsFragment contactsFragment);
     void inject(GroupsFragment groupsFragment);
     void inject(MoreFragment moreFragment);

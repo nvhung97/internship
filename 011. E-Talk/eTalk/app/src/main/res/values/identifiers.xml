@@ -79,6 +79,8 @@
     <item name="content_activity_menu_etalk_calendar" type="id"/>
 
     <!--Messages fragment-->
+    <item name="message_fragment_rv_message" type="id"/>
+    <item name="message_fragment_loading" type="id"/>
     <item name="lyt_row_message_person" type="id"/>
     <item name="lyt_row_message_person_avatar" type="id"/>
     <item name="lyt_row_message_person_name" type="id"/>

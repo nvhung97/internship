@@ -121,6 +121,13 @@ public class Event {
     public static final int GROUP_FRAGMENT_CHAT                 = GROUP_FRAGMENT_MARK | 0;
     public static final int GROUP_FRAGMENT_HIDE_PROGRESS_BAR    = GROUP_FRAGMENT_MARK | 1;
 
+    /**
+     * Bellow commands for {@code MessageFragment}.
+     */
+    private static final int MESSAGE_FRAGMENT_MARK                = 11 << MODE_SHIFT;
+    public static final int MESSAGE_FRAGMENT_CHAT                 = MESSAGE_FRAGMENT_MARK | 0;
+    public static final int MESSAGE_FRAGMENT_HIDE_PROGRESS_BAR    = MESSAGE_FRAGMENT_MARK | 1;
+
 
     /***********************************************************************************************
      * Class implementation.

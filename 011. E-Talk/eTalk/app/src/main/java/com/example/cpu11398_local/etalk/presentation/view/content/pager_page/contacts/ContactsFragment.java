@@ -12,6 +12,8 @@ import android.widget.ProgressBar;
 
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.FragmentContactsBinding;
+import com.example.cpu11398_local.etalk.presentation.model.Conversation;
+import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.presentation.view.chat.ChatActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
@@ -95,7 +97,14 @@ public class ContactsFragment extends Fragment {
             Object[] data = event.getData();
             switch (event.getType()) {
                 case Event.CONTACT_FRAGMENT_CHAT:
-                    startActivity(new Intent(getActivity(), ChatActivity.class));
+                    Conversation conversation = (Conversation)data[0];
+                    User friend = (User)data[1];
+                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    intent.putExtra("key", conversation.getCreator() + conversation.getTime());
+                    intent.putExtra("type", conversation.getType());
+                    intent.putExtra("name", friend.getName());
+                    intent.putExtra("number", friend.getActive());
+                    startActivity(intent);
                     break;
                 case Event.CONTACT_FRAGMENT_HIDE_PROGRESS_BAR:
                     progressBar.setVisibility(View.GONE);

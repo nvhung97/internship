@@ -13,7 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView;
-import com.example.cpu11398_local.etalk.presentation.custom.StatusView;
+import com.example.cpu11398_local.etalk.presentation.custom.StatusCircleView;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContactViewModel;
@@ -33,7 +33,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     public class ContactViewHolder extends RecyclerView.ViewHolder {
         public FrameLayout      row;
         public AvatarImageView  avatar;
-        public StatusView       status;
+        public StatusCircleView status;
         public TextView         name;
         public ImageButton      voiceCall;
         public ImageButton      videoCall;
@@ -71,20 +71,19 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     @Override
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
         if (currentUser != null) {
-            User friend = null;
             for (String key : conversations.get(position).getMembers().keySet()) {
                 if (!key.equals(currentUser.getUsername())) {
-                    friend = friends.get(key);
+                    User friend = friends.get(key);
+                    if (friend != null) {
+                        holder.avatar.setImageFromObject(friend.getAvatar());
+                        holder.status.setStatus(friend.getActive());
+                        holder.name.setText(friend.getName());
+                        holder.row.setOnClickListener(v -> actionCallback.chatWith(conversations.get(position), friends.get(key)));
+                        holder.voiceCall.setOnClickListener(v -> actionCallback.voiceCallWith(conversations.get(position), friends.get(key)));
+                        holder.videoCall.setOnClickListener(v -> actionCallback.videoCallWith(conversations.get(position), friends.get(key)));
+                    }
                     break;
                 }
-            }
-            if (friend != null) {
-                holder.avatar.setImageFromObject(friend.getAvatar());
-                holder.status.setStatus(friend.getActive());
-                holder.name.setText(friend.getName());
-                holder.row.setOnClickListener(v -> actionCallback.chatWith(conversations.get(position)));
-                holder.voiceCall.setOnClickListener(v -> actionCallback.voiceCallWith(conversations.get(position)));
-                holder.videoCall.setOnClickListener(v -> actionCallback.videoCallWith(conversations.get(position)));
             }
         }
     }
@@ -97,6 +96,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
             Bundle bundle = (Bundle)payloads.get(0);
             for (String key : bundle.keySet()) {
                 switch (key) {
+                    case "key":
+                        holder.row.setOnClickListener(v -> actionCallback.chatWith(conversations.get(position), friends.get(bundle.getString(key))));
+                        holder.voiceCall.setOnClickListener(v -> actionCallback.voiceCallWith(conversations.get(position), friends.get(bundle.getString(key))));
+                        holder.videoCall.setOnClickListener(v -> actionCallback.videoCallWith(conversations.get(position), friends.get(bundle.getString(key))));
+                        break;
                     case "avatar":
                         holder.avatar.setImageFromObject(bundle.getString(key));
                         break;

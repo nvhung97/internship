@@ -5,31 +5,36 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 
-import com.example.cpu11398_local.etalk.BR;
-import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.User;
-import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.groups.GroupAdapter;
+import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.messages.MessageAdapter;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
 import com.example.cpu11398_local.etalk.utils.Event;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.inject.Inject;
+
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 
-public class GroupViewModel extends BaseObservable implements ViewModel {
+public class MessageViewModel extends BaseObservable implements ViewModel {
 
     /**
      * Used to dispose observer when activity destroyed.
      */
     private Disposable disposable;
+
+    /**
+     * Used to determine if user read new messages in the conversation.
+     */
+    private User currentUser;
 
     /**
      * Container contain current friend.
@@ -44,29 +49,20 @@ public class GroupViewModel extends BaseObservable implements ViewModel {
     /**
      * Binding {@code adapter} and {@code RecyclerView} for contacts on view.
      */
-    private GroupAdapter adapter = new GroupAdapter(conversations, friends, new ActionCallback() {
+    private MessageAdapter adapter = new MessageAdapter(currentUser, conversations, friends, new ActionCallback() {
         @Override
-        public void chatWith(Conversation conversation) {
-            Log.e("Test", conversation.getName());
+        public void chatWith(Conversation conversation, User friend) {
             publisher.onNext(Event.create(
-                    Event.GROUP_FRAGMENT_CHAT,
-                    conversation
+                    Event.MESSAGE_FRAGMENT_CHAT,
+                    conversation,
+                    friend
             ));
         }
     });
 
     @Bindable
-    public GroupAdapter getAdapter() {
+    public MessageAdapter getAdapter() {
         return adapter;
-    }
-
-    @Bindable
-    public String getTitle(){
-        if (conversations.isEmpty()) {
-            return context.getString(R.string.group_fragment_txt_title);
-        } else {
-            return context.getString(R.string.group_fragment_txt_title) + " (" + conversations.size() + ")";
-        }
     }
 
     /**
@@ -85,16 +81,16 @@ public class GroupViewModel extends BaseObservable implements ViewModel {
     private ViewModelCallback viewModelCallback;
 
     /**
-     * Create new {@code GroupViewModel} with a {@code Context}, a {@code ViewModelCallback}.
+     * Create new {@code MessageViewModel} with a {@code Context}, a {@code ViewModelCallback}.
      */
     @Inject
-    public GroupViewModel(Context context,
-                          ViewModelCallback viewModelCallback) {
+    public MessageViewModel(Context context,
+                            ViewModelCallback viewModelCallback) {
         this.context                        = context;
         this.viewModelCallback              = viewModelCallback;
         this.viewModelCallback.onChildViewModelSubscribeObserver(
-                new GroupObserver(),
-                ViewModelCallback.GROUPS
+                new MessageObserver(),
+                ViewModelCallback.MESSAGES
         );
     }
 
@@ -120,7 +116,7 @@ public class GroupViewModel extends BaseObservable implements ViewModel {
     /**
      * {@code GroupObserver} is subscribed to parent viewModel to listen event from it.
      */
-    private class GroupObserver implements Observer<Event> {
+    private class MessageObserver implements Observer<Event> {
         @Override
         public void onSubscribe(Disposable d) {
             disposable = d;
@@ -132,16 +128,16 @@ public class GroupViewModel extends BaseObservable implements ViewModel {
             Object[] data = event.getData();
             switch (event.getType()) {
                 case Event.CONTENT_ACTIVITY_EMIT_DATA:
-                    User user       = (User)data[0];
+                    currentUser     = (User)data[0];
                     conversations   = (List<Conversation>)data[1];
                     friends         = new HashMap<>((Map<String, User>)data[2]);
-                    friends.put(user.getUsername(), user);
+                    friends.put(currentUser.getUsername(), currentUser);
                     adapter.onNewData(
+                            currentUser,
                             conversations,
                             friends
                     );
-                    publisher.onNext(Event.create(Event.GROUP_FRAGMENT_HIDE_PROGRESS_BAR));
-                    notifyPropertyChanged(BR.title);
+                    publisher.onNext(Event.create(Event.MESSAGE_FRAGMENT_HIDE_PROGRESS_BAR));
                     break;
             }
         }
@@ -161,6 +157,6 @@ public class GroupViewModel extends BaseObservable implements ViewModel {
      * A callback to get action when user click item on {@code RecyclerView}.
      */
     public interface ActionCallback {
-        void chatWith(Conversation conversation);
+        void chatWith(Conversation conversation, User friend);
     }
 }

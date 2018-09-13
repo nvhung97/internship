@@ -150,6 +150,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
             Bundle bundle = (Bundle)payloads.get(0);
             if (abstractHolder.getItemViewType() == SINGLE_AVATAR) {
                 SingleAvatarViewHolder holder = (SingleAvatarViewHolder)abstractHolder;
+                holder.row.setOnClickListener(v -> actionCallback.chatWith(conversations.get(position)));
                 for (String key : bundle.keySet()) {
                     switch (key) {
                         case "data":
@@ -169,6 +170,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
             }
             else {
                 MultipleAvatarViewHolder holder = (MultipleAvatarViewHolder)abstractHolder;
+                holder.row.setOnClickListener(v -> actionCallback.chatWith(conversations.get(position)));
                 for (String key : bundle.keySet()) {
                     switch (key) {
                         case "data":

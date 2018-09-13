@@ -49,17 +49,21 @@ public class ContactViewModel extends BaseObservable implements ViewModel {
      */
     private ContactAdapter adapter = new ContactAdapter(currentUser, conversations, friends, new ActionCallback() {
         @Override
-        public void chatWith(Conversation conversation) {
-            publisher.onNext(Event.create(Event.CONTACT_FRAGMENT_CHAT));
+        public void chatWith(Conversation conversation, User friend) {
+            publisher.onNext(Event.create(
+                    Event.CONTACT_FRAGMENT_CHAT,
+                    conversation,
+                    friend
+            ));
         }
 
         @Override
-        public void voiceCallWith(Conversation conversation) {
+        public void voiceCallWith(Conversation conversation, User friend) {
             Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        public void videoCallWith(Conversation conversation) {
+        public void videoCallWith(Conversation conversation, User friend) {
             Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
         }
     });
@@ -190,8 +194,8 @@ public class ContactViewModel extends BaseObservable implements ViewModel {
      * A callback to get action when user click item on {@code RecyclerView}.
      */
     public interface ActionCallback {
-        void chatWith(Conversation conversation);
-        void voiceCallWith(Conversation conversation);
-        void videoCallWith(Conversation conversation);
+        void chatWith(Conversation conversation, User friend);
+        void voiceCallWith(Conversation conversation, User friend);
+        void videoCallWith(Conversation conversation, User friend);
     }
 }

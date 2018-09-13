@@ -88,8 +88,11 @@ public class ContactDiffUtil extends DiffUtil.Callback{
                 break;
             }
         }
-        if (oldFriend == null || newFriend == null) {
-            return null;
+        bundle.putString("key", newFriend.getUsername());
+        if (oldFriend == null && newFriend != null) {
+            bundle.putString("avatar", newFriend.getAvatar());
+            bundle.putString("name", newFriend.getName());
+            bundle.putLong("active", newFriend.getActive());
         } else {
             if (!oldFriend.getAvatar().equals(newFriend.getAvatar())) {
                 bundle.putString("avatar", newFriend.getAvatar());
@@ -100,7 +103,7 @@ public class ContactDiffUtil extends DiffUtil.Callback{
             if (oldFriend.getActive() != newFriend.getActive()) {
                 bundle.putLong("active", newFriend.getActive());
             }
-            return bundle;
         }
+        return bundle;
     }
 }

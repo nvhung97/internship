@@ -2,8 +2,12 @@ package com.example.cpu11398_local.etalk.presentation.view.chat;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityChatBinding;
+import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatViewModel;
@@ -41,6 +45,18 @@ public class ChatActivity extends BaseActivity {
             WelcomeActivity.getAppComponent(this).inject(this);
         }
         binding.setViewModel((ChatViewModel) viewModel);
+        binding.chatActivityTxtFriendName.setText(getIntent().getExtras().getString("name"));
+        if (getIntent().getExtras().getLong("type") == Conversation.GROUP) {
+            binding.chatActivityTxtFriendStatus.setText(
+                    getIntent().getExtras().getInt("number")
+                    + " "
+                    + getString(R.string.app_members)
+            );
+        } else if (System.currentTimeMillis() - getIntent().getExtras().getLong("number") < 10000) {
+            binding.chatActivityTxtFriendStatus.setText(getString(R.string.app_online));
+        } else {
+            binding.chatActivityTxtFriendStatus.setText(getString(R.string.app_offline));
+        }
         addControlKeyboardView(binding.chatActivityLytMessage);
     }
 
