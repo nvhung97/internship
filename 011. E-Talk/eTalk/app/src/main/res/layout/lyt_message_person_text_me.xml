@@ -21,7 +21,6 @@
             android:paddingTop="5dp"
             android:paddingRight="10dp"
             android:paddingBottom="5dp"
-            android:text="Text"
             android:textSize="14.5sp"
             android:textColor="@color/colorBlack"/>
         <TextView
@@ -31,7 +30,6 @@
             android:paddingLeft="10dp"
             android:paddingBottom="2dp"
             android:paddingRight="10dp"
-            android:text="10:15"
             android:textSize="12sp"
             app:layout_constraintLeft_toLeftOf="@id/lyt_message_person_text_me_data"
             app:layout_constraintTop_toBottomOf="@id/lyt_message_person_text_me_data"/>
@@ -41,6 +39,5 @@
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:layout_marginRight="5dp"
-        android:layout_gravity="right|bottom"
-        android:src="@drawable/img_avatar_holder"/>
+        android:layout_gravity="right|bottom"/>
 </FrameLayout>
