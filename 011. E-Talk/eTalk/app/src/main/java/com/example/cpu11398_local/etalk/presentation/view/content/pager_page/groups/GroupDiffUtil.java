@@ -60,20 +60,22 @@ public class GroupDiffUtil extends DiffUtil.Callback{
         } else {
             List<String> oldKeyFriends = new ArrayList<>(oldConversation.getMembers().keySet());
             List<String> newKeyFriends = new ArrayList<>(newConversation.getMembers().keySet());
-            if (!((oldFriends.get(oldKeyFriends.get(0)) == null && newFriends.get(newKeyFriends.get(0)) == null)
-                    || (oldFriends.get(oldKeyFriends.get(0)) != null && newFriends.get(newKeyFriends.get(0)) != null
-                    && oldFriends.get(oldKeyFriends.get(0)).getAvatar().equals(newFriends.get(newKeyFriends.get(0)).getAvatar())))) {
-                return false;
-            }
-            if (!((oldFriends.get(oldKeyFriends.get(1)) == null && newFriends.get(newKeyFriends.get(1)) == null)
-                    || (oldFriends.get(oldKeyFriends.get(1)) != null && newFriends.get(newKeyFriends.get(1)) != null
-                    && oldFriends.get(oldKeyFriends.get(1)).getAvatar().equals(newFriends.get(newKeyFriends.get(1)).getAvatar())))) {
-                return false;
-            }
-            if (!((oldFriends.get(oldKeyFriends.get(2)) == null && newFriends.get(newKeyFriends.get(2)) == null)
-                    || (oldFriends.get(oldKeyFriends.get(2)) != null && newFriends.get(newKeyFriends.get(2)) != null
-                    && oldFriends.get(oldKeyFriends.get(2)).getAvatar().equals(newFriends.get(newKeyFriends.get(2)).getAvatar())))) {
-                return false;
+            for (int i = 1; i <= 3; ++i) {
+                User oldFriend = oldFriends.get(oldKeyFriends.get(i - 1));
+                User newFriend = newFriends.get(newKeyFriends.get(i - 1));
+                if (oldFriend == null && newFriend != null) {
+                    return false;
+                }
+                if (oldFriend != null && newFriend != null) {
+                    if ((oldFriend.getAvatar() == null && newFriend.getAvatar() != null)
+                        || (oldFriend.getAvatar() != null && newFriend.getAvatar() == null)) {
+                        return false;
+                    }
+                    if (oldFriend.getAvatar() != null && newFriend.getAvatar() != null
+                            && !oldFriend.getAvatar().equals(newFriend.getAvatar())) {
+                        return false;
+                    }
+                }
             }
         }
         if (oldConversation.getMembers().size() != newConversation.getMembers().size()) {
@@ -103,20 +105,22 @@ public class GroupDiffUtil extends DiffUtil.Callback{
         } else {
             List<String> oldKeyFriends = new ArrayList<>(oldConversation.getMembers().keySet());
             List<String> newKeyFriends = new ArrayList<>(newConversation.getMembers().keySet());
-            if (!((oldFriends.get(oldKeyFriends.get(0)) == null && newFriends.get(newKeyFriends.get(0)) == null)
-                    || (oldFriends.get(oldKeyFriends.get(0)) != null && newFriends.get(newKeyFriends.get(0)) != null
-                    && oldFriends.get(oldKeyFriends.get(0)).getAvatar().equals(newFriends.get(newKeyFriends.get(0)).getAvatar())))) {
-                bundle.putString("avatar1", newFriends.get(newKeyFriends.get(0)).getAvatar());
-            }
-            if (!((oldFriends.get(oldKeyFriends.get(1)) == null && newFriends.get(newKeyFriends.get(1)) == null)
-                    || (oldFriends.get(oldKeyFriends.get(1)) != null && newFriends.get(newKeyFriends.get(1)) != null
-                    && oldFriends.get(oldKeyFriends.get(1)).getAvatar().equals(newFriends.get(newKeyFriends.get(1)).getAvatar())))) {
-                bundle.putString("avatar2", newFriends.get(newKeyFriends.get(1)).getAvatar());
-            }
-            if (!((oldFriends.get(oldKeyFriends.get(2)) == null && newFriends.get(newKeyFriends.get(2)) == null)
-                    || (oldFriends.get(oldKeyFriends.get(2)) != null && newFriends.get(newKeyFriends.get(2)) != null
-                    && oldFriends.get(oldKeyFriends.get(2)).getAvatar().equals(newFriends.get(newKeyFriends.get(2)).getAvatar())))) {
-                bundle.putString("avatar3", newFriends.get(newKeyFriends.get(2)).getAvatar());
+            for (int i = 1; i <= 3; ++i) {
+                User oldFriend = oldFriends.get(oldKeyFriends.get(i - 1));
+                User newFriend = newFriends.get(newKeyFriends.get(i - 1));
+                if (oldFriend == null && newFriend != null) {
+                    bundle.putString("avatar" + i, newFriend.getAvatar());
+                }
+                if (oldFriend != null && newFriend != null) {
+                    if ((oldFriend.getAvatar() == null && newFriend.getAvatar() != null)
+                            || (oldFriend.getAvatar() != null && newFriend.getAvatar() == null)) {
+                        bundle.putString("avatar" + i, newFriend.getAvatar());
+                    }
+                    if (oldFriend.getAvatar() != null && newFriend.getAvatar() != null
+                            && !oldFriend.getAvatar().equals(newFriend.getAvatar())) {
+                        bundle.putString("avatar" + i, newFriend.getAvatar());
+                    }
+                }
             }
         }
         if (oldConversation.getMembers().size() != newConversation.getMembers().size()) {

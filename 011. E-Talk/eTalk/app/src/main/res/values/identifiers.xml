@@ -142,6 +142,16 @@
     <item name="chat_activity_btn_record" type="id"/>
     <item name="chat_activity_btn_image" type="id"/>
     <item name="chat_activity_btn_send" type="id"/>
+    <item name="lyt_message_person_text_me_row" type="id"/>
+    <item name="lyt_message_person_text_me_content" type="id"/>
+    <item name="lyt_message_person_text_me_data" type="id"/>
+    <item name="lyt_message_person_text_me_time" type="id"/>
+    <item name="lyt_message_person_text_me_status" type="id"/>
+    <item name="lyt_message_person_text_friend_row" type="id"/>
+    <item name="lyt_message_person_text_friend_avatar" type="id"/>
+    <item name="lyt_message_person_text_friend_content" type="id"/>
+    <item name="lyt_message_person_text_friend_data" type="id"/>
+    <item name="lyt_message_person_text_friend_time" type="id"/>
 
     <!--Profile activity-->
     <item name="profile_activity_status_bar" type="id"/>

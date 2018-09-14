@@ -323,6 +323,9 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Hoàn thiện group fragment
 2:00 PM 9/13/2018
 	- Hoàn thiện Message fragment
+2:46 PM 9/14/2018
+	- Chỉnh sửa bug avatar
+	- Thiết kế layout item message
 
 
 

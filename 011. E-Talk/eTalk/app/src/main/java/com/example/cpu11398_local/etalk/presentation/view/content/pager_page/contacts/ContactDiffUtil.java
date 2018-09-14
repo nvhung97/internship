@@ -60,14 +60,28 @@ public class ContactDiffUtil extends DiffUtil.Callback{
                 break;
             }
         }
-        if ((oldFriend == null && newFriend == null)
-                || (oldFriend != null && newFriend != null
-                    && oldFriend.getName().equals(newFriend.getName())
-                    && oldFriend.getAvatar().equals(newFriend.getAvatar())
-                    && oldFriend.getActive() == newFriend.getActive())) {
+        if (oldFriend == null && newFriend == null) {
             return true;
         }
-        return false;
+        if (oldFriend == null && newFriend != null) {
+            return false;
+        }
+        if (!oldFriend.getName().equals(newFriend.getName())) {
+            return false;
+        }
+        if (oldFriend.getActive() != newFriend.getActive()) {
+            return false;
+        }
+        if (oldFriend.getAvatar() == null & newFriend.getAvatar() == null) {
+            return true;
+        }
+        if (oldFriend.getAvatar() == null & newFriend.getAvatar() != null) {
+            return false;
+        }
+        if (!oldFriend.getAvatar().equals(newFriend.getAvatar())) {
+            return false;
+        }
+        return true;
     }
 
     @Nullable
@@ -93,15 +107,21 @@ public class ContactDiffUtil extends DiffUtil.Callback{
             bundle.putString("avatar", newFriend.getAvatar());
             bundle.putString("name", newFriend.getName());
             bundle.putLong("active", newFriend.getActive());
-        } else {
-            if (!oldFriend.getAvatar().equals(newFriend.getAvatar())) {
-                bundle.putString("avatar", newFriend.getAvatar());
-            }
+        }
+        if (oldFriend != null && newFriend != null) {
             if (!oldFriend.getName().equals(newFriend.getName())) {
                 bundle.putString("name", newFriend.getName());
             }
             if (oldFriend.getActive() != newFriend.getActive()) {
                 bundle.putLong("active", newFriend.getActive());
+            }
+            if ((oldFriend.getAvatar() == null && newFriend.getAvatar() != null)
+                    || (oldFriend.getAvatar() != null && newFriend.getAvatar() == null)) {
+                bundle.putString("avatar", newFriend.getAvatar());
+            }
+            if (oldFriend.getAvatar() != null && newFriend.getAvatar() != null
+                    && !oldFriend.getAvatar().equals(newFriend.getAvatar())) {
+                bundle.putString("avatar", newFriend.getAvatar());
             }
         }
         return bundle;

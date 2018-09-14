@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@id/lyt_message_person_text_me_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="75dp">
+    <android.support.constraint.ConstraintLayout
+        android:id="@id/lyt_message_person_text_me_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="25dp"
+        android:layout_gravity="right"
+        android:background="@drawable/message_me_background">
+        <TextView
+            android:id="@id/lyt_message_person_text_me_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:text="Text"
+            android:textSize="14.5sp"
+            android:textColor="@color/colorBlack"/>
+        <TextView
+            android:id="@id/lyt_message_person_text_me_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingBottom="2dp"
+            android:paddingRight="10dp"
+            android:text="10:15"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="@id/lyt_message_person_text_me_data"
+            app:layout_constraintTop_toBottomOf="@id/lyt_message_person_text_me_data"/>
+    </android.support.constraint.ConstraintLayout>
+    <com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView
+        android:id="@id/lyt_message_person_text_me_status"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginRight="5dp"
+        android:layout_gravity="right|bottom"
+        android:src="@drawable/img_avatar_holder"/>
+</FrameLayout>

@@ -93,10 +93,10 @@ public class LoadContentDataUsecase implements Usecase {
                                 }).map(e -> e.getValue()).collect(Collectors.toList()),
                                 new HashMap<>(friends)
                         ));
-                        handler.postDelayed(this, 5000);
+                        handler.postDelayed(this, 3000);
                     }
                 },
-                5000
+                3000
         );
     }
 
