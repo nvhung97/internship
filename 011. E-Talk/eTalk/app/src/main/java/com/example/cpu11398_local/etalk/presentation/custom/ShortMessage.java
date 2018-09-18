@@ -22,19 +22,19 @@ public class ShortMessage extends android.support.v7.widget.AppCompatTextView{
 
     public void setData(String data) {
         switch (data.substring(0,2)) {
-            case FirebaseTree.Database.Messages.Keys.key.Data.TEXT:
+            case FirebaseTree.Database.Messages.Keys.Key.Data.TEXT:
                 setText(data.substring(3));
                 break;
-            case FirebaseTree.Database.Messages.Keys.key.Data.IMAGE:
+            case FirebaseTree.Database.Messages.Keys.Key.Data.IMAGE:
                 setText(getContext().getString(R.string.app_image));
                 break;
-            case FirebaseTree.Database.Messages.Keys.key.Data.SOUND:
+            case FirebaseTree.Database.Messages.Keys.Key.Data.SOUND:
                 setText(getContext().getString(R.string.app_sound));
                 break;
-            case FirebaseTree.Database.Messages.Keys.key.Data.VIDEO:
+            case FirebaseTree.Database.Messages.Keys.Key.Data.VIDEO:
                 setText(getContext().getString(R.string.app_video));
                 break;
-            case FirebaseTree.Database.Messages.Keys.key.Data.FILE:
+            case FirebaseTree.Database.Messages.Keys.Key.Data.FILE:
                 setText(getContext().getString(R.string.app_sound));
                 break;
         }

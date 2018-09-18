@@ -30,7 +30,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".presentation.view.chat.ChatActivity"
+            android:name=".presentation.view.chat.person.ChatPersonActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity

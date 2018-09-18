@@ -13,7 +13,7 @@ import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.FragmentMessagesBinding;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.User;
-import com.example.cpu11398_local.etalk.presentation.view.chat.ChatActivity;
+import com.example.cpu11398_local.etalk.presentation.view.chat.person.ChatPersonActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.MessageViewModel;
@@ -97,8 +97,8 @@ public class MessagesFragment extends Fragment {
                 case Event.MESSAGE_FRAGMENT_CHAT:
                     Conversation conversation = (Conversation)data[0];
                     User friend = (User)data[1];
-                    Intent intent = new Intent(getActivity(), ChatActivity.class);
-                    intent.putExtra("key", conversation.getCreator() + conversation.getTime());
+                    Intent intent = new Intent(getActivity(), ChatPersonActivity.class);
+                    intent.putExtra("Key", conversation.getCreator() + conversation.getTime());
                     intent.putExtra("type", conversation.getType());
                     if (conversation.getType() == Conversation.PERSON) {
                         intent.putExtra("name", friend.getName());

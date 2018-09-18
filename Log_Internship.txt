@@ -326,6 +326,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 2:46 PM 9/14/2018
 	- Chỉnh sửa bug avatar
 	- Thiết kế layout item message
+6:18 PM 9/18/2018
+	- Chuẩn bị load dữ liệu cho chat activity
 
 
 

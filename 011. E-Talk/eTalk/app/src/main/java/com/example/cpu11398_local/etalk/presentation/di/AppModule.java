@@ -11,6 +11,7 @@ import com.example.cpu11398_local.etalk.data.repository.implement.ConversationRe
 import com.example.cpu11398_local.etalk.data.repository.implement.UserRepositoryImpl;
 import com.example.cpu11398_local.etalk.domain.executor.TaskExecutor;
 import com.example.cpu11398_local.etalk.domain.interactor.AddFriendUsecase;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.CreateGroupUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.FindFriendUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.GetUserInfoUsecase;
@@ -24,7 +25,7 @@ import com.example.cpu11398_local.etalk.domain.interactor.UpdateUserInfoUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
 import com.example.cpu11398_local.etalk.domain.interactor.WelcomeUsecase;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
-import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatViewModel;
+import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatPersonViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContactViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContentViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.GroupViewModel;
@@ -289,6 +290,22 @@ public class AppModule {
     }
 
     @Provides
+    @Named("ChatPersonUsecase")
+    public Usecase provideChatPersonUsecase(Executor executor,
+                                            Scheduler scheduler,
+                                            CompositeDisposable compositeDisposable,
+                                            UserRepository userRepository,
+                                            ConversationRepository conversationRepository) {
+        return new ChatPersonUsecase(
+                executor,
+                scheduler,
+                compositeDisposable,
+                userRepository,
+                conversationRepository
+        );
+    }
+
+    @Provides
     @Named("LogoutUsecase")
     public Usecase provideLogoutUsecase(Executor executor,
                                         Scheduler scheduler,
@@ -379,9 +396,10 @@ public class AppModule {
     }
 
     @Provides
-    @Named("ChatViewModel")
-    public ViewModel provideChatViewModel(Context context) {
-        return new ChatViewModel(context);
+    @Named("ChatPersonViewModel")
+    public ViewModel provideChatPersonViewModel(Context context,
+                                                @Named("ChatPersonUsecase") Usecase usecase) {
+        return new ChatPersonViewModel(context, usecase);
     }
 
     @Provides

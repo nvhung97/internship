@@ -96,7 +96,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
             Bundle bundle = (Bundle)payloads.get(0);
             for (String key : bundle.keySet()) {
                 switch (key) {
-                    case "key":
+                    case "Key":
                         holder.row.setOnClickListener(v -> actionCallback.chatWith(conversations.get(position), friends.get(bundle.getString(key))));
                         holder.voiceCall.setOnClickListener(v -> actionCallback.voiceCallWith(conversations.get(position), friends.get(bundle.getString(key))));
                         holder.videoCall.setOnClickListener(v -> actionCallback.videoCallWith(conversations.get(position), friends.get(bundle.getString(key))));

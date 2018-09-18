@@ -228,7 +228,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 PersonViewHolder holder = (PersonViewHolder)abstractHolder;
                 for (String key : bundle.keySet()) {
                     switch (key) {
-                        case "key":
+                        case "Key":
                             holder.row.setOnClickListener(v -> actionCallback.chatWith(conversations.get(position), friends.get(bundle.getString(key))));
                             break;
                         case "data":

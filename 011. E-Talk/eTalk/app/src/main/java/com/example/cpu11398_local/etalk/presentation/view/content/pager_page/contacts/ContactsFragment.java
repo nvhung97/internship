@@ -9,12 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.FragmentContactsBinding;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.User;
-import com.example.cpu11398_local.etalk.presentation.view.chat.ChatActivity;
+import com.example.cpu11398_local.etalk.presentation.view.chat.person.ChatPersonActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.ContactViewModel;
@@ -63,6 +62,7 @@ public class ContactsFragment extends Fragment {
         );
         binding.contactFragmentRvContact.setHasFixedSize(true);
         progressBar = binding.contactFragmentLoading;
+
         return binding.getRoot();
     }
 
@@ -97,11 +97,12 @@ public class ContactsFragment extends Fragment {
             Object[] data = event.getData();
             switch (event.getType()) {
                 case Event.CONTACT_FRAGMENT_CHAT:
-                    Conversation conversation = (Conversation)data[0];
-                    User friend = (User)data[1];
-                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    User user = (User)data[0];
+                    Conversation conversation = (Conversation)data[1];
+                    User friend = (User)data[2];
+                    Intent intent = new Intent(getActivity(), ChatPersonActivity.class);
+                    intent.putExtra("user", user.getUsername());
                     intent.putExtra("key", conversation.getCreator() + conversation.getTime());
-                    intent.putExtra("type", conversation.getType());
                     intent.putExtra("name", friend.getName());
                     intent.putExtra("number", friend.getActive());
                     startActivity(intent);

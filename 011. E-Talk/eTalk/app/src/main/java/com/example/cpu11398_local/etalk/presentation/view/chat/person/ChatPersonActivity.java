@@ -1,16 +1,15 @@
-package com.example.cpu11398_local.etalk.presentation.view.chat;
+package com.example.cpu11398_local.etalk.presentation.view.chat.person;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
+import android.support.v7.widget.LinearLayoutManager;
 
 import com.example.cpu11398_local.etalk.R;
-import com.example.cpu11398_local.etalk.databinding.ActivityChatBinding;
-import com.example.cpu11398_local.etalk.presentation.model.Conversation;
+import com.example.cpu11398_local.etalk.databinding.ActivityPersonChatBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
-import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatViewModel;
+import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
+import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatPersonViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.Tool;
@@ -19,13 +18,14 @@ import javax.inject.Named;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
-public class ChatActivity extends BaseActivity {
+public class ChatPersonActivity extends BaseActivity {
 
     @Inject
-    @Named("ChatViewModel")
+    @Named("ChatPersonViewModel")
     public ViewModel    viewModel;
 
     private Disposable  disposable;
+    private ViewModelCallback helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,24 +39,13 @@ public class ChatActivity extends BaseActivity {
 
     @Override
     public void onDataBinding() {
-        ActivityChatBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_chat);
+        ActivityPersonChatBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_person_chat);
         viewModel = (ViewModel) getLastCustomNonConfigurationInstance();
         if (viewModel == null) {
             WelcomeActivity.getAppComponent(this).inject(this);
         }
-        binding.setViewModel((ChatViewModel) viewModel);
-        binding.chatActivityTxtFriendName.setText(getIntent().getExtras().getString("name"));
-        if (getIntent().getExtras().getLong("type") == Conversation.GROUP) {
-            binding.chatActivityTxtFriendStatus.setText(
-                    getIntent().getExtras().getInt("number")
-                    + " "
-                    + getString(R.string.app_members)
-            );
-        } else if (System.currentTimeMillis() - getIntent().getExtras().getLong("number") < 10000) {
-            binding.chatActivityTxtFriendStatus.setText(getString(R.string.app_online));
-        } else {
-            binding.chatActivityTxtFriendStatus.setText(getString(R.string.app_offline));
-        }
+        binding.setViewModel((ChatPersonViewModel)viewModel);
+        binding.chatActivityLstMessage.setLayoutManager(new LinearLayoutManager(this));
         addControlKeyboardView(binding.chatActivityLytMessage);
     }
 
@@ -95,6 +84,17 @@ public class ChatActivity extends BaseActivity {
                 case Event.CHAT_ACTIVITY_BACK:
                     onBackPressed();
                     break;
+                case Event.CHAT_ACTIVITY_HELPER:
+                    if (helper == null) {
+                        helper = (ViewModelCallback) data[0];
+                        helper.onHelp(Event.create(
+                                Event.CHAT_ACTIVITY_VALUE,
+                                getIntent().getExtras().getString("user"),
+                                getIntent().getExtras().getString("key"),
+                                getIntent().getExtras().getString("name"),
+                                getIntent().getExtras().getLong("number")
+                        ));
+                    }
             }
         }
 

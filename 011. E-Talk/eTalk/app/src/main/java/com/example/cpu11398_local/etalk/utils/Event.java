@@ -28,10 +28,14 @@ public class Event {
     public static final int CONTENT_ACTIVITY_EMIT_DATA                  = CONTENT_ACTIVITY_MARK | 4;
 
     /**
-     * Bellow commands for {@code ChatActivity}.
+     * Bellow commands for {@code ChatPersonActivity}.
      */
-    private static final int CHAT_ACTIVITY_MARK = 1 << MODE_SHIFT;
-    public static final int CHAT_ACTIVITY_BACK  = CHAT_ACTIVITY_MARK | 0;
+    private static final int CHAT_ACTIVITY_MARK     = 1 << MODE_SHIFT;
+    public static final int CHAT_ACTIVITY_BACK      = CHAT_ACTIVITY_MARK | 0;
+    public static final int CHAT_ACTIVITY_HELPER    = CHAT_ACTIVITY_MARK | 1;
+    public static final int CHAT_ACTIVITY_VALUE     = CHAT_ACTIVITY_MARK | 2;
+    public static final int CHAT_ACTIVITY_FRIEND    = CHAT_ACTIVITY_MARK | 3;
+    public static final int CHAT_ACTIVITY_MESSAGES  = CHAT_ACTIVITY_MARK | 4;
 
     /**
      * Bellow commands for {@code LoginActivity}.

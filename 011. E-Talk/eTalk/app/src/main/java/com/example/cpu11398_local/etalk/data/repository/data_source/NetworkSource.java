@@ -62,7 +62,7 @@ public interface NetworkSource {
     /**
      * Push a new relationship to given {@code username} with a {@code conversation}.
      * @param username user id.
-     * @param conversation used to get key and type.
+     * @param conversation used to get Key and type.
      * @return an observable contain result of action. {@code true} if successfully,
      * otherwise {@code false}.
      */

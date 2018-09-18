@@ -52,6 +52,7 @@ public class ContactViewModel extends BaseObservable implements ViewModel {
         public void chatWith(Conversation conversation, User friend) {
             publisher.onNext(Event.create(
                     Event.CONTACT_FRAGMENT_CHAT,
+                    currentUser,
                     conversation,
                     friend
             ));

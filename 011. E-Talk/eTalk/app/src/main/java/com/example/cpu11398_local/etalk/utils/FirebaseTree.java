@@ -62,7 +62,7 @@ public final class FirebaseTree {
         public final class Messages {
             public static final String NODE_NAME = "messages";
             public final class Keys {
-                public final class key {
+                public final class Key {
                     public final class Type {
                         public static final String NODE_NAME = "type";
                     }

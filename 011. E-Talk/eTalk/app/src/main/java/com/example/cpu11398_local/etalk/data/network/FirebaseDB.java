@@ -301,6 +301,8 @@ public class FirebaseDB implements NetworkSource{
                 databaseReference
                         .child(FirebaseTree.Database.Messages.NODE_NAME)
                         .child(conversationKey)
+                        .orderByChild(FirebaseTree.Database.Messages.Keys.Key.Time.NODE_NAME)
+                        .limitToLast(30)
                         .addChildEventListener(new ChildEventListener() {
                             @Override
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {

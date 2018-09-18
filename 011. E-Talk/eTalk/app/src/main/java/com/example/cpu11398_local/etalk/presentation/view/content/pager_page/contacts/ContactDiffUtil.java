@@ -102,7 +102,7 @@ public class ContactDiffUtil extends DiffUtil.Callback{
                 break;
             }
         }
-        bundle.putString("key", newFriend.getUsername());
+        bundle.putString("Key", newFriend.getUsername());
         if (oldFriend == null && newFriend != null) {
             bundle.putString("avatar", newFriend.getAvatar());
             bundle.putString("name", newFriend.getName());

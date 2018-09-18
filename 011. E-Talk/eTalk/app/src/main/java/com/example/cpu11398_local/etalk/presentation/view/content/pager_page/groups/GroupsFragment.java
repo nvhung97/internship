@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import android.widget.ProgressBar;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.FragmentGroupsBinding;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
-import com.example.cpu11398_local.etalk.presentation.view.chat.ChatActivity;
+import com.example.cpu11398_local.etalk.presentation.view.chat.person.ChatPersonActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.content.GroupViewModel;
@@ -96,8 +95,8 @@ public class GroupsFragment extends Fragment {
             switch (event.getType()) {
                 case Event.GROUP_FRAGMENT_CHAT:
                     Conversation conversation = (Conversation)data[0];
-                    Intent intent = new Intent(getActivity(), ChatActivity.class);
-                    intent.putExtra("key", conversation.getCreator() + conversation.getTime());
+                    Intent intent = new Intent(getActivity(), ChatPersonActivity.class);
+                    intent.putExtra("Key", conversation.getCreator() + conversation.getTime());
                     intent.putExtra("type", conversation.getType());
                     intent.putExtra("name", conversation.getName());
                     intent.putExtra("number", conversation.getMembers().size());
