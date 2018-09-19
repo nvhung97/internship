@@ -36,6 +36,7 @@ public class Event {
     public static final int CHAT_ACTIVITY_VALUE     = CHAT_ACTIVITY_MARK | 2;
     public static final int CHAT_ACTIVITY_FRIEND    = CHAT_ACTIVITY_MARK | 3;
     public static final int CHAT_ACTIVITY_MESSAGES  = CHAT_ACTIVITY_MARK | 4;
+    public static final int CHAT_ACTIVITY_GOTO_LAST = CHAT_ACTIVITY_MARK | 5;
 
     /**
      * Bellow commands for {@code LoginActivity}.

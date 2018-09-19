@@ -16,6 +16,10 @@ public class Message {
     public Message() {
     }
 
+    public Message(String data, long type) {
+        this(null, data, type);
+    }
+
     public Message(String sender, String data, long type) {
         this(sender, data, type, System.currentTimeMillis());
     }

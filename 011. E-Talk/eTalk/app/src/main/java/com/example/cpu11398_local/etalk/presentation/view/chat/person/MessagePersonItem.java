@@ -16,6 +16,32 @@ public class MessagePersonItem {
         this.message = message;
     }
 
+    public MessagePersonItem(Message message,
+                             Object data,
+                             String avatar,
+                             String time) {
+        this.message = message;
+        this.data = data;
+        this.avatar = avatar;
+        this.time = time;
+    }
+
+    public MessagePersonItem(Message message,
+                             boolean isMe,
+                             Object data,
+                             String avatar,
+                             int avatarVisible,
+                             String time,
+                             int timeVisible) {
+        this.message        = message;
+        this.isMe           = isMe;
+        this.data           = data;
+        this.avatar         = avatar;
+        this.avatarVisible  = avatarVisible;
+        this.time           = time;
+        this.timeVisible    = timeVisible;
+    }
+
     public Message getMessage() {
         return message;
     }
@@ -89,5 +115,9 @@ public class MessagePersonItem {
         if (this.avatar != null && other.avatar != null
                 && this.avatar.equals(other.avatar)) return true;
         return false;
+    }
+
+    public MessagePersonItem clone() {
+        return new MessagePersonItem(message, isMe, data, avatar, avatarVisible, time, timeVisible);
     }
 }

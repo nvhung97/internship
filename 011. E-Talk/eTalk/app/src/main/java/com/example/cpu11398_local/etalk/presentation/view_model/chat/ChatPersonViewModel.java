@@ -10,13 +10,20 @@ import android.widget.Toast;
 import com.example.cpu11398_local.etalk.BR;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
+import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.model.User;
+import com.example.cpu11398_local.etalk.presentation.view.chat.person.MessagePersonAdapter;
+import com.example.cpu11398_local.etalk.presentation.view.chat.person.MessagePersonItem;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
 import com.example.cpu11398_local.etalk.utils.Event;
+import java.util.ArrayList;
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.subjects.PublishSubject;
 
@@ -57,12 +64,27 @@ public class ChatPersonViewModel extends BaseObservable implements ViewModel, Vi
                         this.textStatus = context.getString(R.string.app_offline);
                         notifyPropertyChanged(BR.textStatus);
                     },
-                    10000 + time - System.currentTimeMillis()
+                    10000
             );
         } else {
             this.textStatus = context.getString(R.string.app_offline);
         }
         notifyPropertyChanged(BR.textStatus);
+    }
+
+    /**
+     * Container contain messages.
+     */
+    private List<MessagePersonItem> messages = new ArrayList<>();
+
+    /**
+     * Binding {@code adapter} and {@code RecyclerView} for contacts on view.
+     */
+    private MessagePersonAdapter adapter = new MessagePersonAdapter(messages);
+
+    @Bindable
+    public MessagePersonAdapter getAdapter() {
+        return adapter;
     }
 
     /**
@@ -185,6 +207,15 @@ public class ChatPersonViewModel extends BaseObservable implements ViewModel, Vi
      * @param view
      */
     public void onSendMessage(View view) {
+        chatPersonUsecase.execute(
+                new SendObserver(),
+                new Message(
+                        "te:" + textMessage,
+                        Message.TEXT
+                ),
+                null,
+                "send"
+        );
         setTextMessage("");
     }
 
@@ -214,12 +245,11 @@ public class ChatPersonViewModel extends BaseObservable implements ViewModel, Vi
                         data[1],
                         "first_load"
                 );
-                Log.e("Test", (String)data[0] + " " + (String)data[1]);
         }
     }
 
     /**
-     * {@code LoadContentDataObserver} is subscribed to usecase to listen event from it.
+     * {@code ChatObserver} is subscribed to usecase to listen event from it.
      */
     private class ChatObserver extends DisposableObserver<Event> {
 
@@ -233,6 +263,12 @@ public class ChatPersonViewModel extends BaseObservable implements ViewModel, Vi
                     setTextStatus(friend.getActive());
                     break;
                 case Event.CHAT_ACTIVITY_MESSAGES:
+                    adapter.onNewData(
+                            (List<MessagePersonItem>) data[0],
+                            () -> {
+                                publisher.onNext(Event.create(Event.CHAT_ACTIVITY_GOTO_LAST));
+                                return null;
+                            });
                     break;
             }
         }
@@ -245,6 +281,27 @@ public class ChatPersonViewModel extends BaseObservable implements ViewModel, Vi
         @Override
         public void onComplete() {
 
+        }
+    }
+
+    /**
+     * {@code SendObserver} is subscribed to usecase to listen event from it.
+     */
+    private class SendObserver implements SingleObserver<Boolean> {
+
+        @Override
+        public void onSubscribe(Disposable d) {
+
+        }
+
+        @Override
+        public void onSuccess(Boolean result) {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.i("eTalk", e.getMessage());
         }
     }
 }

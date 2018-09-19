@@ -13,6 +13,7 @@ import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import java.util.List;
+import java.util.concurrent.Callable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -140,7 +141,7 @@ public class MessagePersonAdapter extends RecyclerView.Adapter<MessagePersonAdap
     }
 
     @SuppressLint("CheckResult")
-    public void onNewData(List<MessagePersonItem> messages) {
+    public void onNewData(List<MessagePersonItem> messages, Callable<Void> func) {
         Single
                 .just(DiffUtil.calculateDiff(
                         new MessagePersonDiffUtil(
@@ -153,6 +154,7 @@ public class MessagePersonAdapter extends RecyclerView.Adapter<MessagePersonAdap
                 .subscribe(diffResult -> {
                     this.messages = messages;
                     diffResult.dispatchUpdatesTo(this);
+                    func.call();
                 });
     }
 }
