@@ -1,5 +1,9 @@
 package com.example.cpu11398_local.etalk.presentation.model;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.PropertyName;
+import com.google.firebase.database.ServerValue;
+
 public class Message {
 
     public static final long TEXT  = 0;
@@ -11,7 +15,7 @@ public class Message {
     private String sender;
     private String data;
     private long   type;
-    private long   time;
+    private Object time;
 
     public Message() {
     }
@@ -21,10 +25,10 @@ public class Message {
     }
 
     public Message(String sender, String data, long type) {
-        this(sender, data, type, System.currentTimeMillis());
+        this(sender, data, type, ServerValue.TIMESTAMP);
     }
 
-    public Message(String sender, String data, long type, long time) {
+    public Message(String sender, String data, long type, Object time) {
         this.sender = sender;
         this.data   = data;
         this.type   = type;
@@ -55,11 +59,18 @@ public class Message {
         this.type = type;
     }
 
+    @Exclude
     public long getTime() {
+        return (long)time;
+    }
+
+    @PropertyName("time")
+    public Object getServerTime() {
         return time;
     }
 
-    public void setTime(long time) {
+    @PropertyName("time")
+    public void setServerTime(Object time) {
         this.time = time;
     }
 }

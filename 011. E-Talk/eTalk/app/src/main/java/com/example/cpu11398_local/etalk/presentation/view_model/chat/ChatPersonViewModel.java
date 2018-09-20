@@ -118,6 +118,11 @@ public class ChatPersonViewModel extends BaseObservable implements ViewModel, Vi
     private Usecase chatPersonUsecase;
 
     /**
+     * Used to dispose send usecase.
+     */
+    private Disposable sendDisposable;
+
+    /**
      * create new {@code ChatPersonViewModel} with a context.
      */
     @Inject
@@ -207,6 +212,9 @@ public class ChatPersonViewModel extends BaseObservable implements ViewModel, Vi
      * @param view
      */
     public void onSendMessage(View view) {
+        if (sendDisposable != null && !sendDisposable.isDisposed()) {
+            sendDisposable.dispose();
+        }
         chatPersonUsecase.execute(
                 new SendObserver(),
                 new Message(
@@ -225,6 +233,9 @@ public class ChatPersonViewModel extends BaseObservable implements ViewModel, Vi
     @Override
     public void endTask() {
         chatPersonUsecase.endTask();
+        if (sendDisposable != null && !sendDisposable.isDisposed()) {
+            sendDisposable.dispose();
+        }
     }
 
     @Override
@@ -291,7 +302,7 @@ public class ChatPersonViewModel extends BaseObservable implements ViewModel, Vi
 
         @Override
         public void onSubscribe(Disposable d) {
-
+            sendDisposable = d;
         }
 
         @Override

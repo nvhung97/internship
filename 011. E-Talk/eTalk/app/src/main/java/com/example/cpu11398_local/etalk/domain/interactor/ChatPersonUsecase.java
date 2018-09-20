@@ -2,6 +2,7 @@ package com.example.cpu11398_local.etalk.domain.interactor;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
@@ -82,14 +83,14 @@ public class ChatPersonUsecase implements Usecase {
 
     private void executeFirstLoadCase(DisposableObserver<Event> observer) {
         disposable.add(
-                buildFirstLoadObservable(username, conversationKey)
+                buildFirstLoadObservable()
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
                         .subscribeWith(observer)
         );
     }
 
-    private Observable<Event> buildFirstLoadObservable(String username, String conversationKey) {
+    private Observable<Event> buildFirstLoadObservable() {
         return Observable.create(emitter -> {
             loadConversation();
             runFriendHandler(emitter);
@@ -121,7 +122,7 @@ public class ChatPersonUsecase implements Usecase {
                 new Runnable() {
                     @Override
                     public void run() {
-                        if (needUpdateMessage/* && friend != null*/) {
+                        if (needUpdateMessage) {
                             needUpdateMessage = false;
                             emitter.onNext(Event.create(
                                     Event.CHAT_ACTIVITY_MESSAGES,
@@ -140,13 +141,24 @@ public class ChatPersonUsecase implements Usecase {
         conversationRepository
                 .loadNetworkConversation(conversationKey)
                 .subscribe(item -> {
+                    Conversation oldConversation = conversation;
                     if (conversation == null) {
                         conversation = item;
                         loadFriend();
                     } else {
                         conversation = item;
                     }
-                    holder.newConversationInfo(conversation);
+                    if (friend != null) {
+                        if (oldConversation.getMembers().get(friend.getUsername()) < conversation.getMembers().get(friend.getUsername())) {
+                            new Handler().postDelayed(
+                                    () -> {
+                                        holder.newConversationInfo(conversation);
+                                        needUpdateMessage = true;
+                                    },
+                                    500
+                            );
+                        }
+                    }
                 });
     }
 
@@ -180,13 +192,15 @@ public class ChatPersonUsecase implements Usecase {
                 });
     }
 
+    @SuppressLint("CheckResult")
     private void executeSendMessage(Message message, SingleObserver<Boolean> observer){
         message.setSender(username);
-        holder.addNewMessage(message);
-        needUpdateMessage = true;
-        /*disposable.add(
-                conversationRepository.pushNetworkMessage(conversationKey, )
-        );*/
+        Log.e("Test", "Send");
+        conversationRepository
+                .pushNetworkMessage(conversationKey, message)
+                .subscribeOn(Schedulers.from(executor))
+                .observeOn(scheduler)
+                .subscribeWith(observer);
     }
 
     @Override
@@ -230,34 +244,44 @@ public class ChatPersonUsecase implements Usecase {
                 if (messages.size() > 1) {
                     MessagePersonItem lastItem = messages.get(messages.size() - 2).clone();
                     messages.set(messages.size() - 2, lastItem);
-                    if (newItem.isMe() && lastItem.isMe()) {
+                    if (!newItem.isMe() && !lastItem.isMe()) {
+                        newItem.setAvatarVisible(View.GONE);
+                        lastItem.setTimeVisible(View.GONE);
+                    }
+                    if (newItem.isMe()) {
+                        if (lastItem.isMe()) {
+                            lastItem.setTimeVisible(View.GONE);
+                        }
                         if (newItem.getAvatarVisible() == View.VISIBLE) {
                             for (int i = messages.size() - 2; i >= 0; --i) {
                                 if (messages.get(i).isMe() && messages.get(i).getAvatarVisible() == View.VISIBLE) {
+                                    messages.set(i, messages.get(i).clone());
                                     messages.get(i).setAvatarVisible(View.GONE);
                                     break;
                                 }
                             }
                         }
-                        lastItem.setTimeVisible(View.GONE);
-                    }
-                    if (!newItem.isMe() && !lastItem.isMe()) {
-                        newItem.setAvatarVisible(View.GONE);
-                        lastItem.setTimeVisible(View.GONE);
                     }
                 }
             }
         }
 
         public void newConversationInfo(Conversation conversation) {
+            Log.e("TestSize", " " + messages.size());
             if (friend != null) {
                 long friendTime = conversation.getMembers().get(friend.getUsername());
+                Log.e("TestFriendTime", " " + friendTime);
                 for (int i = messages.size() - 1; i >= 0; --i) {
+                    Log.e("TestI", " " + i);
                     if (messages.get(i).isMe() && friendTime >= messages.get(i).getMessage().getTime()) {
+                        Log.e("TestUserTime", " " + messages.get(i).getMessage().getTime());
                         if (messages.get(i).getAvatarVisible() == View.GONE) {
+                            messages.set(i, messages.get(i).clone());
                             messages.get(i).setAvatarVisible(View.VISIBLE);
                             for (int j = i - 1; j >= 0; --j) {
+                                Log.e("TestJ", " " + j);
                                 if (messages.get(j).isMe() && messages.get(j).getAvatarVisible() == View.VISIBLE) {
+                                    messages.set(j, messages.get(j).clone());
                                     messages.get(j).setAvatarVisible(View.GONE);
                                     break;
                                 }

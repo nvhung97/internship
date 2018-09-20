@@ -5,9 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.di.AppComponent;
@@ -20,10 +17,6 @@ import com.example.cpu11398_local.etalk.presentation.view.register.RegisterActiv
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.Tool;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -46,39 +39,37 @@ public class WelcomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        /*Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/1/", new TestModel());
+        childUpdates.put("/50/", new Message("long", "addd", 0));
+        FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .child("test")
+                .updateChildren(childUpdates, (databaseError, databaseReference) -> {
+                    if (databaseError == null) {
+                        Log.e("Test", "OK");
+                    } else  {
+                        Log.i("Test", databaseError.getMessage());
+                    }
+                });*/
         /*FirebaseDatabase
                 .getInstance()
                 .getReference()
                 .child("test")
-                .orderByChild("a")
-                .endAt(4)
-                .limitToLast(1)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        Log.e("TestAdd", dataSnapshot.toString() + s);
-                    }
+                .child("1").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                TestModel testModel = dataSnapshot.getValue(TestModel.class);
+                Log.e("TestModel", " " + testModel._getTime());
+            }
 
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        Log.e("TestChange", dataSnapshot.toString()+ s);
-                    }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+            }
+        });*/
 
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });*/
     }
 
     /**

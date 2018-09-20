@@ -1,6 +1,8 @@
 package com.example.cpu11398_local.etalk.presentation.model;
 
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.PropertyName;
+import com.google.firebase.database.ServerValue;
 import java.util.Map;
 
 public class Conversation {
@@ -12,7 +14,7 @@ public class Conversation {
     private String              name;
     private String              avatar;
     private String              creator;
-    private long                time;
+    private Object              time;
     private Map<String, Long>   members;
     private Message             lastMessage;
 
@@ -25,14 +27,14 @@ public class Conversation {
                         String creator,
                         Map<String, Long> members,
                         Message lastMessage) {
-        this(type, name, avatar, creator, System.currentTimeMillis(), members, lastMessage);
+        this(type, name, avatar, creator, ServerValue.TIMESTAMP, members, lastMessage);
     }
 
     public Conversation(long type,
                         String name,
                         String avatar,
                         String creator,
-                        long time,
+                        Object time,
                         Map<String, Long> members,
                         Message lastMessage) {
         this.type        = type;
@@ -76,11 +78,18 @@ public class Conversation {
         this.creator = creator;
     }
 
+    @Exclude
     public long getTime() {
+        return (long)time;
+    }
+
+    @PropertyName("time")
+    public Object getServerTime() {
         return time;
     }
 
-    public void setTime(long time) {
+    @PropertyName("time")
+    public void setServerTime(Object time) {
         this.time = time;
     }
 

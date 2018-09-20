@@ -20,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -203,20 +204,43 @@ public class FirebaseDB implements NetworkSource{
 
     @Override
     public Single<Boolean> pushMessage(String conversationKey, Message message) {
-        return Single.create(emitter ->
-                databaseReference
-                        .child(FirebaseTree.Database.Messages.NODE_NAME)
-                        .child(conversationKey)
-                        .child(message.getSender() + message.getTime())
-                        .setValue(message, (databaseError, databaseReference) -> {
-                            if (databaseError == null) {
-                                emitter.onSuccess(true);
-                            } else  {
-                                Log.i("eTalk", databaseError.getMessage());
-                                emitter.onSuccess(false);
-                            }
-                        })
-        );
+        return Single.create(emitter -> {
+            databaseReference
+                    .child(FirebaseTree.Database.Conversations.NODE_NAME)
+                    .child(conversationKey)
+                    .child(FirebaseTree.Database.Conversations.Key.LastMessage.NODE_NAME)
+                    .setValue(message, (databaseError, databaseRef) -> {
+                        if (databaseError == null) {
+                            databaseRef
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            Message newMessage = dataSnapshot.getValue(Message.class);
+                                            databaseReference
+                                                    .child(FirebaseTree.Database.Messages.NODE_NAME)
+                                                    .child(conversationKey)
+                                                    .child(newMessage.getSender() + newMessage.getTime())
+                                                    .setValue(newMessage, (databaseError, databaseReference) -> {
+                                                        if (databaseError == null) {
+                                                            emitter.onSuccess(true);
+                                                        } else {
+                                                            Log.i("eTalk", databaseError.getMessage());
+                                                            emitter.onSuccess(false);
+                                                        }
+                                                    });
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                            Log.i("eTalk", databaseError.getMessage());
+                                        }
+                                    });
+                        } else {
+                            Log.i("eTalk", databaseError.getMessage());
+                            emitter.onSuccess(false);
+                        }
+                    });
+        });
     }
 
     @Override
@@ -312,7 +336,7 @@ public class FirebaseDB implements NetworkSource{
                                         .child(conversationKey)
                                         .child(FirebaseTree.Database.Conversations.Key.Members.NODE_NAME)
                                         .child(username)
-                                        .setValue(System.currentTimeMillis());
+                                        .setValue(ServerValue.TIMESTAMP);
                             }
 
                             @Override

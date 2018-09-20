@@ -27,7 +27,7 @@ public class MultipleItemTypesDivider extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        RecyclerView.ViewHolder viewHolder = parent.getChildViewHolder(view);parent.g
+        RecyclerView.ViewHolder viewHolder = parent.getChildViewHolder(view);
         if (viewHolder.getAdapterPosition() == 0) {
             outRect.set(0, 0, 0, 0);
         }
