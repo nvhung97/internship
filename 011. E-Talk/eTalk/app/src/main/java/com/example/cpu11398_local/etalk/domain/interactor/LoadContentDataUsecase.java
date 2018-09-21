@@ -110,14 +110,14 @@ public class LoadContentDataUsecase implements Usecase {
         conversationRepository
                 .loadNetworkRelationships(currentUser.getUsername())
                 .subscribe(conversation -> {
-                    if (conversations.containsKey(conversation.getCreator() + conversation.getTime())) {
+                    if (conversations.containsKey(conversation.getKey())) {
                         conversations.replace(
-                                conversation.getCreator() + conversation.getTime(),
+                                conversation.getKey(),
                                 conversation
                         );
                     } else {
                         conversations.put(
-                                conversation.getCreator() + conversation.getTime(),
+                                conversation.getKey(),
                                 conversation
                         );
                     }

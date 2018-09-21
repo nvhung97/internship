@@ -37,7 +37,10 @@ public final class FirebaseTree {
 
         public final class Conversations {
             public static final String NODE_NAME = "conversations";
-            public final class Key {
+            public final class ConversationKey {
+                public final class Key {
+                    public static final String NODE_NAME = "key";
+                }
                 public final class Type {
                     public static final String NODE_NAME = "type";
                 }
@@ -47,8 +50,8 @@ public final class FirebaseTree {
                 public final class Creator {
                     public static final String NODE_NAME = "creator";
                 }
-                public final class Time {
-                    public static final String NODE_NAME = "time";
+                public final class CreateTime {
+                    public static final String NODE_NAME = "create_time";
                 }
                 public final class Members {
                     public static final String NODE_NAME = "members";
@@ -61,18 +64,16 @@ public final class FirebaseTree {
 
         public final class Messages {
             public static final String NODE_NAME = "messages";
-            public final class Keys {
-                public final class Key {
+            public final class ConversationKey {
+                public final class MessageKey {
+                    public final class Key {
+                        public static final String NODE_NAME = "key";
+                    }
                     public final class Type {
                         public static final String NODE_NAME = "type";
                     }
                     public final class Data {
                         public static final String NODE_NAME = "data";
-                        public static final String TEXT      = "te";
-                        public static final String IMAGE     = "im";
-                        public static final String SOUND     = "so";
-                        public static final String VIDEO     = "vi";
-                        public static final String FILE      = "fi";
                     }
                     public final class Time {
                         public static final String NODE_NAME = "time";

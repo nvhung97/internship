@@ -45,16 +45,16 @@ public class MessageDiffUtil extends DiffUtil.Callback{
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return (oldConversations.get(oldItemPosition).getCreator() + oldConversations.get(oldItemPosition).getTime())
-                .equals(newConversations.get(newItemPosition).getCreator() + newConversations.get(newItemPosition).getTime());
+        return (oldConversations.get(oldItemPosition).getKey())
+                .equals(newConversations.get(newItemPosition).getKey());
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         Conversation oldConversation = oldConversations.get(oldItemPosition);
         Conversation newConversation = newConversations.get(newItemPosition);
-        if (!(oldConversation.getLastMessage().getSender() + oldConversation.getLastMessage().getTime())
-                .equals((newConversation.getLastMessage().getSender() + newConversation.getLastMessage().getTime()))) {
+        if (!(oldConversation.getLastMessage().getKey())
+                .equals((newConversation.getLastMessage().getKey()))) {
             return false;
         }
         if (((oldConversation.getMembers().get(oldUser.getUsername()) > oldConversation.getLastMessage().getTime())
@@ -142,9 +142,10 @@ public class MessageDiffUtil extends DiffUtil.Callback{
         Conversation oldConversation = oldConversations.get(oldItemPosition);
         Conversation newConversation = newConversations.get(newItemPosition);
         Bundle bundle  = new Bundle();
-        if (!(oldConversation.getLastMessage().getSender() + oldConversation.getLastMessage().getTime())
-                .equals((newConversation.getLastMessage().getSender() + newConversation.getLastMessage().getTime()))) {
+        if (!(oldConversation.getLastMessage().getKey())
+                .equals((newConversation.getLastMessage().getKey()))) {
             bundle.putString("data", newConversation.getLastMessage().getData());
+            bundle.putLong("data_type", newConversation.getLastMessage().getType());
             bundle.putLong("time", newConversation.getLastMessage().getTime());
         }
         if ((oldConversation.getMembers().get(oldUser.getUsername()) < oldConversation.getLastMessage().getTime())

@@ -103,9 +103,9 @@ public class MessagePersonItem {
     }
 
     public boolean equalsItems(MessagePersonItem other) {
-        return (this.message.getSender() + this.message.getTime())
+        return (this.message.getKey())
                 .equals
-                (other.getMessage().getSender() + other.getMessage().getTime());
+                (other.getMessage().getKey());
     }
 
     public boolean equalsContent(MessagePersonItem other) {

@@ -218,7 +218,8 @@ public class ChatPersonViewModel extends BaseObservable implements ViewModel, Vi
         chatPersonUsecase.execute(
                 new SendObserver(),
                 new Message(
-                        "te:" + textMessage,
+                        username,
+                        textMessage,
                         Message.TEXT
                 ),
                 null,
@@ -226,6 +227,9 @@ public class ChatPersonViewModel extends BaseObservable implements ViewModel, Vi
         );
         setTextMessage("");
     }
+
+    private String username;
+    private String conversationKey;
 
     /**
      * Called when this viewModel destroyed to inform usecase stop current task.
@@ -248,12 +252,14 @@ public class ChatPersonViewModel extends BaseObservable implements ViewModel, Vi
         Object[] data = event.getData();
         switch (event.getType()) {
             case Event.CHAT_ACTIVITY_VALUE:
+                username = (String)data[0];
+                conversationKey = (String)data[1];
                 setTextName((String)data[2]);
                 setTextStatus((long)data[3]);
                 chatPersonUsecase.execute(
                         new ChatObserver(),
-                        data[0],
-                        data[1],
+                        username,
+                        conversationKey,
                         "first_load"
                 );
         }

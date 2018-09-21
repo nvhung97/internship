@@ -12,6 +12,7 @@ public class Message {
     public static final long VIDEO = 3;
     public static final long FILE  = 4;
 
+    private String key;
     private String sender;
     private String data;
     private long   type;
@@ -25,14 +26,23 @@ public class Message {
     }
 
     public Message(String sender, String data, long type) {
-        this(sender, data, type, ServerValue.TIMESTAMP);
+        this(sender + System.currentTimeMillis(), sender, data, type, ServerValue.TIMESTAMP);
     }
 
-    public Message(String sender, String data, long type, Object time) {
+    public Message(String key, String sender, String data, long type, Object time) {
+        this.key    = key;
         this.sender = sender;
         this.data   = data;
         this.type   = type;
         this.time   = time;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getSender() {

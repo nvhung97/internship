@@ -328,6 +328,12 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Thiết kế layout item message
 6:18 PM 9/18/2018
 	- Chuẩn bị load dữ liệu cho chat activity
+4:57 PM 9/19/2018
+	- Load dữ liệu cho chat activity
+4:57 PM 9/20/2018
+	- Thực hiện chức năng chat
+4:57 PM 9/21/2018
+	- Tái cấu trúc database, thêm sending, sent, seen.
 
 
 
@@ -342,6 +348,8 @@ https://github.com/MindorksOpenSource/android-interview-questions
 https://www.deeplearningbook.org/
 https://pegasi.com.vn/job/technical-director-55
 https://www.raywenderlich.com/959-arc-and-memory-management-in-swift
+https://dzone.com/articles/immutables-in-java
+https://medium.com/@jamesrochabrun/advance-generics-to-create-reusable-ui-f0b8b8934895
 
 https://www.dkn.tv/doi-song/17-buc-anh-day-xuc-dong-khien-trai-tim-ban-tan-chay-ngay-lap-tuc.html
 https://ins.dkn.tv/giaitri/cam-dong-hinh-anh-ve-8-chu-cho-trung-thanh.html

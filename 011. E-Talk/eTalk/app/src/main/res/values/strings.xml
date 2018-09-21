@@ -4,7 +4,7 @@
     <string name="app_processing">Processing…</string>
     <string name="app_no_connection">No connection</string>
     <string name="app_request_timeout">Request Timeout.\n Check connection and try again.</string>
-    <string name="app_first_message">te:Hello!</string>
+    <string name="app_first_message">Hello!</string>
     <string name="app_image">[Picture]</string>
     <string name="app_sound">[Record]</string>
     <string name="app_video">[Video]</string>

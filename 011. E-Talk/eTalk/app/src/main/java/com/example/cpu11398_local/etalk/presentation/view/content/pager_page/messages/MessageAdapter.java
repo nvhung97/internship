@@ -70,7 +70,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     break;
                 }
             }
-            data.setData(conversation.getLastMessage().getData());
+            data.setData(conversation.getLastMessage().getData(), conversation.getLastMessage().getType());
             time.setTime(conversation.getLastMessage().getTime());
             if (conversation.getMembers().get(currentUser.getUsername()) < conversation.getLastMessage().getTime()) {
                 name.setTypeface(null, Typeface.BOLD);
@@ -103,7 +103,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             row.setOnClickListener(v -> actionCallback.chatWith(conversation, null));
             avatar.setImageFromObject(conversation.getAvatar());
             name.setText(conversation.getName());
-            data.setData(conversation.getLastMessage().getData());
+            data.setData(conversation.getLastMessage().getData(), conversation.getLastMessage().getType());
             time.setTime(conversation.getLastMessage().getTime());
             if (conversation.getMembers().get(currentUser.getUsername()) < conversation.getLastMessage().getTime()) {
                 name.setTypeface(null, Typeface.BOLD);
@@ -141,7 +141,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public void bindView(Conversation conversation) {
             row.setOnClickListener(v -> actionCallback.chatWith(conversation, null));
             name.setText(conversation.getName());
-            data.setData(conversation.getLastMessage().getData());
+            data.setData(conversation.getLastMessage().getData(), conversation.getLastMessage().getType());
             time.setTime(conversation.getLastMessage().getTime());
             number.setText(String.valueOf(conversation.getMembers().size()));
             List<String> keyFriends = new ArrayList<>(conversation.getMembers().keySet());
@@ -232,7 +232,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                             holder.row.setOnClickListener(v -> actionCallback.chatWith(conversations.get(position), friends.get(bundle.getString(key))));
                             break;
                         case "data":
-                            holder.data.setData(bundle.getString(key));
+                            holder.data.setData(bundle.getString(key), bundle.getLong("data_type"));
                             break;
                         case "time":
                             holder.time.setTime(bundle.getLong(key));
@@ -256,7 +256,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 for (String key : bundle.keySet()) {
                     switch (key) {
                         case "data":
-                            holder.data.setData(bundle.getString(key));
+                            holder.data.setData(bundle.getString(key), bundle.getLong("type"));
                             break;
                         case "time":
                             holder.time.setTime(bundle.getLong(key));
@@ -280,7 +280,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 for (String key : bundle.keySet()) {
                     switch (key) {
                         case "data":
-                            holder.data.setData(bundle.getString(key));
+                            holder.data.setData(bundle.getString(key), bundle.getLong("type"));
                             break;
                         case "time":
                             holder.time.setTime(bundle.getLong(key));

@@ -40,8 +40,8 @@ public class ContactDiffUtil extends DiffUtil.Callback{
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return (oldConversations.get(oldItemPosition).getCreator() + oldConversations.get(oldItemPosition).getTime())
-                .equals(newConversations.get(newItemPosition).getCreator() + newConversations.get(newItemPosition).getTime());
+        return (oldConversations.get(oldItemPosition).getKey())
+                .equals(newConversations.get(newItemPosition).getKey());
     }
 
     @Override

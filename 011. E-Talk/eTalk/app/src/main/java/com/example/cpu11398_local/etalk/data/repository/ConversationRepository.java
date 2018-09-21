@@ -1,7 +1,6 @@
 package com.example.cpu11398_local.etalk.data.repository;
 
 import android.graphics.Bitmap;
-
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import io.reactivex.Observable;

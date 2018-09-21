@@ -62,7 +62,6 @@ public class CreateGroupUsecase implements Usecase {
                 name,
                 null,
                 user.getUsername(),
-                message.getTime(),
                 new HashMap<String, Long>() {{
                     put(user.getUsername(), 0L);
                     for (String friend : friends) {
@@ -78,7 +77,7 @@ public class CreateGroupUsecase implements Usecase {
             disposable.add(
                     conversationRepository
                             .uploadNetworkGroupAvatar(
-                                    conversation.getCreator() + conversation.getTime(),
+                                    conversation.getKey(),
                                     avatar
                             )
                             .subscribeOn(Schedulers.from(executor))
@@ -95,7 +94,7 @@ public class CreateGroupUsecase implements Usecase {
         disposable.add(
                 conversationRepository
                         .pushNetworkMessage(
-                                conversation.getCreator() + conversation.getTime(),
+                                conversation.getKey(),
                                 message
                         )
                         .doOnSuccess(isSuccess -> {

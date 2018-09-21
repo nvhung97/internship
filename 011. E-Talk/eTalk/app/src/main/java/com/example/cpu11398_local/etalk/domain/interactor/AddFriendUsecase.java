@@ -55,7 +55,6 @@ public class AddFriendUsecase implements Usecase {
                 null,
                 null,
                 user.getUsername(),
-                message.getTime(),
                 new HashMap<String, Long>() {{
                     put(user.getUsername(), 0L);
                     put(friend.getUsername(), 0L);
@@ -70,7 +69,7 @@ public class AddFriendUsecase implements Usecase {
         disposable.add(
                 conversationRepository
                         .pushNetworkMessage(
-                                conversation.getCreator() + conversation.getTime(),
+                                conversation.getKey(),
                                 message
                         )
                         .doOnSuccess(isSuccess -> {

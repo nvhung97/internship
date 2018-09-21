@@ -11,7 +11,6 @@ import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.presentation.view.chat.person.MessagePersonItem;
 import com.example.cpu11398_local.etalk.utils.Event;
-import com.example.cpu11398_local.etalk.utils.FirebaseTree;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -29,6 +28,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ChatPersonUsecase implements Usecase {
 
+    private final String SENT_URL = "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/sent.png?alt=media&token=4e7cf2d2-22d5-47d8-9e5a-12bdbbcaedb1";
+    private final String SENDING_URL  = "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/sending.png?alt=media&token=32ca8ddf-6b82-42e8-85d9-2e5d726dfe97";
     private final String FIRST_LOAD = "first_load";
     private final String LOAD_MORE  = "load_more";
     private final String SEND       = "send";
@@ -195,7 +196,8 @@ public class ChatPersonUsecase implements Usecase {
     @SuppressLint("CheckResult")
     private void executeSendMessage(Message message, SingleObserver<Boolean> observer){
         message.setSender(username);
-        Log.e("Test", "Send");
+        holder.sendNewMessage(message);
+        needUpdateMessage = true;
         conversationRepository
                 .pushNetworkMessage(conversationKey, message)
                 .subscribeOn(Schedulers.from(executor))
@@ -213,17 +215,29 @@ public class ChatPersonUsecase implements Usecase {
     public class MessagesHolder {
 
         Map<String, Message>    rawMessages = new HashMap<>();
+        Map<String, Message>    sendingMessage = new HashMap<>();
         List<MessagePersonItem> messages = new ArrayList<>();
 
         public void addNewMessage(Message message) {
-            if (!rawMessages.containsKey(message.getSender() + message.getTime())) {
+            if (sendingMessage.containsKey(message.getKey())) {
+                sendingMessage.remove(message.getKey());
+                for (int i = messages.size() - 1; i >=0 ; --i) {
+                    if (messages.get(i).getMessage().getKey().equals(message.getKey())) {
+                        messages.set(i, messages.get(i).clone());
+                        messages.get(i).setMessage(message);
+                        messages.get(i).setAvatar(SENT_URL);
+                        break;
+                    }
+                }
+            }
+            else if (!rawMessages.containsKey(message.getKey())) {
                 rawMessages.put(
-                        message.getSender() + message.getTime(),
+                        message.getKey(),
                         message
                 );
                 MessagePersonItem newItem = new MessagePersonItem(
                         message,
-                        decodeData(message.getData()),
+                        decodeData(message.getData(), message.getType()),
                         friend.getAvatar(),
                         decodeTime(message.getTime())
                 );
@@ -266,29 +280,52 @@ public class ChatPersonUsecase implements Usecase {
             }
         }
 
+        public void sendNewMessage(Message message) {
+            sendingMessage.put(message.getKey(), message);
+            MessagePersonItem newItem = new MessagePersonItem(
+                    message,
+                    true,
+                    decodeData(message.getData(), message.getType()),
+                    SENDING_URL,
+                    View.VISIBLE,
+                    decodeTime(Long.parseLong(message.getKey().substring(username.length()))),
+                    View.VISIBLE
+            );
+            messages.add(newItem);
+            if (messages.size() > 1 && messages.get(messages.size() - 2).isMe()) {
+                messages.set(messages.size() - 2, messages.get(messages.size() - 2).clone());
+                messages.get(messages.size() - 2 ).setTimeVisible(View.GONE);
+            }
+        }
+
         public void newConversationInfo(Conversation conversation) {
-            Log.e("TestSize", " " + messages.size());
-            if (friend != null) {
-                long friendTime = conversation.getMembers().get(friend.getUsername());
-                Log.e("TestFriendTime", " " + friendTime);
-                for (int i = messages.size() - 1; i >= 0; --i) {
-                    Log.e("TestI", " " + i);
-                    if (messages.get(i).isMe() && friendTime >= messages.get(i).getMessage().getTime()) {
-                        Log.e("TestUserTime", " " + messages.get(i).getMessage().getTime());
-                        if (messages.get(i).getAvatarVisible() == View.GONE) {
-                            messages.set(i, messages.get(i).clone());
-                            messages.get(i).setAvatarVisible(View.VISIBLE);
-                            for (int j = i - 1; j >= 0; --j) {
-                                Log.e("TestJ", " " + j);
-                                if (messages.get(j).isMe() && messages.get(j).getAvatarVisible() == View.VISIBLE) {
-                                    messages.set(j, messages.get(j).clone());
-                                    messages.get(j).setAvatarVisible(View.GONE);
+            long friendTime = conversation.getMembers().get(friend.getUsername());
+            for (int i = messages.size() - 1; i >= 0; --i) {
+                if (messages.get(i).isMe() && friendTime >= messages.get(i).getMessage().getTime()) {
+                    if (messages.get(i).getAvatarVisible() == View.GONE) {
+                        messages.set(i, messages.get(i).clone());
+                        messages.get(i).setAvatarVisible(View.VISIBLE);
+                        for (int j = i - 1; j >= 0; --j) {
+                            if (messages.get(j).isMe() && messages.get(j).getAvatarVisible() == View.VISIBLE) {
+                                messages.set(j, messages.get(j).clone());
+                                messages.get(j).setAvatarVisible(View.GONE);
+                                break;
+                            }
+                        }
+                    } else if (messages.get(i).getAvatar().equals(SENT_URL)) {
+                        messages.set(i, messages.get(i).clone());
+                        messages.get(i).setAvatar(friend.getAvatar());
+                        for (int j = i - 1; j >= 0; --j) {
+                            if (messages.get(j).isMe() && messages.get(j).getAvatarVisible() == View.VISIBLE) {
+                                messages.set(j, messages.get(j).clone());
+                                messages.get(j).setAvatarVisible(View.GONE);
+                                if (messages.get(j).getAvatar().equals(friend.getAvatar())) {
                                     break;
                                 }
                             }
                         }
-                        break;
                     }
+                    break;
                 }
             }
         }
@@ -297,22 +334,9 @@ public class ChatPersonUsecase implements Usecase {
             return new ArrayList<>(messages);
         }
 
-        private Object decodeData(String data) {
-            switch (data.substring(0,2)) {
-                case FirebaseTree.Database.Messages.Keys.Key.Data.TEXT:
-                    return data.substring(3);
-                /*case FirebaseTree.Database.Messages.Keys.Key.Data.IMAGE:
-                    setText(getContext().getString(R.string.app_image));
-                    break;
-                case FirebaseTree.Database.Messages.Keys.Key.Data.SOUND:
-                    setText(getContext().getString(R.string.app_sound));
-                    break;
-                case FirebaseTree.Database.Messages.Keys.Key.Data.VIDEO:
-                    setText(getContext().getString(R.string.app_video));
-                    break;
-                case FirebaseTree.Database.Messages.Keys.Key.Data.FILE:
-                    setText(getContext().getString(R.string.app_sound));
-                    break;*/
+        private Object decodeData(String data, long type) {
+            if (type == Message.TEXT) {
+                return data;
             }
             return null;
         }

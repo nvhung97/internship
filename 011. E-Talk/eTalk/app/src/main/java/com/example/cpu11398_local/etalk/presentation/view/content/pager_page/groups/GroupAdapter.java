@@ -59,7 +59,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
             row.setOnClickListener(v -> actionCallback.chatWith(conversation));
             avatar.setImageFromObject(conversation.getAvatar());
             name.setText(conversation.getName());
-            data.setData(conversation.getLastMessage().getData());
+            data.setData(conversation.getLastMessage().getData(), conversation.getLastMessage().getType());
             time.setTime(conversation.getLastMessage().getTime());
         }
     }
@@ -88,7 +88,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         public void bindView(Conversation conversation) {
             row.setOnClickListener(v -> actionCallback.chatWith(conversation));
             name.setText(conversation.getName());
-            data.setData(conversation.getLastMessage().getData());
+            data.setData(conversation.getLastMessage().getData(), conversation.getLastMessage().getType());
             time.setTime(conversation.getLastMessage().getTime());
             number.setText(String.valueOf(conversation.getMembers().size()));
             List<String> keyFriends = new ArrayList<>(conversation.getMembers().keySet());
@@ -154,7 +154,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
                 for (String key : bundle.keySet()) {
                     switch (key) {
                         case "data":
-                            holder.data.setData(bundle.getString(key));
+                            holder.data.setData(bundle.getString(key), bundle.getLong("type"));
                             break;
                         case "time":
                             holder.time.setTime(bundle.getLong(key));
@@ -174,7 +174,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
                 for (String key : bundle.keySet()) {
                     switch (key) {
                         case "data":
-                            holder.data.setData(bundle.getString(key));
+                            holder.data.setData(bundle.getString(key), bundle.getLong("type"));
                             break;
                         case "time":
                             holder.time.setTime(bundle.getLong(key));

@@ -1,11 +1,12 @@
 {
   "conversations" : {
     "ducnguyen1536835476181" : {
-      "key"  : "ducnguyen1536835476181",
+      "create_time" : 1536835476181,
       "creator" : "ducnguyen",
+      "key" : "ducnguyen1536835476181",
       "last_message" : {
-        "key"  : "ducnguyen1536835476181",
         "data" : "Hello!",
+        "key" : "ducnguyen1536835476181",
         "sender" : "ducnguyen",
         "time" : 1536835476181,
         "type" : 0
@@ -14,15 +15,15 @@
         "ducnguyen" : 0,
         "hungnv6" : 1537423303605
       },
-      "create_time" : 1536835476181,
       "type" : 1
     },
     "ducnguyen1536836423386" : {
-      "key"  : "ducnguyen1536836423386",
+      "create_time" : 1536836423386,
       "creator" : "ducnguyen",
+      "key" : "ducnguyen1536836423386",
       "last_message" : {
-        "key"  : "ducnguyen1536836423386",
         "data" : "Hello!",
+        "key" : "ducnguyen1536836423386",
         "sender" : "ducnguyen",
         "time" : 1536836423386,
         "type" : 0
@@ -31,15 +32,15 @@
         "ducnguyen" : 0,
         "long" : 0
       },
-      "create_time" : 1536836423386,
       "type" : 1
     },
     "hungnv61536114395206" : {
-      "key"  : "hungnv61536114395206",
+      "create_time" : 1536114395206,
       "creator" : "hungnv6",
+      "key" : "hungnv61536114395206",
       "last_message" : {
-        "key"  : "hungnv61536114395206",
         "data" : "Hello!",
+        "key" : "hungnv61536114395206",
         "sender" : "hungnv6",
         "time" : 1536114395206,
         "type" : 0
@@ -48,15 +49,15 @@
         "hungnv6" : 0,
         "potter" : 0
       },
-      "create_time" : 1536114395206,
       "type" : 1
     },
     "hungnv61536114413562" : {
-      "key"  : "hungnv61536114413562",
+      "create_time" : 1536114413562,
       "creator" : "hungnv6",
+      "key" : "hungnv61536114413562",
       "last_message" : {
-        "key"  : "hungnv61536114413562",
         "data" : "Hello!",
+        "key" : "hungnv61536114413562",
         "sender" : "hungnv6",
         "time" : 1536114413562,
         "type" : 0
@@ -65,15 +66,15 @@
         "hermione" : 0,
         "hungnv6" : 1537423288372
       },
-      "create_time" : 1536114413562,
       "type" : 1
     },
     "hungnv61536114438475" : {
-      "key"  : "hungnv61536114438475",
+      "create_time" : 1536114438475,
       "creator" : "hungnv6",
+      "key" : "hungnv61536114438475",
       "last_message" : {
-        "key"  : "hungnv61536114438475",
         "data" : "Hello!",
+        "key" : "hungnv61536114438475",
         "sender" : "hungnv6",
         "time" : 1536114438475,
         "type" : 0
@@ -82,15 +83,15 @@
         "hungnv6" : 0,
         "ron" : 0
       },
-      "create_time" : 1536114438475,
       "type" : 1
     },
     "hungnv61536128319241" : {
-      "key"  : "hungnv61536128319241",
+      "create_time" : 1536128319241,
       "creator" : "hungnv6",
+      "key" : "hungnv61536128319241",
       "last_message" : {
-        "key"  : "hungnv61536128319241",
         "data" : "Hello!",
+        "key" : "hungnv61536128319241",
         "sender" : "hungnv6",
         "time" : 1536128319241,
         "type" : 0
@@ -99,15 +100,15 @@
         "ginny" : 0,
         "hungnv6" : 0
       },
-      "create_time" : 1536128319241,
       "type" : 1
     },
     "hungnv61536144731714" : {
-      "key"  : "hungnv61536144731714",
+      "create_time" : 1536144731714,
       "creator" : "hungnv6",
+      "key" : "hungnv61536144731714",
       "last_message" : {
-        "key"  : "hungnv61536144731714",
         "data" : "Hello!",
+        "key" : "hungnv61536144731714",
         "sender" : "hungnv6",
         "time" : 1536144731714,
         "type" : 0
@@ -116,15 +117,15 @@
         "dumbledore" : 0,
         "hungnv6" : 0
       },
-      "create_time" : 1536144731714,
       "type" : 1
     },
     "hungnv61536144753315" : {
-      "key"  : "hungnv61536144753315",
+      "create_time" : 1536144753315,
       "creator" : "hungnv6",
+      "key" : "hungnv61536144753315",
       "last_message" : {
-        "key"  : "hungnv61536144753315",
         "data" : "Hello!",
+        "key" : "hungnv61536144753315",
         "sender" : "hungnv6",
         "time" : 1536144753315,
         "type" : 0
@@ -133,15 +134,15 @@
         "hungnv6" : 0,
         "mcgonagall" : 0
       },
-      "create_time" : 1536144753315,
       "type" : 1
     },
     "hungnv61536144768735" : {
-      "key"  : "hungnv61536144768735",
+      "create_time" : 1536144768735,
       "creator" : "hungnv6",
+      "key" : "hungnv61536144768735",
       "last_message" : {
-        "key"  : "hungnv61536144768735",
         "data" : "Hello!",
+        "key" : "hungnv61536144768735",
         "sender" : "hungnv6",
         "time" : 1536144768735,
         "type" : 0
@@ -150,15 +151,15 @@
         "hungnv6" : 1537423294128,
         "moody" : 0
       },
-      "create_time" : 1536144768735,
       "type" : 1
     },
     "hungnv61536144785253" : {
-      "key"  : "hungnv61536144785253",
+      "create_time" : 1536144785253,
       "creator" : "hungnv6",
+      "key" : "hungnv61536144785253",
       "last_message" : {
-        "key"  : "hungnv61536144785253",
         "data" : "Hello!",
+        "key" : "hungnv61536144785253",
         "sender" : "hungnv6",
         "time" : 1536144785253,
         "type" : 0
@@ -167,15 +168,15 @@
         "hungnv6" : 0,
         "snape" : 0
       },
-      "create_time" : 1536144785253,
       "type" : 1
     },
     "hungnv61536144805107" : {
-      "key"  : "hungnv61536144805107",
+      "create_time" : 1536144805107,
       "creator" : "hungnv6",
+      "key" : "hungnv61536144805107",
       "last_message" : {
-        "key"  : "hungnv61536144805107",
         "data" : "Hello!",
+        "key" : "hungnv61536144805107",
         "sender" : "hungnv6",
         "time" : 1536144805107,
         "type" : 0
@@ -184,16 +185,16 @@
         "hungnv6" : 0,
         "voldemort" : 0
       },
-      "create_time" : 1536144805107,
       "type" : 1
     },
     "hungnv61536205829989" : {
-      "key"  : "hungnv61536205829989",
       "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/conversations%2Fhungnv61536205829989%2Favatar%2Fhungnv61536205829989.png?alt=media&token=147cad0f-4bf6-4e24-894f-df996b0db42d",
+      "create_time" : 1536205829988,
       "creator" : "hungnv6",
+      "key" : "hungnv61536205829989",
       "last_message" : {
-        "key"  : "hungnv61536205829989",
         "data" : "Hello!",
+        "key" : "hungnv61536205829989",
         "sender" : "hungnv6",
         "time" : 1536205829989,
         "type" : 0
@@ -211,32 +212,32 @@
         "voldemort" : 0
       },
       "name" : "Hogwarts",
-      "create_time" : 1536205829988,
       "type" : 0
     },
     "hungnv61536717419575" : {
-      "key"  : "hungnv61536717419575",
+      "create_time" : 1536717419575,
       "creator" : "hungnv6",
+      "key" : "hungnv61536717419575",
       "last_message" : {
-        "key"  : "hungnv61536717419575",
-        "data" : "Hello!",
-        "sender" : "hungnv6",
-        "time" : 1536717419575,
+        "data" : "How r u?",
+        "key" : "long1537522513185",
+        "sender" : "long",
+        "time" : 1537522516559,
         "type" : 0
       },
       "members" : {
-        "hungnv6" : 1537423299401,
-        "long" : 1537341829522
+        "hungnv6" : 1537522530607,
+        "long" : 1537522516584
       },
-      "create_time" : 1536717419575,
       "type" : 1
     },
     "hungnv61536728720851" : {
-      "key"  : "hungnv61536728720851",
+      "create_time" : 1536728720851,
       "creator" : "hungnv6",
+      "key" : "hungnv61536728720851",
       "last_message" : {
-        "key"  : "hungnv61536728720851",
         "data" : "Hello!",
+        "key" : "hungnv61536728720851",
         "sender" : "hungnv6",
         "time" : 1536728720851,
         "type" : 0
@@ -247,15 +248,15 @@
         "huutrongtdtp" : 0
       },
       "name" : "Bách Khoa",
-      "create_time" : 1536728720851,
       "type" : 0
     },
     "hungnv61536768896943" : {
-      "key"  : "hungnv61536768896943",
+      "create_time" : 1536768896943,
       "creator" : "hungnv6",
+      "key" : "hungnv61536768896943",
       "last_message" : {
-        "key"  : "hungnv61536768896943",
         "data" : "Hello!",
+        "key" : "hungnv61536768896943",
         "sender" : "hungnv6",
         "time" : 1536768896944,
         "type" : 0
@@ -266,15 +267,15 @@
         "long" : 0
       },
       "name" : "VNG Fresher",
-      "create_time" : 1536768896943,
       "type" : 0
     },
     "huutrongtdtp1536629619120" : {
-      "key"  : "huutrongtdtp1536629619120",
+      "create_time" : 1536629619120,
       "creator" : "huutrongtdtp",
+      "key" : "huutrongtdtp1536629619120",
       "last_message" : {
-        "key"  : "huutrongtdtp1536629619120",
         "data" : "Hello!",
+        "key" : "huutrongtdtp1536629619120",
         "sender" : "huutrongtdtp",
         "time" : 1536629619120,
         "type" : 0
@@ -283,15 +284,14 @@
         "hungnv6" : 0,
         "huutrongtdtp" : 0
       },
-      "create_time" : 1536629619120,
       "type" : 1
     }
   },
   "messages" : {
     "ducnguyen1536835476181" : {
       "ducnguyen1536835476181" : {
-        "key"  : "ducnguyen1536835476181",
         "data" : "Hello!",
+        "key" : "ducnguyen1536835476181",
         "sender" : "ducnguyen",
         "time" : 1536835476181,
         "type" : 0
@@ -299,8 +299,8 @@
     },
     "ducnguyen1536836423386" : {
       "ducnguyen1536836423386" : {
-        "key"  : "ducnguyen1536836423386",
         "data" : "Hello!",
+        "key" : "ducnguyen1536836423386",
         "sender" : "ducnguyen",
         "time" : 1536836423386,
         "type" : 0
@@ -308,8 +308,8 @@
     },
     "hungnv61536114395206" : {
       "hungnv61536114395206" : {
-        "key"  : "hungnv61536114395206",
         "data" : "Hello!",
+        "key" : "hungnv61536114395206",
         "sender" : "hungnv6",
         "time" : 1536114395206,
         "type" : 0
@@ -317,8 +317,8 @@
     },
     "hungnv61536114413562" : {
       "hungnv61536114413562" : {
-        "key"  : "hungnv61536114413562",
         "data" : "Hello!",
+        "key" : "hungnv61536114413562",
         "sender" : "hungnv6",
         "time" : 1536114413562,
         "type" : 0
@@ -326,8 +326,8 @@
     },
     "hungnv61536114438475" : {
       "hungnv61536114438475" : {
-        "key"  : "hungnv61536114438475",
         "data" : "Hello!",
+        "key" : "hungnv61536114438475",
         "sender" : "hungnv6",
         "time" : 1536114438475,
         "type" : 0
@@ -335,8 +335,8 @@
     },
     "hungnv61536128319241" : {
       "hungnv61536128319241" : {
-        "key"  : "hungnv61536128319241",
         "data" : "Hello!",
+        "key" : "hungnv61536128319241",
         "sender" : "hungnv6",
         "time" : 1536128319241,
         "type" : 0
@@ -344,8 +344,8 @@
     },
     "hungnv61536144731714" : {
       "hungnv61536144731714" : {
-        "key"  : "hungnv61536144731714",
         "data" : "Hello!",
+        "key" : "hungnv61536144731714",
         "sender" : "hungnv6",
         "time" : 1536144731714,
         "type" : 0
@@ -353,8 +353,8 @@
     },
     "hungnv61536144753315" : {
       "hungnv61536144753315" : {
-        "key"  : "hungnv61536144753315",
         "data" : "Hello!",
+        "key" : "hungnv61536144753315",
         "sender" : "hungnv6",
         "time" : 1536144753315,
         "type" : 0
@@ -362,8 +362,8 @@
     },
     "hungnv61536144768735" : {
       "hungnv61536144768735" : {
-        "key"  : "hungnv61536144768735",
         "data" : "Hello!",
+        "key" : "hungnv61536144768735",
         "sender" : "hungnv6",
         "time" : 1536144768735,
         "type" : 0
@@ -371,8 +371,8 @@
     },
     "hungnv61536144785253" : {
       "hungnv61536144785253" : {
-        "key"  : "hungnv61536144785253",
         "data" : "Hello!",
+        "key" : "hungnv61536144785253",
         "sender" : "hungnv6",
         "time" : 1536144785253,
         "type" : 0
@@ -380,8 +380,8 @@
     },
     "hungnv61536144805107" : {
       "hungnv61536144805107" : {
-        "key"  : "hungnv61536144805107",
         "data" : "Hello!",
+        "key" : "hungnv61536144805107",
         "sender" : "hungnv6",
         "time" : 1536144805107,
         "type" : 0
@@ -389,8 +389,8 @@
     },
     "hungnv61536205829989" : {
       "hungnv61536205829989" : {
-        "key"  : "hungnv61536205829989",
         "data" : "Hello!",
+        "key" : "hungnv61536205829989",
         "sender" : "hungnv6",
         "time" : 1536205829989,
         "type" : 0
@@ -398,17 +398,31 @@
     },
     "hungnv61536717419575" : {
       "hungnv61536717419575" : {
-        "key"  : "hungnv61536717419575",
         "data" : "Hello!",
+        "key" : "hungnv61536717419575",
         "sender" : "hungnv6",
         "time" : 1536717419575,
+        "type" : 0
+      },
+      "long1537522490434" : {
+        "data" : "Hi",
+        "key" : "long1537522490434",
+        "sender" : "long",
+        "time" : 1537522493813,
+        "type" : 0
+      },
+      "long1537522513185" : {
+        "data" : "How r u?",
+        "key" : "long1537522513185",
+        "sender" : "long",
+        "time" : 1537522516559,
         "type" : 0
       }
     },
     "hungnv61536728720851" : {
       "hungnv61536728720851" : {
-        "key"  : "hungnv61536728720851",
         "data" : "Hello!",
+        "key" : "hungnv61536728720851",
         "sender" : "hungnv6",
         "time" : 1536728720851,
         "type" : 0
@@ -416,8 +430,8 @@
     },
     "hungnv61536768896943" : {
       "hungnv61536768896943" : {
-        "key"  : "hungnv61536768896943",
         "data" : "Hello!",
+        "key" : "hungnv61536768896943",
         "sender" : "hungnv6",
         "time" : 1536768896943,
         "type" : 0
@@ -425,8 +439,8 @@
     },
     "huutrongtdtp1536629619120" : {
       "huutrongtdtp1536629619120" : {
-        "key"  : "huutrongtdtp1536629619120",
         "data" : "Hello!",
+        "key" : "huutrongtdtp1536629619120",
         "sender" : "huutrongtdtp",
         "time" : 1536629619120,
         "type" : 0
@@ -582,7 +596,7 @@
       "username" : "hermione"
     },
     "hungnv6" : {
-      "active" : 1537423343354,
+      "active" : 1537522544255,
       "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/avatars%2Fhungnv6.png?alt=media&token=1f4b2e0e-cba6-48f8-8bba-91494d6b21e0",
       "name" : "Nguyen Van Hung",
       "password" : "88888888",
@@ -598,8 +612,8 @@
       "username" : "huutrongtdtp"
     },
     "long" : {
-      "active" : 1537427046226,
-      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/avatars%2Flong.png?alt=media&token=11101188-3f50-4681-99ae-9be37c564eb0",
+      "active" : 1537522569712,
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/avatars%2Flong.png?alt=media&token=3d9d0511-bc8b-4b89-93b9-38df732986d1",
       "name" : "Lý Kim Long",
       "password" : "123456",
       "phone" : "01207902297",

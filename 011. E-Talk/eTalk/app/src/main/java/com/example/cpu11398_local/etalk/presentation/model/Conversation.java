@@ -1,5 +1,6 @@
 package com.example.cpu11398_local.etalk.presentation.model;
 
+import com.example.cpu11398_local.etalk.utils.FirebaseTree;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.PropertyName;
 import com.google.firebase.database.ServerValue;
@@ -10,11 +11,12 @@ public class Conversation {
     public static final long GROUP  = 0;
     public static final long PERSON = 1;
 
+    private String              key;
     private long                type;
     private String              name;
     private String              avatar;
     private String              creator;
-    private Object              time;
+    private Object              createTime;
     private Map<String, Long>   members;
     private Message             lastMessage;
 
@@ -27,23 +29,33 @@ public class Conversation {
                         String creator,
                         Map<String, Long> members,
                         Message lastMessage) {
-        this(type, name, avatar, creator, ServerValue.TIMESTAMP, members, lastMessage);
+        this(creator + System.currentTimeMillis(), type, name, avatar, creator, ServerValue.TIMESTAMP, members, lastMessage);
     }
 
-    public Conversation(long type,
+    public Conversation(String key,
+                        long type,
                         String name,
                         String avatar,
                         String creator,
-                        Object time,
+                        Object createTime,
                         Map<String, Long> members,
                         Message lastMessage) {
+        this.key         = key;
         this.type        = type;
         this.name        = name;
         this.avatar      = avatar;
         this.creator     = creator;
-        this.time        = time;
+        this.createTime  = createTime;
         this.members     = members;
         this.lastMessage = lastMessage;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public long getType() {
@@ -80,17 +92,17 @@ public class Conversation {
 
     @Exclude
     public long getTime() {
-        return (long)time;
+        return (long)createTime;
     }
 
-    @PropertyName("time")
+    @PropertyName(FirebaseTree.Database.Conversations.ConversationKey.CreateTime.NODE_NAME)
     public Object getServerTime() {
-        return time;
+        return createTime;
     }
 
-    @PropertyName("time")
-    public void setServerTime(Object time) {
-        this.time = time;
+    @PropertyName(FirebaseTree.Database.Conversations.ConversationKey.CreateTime.NODE_NAME)
+    public void setServerTime(Object createTime) {
+        this.createTime = createTime;
     }
 
     public Map<String, Long> getMembers() {
@@ -101,12 +113,12 @@ public class Conversation {
         this.members = members;
     }
 
-    @PropertyName("last_message")
+    @PropertyName(FirebaseTree.Database.Conversations.ConversationKey.LastMessage.NODE_NAME)
     public Message getLastMessage() {
         return lastMessage;
     }
 
-    @PropertyName("last_message")
+    @PropertyName(FirebaseTree.Database.Conversations.ConversationKey.LastMessage.NODE_NAME)
     public void setLastMessage(Message lastMessage) {
         this.lastMessage = lastMessage;
     }

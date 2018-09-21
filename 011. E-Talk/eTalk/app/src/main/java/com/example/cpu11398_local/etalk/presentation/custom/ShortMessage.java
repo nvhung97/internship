@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import com.example.cpu11398_local.etalk.R;
+import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.utils.FirebaseTree;
 
 public class ShortMessage extends android.support.v7.widget.AppCompatTextView{
@@ -20,23 +21,21 @@ public class ShortMessage extends android.support.v7.widget.AppCompatTextView{
         super(context, attrs, defStyleAttr);
     }
 
-    public void setData(String data) {
-        switch (data.substring(0,2)) {
-            case FirebaseTree.Database.Messages.Keys.Key.Data.TEXT:
-                setText(data.substring(3));
-                break;
-            case FirebaseTree.Database.Messages.Keys.Key.Data.IMAGE:
-                setText(getContext().getString(R.string.app_image));
-                break;
-            case FirebaseTree.Database.Messages.Keys.Key.Data.SOUND:
-                setText(getContext().getString(R.string.app_sound));
-                break;
-            case FirebaseTree.Database.Messages.Keys.Key.Data.VIDEO:
-                setText(getContext().getString(R.string.app_video));
-                break;
-            case FirebaseTree.Database.Messages.Keys.Key.Data.FILE:
-                setText(getContext().getString(R.string.app_sound));
-                break;
+    public void setData(String data, long type) {
+        if (type == Message.TEXT) {
+            setText(data);
+        }
+        if (type == Message.IMAGE) {
+            setText(getContext().getString(R.string.app_image));
+        }
+        if (type == Message.SOUND) {
+            setText(getContext().getString(R.string.app_sound));
+        }
+        if (type == Message.VIDEO) {
+            setText(getContext().getString(R.string.app_video));
+        }
+        if (type == Message.FILE) {
+            setText(getContext().getString(R.string.app_sound));
         }
     }
 }

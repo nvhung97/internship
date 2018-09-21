@@ -25,6 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
@@ -137,8 +139,8 @@ public class FirebaseDB implements NetworkSource{
                             .child(FirebaseTree.Database.Users.NODE_NAME)
                             .child(username)
                             .child(FirebaseTree.Database.Users.Key.Active.NODE_NAME)
-                            .setValue(System.currentTimeMillis());
-                    handler.postDelayed(this, 1000 * 10); //10 seconds
+                            .setValue(ServerValue.TIMESTAMP);
+                    handler.postDelayed(this, 10000); //10 seconds
                 }
             });
         } else {
@@ -173,7 +175,7 @@ public class FirebaseDB implements NetworkSource{
                 databaseReference
                         .child(FirebaseTree.Database.Relationships.NODE_NAME)
                         .child(username)
-                        .child(conversation.getCreator() + conversation.getTime())
+                        .child(conversation.getKey())
                         .setValue(conversation.getType(), (databaseError, databaseReference) -> {
                             if (databaseError == null) {
                                 emitter.onSuccess(true);
@@ -190,7 +192,7 @@ public class FirebaseDB implements NetworkSource{
         return Single.create(emitter ->
                 databaseReference
                         .child(FirebaseTree.Database.Conversations.NODE_NAME)
-                        .child(conversation.getCreator() + conversation.getTime())
+                        .child(conversation.getKey())
                         .setValue(conversation, (databaseError, databaseReference) -> {
                             if (databaseError == null) {
                                 emitter.onSuccess(true);
@@ -205,41 +207,27 @@ public class FirebaseDB implements NetworkSource{
     @Override
     public Single<Boolean> pushMessage(String conversationKey, Message message) {
         return Single.create(emitter -> {
-            databaseReference
-                    .child(FirebaseTree.Database.Conversations.NODE_NAME)
-                    .child(conversationKey)
-                    .child(FirebaseTree.Database.Conversations.Key.LastMessage.NODE_NAME)
-                    .setValue(message, (databaseError, databaseRef) -> {
-                        if (databaseError == null) {
-                            databaseRef
-                                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            Message newMessage = dataSnapshot.getValue(Message.class);
-                                            databaseReference
-                                                    .child(FirebaseTree.Database.Messages.NODE_NAME)
-                                                    .child(conversationKey)
-                                                    .child(newMessage.getSender() + newMessage.getTime())
-                                                    .setValue(newMessage, (databaseError, databaseReference) -> {
-                                                        if (databaseError == null) {
-                                                            emitter.onSuccess(true);
-                                                        } else {
-                                                            Log.i("eTalk", databaseError.getMessage());
-                                                            emitter.onSuccess(false);
-                                                        }
-                                                    });
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                                            Log.i("eTalk", databaseError.getMessage());
-                                        }
-                                    });
-                        } else {
-                            Log.i("eTalk", databaseError.getMessage());
-                            emitter.onSuccess(false);
-                        }
-                    });
+            Map<String, Object> childUpdates = new HashMap<>();
+            childUpdates.put(
+                    "/" + FirebaseTree.Database.Conversations.NODE_NAME + "/"
+                            + conversationKey + "/"
+                            + FirebaseTree.Database.Conversations.ConversationKey.LastMessage.NODE_NAME,
+                    message
+            );
+            childUpdates.put(
+                    "/" + FirebaseTree.Database.Messages.NODE_NAME + "/"
+                            + conversationKey + "/"
+                            + message.getKey(),
+                    message
+            );
+            databaseReference.updateChildren(childUpdates, (databaseError, databaseReference) -> {
+                if (databaseError == null) {
+                    emitter.onSuccess(true);
+                } else {
+                    Log.i("eTalk", databaseError.getMessage());
+                    emitter.onSuccess(false);
+                }
+            });
         });
     }
 
@@ -275,6 +263,7 @@ public class FirebaseDB implements NetworkSource{
                         .child(FirebaseTree.Database.Relationships.NODE_NAME)
                         .child(username)
                         .addChildEventListener(new ChildEventListener() {
+                            @SuppressLint("CheckResult")
                             @Override
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                                 loadConversation(dataSnapshot.getKey()).subscribe(conversation ->
@@ -325,7 +314,7 @@ public class FirebaseDB implements NetworkSource{
                 databaseReference
                         .child(FirebaseTree.Database.Messages.NODE_NAME)
                         .child(conversationKey)
-                        .orderByChild(FirebaseTree.Database.Messages.Keys.Key.Time.NODE_NAME)
+                        .orderByChild(FirebaseTree.Database.Messages.ConversationKey.MessageKey.Time.NODE_NAME)
                         .limitToLast(30)
                         .addChildEventListener(new ChildEventListener() {
                             @Override
@@ -334,7 +323,7 @@ public class FirebaseDB implements NetworkSource{
                                 databaseReference
                                         .child(FirebaseTree.Database.Conversations.NODE_NAME)
                                         .child(conversationKey)
-                                        .child(FirebaseTree.Database.Conversations.Key.Members.NODE_NAME)
+                                        .child(FirebaseTree.Database.Conversations.ConversationKey.Members.NODE_NAME)
                                         .child(username)
                                         .setValue(ServerValue.TIMESTAMP);
                             }
