@@ -334,6 +334,10 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Thực hiện chức năng chat
 4:57 PM 9/21/2018
 	- Tái cấu trúc database, thêm sending, sent, seen.
+6:18 PM 9/24/2018
+	- Remove listener khi unsebscribe RxJava 2
+		+ https://medium.com/yammer-engineering/converting-callback-async-calls-to-rxjava-ebc68bde5831
+		+ https://stackoverflow.com/questions/43280248/what-is-the-difference-between-rxjava-2-cancellable-and-disposable
 
 
 
