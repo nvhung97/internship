@@ -1,9 +1,11 @@
 package com.example.cpu11398_local.etalk.data.repository.implement;
 
 import android.graphics.Bitmap;
-
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
+import com.example.cpu11398_local.etalk.data.repository.data_source.LocalSource;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesHolder;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import javax.inject.Inject;
@@ -13,10 +15,13 @@ import io.reactivex.Single;
 public class ConversationRepositoryImpl  implements ConversationRepository{
 
     private NetworkSource networkSource;
+    private LocalSource   localSource;
 
     @Inject
-    public ConversationRepositoryImpl(NetworkSource networkSource) {
+    public ConversationRepositoryImpl(NetworkSource networkSource,
+                                      LocalSource localSource) {
         this.networkSource = networkSource;
+        this.localSource   = localSource;
     }
 
     @Override
@@ -52,5 +57,15 @@ public class ConversationRepositoryImpl  implements ConversationRepository{
     @Override
     public Observable<Message> loadNetworkMessages(String conversationKey, String username) {
         return networkSource.loadMessages(conversationKey, username);
+    }
+
+    @Override
+    public Single<MessagesHolder> loadLocalMessagesHolder(ChatPersonUsecase usecase, String conversationKey) {
+        return localSource.loadLocalMessagesHolder(usecase, conversationKey);
+    }
+
+    @Override
+    public void putLocalMessagesHolder(String conversationKey, MessagesHolder chatHolder) {
+        localSource.putLocalMessagesHolder(conversationKey, chatHolder);
     }
 }

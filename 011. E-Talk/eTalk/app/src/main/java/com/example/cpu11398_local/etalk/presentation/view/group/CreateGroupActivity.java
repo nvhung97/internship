@@ -122,12 +122,12 @@ public class CreateGroupActivity extends BaseActivity {
                     onHideLoading();
                     break;
                 case Event.CREATE_GROUP_ACTIVITY_CREATE_OK:
-                    startActivity(
+                    /*startActivity(
                             new Intent(
                                     CreateGroupActivity.this,
                                     ChatPersonActivity.class
                             )
-                    );
+                    );*/
                     finish();
                     break;
                 case Event.CREATE_GROUP_ACTIVITY_CREATE_FAILED:

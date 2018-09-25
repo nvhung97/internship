@@ -20,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -29,87 +30,102 @@ import java.util.HashMap;
 import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class FirebaseDB implements NetworkSource{
 
-    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-    private StorageReference  storageReference  = FirebaseStorage.getInstance(FirebaseTree.Storage.NODE_NAME).getReference();
-    private Handler           handler           = new Handler();
+    private DatabaseReference databaseReference;
+    private StorageReference  storageReference;
+    private Handler           handler;
+
+    public FirebaseDB() {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(false);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.keepSynced(false);
+        storageReference  = FirebaseStorage.getInstance(FirebaseTree.Storage.NODE_NAME).getReference();
+        handler           = new Handler();
+    }
 
     @SuppressLint("CheckResult")
     @Override
     public Single<Optional<User>> loadUser(String username) {
-        return Single.create(emitter ->
-                databaseReference
-                        .child(FirebaseTree.Database.Users.NODE_NAME)
-                        .child(username)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                emitter.onSuccess(Optional.of(dataSnapshot.getValue(User.class)));
-                            }
+        return Single.create(emitter -> {
+            DatabaseReference databaseRef = databaseReference
+                    .child(FirebaseTree.Database.Users.NODE_NAME)
+                    .child(username);
+            ValueEventListener listener = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    emitter.onSuccess(Optional.of(dataSnapshot.getValue(User.class)));
+                }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Log.i("eTalk" , databaseError.getMessage());
-                                emitter.onSuccess(Optional.empty());
-                            }
-                        })
-        );
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.i("eTalk", databaseError.getMessage());
+                    emitter.onSuccess(Optional.empty());
+                }
+            };
+            databaseRef.addListenerForSingleValueEvent(listener);
+            emitter.setCancellable(() -> databaseRef.removeEventListener(listener));
+        });
     }
 
     @SuppressLint("CheckResult")
     @Override
     public Observable<Optional<User>> loadChangeableUser(String username) {
-        return Observable.create(emitter ->
-                databaseReference
-                        .child(FirebaseTree.Database.Users.NODE_NAME)
-                        .child(username)
-                        .addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                emitter.onNext(Optional.of(dataSnapshot.getValue(User.class)));
-                            }
+        return Observable.create(emitter -> {
+            DatabaseReference databaseRef = databaseReference
+                    .child(FirebaseTree.Database.Users.NODE_NAME)
+                    .child(username);
+            ValueEventListener listener = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    emitter.onNext(Optional.of(dataSnapshot.getValue(User.class)));
+                }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Log.i("eTalk" , databaseError.getMessage());
-                                emitter.onNext(Optional.empty());
-                            }
-                        })
-        );
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.i("eTalk", databaseError.getMessage());
+                    emitter.onNext(Optional.empty());
+                }
+            };
+            databaseRef.addValueEventListener(listener);
+            emitter.setCancellable(() -> databaseRef.removeEventListener(listener));
+        });
     }
 
     @SuppressLint("CheckResult")
     @Override
     public Single<Optional<User>> findUserWithPhone(String phone) {
-        return Single.create(emitter ->
-            databaseReference
+        return Single.create(emitter -> {
+            Query query = databaseReference
                     .child(FirebaseTree.Database.Users.NODE_NAME)
                     .orderByChild(FirebaseTree.Database.Users.Key.Phone.NODE_NAME)
-                    .equalTo(phone)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.N)
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                dataSnapshot.getChildren().forEach(each ->
-                                                emitter.onSuccess(
-                                                        Optional.of(each.getValue(User.class))
-                                                )
-                                );
-                            } else {
-                                emitter.onSuccess(Optional.empty());
-                            }
-                        }
+                    .equalTo(phone);
+            ValueEventListener listener = new ValueEventListener() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        dataSnapshot.getChildren().forEach(each ->
+                                emitter.onSuccess(
+                                        Optional.of(each.getValue(User.class))
+                                )
+                        );
+                    } else {
+                        emitter.onSuccess(Optional.empty());
+                    }
+                }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Log.i("eTalk" , databaseError.getMessage());
-                            emitter.onSuccess(Optional.empty());
-                        }
-                    })
-        );
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.i("eTalk", databaseError.getMessage());
+                    emitter.onSuccess(Optional.empty());
+                }
+            };
+            query.addListenerForSingleValueEvent(listener);
+            emitter.setCancellable(() -> query.removeEventListener(listener));
+        });
     }
 
     @Override
@@ -258,90 +274,114 @@ public class FirebaseDB implements NetworkSource{
 
     @Override
     public Observable<Conversation> loadRelationships(String username) {
-        return Observable.create(emitter ->
-                databaseReference
-                        .child(FirebaseTree.Database.Relationships.NODE_NAME)
-                        .child(username)
-                        .addChildEventListener(new ChildEventListener() {
-                            @SuppressLint("CheckResult")
-                            @Override
-                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                                loadConversation(dataSnapshot.getKey()).subscribe(conversation ->
-                                    emitter.onNext(conversation)
-                                );
-                            }
+        CompositeDisposable disposable = new CompositeDisposable();
+        return Observable.create(emitter -> {
+                    DatabaseReference databaseRef = databaseReference
+                            .child(FirebaseTree.Database.Relationships.NODE_NAME)
+                            .child(username);
+                    ChildEventListener listener = new ChildEventListener() {
+                        @SuppressLint("CheckResult")
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            disposable.add(
+                                    loadConversation(dataSnapshot.getKey()).subscribe(conversation ->
+                                            emitter.onNext(conversation)
+                                    )
+                            );
+                        }
 
-                            @Override
-                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        }
 
-                            @Override
-                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                        }
 
-                            @Override
-                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Log.i("eTalk", databaseError.getMessage());
-                            }
-                        })
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.i("eTalk", databaseError.getMessage());
+                        }
+                    };
+                    databaseRef.addChildEventListener(listener);
+                    emitter.setCancellable(() -> {
+                        if (disposable.size() > 0) {
+                            disposable.dispose();
+                        }
+                        databaseRef.removeEventListener(listener);
+                    });
+                }
         );
     }
 
     @Override
     public Observable<Conversation> loadConversation(String conversationKey) {
-        return Observable.create(emitter ->
-                databaseReference
-                        .child(FirebaseTree.Database.Conversations.NODE_NAME)
-                        .child(conversationKey)
-                        .addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                emitter.onNext(dataSnapshot.getValue(Conversation.class));
-                            }
+        return Observable.create(emitter -> {
+                    DatabaseReference databaseRef = databaseReference
+                            .child(FirebaseTree.Database.Conversations.NODE_NAME)
+                            .child(conversationKey);
+                    ValueEventListener listener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            emitter.onNext(dataSnapshot.getValue(Conversation.class));
+                        }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Log.i("eTalk", databaseError.getMessage());
-                            }
-                        })
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.i("eTalk", databaseError.getMessage());
+                        }
+                    };
+                    databaseRef.addValueEventListener(listener);
+                    emitter.setCancellable(() -> databaseRef.removeEventListener(listener));
+                }
         );
     }
 
     @Override
     public Observable<Message> loadMessages(String conversationKey, String username) {
-        return Observable.create(emitter ->
-                databaseReference
-                        .child(FirebaseTree.Database.Messages.NODE_NAME)
-                        .child(conversationKey)
-                        .orderByChild(FirebaseTree.Database.Messages.ConversationKey.MessageKey.Time.NODE_NAME)
-                        .limitToLast(30)
-                        .addChildEventListener(new ChildEventListener() {
-                            @Override
-                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                                emitter.onNext(dataSnapshot.getValue(Message.class));
-                                databaseReference
-                                        .child(FirebaseTree.Database.Conversations.NODE_NAME)
-                                        .child(conversationKey)
-                                        .child(FirebaseTree.Database.Conversations.ConversationKey.Members.NODE_NAME)
-                                        .child(username)
-                                        .setValue(ServerValue.TIMESTAMP);
-                            }
+        return Observable.create(emitter -> {
+                    DatabaseReference databaseRef = databaseReference
+                            .child(FirebaseTree.Database.Messages.NODE_NAME)
+                            .child(conversationKey);
+                    ChildEventListener listener = new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            emitter.onNext(dataSnapshot.getValue(Message.class));
+                            databaseReference
+                                    .child(FirebaseTree.Database.Conversations.NODE_NAME)
+                                    .child(conversationKey)
+                                    .child(FirebaseTree.Database.Conversations.ConversationKey.Members.NODE_NAME)
+                                    .child(username)
+                                    .setValue(ServerValue.TIMESTAMP);
+                        }
 
-                            @Override
-                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        }
 
-                            @Override
-                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                        }
 
-                            @Override
-                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Log.i("eTalk", databaseError.getMessage());
-                            }
-                        })
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.i("eTalk", databaseError.getMessage());
+                        }
+                    };
+                    databaseRef
+                            .orderByChild(FirebaseTree.Database.Messages.ConversationKey.MessageKey.Time.NODE_NAME)
+                            .limitToLast(30)
+                            .addChildEventListener(listener);
+                    emitter.setCancellable(() -> databaseRef.removeEventListener(listener));
+                }
         );
     }
 }

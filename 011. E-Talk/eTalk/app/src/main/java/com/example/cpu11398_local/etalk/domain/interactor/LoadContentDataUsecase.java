@@ -63,15 +63,17 @@ public class LoadContentDataUsecase implements Usecase {
         return Observable
                 .create(emitter -> {
                     runHandler(emitter);
-                    loadUser()
-                            .subscribe(user -> {
-                                if (currentUser == null) {
-                                    currentUser = user;
-                                    loadConversation();
-                                } else {
-                                    currentUser = user;
-                                }
-                            });
+                    disposable.add(
+                            loadUser()
+                                    .subscribe(user -> {
+                                        if (currentUser == null) {
+                                            currentUser = user;
+                                            loadConversation();
+                                        } else {
+                                            currentUser = user;
+                                        }
+                                    })
+                    );
                 });
     }
 
@@ -107,22 +109,24 @@ public class LoadContentDataUsecase implements Usecase {
     @SuppressLint("CheckResult")
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void loadConversation() {
-        conversationRepository
-                .loadNetworkRelationships(currentUser.getUsername())
-                .subscribe(conversation -> {
-                    if (conversations.containsKey(conversation.getKey())) {
-                        conversations.replace(
-                                conversation.getKey(),
-                                conversation
-                        );
-                    } else {
-                        conversations.put(
-                                conversation.getKey(),
-                                conversation
-                        );
-                    }
-                    loadFriends(conversation);
-                });
+        disposable.add(
+                conversationRepository
+                        .loadNetworkRelationships(currentUser.getUsername())
+                        .subscribe(conversation -> {
+                            if (conversations.containsKey(conversation.getKey())) {
+                                conversations.replace(
+                                        conversation.getKey(),
+                                        conversation
+                                );
+                            } else {
+                                conversations.put(
+                                        conversation.getKey(),
+                                        conversation
+                                );
+                            }
+                            loadFriends(conversation);
+                        })
+        );
     }
 
     @SuppressLint("CheckResult")
@@ -130,17 +134,19 @@ public class LoadContentDataUsecase implements Usecase {
     private void loadFriends(Conversation conversation) {
         conversation.getMembers().forEach((key, time) -> {
             if (!friends.containsKey(key) && !key.equals(currentUser.getUsername())) {
-                userRepository
-                        .loadNetworlChangeableUser(key)
-                        .subscribe(friend -> {
-                            if (friend.isPresent()) {
-                                if (friends.containsKey(key)) {
-                                    friends.replace(key, friend.get());
-                                } else {
-                                    friends.put(key, friend.get());
-                                }
-                            }
-                        });
+                disposable.add(
+                        userRepository
+                                .loadNetworlChangeableUser(key)
+                                .subscribe(friend -> {
+                                    if (friend.isPresent()) {
+                                        if (friends.containsKey(key)) {
+                                            friends.replace(key, friend.get());
+                                        } else {
+                                            friends.put(key, friend.get());
+                                        }
+                                    }
+                                })
+                );
             }
         });
     }
