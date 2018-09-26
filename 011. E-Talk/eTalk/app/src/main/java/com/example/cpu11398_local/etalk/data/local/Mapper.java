@@ -18,9 +18,7 @@ public class Mapper {
                                                        MessagesHolder holder) {
         return new ChatHolder(
                 conversationKey,
-                holder.getRawMessages(),
-                holder.getSendingMessage(),
-                holder.getMessages()
+                holder
         );
     }
 }

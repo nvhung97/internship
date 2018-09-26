@@ -5,6 +5,8 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
+import android.util.Log;
+
 import com.example.cpu11398_local.etalk.data.repository.data_source.LocalSource;
 import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesHolder;
@@ -39,12 +41,12 @@ public abstract class ETalkDB extends RoomDatabase implements LocalSource{
     }
 
     @Override
-    public void putLocalMessagesHolder(String conversationKey, MessagesHolder chatHolder) {
+    public void putLocalMessagesHolder(String conversationKey, MessagesHolder messagesHolder) {
         new Thread(() ->
                 eTalkDao().insertChatHolder(Mapper.MessagesHolder2ChatHolder(
                         conversationKey,
-                        chatHolder)
+                        messagesHolder)
                 )
-        );
+        ).start();
     }
 }

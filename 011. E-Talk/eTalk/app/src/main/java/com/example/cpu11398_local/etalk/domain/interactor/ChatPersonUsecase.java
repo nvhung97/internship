@@ -2,6 +2,7 @@ package com.example.cpu11398_local.etalk.domain.interactor;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
@@ -20,7 +21,9 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.Scheduler;
+import io.reactivex.SingleObserver;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -82,6 +85,26 @@ public class ChatPersonUsecase implements Usecase {
 
     @SuppressLint("CheckResult")
     private void executeFirstLoadCase(DisposableObserver<Event> observer) {
+        conversationRepository
+                .loadLocalMessagesHolder(this, conversationKey)
+                .subscribeOn(Schedulers.from(executor))
+                .observeOn(scheduler)
+                .subscribeWith(new SingleObserver<MessagesHolder>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(MessagesHolder messagesHolder) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
         disposable.add(
                 buildFirstLoadObservable()
                         .subscribeOn(Schedulers.from(executor))
