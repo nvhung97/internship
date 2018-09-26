@@ -23,6 +23,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.Scheduler;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -70,7 +71,7 @@ public class ChatPersonUsecase implements Usecase {
     public void execute(Object observer, Object... params) {
         switch ((String)params[2]) {
             case SEND:
-                executeSendMessage((Message)params[0], (SingleObserver<Boolean>)observer);
+                executeSendMessage((Message)params[0]);
                 break;
             case FIRST_LOAD:
                 username        = (String)params[0];
@@ -82,7 +83,28 @@ public class ChatPersonUsecase implements Usecase {
         }
     }
 
+    @SuppressLint("CheckResult")
     private void executeFirstLoadCase(DisposableObserver<Event> observer) {
+        conversationRepository
+                .loadLocalMessagesHolder(this, conversationKey)
+                .subscribeOn(Schedulers.from(executor))
+                .observeOn(scheduler)
+                .subscribeWith(new SingleObserver<MessagesHolder>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(MessagesHolder messagesHolder) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
         disposable.add(
                 buildFirstLoadObservable()
                         .subscribeOn(Schedulers.from(executor))
@@ -139,45 +161,49 @@ public class ChatPersonUsecase implements Usecase {
 
     @SuppressLint("CheckResult")
     private void loadConversation() {
-        conversationRepository
-                .loadNetworkConversation(conversationKey)
-                .subscribe(item -> {
-                    Conversation oldConversation = conversation;
-                    if (conversation == null) {
-                        conversation = item;
-                        loadFriend();
-                    } else {
-                        conversation = item;
-                    }
-                    if (friend != null) {
-                        if (oldConversation.getMembers().get(friend.getUsername()) < conversation.getMembers().get(friend.getUsername())) {
-                            new Handler().postDelayed(
-                                    () -> {
-                                        holder.newConversationInfo(conversation);
-                                        needUpdateMessage = true;
-                                    },
-                                    500
-                            );
-                        }
-                    }
-                });
+        disposable.add(
+                conversationRepository
+                        .loadNetworkConversation(conversationKey)
+                        .subscribe(item -> {
+                            Conversation oldConversation = conversation;
+                            if (conversation == null) {
+                                conversation = item;
+                                loadFriend();
+                            } else {
+                                conversation = item;
+                            }
+                            if (friend != null) {
+                                if (oldConversation.getMembers().get(friend.getUsername()) < conversation.getMembers().get(friend.getUsername())) {
+                                    new Handler().postDelayed(
+                                            () -> {
+                                                holder.newConversationInfo(conversation);
+                                                needUpdateMessage = true;
+                                            },
+                                            500
+                                    );
+                                }
+                            }
+                        })
+        );
     }
 
     @SuppressLint("CheckResult")
     private void loadFriend() {
         for (String key : conversation.getMembers().keySet()) {
             if (!key.equals(username)) {
-                userRepository
-                        .loadNetworlChangeableUser(key)
-                        .subscribe(userOptional -> {
-                            if (friend == null) {
-                                friend = userOptional.get();
-                                loadMessages();
-                            } else {
-                                friend = userOptional.get();
-                            }
-                            needUpdateFriend = true;
-                        });
+                disposable.add(
+                        userRepository
+                                .loadNetworlChangeableUser(key)
+                                .subscribe(userOptional -> {
+                                    if (friend == null) {
+                                        friend = userOptional.get();
+                                        loadMessages();
+                                    } else {
+                                        friend = userOptional.get();
+                                    }
+                                    needUpdateFriend = true;
+                                })
+                );
                 break;
             }
         }
@@ -185,16 +211,18 @@ public class ChatPersonUsecase implements Usecase {
 
     @SuppressLint("CheckResult")
     private void loadMessages() {
-        conversationRepository
-                .loadNetworkMessages(conversationKey, username)
-                .subscribe(message -> {
-                    holder.addNewMessage(message);
-                    needUpdateMessage = true;
-                });
+        disposable.add(
+                conversationRepository
+                        .loadNetworkMessages(conversationKey, username)
+                        .subscribe(message -> {
+                            holder.addNewMessage(message);
+                            needUpdateMessage = true;
+                        })
+        );
     }
 
     @SuppressLint("CheckResult")
-    private void executeSendMessage(Message message, SingleObserver<Boolean> observer){
+    private void executeSendMessage(Message message){
         message.setSender(username);
         holder.sendNewMessage(message);
         needUpdateMessage = true;
@@ -202,11 +230,22 @@ public class ChatPersonUsecase implements Usecase {
                 .pushNetworkMessage(conversationKey, message)
                 .subscribeOn(Schedulers.from(executor))
                 .observeOn(scheduler)
-                .subscribeWith(observer);
+                .subscribe(result -> {
+                    if (result == true) {
+                        holder.sendSuccessMessage(message);
+                        needUpdateMessage = true;
+                    }
+                });
     }
 
     @Override
     public void endTask() {
+        friendHandler.removeCallbacksAndMessages(null);
+        messageHandler.removeCallbacksAndMessages(null);
+        conversationRepository.putLocalMessagesHolder(
+                conversationKey,
+                holder
+        );
         if (disposable.size() > 0) {
             disposable.clear();
         }
@@ -214,23 +253,22 @@ public class ChatPersonUsecase implements Usecase {
 
     public class MessagesHolder {
 
-        Map<String, Message>    rawMessages = new HashMap<>();
-        Map<String, Message>    sendingMessage = new HashMap<>();
-        List<MessagePersonItem> messages = new ArrayList<>();
+        Map<String, Message>    rawMessages     = new HashMap<>();
+        Map<String, Message>    sendingMessage  = new HashMap<>();
+        List<MessagePersonItem> messages        = new ArrayList<>();
+
+        public MessagesHolder() {}
+
+        public MessagesHolder(Map<String, Message> rawMessages,
+                              Map<String, Message> sendingMessage,
+                              List<MessagePersonItem> messages) {
+            this.rawMessages    = rawMessages;
+            this.sendingMessage = sendingMessage;
+            this.messages       = messages;
+        }
 
         public void addNewMessage(Message message) {
-            if (sendingMessage.containsKey(message.getKey())) {
-                sendingMessage.remove(message.getKey());
-                for (int i = messages.size() - 1; i >=0 ; --i) {
-                    if (messages.get(i).getMessage().getKey().equals(message.getKey())) {
-                        messages.set(i, messages.get(i).clone());
-                        messages.get(i).setMessage(message);
-                        messages.get(i).setAvatar(SENT_URL);
-                        break;
-                    }
-                }
-            }
-            else if (!rawMessages.containsKey(message.getKey())) {
+            if (!rawMessages.containsKey(message.getKey())) {
                 rawMessages.put(
                         message.getKey(),
                         message
@@ -277,11 +315,14 @@ public class ChatPersonUsecase implements Usecase {
                         }
                     }
                 }
+            } else if (sendingMessage.containsKey(message.getKey())) {
+                sendingMessage.get(message.getKey()).setServerTime(message.getTime());
             }
         }
 
         public void sendNewMessage(Message message) {
             sendingMessage.put(message.getKey(), message);
+            rawMessages.put(message.getKey(), message);
             MessagePersonItem newItem = new MessagePersonItem(
                     message,
                     true,
@@ -295,6 +336,17 @@ public class ChatPersonUsecase implements Usecase {
             if (messages.size() > 1 && messages.get(messages.size() - 2).isMe()) {
                 messages.set(messages.size() - 2, messages.get(messages.size() - 2).clone());
                 messages.get(messages.size() - 2 ).setTimeVisible(View.GONE);
+            }
+        }
+
+        public void sendSuccessMessage(Message message) {
+            sendingMessage.remove(message.getKey());
+            for (int i = messages.size() - 1; i >=0 ; --i) {
+                if (messages.get(i).getMessage().getKey().equals(message.getKey())) {
+                    messages.set(i, messages.get(i).clone());
+                    messages.get(i).setAvatar(SENT_URL);
+                    break;
+                }
             }
         }
 
@@ -330,8 +382,28 @@ public class ChatPersonUsecase implements Usecase {
             }
         }
 
+        public void setRawMessages(Map<String, Message> rawMessages) {
+            this.rawMessages = rawMessages;
+        }
+
+        public void setSendingMessage(Map<String, Message> sendingMessage) {
+            this.sendingMessage = sendingMessage;
+        }
+
+        public void setMessages(List<MessagePersonItem> messages) {
+            this.messages = messages;
+        }
+
         public List<MessagePersonItem> getMessages() {
             return new ArrayList<>(messages);
+        }
+
+        public Map<String, Message> getRawMessages() {
+            return rawMessages;
+        }
+
+        public Map<String, Message> getSendingMessage() {
+            return sendingMessage;
         }
 
         private Object decodeData(String data, long type) {

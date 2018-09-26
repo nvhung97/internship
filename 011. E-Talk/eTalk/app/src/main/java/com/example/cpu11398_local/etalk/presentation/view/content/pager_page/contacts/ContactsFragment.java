@@ -102,7 +102,7 @@ public class ContactsFragment extends Fragment {
                     User friend = (User)data[2];
                     Intent intent = new Intent(getActivity(), ChatPersonActivity.class);
                     intent.putExtra("user", user.getUsername());
-                    intent.putExtra("key", conversation.getCreator() + conversation.getTime());
+                    intent.putExtra("key", conversation.getKey());
                     intent.putExtra("name", friend.getName());
                     intent.putExtra("number", friend.getActive());
                     startActivity(intent);

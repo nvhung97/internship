@@ -40,6 +40,7 @@ public class SharedPreferencesDB implements CacheSource {
         return Observable.create(emitter -> {
             changeableUserEmitter = emitter;
             changeableUserEmitter.onNext(getUserHelper());
+            emitter.setCancellable(() -> changeableUserEmitter = null);
         });
     }
 

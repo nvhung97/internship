@@ -1,6 +1,8 @@
 package com.example.cpu11398_local.etalk.data.repository;
 
 import android.graphics.Bitmap;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesHolder;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import io.reactivex.Observable;
@@ -62,4 +64,8 @@ public interface ConversationRepository {
      * @return an observable emit result or any new message.
      */
     Observable<Message> loadNetworkMessages(String conversationKey, String username);
+
+    Single<MessagesHolder> loadLocalMessagesHolder(ChatPersonUsecase usecase, String conversationKey);
+
+    void putLocalMessagesHolder(String conversationKey, MessagesHolder chatHolder);
 }

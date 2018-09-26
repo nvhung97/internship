@@ -5,12 +5,17 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import com.example.cpu11398_local.etalk.R;
+import com.example.cpu11398_local.etalk.data.local.ChatHolder;
+import com.example.cpu11398_local.etalk.data.local.ETalkDB;
 import com.example.cpu11398_local.etalk.presentation.di.AppComponent;
 import com.example.cpu11398_local.etalk.presentation.di.AppModule;
 import com.example.cpu11398_local.etalk.presentation.di.DaggerAppComponent;
+import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
+import com.example.cpu11398_local.etalk.presentation.view.chat.person.MessagePersonItem;
 import com.example.cpu11398_local.etalk.presentation.view.content.ContentActivity;
 import com.example.cpu11398_local.etalk.presentation.view.login.LoginActivity;
 import com.example.cpu11398_local.etalk.presentation.view.register.RegisterActivity;
@@ -21,7 +26,9 @@ import com.example.cpu11398_local.etalk.utils.Tool;
 import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class WelcomeActivity extends BaseActivity {
 
@@ -35,6 +42,7 @@ public class WelcomeActivity extends BaseActivity {
     private Disposable  disposable;
     private Dialog      dialog;
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +77,27 @@ public class WelcomeActivity extends BaseActivity {
 
             }
         });*/
-
+        ETalkDB eTalkDB = ETalkDB.getInstance(this);
+        /*new Thread(() -> eTalkDB.eTalkDao().insertChatHolder(
+                new ChatHolder(
+                        "hungnv6",
+                        new MessagePersonItem(
+                                new Message(
+                                        "long",
+                                        "hello",
+                                        Message.TEXT
+                                )
+                        )
+                )
+        )).start();*/
+        /*eTalkDB
+                .eTalkDao()
+                .loadChatHolder("hungnv61536717419575")
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(chatHolder -> {
+                    Log.e("Test", " " +chatHolder.getMessages().size());
+                });*/
     }
 
     /**

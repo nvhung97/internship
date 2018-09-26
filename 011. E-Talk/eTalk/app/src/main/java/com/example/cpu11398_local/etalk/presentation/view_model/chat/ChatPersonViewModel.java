@@ -216,7 +216,7 @@ public class ChatPersonViewModel extends BaseObservable implements ViewModel, Vi
             sendDisposable.dispose();
         }
         chatPersonUsecase.execute(
-                new SendObserver(),
+                null,
                 new Message(
                         username,
                         textMessage,
@@ -298,27 +298,6 @@ public class ChatPersonViewModel extends BaseObservable implements ViewModel, Vi
         @Override
         public void onComplete() {
 
-        }
-    }
-
-    /**
-     * {@code SendObserver} is subscribed to usecase to listen event from it.
-     */
-    private class SendObserver implements SingleObserver<Boolean> {
-
-        @Override
-        public void onSubscribe(Disposable d) {
-            sendDisposable = d;
-        }
-
-        @Override
-        public void onSuccess(Boolean result) {
-
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            Log.i("eTalk", e.getMessage());
         }
     }
 }

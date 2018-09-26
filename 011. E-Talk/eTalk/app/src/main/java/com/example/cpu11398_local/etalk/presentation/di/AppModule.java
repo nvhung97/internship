@@ -2,10 +2,12 @@ package com.example.cpu11398_local.etalk.presentation.di;
 
 import android.content.Context;
 import com.example.cpu11398_local.etalk.data.cache.SharedPreferencesDB;
+import com.example.cpu11398_local.etalk.data.local.ETalkDB;
 import com.example.cpu11398_local.etalk.data.network.FirebaseDB;
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import com.example.cpu11398_local.etalk.data.repository.data_source.CacheSource;
+import com.example.cpu11398_local.etalk.data.repository.data_source.LocalSource;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
 import com.example.cpu11398_local.etalk.data.repository.implement.ConversationRepositoryImpl;
 import com.example.cpu11398_local.etalk.data.repository.implement.UserRepositoryImpl;
@@ -106,6 +108,11 @@ public class AppModule {
         return new SharedPreferencesDB(context);
     }
 
+    @Provides
+    public LocalSource provideLocalSource(Context context) {
+        return ETalkDB.getInstance(context);
+    }
+
 
     /**********************************************************************************************
      *                                     REPOSITORY
@@ -120,8 +127,9 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public ConversationRepository provideConversationRepository(NetworkSource networkSource) {
-        return new ConversationRepositoryImpl(networkSource);
+    public ConversationRepository provideConversationRepository(NetworkSource networkSource,
+                                                                LocalSource localSource) {
+        return new ConversationRepositoryImpl(networkSource, localSource);
     }
 
 
