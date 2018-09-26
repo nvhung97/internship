@@ -11,6 +11,36 @@ import java.util.Map;
 public class Converter {
 
     @TypeConverter
+    public static String fromObjectObject(Object object) {
+        return new Gson().toJson(object);
+    }
+
+    @TypeConverter
+    public static Object fromObjectString(String object) {
+        return new Gson().fromJson(object, new TypeToken<Object>(){}.getType());
+    }
+
+    @TypeConverter
+    public static String fromMapMembersObject(Map<String, Long> members) {
+        return new Gson().toJson(members);
+    }
+
+    @TypeConverter
+    public static Map<String, Long> fromMapMembersString(String members) {
+        return new Gson().fromJson(members, new TypeToken<Map<String, Long>>(){}.getType());
+    }
+
+    @TypeConverter
+    public static String fromMessageObject(Message messages) {
+        return new Gson().toJson(messages);
+    }
+
+    @TypeConverter
+    public static Message fromMessageString(String message) {
+        return new Gson().fromJson(message, new TypeToken<Message>(){}.getType());
+    }
+
+    @TypeConverter
     public static String fromMapMessageObject(Map<String, Message> messages) {
         return new Gson().toJson(messages);
     }

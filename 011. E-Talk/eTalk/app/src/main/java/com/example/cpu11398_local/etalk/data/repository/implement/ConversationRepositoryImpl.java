@@ -8,6 +8,9 @@ import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesHolder;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
+
+import java.util.List;
+
 import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -67,5 +70,30 @@ public class ConversationRepositoryImpl  implements ConversationRepository{
     @Override
     public void putLocalMessagesHolder(String conversationKey, MessagesHolder chatHolder) {
         localSource.putLocalMessagesHolder(conversationKey, chatHolder);
+    }
+
+    @Override
+    public void deleteAllLocalMessagesHolder() {
+        localSource.deleteAllMessagesHolder();
+    }
+
+    @Override
+    public Single<List<Conversation>> loadAllLocalConversation() {
+        return localSource.loadAllConversation();
+    }
+
+    @Override
+    public Single<Conversation> loadLocalConversation(String conversatonKey) {
+        return localSource.loadConversation(conversatonKey);
+    }
+
+    @Override
+    public void insertLocalConversation(Conversation conversation) {
+        localSource.insertConversation(conversation);
+    }
+
+    @Override
+    public void deleteAllLocalConversation() {
+        localSource.deleteAllConversation();
     }
 }

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatPersonViewModel"/>
+        <import type="android.view.View"/>
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@id/chat_activity_status_bar"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:background="@drawable/status_bar_background"/>
+
+        <FrameLayout
+            android:id="@id/chat_activity_lyt_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@id/chat_activity_tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/tool_bar_backgound">
+                <ImageButton
+                    android:id="@id/chat_activity_btn_back_arrow"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:padding="17dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_arrow_back"
+                    android:onClick="@{viewModel::onBackPressed}"
+                    android:background="@drawable/tool_bar_background_button"/>
+                <TextView
+                    android:id="@id/chat_activity_txt_friend_name"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18dp"
+                    android:gravity="bottom"
+                    android:text="@{viewModel.textName}"
+                    app:layout_constraintLeft_toRightOf="@id/chat_activity_btn_back_arrow"
+                    app:layout_constraintRight_toLeftOf="@id/chat_activity_btn_voice_call"/>
+                <TextView
+                    android:id="@id/chat_activity_txt_friend_status"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="14dp"
+                    android:gravity="top"
+                    android:text="@{viewModel.textStatus}"
+                    app:layout_constraintTop_toBottomOf="@id/chat_activity_txt_friend_name"
+                    app:layout_constraintLeft_toRightOf="@id/chat_activity_btn_back_arrow"
+                    app:layout_constraintRight_toLeftOf="@id/chat_activity_btn_voice_call"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+                <ImageButton
+                    android:id="@id/chat_activity_btn_voice_call"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/tool_bar_background_button"
+                    android:padding="17dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_chat_voice_call"
+                    android:onClick="@{viewModel::onVoiceCallClick}"
+                    app:layout_constraintRight_toLeftOf="@id/chat_activity_btn_video_call" />
+                <ImageButton
+                    android:id="@id/chat_activity_btn_video_call"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/tool_bar_background_button"
+                    android:padding="17dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_chat_video_call"
+                    android:onClick="@{viewModel::onVideoCallClick}"
+                    app:layout_constraintRight_toLeftOf="@id/chat_activity_btn_more" />
+                <ImageButton
+                    android:id="@id/chat_activity_btn_more"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:padding="17dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_more"
+                    android:onClick="@{viewModel::onMoreClick}"
+                    android:background="@drawable/tool_bar_background_button"
+                    app:layout_constraintRight_toRightOf="parent"/>
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="?attr/actionBarSize"
+                android:layout_marginBottom="?attr/actionBarSize"
+                android:background="@color/colorBackground"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@id/chat_activity_lst_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="?attr/actionBarSize"
+                android:layout_marginBottom="?attr/actionBarSize"
+                bind:setRecyclerViewAdapter="@{viewModel.adapter}"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="?attr/actionBarSize"
+                android:layout_gravity="bottom"
+                android:background="@color/colorLightGray" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@id/chat_activity_lyt_message"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="bottom"
+                android:background="@color/colorWhite">
+                <ImageButton
+                    android:id="@id/chat_activity_btn_emoticon"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_emoticon"
+                    android:onClick="@{viewModel::onEmoticonClick}"
+                    android:background="@drawable/message_bar_background_button"/>
+                <EditText
+                    android:id="@id/chat_activity_edt_message"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:hint="@string/chat_activity_edt_message"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textSize="18dp"
+                    android:text="@={viewModel.textMessage}"
+                    android:textCursorDrawable="@drawable/edt_cursor_normal"
+                    android:backgroundTint="@color/colorTransparent"
+                    android:gravity="center_vertical"
+                    app:layout_constraintLeft_toRightOf="@id/chat_activity_btn_emoticon"
+                    app:layout_constraintRight_toLeftOf="@id/chat_activity_btn_send"/>
+                <ImageButton
+                    android:id="@id/chat_activity_btn_attach"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_attach"
+                    android:onClick="@{viewModel::onAttachClick}"
+                    android:visibility="@{viewModel.textMessage.isEmpty() ? View.VISIBLE : View.GONE}"
+                    android:background="@drawable/message_bar_background_button"
+                    app:layout_constraintRight_toLeftOf="@id/chat_activity_btn_record"/>
+                <ImageButton
+                    android:id="@id/chat_activity_btn_record"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_record"
+                    android:onClick="@{viewModel::onRecordClick}"
+                    android:visibility="@{viewModel.textMessage.isEmpty() ? View.VISIBLE : View.GONE}"
+                    android:background="@drawable/message_bar_background_button"
+                    app:layout_constraintRight_toLeftOf="@id/chat_activity_btn_image"/>
+                <ImageButton
+                    android:id="@id/chat_activity_btn_image"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_image"
+                    android:onClick="@{viewModel::onImageClick}"
+                    android:visibility="@{viewModel.textMessage.isEmpty() ? View.VISIBLE : View.GONE}"
+                    android:background="@drawable/message_bar_background_button"
+                    app:layout_constraintRight_toRightOf="parent"/>
+                <ImageButton
+                    android:id="@id/chat_activity_btn_send"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_send"
+                    android:onClick="@{viewModel::onSendMessage}"
+                    android:visibility="@{viewModel.textMessage.isEmpty() ? View.GONE : View.VISIBLE}"
+                    android:background="@drawable/message_bar_background_button"
+                    app:layout_constraintRight_toRightOf="parent"/>
+            </android.support.constraint.ConstraintLayout>
+
+        </FrameLayout>
+
+    </FrameLayout>
+</layout>

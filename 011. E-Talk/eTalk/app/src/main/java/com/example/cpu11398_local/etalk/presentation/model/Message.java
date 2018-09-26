@@ -21,6 +21,14 @@ public class Message {
     public Message() {
     }
 
+    public Message(Message message) {
+        this.key    = message.key;
+        this.sender = message.sender;
+        this.data   = message.data;
+        this.type   = message.type;
+        this.time   = message.time;
+    }
+
     public Message(String data, long type) {
         this(null, data, type);
     }
@@ -71,7 +79,13 @@ public class Message {
 
     @Exclude
     public long getTime() {
-        return (long)time;
+        if (time instanceof Long) {
+            return (long)time;
+        }
+        if (time instanceof Double) {
+            return ((Double)time).longValue();
+        }
+        return 0L;
     }
 
     @PropertyName("time")

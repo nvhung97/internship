@@ -3,9 +3,13 @@ package com.example.cpu11398_local.etalk.data.repository.implement;
 import android.graphics.Bitmap;
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import com.example.cpu11398_local.etalk.data.repository.data_source.CacheSource;
+import com.example.cpu11398_local.etalk.data.repository.data_source.LocalSource;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.Optional;
+
+import java.util.List;
+
 import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -14,11 +18,15 @@ public class UserRepositoryImpl implements UserRepository{
 
     private NetworkSource   networkSource;
     private CacheSource     cacheSource;
+    private LocalSource     localSource;
 
     @Inject
-    public UserRepositoryImpl(NetworkSource networkSource, CacheSource cacheSource) {
+    public UserRepositoryImpl(NetworkSource networkSource,
+                              CacheSource cacheSource,
+                              LocalSource localSource) {
         this.networkSource  = networkSource;
         this.cacheSource    = cacheSource;
+        this.localSource    = localSource;
     }
 
     @Override
@@ -69,5 +77,25 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     public Single<String> getCacheUsernameLoggedIn() {
         return cacheSource.getUsernameLoggedIn();
+    }
+
+    @Override
+    public Single<List<User>> loadAllLocalUser() {
+        return localSource.loadAllUser();
+    }
+
+    @Override
+    public Single<User> loadLocalUser(String username) {
+        return localSource.loadUser(username);
+    }
+
+    @Override
+    public void inserLocalUser(User user) {
+        localSource.inserUser(user);
+    }
+
+    @Override
+    public void deleteAllLocalUser() {
+        localSource.deleteAllUser();
     }
 }

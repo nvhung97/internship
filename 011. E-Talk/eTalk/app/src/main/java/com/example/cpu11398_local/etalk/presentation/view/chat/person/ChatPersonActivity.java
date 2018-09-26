@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import com.example.cpu11398_local.etalk.R;
-import com.example.cpu11398_local.etalk.databinding.ActivityPersonChatBinding;
+import com.example.cpu11398_local.etalk.databinding.ActivityChatPersonBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
@@ -24,7 +24,7 @@ public class ChatPersonActivity extends BaseActivity {
     @Named("ChatPersonViewModel")
     public ViewModel    viewModel;
 
-    private ActivityPersonChatBinding binding;
+    private ActivityChatPersonBinding binding;
     private Disposable  disposable;
     private ViewModelCallback helper;
 
@@ -40,14 +40,14 @@ public class ChatPersonActivity extends BaseActivity {
 
     @Override
     public void onDataBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_person_chat);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_chat_person);
         viewModel = (ViewModel) getLastCustomNonConfigurationInstance();
         if (viewModel == null) {
             WelcomeActivity.getAppComponent(this).inject(this);
         }
         binding.setViewModel((ChatPersonViewModel)viewModel);
         binding.chatActivityLstMessage.setLayoutManager(new LinearLayoutManager(this));
-        binding.chatActivityLstMessage.addItemDecoration(new ChatDivider(
+        binding.chatActivityLstMessage.addItemDecoration(new ChatPersonDivider(
                 (int)getResources().getDimension(R.dimen.divider_chat_space_same),
                 (int)getResources().getDimension(R.dimen.divider_chat_space_diff)
         ));

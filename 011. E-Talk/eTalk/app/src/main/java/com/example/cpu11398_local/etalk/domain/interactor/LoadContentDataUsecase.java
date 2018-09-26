@@ -111,21 +111,67 @@ public class LoadContentDataUsecase implements Usecase {
     private void loadConversation() {
         disposable.add(
                 conversationRepository
-                        .loadNetworkRelationships(currentUser.getUsername())
-                        .subscribe(conversation -> {
-                            if (conversations.containsKey(conversation.getKey())) {
-                                conversations.replace(
-                                        conversation.getKey(),
-                                        conversation
-                                );
-                            } else {
-                                conversations.put(
-                                        conversation.getKey(),
-                                        conversation
-                                );
-                            }
-                            loadFriends(conversation);
-                        })
+                        .loadAllLocalConversation()
+                        .subscribeOn(Schedulers.from(executor))
+                        .observeOn(scheduler)
+                        .subscribe(
+                                conversationList -> {
+                                    for (Conversation conversation : conversationList) {
+                                        if (conversations.containsKey(conversation.getKey())) {
+                                            conversations.replace(
+                                                    conversation.getKey(),
+                                                    conversation
+                                            );
+                                        } else {
+                                            conversations.put(
+                                                    conversation.getKey(),
+                                                    conversation
+                                            );
+                                        }
+                                        loadFriends(conversation);
+                                    }
+                                    disposable.add(
+                                            conversationRepository
+                                                    .loadNetworkRelationships(currentUser.getUsername())
+                                                    .subscribe(conversation -> {
+                                                        if (conversations.containsKey(conversation.getKey())) {
+                                                            conversations.replace(
+                                                                    conversation.getKey(),
+                                                                    conversation
+                                                            );
+                                                        } else {
+                                                            conversations.put(
+                                                                    conversation.getKey(),
+                                                                    conversation
+                                                            );
+                                                        }
+                                                        loadFriends(conversation);
+                                                        conversationRepository.insertLocalConversation(conversation);
+                                                    })
+                                    );
+                                },
+                                e -> {
+                                    disposable.add(
+                                            conversationRepository
+                                                    .loadNetworkRelationships(currentUser.getUsername())
+                                                    .subscribe(conversation -> {
+                                                        if (conversations.containsKey(conversation.getKey())) {
+                                                            conversations.replace(
+                                                                    conversation.getKey(),
+                                                                    conversation
+                                                            );
+                                                        } else {
+                                                            conversations.put(
+                                                                    conversation.getKey(),
+                                                                    conversation
+                                                            );
+                                                        }
+                                                        loadFriends(conversation);
+                                                        conversationRepository.insertLocalConversation(conversation);
+                                                    })
+                                    );
+                                }
+                        )
         );
     }
 
@@ -136,16 +182,52 @@ public class LoadContentDataUsecase implements Usecase {
             if (!friends.containsKey(key) && !key.equals(currentUser.getUsername())) {
                 disposable.add(
                         userRepository
-                                .loadNetworlChangeableUser(key)
-                                .subscribe(friend -> {
-                                    if (friend.isPresent()) {
-                                        if (friends.containsKey(key)) {
-                                            friends.replace(key, friend.get());
-                                        } else {
-                                            friends.put(key, friend.get());
+                                .loadLocalUser(key)
+                                .subscribeOn(Schedulers.from(executor))
+                                .observeOn(scheduler)
+                                .subscribe(
+                                        user -> {
+                                            if (friends.containsKey(key)) {
+                                                friends.replace(key, user);
+                                            } else {
+                                                friends.put(key, user);
+                                            }
+                                            disposable.add(
+                                                    userRepository
+                                                            .loadNetworlChangeableUser(key)
+                                                            .subscribe(friend -> {
+                                                                if (friend.isPresent()) {
+                                                                    if (friends.containsKey(key)) {
+                                                                        friends.replace(key, friend.get());
+                                                                    } else {
+                                                                        friends.put(key, friend.get());
+                                                                    }
+                                                                    if (conversation.getType() == Conversation.PERSON) {
+                                                                        userRepository.inserLocalUser(friend.get());
+                                                                    }
+                                                                }
+                                                            })
+                                            );
+                                        },
+                                        e -> {
+                                            disposable.add(
+                                                    userRepository
+                                                            .loadNetworlChangeableUser(key)
+                                                            .subscribe(friend -> {
+                                                                if (friend.isPresent()) {
+                                                                    if (friends.containsKey(key)) {
+                                                                        friends.replace(key, friend.get());
+                                                                    } else {
+                                                                        friends.put(key, friend.get());
+                                                                    }
+                                                                }
+                                                                if (conversation.getType() == Conversation.PERSON) {
+                                                                    userRepository.inserLocalUser(friend.get());
+                                                                }
+                                                            })
+                                            );
                                         }
-                                    }
-                                })
+                                )
                 );
             }
         });

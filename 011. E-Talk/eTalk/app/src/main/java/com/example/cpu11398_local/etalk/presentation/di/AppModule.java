@@ -121,8 +121,9 @@ public class AppModule {
     @Provides
     @Singleton
     public UserRepository provideUserRepository(NetworkSource networkSource,
-                                                CacheSource cacheSource) {
-        return new UserRepositoryImpl(networkSource, cacheSource);
+                                                CacheSource cacheSource,
+                                                LocalSource localSource) {
+        return new UserRepositoryImpl(networkSource, cacheSource, localSource);
     }
 
     @Provides

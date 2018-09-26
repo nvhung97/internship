@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Entity
-public class ChatHolder {
+public class RoomMessagesHolder {
 
     @NonNull
     @PrimaryKey
@@ -30,18 +30,18 @@ public class ChatHolder {
     @ColumnInfo(name = "item")
     List<MessagePersonItem> messages;
 
-    public ChatHolder(@NonNull String conversationKey,
-                      @NonNull MessagesHolder holder) {
+    public RoomMessagesHolder(@NonNull String conversationKey,
+                              @NonNull MessagesHolder holder) {
         this.conversationKey = conversationKey;
         this.rawMessages     = holder.getRawMessages();
         this.sendingMessage  = holder.getSendingMessage();
         this.messages        = holder.getMessages();
     }
 
-    public ChatHolder(@NonNull String conversationKey,
-                      @NonNull Map<String, Message> rawMessages,
-                      @NonNull Map<String, Message> sendingMessage,
-                      @NonNull List<MessagePersonItem> messages) {
+    public RoomMessagesHolder(@NonNull String conversationKey,
+                              @NonNull Map<String, Message> rawMessages,
+                              @NonNull Map<String, Message> sendingMessage,
+                              @NonNull List<MessagePersonItem> messages) {
         this.conversationKey = conversationKey;
         this.rawMessages     = rawMessages;
         this.sendingMessage  = sendingMessage;

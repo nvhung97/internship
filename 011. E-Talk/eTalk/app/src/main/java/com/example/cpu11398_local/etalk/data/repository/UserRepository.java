@@ -3,6 +3,7 @@ package com.example.cpu11398_local.etalk.data.repository;
 import android.graphics.Bitmap;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.Optional;
+import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
@@ -79,4 +80,12 @@ public interface UserRepository {
      * @return an observable contain username or empty string.
      */
     Single<String> getCacheUsernameLoggedIn();
+
+    Single<List<User>> loadAllLocalUser();
+
+    Single<User> loadLocalUser(String username);
+
+    void inserLocalUser(User user);
+
+    void deleteAllLocalUser();
 }

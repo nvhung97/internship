@@ -92,7 +92,13 @@ public class Conversation {
 
     @Exclude
     public long getTime() {
-        return (long)createTime;
+        if (createTime instanceof Long) {
+            return (long)createTime;
+        }
+        if (createTime instanceof Double) {
+            return ((Double)createTime).longValue();
+        }
+        return 0L;
     }
 
     @PropertyName(FirebaseTree.Database.Conversations.ConversationKey.CreateTime.NODE_NAME)

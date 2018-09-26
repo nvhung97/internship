@@ -21,10 +21,9 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.Scheduler;
-import io.reactivex.SingleObserver;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class ChatPersonUsecase implements Usecase {
@@ -85,26 +84,6 @@ public class ChatPersonUsecase implements Usecase {
 
     @SuppressLint("CheckResult")
     private void executeFirstLoadCase(DisposableObserver<Event> observer) {
-        conversationRepository
-                .loadLocalMessagesHolder(this, conversationKey)
-                .subscribeOn(Schedulers.from(executor))
-                .observeOn(scheduler)
-                .subscribeWith(new SingleObserver<MessagesHolder>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(MessagesHolder messagesHolder) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                });
         disposable.add(
                 buildFirstLoadObservable()
                         .subscribeOn(Schedulers.from(executor))
@@ -163,25 +142,44 @@ public class ChatPersonUsecase implements Usecase {
     private void loadConversation() {
         disposable.add(
                 conversationRepository
-                        .loadNetworkConversation(conversationKey)
-                        .subscribe(item -> {
-                            Conversation oldConversation = conversation;
-                            if (conversation == null) {
+                        .loadLocalConversation(conversationKey)
+                        .subscribeOn(Schedulers.from(executor))
+                        .observeOn(scheduler)
+                        .subscribeWith(new DisposableSingleObserver<Conversation>() {
+                            @Override
+                            public void onSuccess(Conversation item) {
                                 conversation = item;
                                 loadFriend();
-                            } else {
-                                conversation = item;
+                                onError(null);
                             }
-                            if (friend != null) {
-                                if (oldConversation.getMembers().get(friend.getUsername()) < conversation.getMembers().get(friend.getUsername())) {
-                                    new Handler().postDelayed(
-                                            () -> {
-                                                holder.newConversationInfo(conversation);
-                                                needUpdateMessage = true;
-                                            },
-                                            500
-                                    );
-                                }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                disposable.add(
+                                        conversationRepository
+                                                .loadNetworkConversation(conversationKey)
+                                                .subscribe(item -> {
+                                                    Conversation oldConversation = conversation;
+                                                    if (conversation == null) {
+                                                        conversation = item;
+                                                        loadFriend();
+                                                    } else {
+                                                        conversation = item;
+                                                    }
+                                                    if (friend != null && oldConversation != null) {
+                                                        if (oldConversation.getMembers().get(friend.getUsername()) < conversation.getMembers().get(friend.getUsername())) {
+                                                            new Handler().postDelayed(
+                                                                    () -> {
+                                                                        holder.newConversationInfo(conversation);
+                                                                        needUpdateMessage = true;
+                                                                    },
+                                                                    500
+                                                            );
+                                                        }
+                                                    }
+                                                    conversationRepository.insertLocalConversation(conversation);
+                                                })
+                                );
                             }
                         })
         );
@@ -193,15 +191,32 @@ public class ChatPersonUsecase implements Usecase {
             if (!key.equals(username)) {
                 disposable.add(
                         userRepository
-                                .loadNetworlChangeableUser(key)
-                                .subscribe(userOptional -> {
-                                    if (friend == null) {
-                                        friend = userOptional.get();
+                                .loadLocalUser(key)
+                                .subscribeOn(Schedulers.from(executor))
+                                .observeOn(scheduler)
+                                .subscribeWith(new DisposableSingleObserver<User>() {
+                                    @Override
+                                    public void onSuccess(User user) {
+                                        friend = user;
                                         loadMessages();
-                                    } else {
-                                        friend = userOptional.get();
+                                        onError(null);
                                     }
-                                    needUpdateFriend = true;
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        disposable.add(
+                                                userRepository
+                                                        .loadNetworlChangeableUser(key)
+                                                        .subscribe(userOptional -> {
+                                                            if (friend == null) {
+                                                                friend = userOptional.get();
+                                                                loadMessages();
+                                                            } else {
+                                                                friend = userOptional.get();
+                                                            }
+                                                            needUpdateFriend = true;
+                                                        })
+                                        );
+                                    }
                                 })
                 );
                 break;
@@ -213,10 +228,49 @@ public class ChatPersonUsecase implements Usecase {
     private void loadMessages() {
         disposable.add(
                 conversationRepository
-                        .loadNetworkMessages(conversationKey, username)
-                        .subscribe(message -> {
-                            holder.addNewMessage(message);
-                            needUpdateMessage = true;
+                        .loadLocalMessagesHolder(this, conversationKey)
+                        .subscribeOn(Schedulers.from(executor))
+                        .observeOn(scheduler)
+                        .subscribeWith(new DisposableSingleObserver<MessagesHolder>() {
+                            @Override
+                            public void onSuccess(MessagesHolder messagesHolder) {
+                                holder = messagesHolder;
+                                needUpdateMessage = true;
+                                for (Message message : holder.getSendingMessage().values()) {
+                                    disposable.add(
+                                            conversationRepository
+                                                    .pushNetworkMessage(conversationKey, message)
+                                                    .subscribeOn(Schedulers.from(executor))
+                                                    .observeOn(scheduler)
+                                                    .subscribe(result -> {
+                                                        if (result == true) {
+                                                            holder.sendSuccessMessage(message);
+                                                            needUpdateMessage = true;
+                                                        }
+                                                    })
+                                    );
+                                }
+                                disposable.add(
+                                        conversationRepository
+                                                .loadNetworkMessages(conversationKey, username)
+                                                .subscribe(message -> {
+                                                    holder.addNewMessage(message);
+                                                    needUpdateMessage = true;
+                                                })
+                                );
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                disposable.add(
+                                        conversationRepository
+                                                .loadNetworkMessages(conversationKey, username)
+                                                .subscribe(message -> {
+                                                    holder.addNewMessage(message);
+                                                    needUpdateMessage = true;
+                                                })
+                                );
+                            }
                         })
         );
     }
@@ -226,16 +280,18 @@ public class ChatPersonUsecase implements Usecase {
         message.setSender(username);
         holder.sendNewMessage(message);
         needUpdateMessage = true;
-        conversationRepository
-                .pushNetworkMessage(conversationKey, message)
-                .subscribeOn(Schedulers.from(executor))
-                .observeOn(scheduler)
-                .subscribe(result -> {
-                    if (result == true) {
-                        holder.sendSuccessMessage(message);
-                        needUpdateMessage = true;
-                    }
-                });
+        disposable.add(
+                conversationRepository
+                        .pushNetworkMessage(conversationKey, message)
+                        .subscribeOn(Schedulers.from(executor))
+                        .observeOn(scheduler)
+                        .subscribe(result -> {
+                            if (result == true) {
+                                holder.sendSuccessMessage(message);
+                                needUpdateMessage = true;
+                            }
+                        })
+        );
     }
 
     @Override
