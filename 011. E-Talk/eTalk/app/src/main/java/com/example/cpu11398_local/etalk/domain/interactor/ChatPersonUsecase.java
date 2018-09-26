@@ -26,11 +26,11 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ChatPersonUsecase implements Usecase {
 
-    private final String SENT_URL = "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/sent.png?alt=media&token=4e7cf2d2-22d5-47d8-9e5a-12bdbbcaedb1";
-    private final String SENDING_URL  = "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/sending.png?alt=media&token=32ca8ddf-6b82-42e8-85d9-2e5d726dfe97";
-    private final String FIRST_LOAD = "first_load";
-    private final String LOAD_MORE  = "load_more";
-    private final String SEND       = "send";
+    private final String SENT_URL       = "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/sent.png?alt=media&token=4e7cf2d2-22d5-47d8-9e5a-12bdbbcaedb1";
+    private final String SENDING_URL    = "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/sending.png?alt=media&token=32ca8ddf-6b82-42e8-85d9-2e5d726dfe97";
+    private final String FIRST_LOAD     = "first_load";
+    private final String LOAD_MORE      = "load_more";
+    private final String SEND           = "send";
 
     private Executor                executor;
     private Scheduler               scheduler;
@@ -321,6 +321,7 @@ public class ChatPersonUsecase implements Usecase {
             for (int i = messages.size() - 1; i >=0 ; --i) {
                 if (messages.get(i).getMessage().getKey().equals(message.getKey())) {
                     messages.set(i, messages.get(i).clone());
+                    messages.get(i).getMessage().setServerTime(Long.parseLong(message.getKey().substring(username.length())));
                     messages.get(i).setAvatar(SENT_URL);
                     break;
                 }
