@@ -28,7 +28,7 @@ public class Event {
     public static final int CONTENT_ACTIVITY_EMIT_DATA                  = CONTENT_ACTIVITY_MARK | 4;
 
     /**
-     * Bellow commands for {@code ChatPersonActivity}.
+     * Bellow commands for {@code ChatPersonActivity} and {@code ChatGroupActivity}.
      */
     private static final int CHAT_ACTIVITY_MARK     = 1 << MODE_SHIFT;
     public static final int CHAT_ACTIVITY_BACK      = CHAT_ACTIVITY_MARK | 0;

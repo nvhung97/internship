@@ -1,5 +1,6 @@
 package com.example.cpu11398_local.etalk.presentation.di;
 
+import com.example.cpu11398_local.etalk.presentation.view.chat.group.ChatGroupActivity;
 import com.example.cpu11398_local.etalk.presentation.view.chat.person.ChatPersonActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.ContentActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.contacts.ContactsFragment;
@@ -34,6 +35,7 @@ public interface AppComponent {
     void inject(ProfileActivity profileActivity);
 
     void inject(ChatPersonActivity chatPersonActivity);
+    void inject(ChatGroupActivity chatGroupActivity);
 
     void inject(AddFriendActivity addFriendActivity);
 

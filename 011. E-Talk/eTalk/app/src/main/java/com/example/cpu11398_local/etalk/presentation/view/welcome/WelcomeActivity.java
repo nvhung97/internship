@@ -16,7 +16,7 @@ import com.example.cpu11398_local.etalk.presentation.view.login.LoginActivity;
 import com.example.cpu11398_local.etalk.presentation.view.register.RegisterActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
-import com.example.cpu11398_local.etalk.utils.Tool
+import com.example.cpu11398_local.etalk.utils.Tool;
 import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observer;

@@ -32,6 +32,11 @@ public class GroupViewModel extends BaseObservable implements ViewModel {
     private Disposable disposable;
 
     /**
+     * Current user to get friend from conversation.
+     */
+    private User currentUser;
+
+    /**
      * Container contain current friend.
      */
     private Map<String, User> friends = new HashMap<>();
@@ -47,9 +52,9 @@ public class GroupViewModel extends BaseObservable implements ViewModel {
     private GroupAdapter adapter = new GroupAdapter(conversations, friends, new ActionCallback() {
         @Override
         public void chatWith(Conversation conversation) {
-            Log.e("Test", conversation.getName());
             publisher.onNext(Event.create(
                     Event.GROUP_FRAGMENT_CHAT,
+                    currentUser,
                     conversation
             ));
         }
@@ -132,10 +137,10 @@ public class GroupViewModel extends BaseObservable implements ViewModel {
             Object[] data = event.getData();
             switch (event.getType()) {
                 case Event.CONTENT_ACTIVITY_EMIT_DATA:
-                    User user       = (User)data[0];
+                    currentUser     = (User)data[0];
                     conversations   = (List<Conversation>)data[1];
                     friends         = new HashMap<>((Map<String, User>)data[2]);
-                    friends.put(user.getUsername(), user);
+                    friends.put(currentUser.getUsername(), currentUser);
                     adapter.onNewData(
                             conversations,
                             friends

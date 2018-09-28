@@ -346,6 +346,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- View Room database
 		+ https://stackoverflow.com/a/51730132/9661754
 	- Hoàn thành chat 2 người
+6:11 PM 9/28/2018
+	- Hiện thực chat nhóm (chưa hiện thực tầng domain)
 
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/

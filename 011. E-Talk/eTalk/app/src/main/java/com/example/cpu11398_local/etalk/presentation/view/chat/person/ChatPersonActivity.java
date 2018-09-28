@@ -51,17 +51,14 @@ public class ChatPersonActivity extends BaseActivity {
                 (int)getResources().getDimension(R.dimen.divider_chat_space_same),
                 (int)getResources().getDimension(R.dimen.divider_chat_space_diff)
         ));
-        binding.chatActivityLstMessage.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                if (bottom < oldBottom) {
-                    binding.chatActivityLstMessage.postDelayed(
-                            (Runnable) () -> binding.chatActivityLstMessage.scrollToPosition(
-                                    binding.chatActivityLstMessage.getAdapter().getItemCount() - 1
-                            ),
-                            100
-                    );
-                }
+        binding.chatActivityLstMessage.addOnLayoutChangeListener((View.OnLayoutChangeListener) (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            if (bottom < oldBottom) {
+                binding.chatActivityLstMessage.postDelayed(
+                        (Runnable) () -> binding.chatActivityLstMessage.scrollToPosition(
+                                binding.chatActivityLstMessage.getAdapter().getItemCount() - 1
+                        ),
+                        100
+                );
             }
         });
         addControlKeyboardView(binding.chatActivityLytMessage);

@@ -4,14 +4,14 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
-import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesHolder;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesPersonHolder;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.view.chat.person.MessagePersonItem;
 import java.util.List;
 import java.util.Map;
 
 @Entity
-public class RoomMessagesHolder {
+public class RoomMessagesPersonHolder {
 
     @NonNull
     @PrimaryKey
@@ -30,18 +30,18 @@ public class RoomMessagesHolder {
     @ColumnInfo(name = "item")
     List<MessagePersonItem> messages;
 
-    public RoomMessagesHolder(@NonNull String conversationKey,
-                              @NonNull MessagesHolder holder) {
+    public RoomMessagesPersonHolder(@NonNull String conversationKey,
+                                    @NonNull MessagesPersonHolder holder) {
         this.conversationKey = conversationKey;
         this.rawMessages     = holder.getRawMessages();
         this.sendingMessage  = holder.getSendingMessage();
         this.messages        = holder.getMessages();
     }
 
-    public RoomMessagesHolder(@NonNull String conversationKey,
-                              @NonNull Map<String, Message> rawMessages,
-                              @NonNull Map<String, Message> sendingMessage,
-                              @NonNull List<MessagePersonItem> messages) {
+    public RoomMessagesPersonHolder(@NonNull String conversationKey,
+                                    @NonNull Map<String, Message> rawMessages,
+                                    @NonNull Map<String, Message> sendingMessage,
+                                    @NonNull List<MessagePersonItem> messages) {
         this.conversationKey = conversationKey;
         this.rawMessages     = rawMessages;
         this.sendingMessage  = sendingMessage;

@@ -1,7 +1,9 @@
 package com.example.cpu11398_local.etalk.data.local;
 
+import com.example.cpu11398_local.etalk.domain.interactor.ChatGroupUsecase;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatGroupUsecase.MessagesGroupHolder;
 import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase;
-import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesHolder;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesPersonHolder;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 
@@ -55,18 +57,35 @@ public class Mapper {
         );
     }
 
-    public static MessagesHolder RoomMessagesHolder2MessagesHolder(ChatPersonUsecase usecase,
-                                                                   RoomMessagesHolder roomMessagesHolder) {
-        return usecase.new MessagesHolder(
-                roomMessagesHolder.getRawMessages(),
-                roomMessagesHolder.getSendingMessage(),
-                roomMessagesHolder.getMessages()
+    public static MessagesPersonHolder RoomMessagesPersonHolder2MessagesPersonHolder(ChatPersonUsecase usecase,
+                                                                                     RoomMessagesPersonHolder roomMessagesPersonHolder) {
+        return usecase.new MessagesPersonHolder(
+                roomMessagesPersonHolder.getRawMessages(),
+                roomMessagesPersonHolder.getSendingMessage(),
+                roomMessagesPersonHolder.getMessages()
         );
     }
 
-    public static RoomMessagesHolder MessagesHolder2RoomMessagesHolder(String conversationKey,
-                                                                       MessagesHolder holder) {
-        return new RoomMessagesHolder(
+    public static RoomMessagesPersonHolder MessagesPersonHolder2RoomMessagesPersonHolder(String conversationKey,
+                                                                                         MessagesPersonHolder holder) {
+        return new RoomMessagesPersonHolder(
+                conversationKey,
+                holder
+        );
+    }
+
+    public static MessagesGroupHolder RoomMessagesGroupHolder2MessagesGroupHolder(ChatGroupUsecase usecase,
+                                                                                  RoomMessagesGroupHolder roomMessagesGroupHolder) {
+        return usecase.new MessagesGroupHolder(
+                roomMessagesGroupHolder.getRawMessages(),
+                roomMessagesGroupHolder.getSendingMessage(),
+                roomMessagesGroupHolder.getMessages()
+        );
+    }
+
+    public static RoomMessagesGroupHolder MessagesGroupHolder2RoomMessagesGroupHolder(String conversationKey,
+                                                                                      MessagesGroupHolder holder) {
+        return new RoomMessagesGroupHolder(
                 conversationKey,
                 holder
         );

@@ -2,6 +2,7 @@ package com.example.cpu11398_local.etalk.data.local;
 
 import android.arch.persistence.room.TypeConverter;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
+import com.example.cpu11398_local.etalk.presentation.view.chat.group.MessageGroupItem;
 import com.example.cpu11398_local.etalk.presentation.view.chat.person.MessagePersonItem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -58,5 +59,15 @@ public class Converter {
     @TypeConverter
     public static List<MessagePersonItem> fromListMessagePersonItemString(String item) {
         return new Gson().fromJson(item, new TypeToken<List<MessagePersonItem>>(){}.getType());
+    }
+
+    @TypeConverter
+    public static String fromListMessageGroupItemObject(List<MessageGroupItem> items) {
+        return new Gson().toJson(items);
+    }
+
+    @TypeConverter
+    public static List<MessageGroupItem> fromListMessageGroupItemString(String item) {
+        return new Gson().fromJson(item, new TypeToken<List<MessageGroupItem>>(){}.getType());
     }
 }

@@ -35,11 +35,9 @@ public class ContactsFragment extends Fragment {
     private Disposable  disposable;
     private ProgressBar progressBar;
 
-
     public ContactsFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -62,7 +60,6 @@ public class ContactsFragment extends Fragment {
         );
         binding.contactFragmentRvContact.setHasFixedSize(true);
         progressBar = binding.contactFragmentLoading;
-
         return binding.getRoot();
     }
 

@@ -112,7 +112,7 @@ public class MessagePersonAdapter extends RecyclerView.Adapter<MessagePersonAdap
 
     @NonNull
     @Override
-    public MessagePersonAdapter.MessagePersonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MessagePersonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case ME_TEXT:
                 return new MessageTextMeViewHolder(

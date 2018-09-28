@@ -38,12 +38,23 @@ public interface ETalkDao {
 
 
 
-    @Query("SELECT * FROM RoomMessagesHolder WHERE id LIKE :conversationKey")
-    Single<RoomMessagesHolder> loadMessagesHolder(String conversationKey);
+    @Query("SELECT * FROM RoomMessagesPersonHolder WHERE id LIKE :conversationKey")
+    Single<RoomMessagesPersonHolder> loadMessagesPersonHolder(String conversationKey);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertMessagesHolder(RoomMessagesHolder roomMessagesHolder);
+    void insertMessagesPersonHolder(RoomMessagesPersonHolder roomMessagesPersonHolder);
 
-    @Query("DELETE FROM RoomMessagesHolder")
-    void removeAllMessagesHolder();
+    @Query("DELETE FROM RoomMessagesPersonHolder")
+    void removeAllMessagesPersonHolder();
+
+
+
+    @Query("SELECT * FROM RoomMessagesGroupHolder WHERE id LIKE :conversationKey")
+    Single<RoomMessagesGroupHolder> loadMessagesGroupHolder(String conversationKey);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertMessagesGroupHolder(RoomMessagesGroupHolder messagesGroupHolder);
+
+    @Query("DELETE FROM RoomMessagesGroupHolder")
+    void removeAllMessagesGroupHolder();
 }

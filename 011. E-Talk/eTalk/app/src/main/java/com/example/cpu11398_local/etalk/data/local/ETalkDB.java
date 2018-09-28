@@ -6,8 +6,10 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import com.example.cpu11398_local.etalk.data.repository.data_source.LocalSource;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatGroupUsecase;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatGroupUsecase.MessagesGroupHolder;
 import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase;
-import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesHolder;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesPersonHolder;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import java.util.ArrayList;
@@ -16,11 +18,12 @@ import io.reactivex.Single;
 
 @Database(
         entities = {
-                RoomMessagesHolder.class,
+                RoomMessagesPersonHolder.class,
+                RoomMessagesGroupHolder.class,
                 RoomUser.class,
                 RoomConversation.class
         },
-        version = 3
+        version = 1
 )
 @TypeConverters({Converter.class})
 public abstract class ETalkDB extends RoomDatabase implements LocalSource{
@@ -102,27 +105,52 @@ public abstract class ETalkDB extends RoomDatabase implements LocalSource{
     }
 
     @Override
-    public Single<MessagesHolder> loadLocalMessagesHolder(ChatPersonUsecase usecase,
-                                                 String conversationKey) {
-        return eTalkDao().loadMessagesHolder(conversationKey).map(chatHolder ->
-                Mapper.RoomMessagesHolder2MessagesHolder(usecase, chatHolder)
+    public Single<MessagesPersonHolder> loadLocalMessagesPersonHolder(ChatPersonUsecase usecase,
+                                                                      String conversationKey) {
+        return eTalkDao().loadMessagesPersonHolder(conversationKey).map(chatHolder ->
+                Mapper.RoomMessagesPersonHolder2MessagesPersonHolder(usecase, chatHolder)
         );
     }
 
     @Override
-    public void putLocalMessagesHolder(String conversationKey, MessagesHolder messagesHolder) {
+    public void putLocalMessagesPersonHolder(String conversationKey, MessagesPersonHolder messagesPersonHolder) {
         new Thread(() ->
-                eTalkDao().insertMessagesHolder(Mapper.MessagesHolder2RoomMessagesHolder(
+                eTalkDao().insertMessagesPersonHolder(Mapper.MessagesPersonHolder2RoomMessagesPersonHolder(
                         conversationKey,
-                        messagesHolder)
+                        messagesPersonHolder)
                 )
         ).start();
     }
 
     @Override
-    public void deleteAllMessagesHolder() {
+    public void deleteAllMessagesPersonHolder() {
         new Thread(() ->
-                eTalkDao().removeAllMessagesHolder()
+                eTalkDao().removeAllMessagesPersonHolder()
+        ).start();
+    }
+
+    @Override
+    public Single<MessagesGroupHolder> loadLocalMessagesGroupHolder(ChatGroupUsecase usecase,
+                                                                     String conversationKey) {
+        return eTalkDao().loadMessagesGroupHolder(conversationKey).map(messagesGroupHolder ->
+                Mapper.RoomMessagesGroupHolder2MessagesGroupHolder(usecase, messagesGroupHolder)
+        );
+    }
+
+    @Override
+    public void putLocalMessagesGroupHolder(String conversationKey, MessagesGroupHolder messagesGroupHolder) {
+        new Thread(() ->
+                eTalkDao().insertMessagesGroupHolder(Mapper.MessagesGroupHolder2RoomMessagesGroupHolder(
+                        conversationKey,
+                        messagesGroupHolder)
+                )
+        ).start();
+    }
+
+    @Override
+    public void deleteAllMessagesGroupHolder() {
+        new Thread(() ->
+                eTalkDao().removeAllMessagesGroupHolder()
         ).start();
     }
 }

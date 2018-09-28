@@ -2,7 +2,6 @@ package com.example.cpu11398_local.etalk.domain.interactor;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
@@ -64,7 +63,7 @@ public class ChatPersonUsecase implements Usecase {
     private Conversation conversation;
     private User         friend;
 
-    private MessagesHolder holder = new MessagesHolder();
+    private MessagesPersonHolder holder = new MessagesPersonHolder();
 
     @Override
     public void execute(Object observer, Object... params) {
@@ -228,13 +227,13 @@ public class ChatPersonUsecase implements Usecase {
     private void loadMessages() {
         disposable.add(
                 conversationRepository
-                        .loadLocalMessagesHolder(this, conversationKey)
+                        .loadLocalMessagesPersonHolder(this, conversationKey)
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
-                        .subscribeWith(new DisposableSingleObserver<MessagesHolder>() {
+                        .subscribeWith(new DisposableSingleObserver<MessagesPersonHolder>() {
                             @Override
-                            public void onSuccess(MessagesHolder messagesHolder) {
-                                holder = messagesHolder;
+                            public void onSuccess(MessagesPersonHolder messagesPersonHolder) {
+                                holder = messagesPersonHolder;
                                 needUpdateMessage = true;
                                 for (Message message : holder.getSendingMessage().values()) {
                                     disposable.add(
@@ -298,7 +297,7 @@ public class ChatPersonUsecase implements Usecase {
     public void endTask() {
         friendHandler.removeCallbacksAndMessages(null);
         messageHandler.removeCallbacksAndMessages(null);
-        conversationRepository.putLocalMessagesHolder(
+        conversationRepository.putLocalMessagesPersonHolder(
                 conversationKey,
                 holder
         );
@@ -307,17 +306,17 @@ public class ChatPersonUsecase implements Usecase {
         }
     }
 
-    public class MessagesHolder {
+    public class MessagesPersonHolder {
 
         Map<String, Message>    rawMessages     = new HashMap<>();
         Map<String, Message>    sendingMessage  = new HashMap<>();
         List<MessagePersonItem> messages        = new ArrayList<>();
 
-        public MessagesHolder() {}
+        public MessagesPersonHolder() {}
 
-        public MessagesHolder(Map<String, Message> rawMessages,
-                              Map<String, Message> sendingMessage,
-                              List<MessagePersonItem> messages) {
+        public MessagesPersonHolder(Map<String, Message> rawMessages,
+                                    Map<String, Message> sendingMessage,
+                                    List<MessagePersonItem> messages) {
             this.rawMessages    = rawMessages;
             this.sendingMessage = sendingMessage;
             this.messages       = messages;

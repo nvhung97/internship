@@ -1,13 +1,13 @@
 package com.example.cpu11398_local.etalk.data.repository;
 
 import android.graphics.Bitmap;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatGroupUsecase;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatGroupUsecase.MessagesGroupHolder;
 import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase;
-import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesHolder;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesPersonHolder;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
-
 import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
@@ -74,16 +74,33 @@ public interface ConversationRepository {
      * @param conversationKey
      * @return
      */
-    Single<MessagesHolder> loadLocalMessagesHolder(ChatPersonUsecase usecase, String conversationKey);
+    Single<MessagesPersonHolder> loadLocalMessagesPersonHolder(ChatPersonUsecase usecase, String conversationKey);
 
     /**
      * Save container contain messages to local database.
      * @param conversationKey
      * @param chatHolder
      */
-    void putLocalMessagesHolder(String conversationKey, MessagesHolder chatHolder);
+    void putLocalMessagesPersonHolder(String conversationKey, MessagesPersonHolder chatHolder);
 
-    void deleteAllLocalMessagesHolder();
+    void deleteAllLocalMessagesPersonHolder();
+
+    /**
+     * Load container that contain messages of conversation given by {@code conversationKey}.
+     * @param usecase
+     * @param conversationKey
+     * @return
+     */
+    Single<MessagesGroupHolder> loadLocalMessagesGroupHolder(ChatGroupUsecase usecase, String conversationKey);
+
+    /**
+     * Save container contain messages to local database.
+     * @param conversationKey
+     * @param messagesGroupHolder
+     */
+    void putLocalMessagesGroupHolder(String conversationKey, MessagesGroupHolder messagesGroupHolder);
+
+    void deleteAllLocalMessagesGroupHolder();
 
     Single<List<Conversation>> loadAllLocalConversation();
 

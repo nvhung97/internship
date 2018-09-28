@@ -4,8 +4,10 @@ import android.graphics.Bitmap;
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
 import com.example.cpu11398_local.etalk.data.repository.data_source.LocalSource;
 import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSource;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatGroupUsecase;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatGroupUsecase.MessagesGroupHolder;
 import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase;
-import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesHolder;
+import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesPersonHolder;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 
@@ -63,18 +65,33 @@ public class ConversationRepositoryImpl  implements ConversationRepository{
     }
 
     @Override
-    public Single<MessagesHolder> loadLocalMessagesHolder(ChatPersonUsecase usecase, String conversationKey) {
-        return localSource.loadLocalMessagesHolder(usecase, conversationKey);
+    public Single<MessagesPersonHolder> loadLocalMessagesPersonHolder(ChatPersonUsecase usecase, String conversationKey) {
+        return localSource.loadLocalMessagesPersonHolder(usecase, conversationKey);
     }
 
     @Override
-    public void putLocalMessagesHolder(String conversationKey, MessagesHolder chatHolder) {
-        localSource.putLocalMessagesHolder(conversationKey, chatHolder);
+    public void putLocalMessagesPersonHolder(String conversationKey, MessagesPersonHolder chatHolder) {
+        localSource.putLocalMessagesPersonHolder(conversationKey, chatHolder);
     }
 
     @Override
-    public void deleteAllLocalMessagesHolder() {
-        localSource.deleteAllMessagesHolder();
+    public void deleteAllLocalMessagesPersonHolder() {
+        localSource.deleteAllMessagesPersonHolder();
+    }
+
+    @Override
+    public Single<MessagesGroupHolder> loadLocalMessagesGroupHolder(ChatGroupUsecase usecase, String conversationKey) {
+        return localSource.loadLocalMessagesGroupHolder(usecase, conversationKey);
+    }
+
+    @Override
+    public void putLocalMessagesGroupHolder(String conversationKey, MessagesGroupHolder chatHolder) {
+        localSource.putLocalMessagesGroupHolder(conversationKey, chatHolder);
+    }
+
+    @Override
+    public void deleteAllLocalMessagesGroupHolder() {
+        localSource.deleteAllMessagesGroupHolder();
     }
 
     @Override
