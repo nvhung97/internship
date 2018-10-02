@@ -6,14 +6,14 @@ import java.util.Map;
 
 public final class MessageGroupItem {
 
-    private Message             message;
+    private Message             message;//
     private boolean             isMe;
-    private Object              data;
+    private Object              data;//
     private String              name;
     private int                 nameVisible;
     private String              avatar;
     private int                 avatarVisible;
-    private String              time;
+    private String              time;//
     private int                 timeVisible;
     private Map<String, String> seen = new HashMap<>();
 
@@ -100,7 +100,7 @@ public final class MessageGroupItem {
 
     public MessageGroupItem newMe(boolean me) {
         return new MessageGroupItem(
-                message,
+                new Message(message),
                 me,
                 name,
                 nameVisible,
@@ -119,7 +119,7 @@ public final class MessageGroupItem {
 
     public MessageGroupItem newName(String name) {
         return new MessageGroupItem(
-                message,
+                new Message(message),
                 isMe,
                 name,
                 nameVisible,
@@ -138,7 +138,7 @@ public final class MessageGroupItem {
 
     public MessageGroupItem newNameVisible(int nameVisible) {
         return new MessageGroupItem(
-                message,
+                new Message(message),
                 isMe,
                 name,
                 nameVisible,
@@ -159,9 +159,9 @@ public final class MessageGroupItem {
         return (String)data;
     }
 
-    public MessageGroupItem setData(Object data) {
+    public MessageGroupItem newData(Object data) {
         return new MessageGroupItem(
-                message,
+                new Message(message),
                 isMe,
                 name,
                 nameVisible,
@@ -180,7 +180,7 @@ public final class MessageGroupItem {
 
     public MessageGroupItem newAvatar(String avatar) {
         return new MessageGroupItem(
-                message,
+                new Message(message),
                 isMe,
                 name,
                 nameVisible,
@@ -199,7 +199,7 @@ public final class MessageGroupItem {
 
     public MessageGroupItem newAvatarVisible(int avatarVisible) {
         return new MessageGroupItem(
-                message,
+                new Message(message),
                 isMe,
                 name,
                 nameVisible,
@@ -218,7 +218,7 @@ public final class MessageGroupItem {
 
     public MessageGroupItem newTime(String time) {
         return new MessageGroupItem(
-                message,
+                new Message(message),
                 isMe,
                 name,
                 nameVisible,
@@ -237,7 +237,7 @@ public final class MessageGroupItem {
 
     public MessageGroupItem newTimeVisible(int timeVisible) {
         return new MessageGroupItem(
-                message,
+                new Message(message),
                 isMe,
                 name,
                 nameVisible,
@@ -256,7 +256,7 @@ public final class MessageGroupItem {
 
     public MessageGroupItem newSeen(Map<String, String> seen) {
         return new MessageGroupItem(
-                message,
+                new Message(message),
                 isMe,
                 name,
                 nameVisible,
@@ -295,13 +295,7 @@ public final class MessageGroupItem {
 
     public MessageGroupItem clone() {
         return new MessageGroupItem(
-                new Message(
-                        message.getKey(),
-                        message.getSender(),
-                        message.getData(),
-                        message.getType(),
-                        message.getTime()
-                ),
+                new Message(message),
                 isMe,
                 name,
                 nameVisible,

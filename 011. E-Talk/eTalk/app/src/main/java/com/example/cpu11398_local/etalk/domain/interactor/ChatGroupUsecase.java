@@ -1,8 +1,10 @@
 package com.example.cpu11398_local.etalk.domain.interactor;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Handler;
-import android.util.Log;
+import android.support.annotation.RequiresApi;
+import android.view.View;
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
@@ -17,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import javax.inject.Inject;
-
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.Scheduler;
@@ -92,8 +93,8 @@ public class ChatGroupUsecase implements Usecase {
 
     private Observable<Event> buildFirstLoadObservable() {
         return Observable.create(emitter -> {
-            loadConversation();
             runMessageHandler(emitter);
+            loadConversation();
         });
     }
 
@@ -118,7 +119,7 @@ public class ChatGroupUsecase implements Usecase {
 
     @SuppressLint("CheckResult")
     private void loadConversation() {
-        /*disposable.add(
+        disposable.add(
                 conversationRepository
                         .loadLocalConversation(conversationKey)
                         .subscribeOn(Schedulers.from(executor))
@@ -144,15 +145,18 @@ public class ChatGroupUsecase implements Usecase {
                                                     } else {
                                                         conversation = item;
                                                     }
-                                                    if (friend != null && oldConversation != null) {
-                                                        if (oldConversation.getMembers().get(friend.getUsername()) < conversation.getMembers().get(friend.getUsername())) {
-                                                            new Handler().postDelayed(
-                                                                    () -> {
-                                                                        holder.newConversationInfo(conversation);
-                                                                        needUpdateMessage = true;
-                                                                    },
-                                                                    500
-                                                            );
+                                                    if (friends.size() == conversation.getMembers().size() - 1) {
+                                                        for (Map.Entry<String, Long> entry : conversation.getMembers().entrySet()) {
+                                                            if (entry.getValue() != oldConversation.getMembers().get(entry.getKey())) {
+                                                                new Handler().postDelayed(
+                                                                        () -> {
+                                                                            holder.newConversationInfo(conversation);
+                                                                            needUpdateMessage = true;
+                                                                        },
+                                                                        500
+                                                                );
+                                                                break;
+                                                            }
                                                         }
                                                     }
                                                     conversationRepository.insertLocalConversation(conversation);
@@ -160,16 +164,107 @@ public class ChatGroupUsecase implements Usecase {
                                 );
                             }
                         })
-        );*/
+        );
+    }
+
+    private void loadFriend() {
+        for (String key : conversation.getMembers().keySet()) {
+            if (!key.equals(username)) {
+                disposable.add(
+                        userRepository
+                                .loadLocalUser(key)
+                                .subscribeOn(Schedulers.from(executor))
+                                .observeOn(scheduler)
+                                .subscribeWith(new DisposableSingleObserver<User>() {
+                                    @RequiresApi(api = Build.VERSION_CODES.N)
+                                    @Override
+                                    public void onSuccess(User user) {
+                                        friends.put(user.getUsername(), user);
+                                        if (friends.size() == conversation.getMembers().size() - 1) {
+                                            loadMessages();
+                                        }
+                                        onError(null);
+                                    }
+
+                                    @RequiresApi(api = Build.VERSION_CODES.N)
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        disposable.add(
+                                                userRepository
+                                                        .loadNetworlChangeableUser(key)
+                                                        .subscribe(userOptional -> {
+                                                            if (friends.containsKey(userOptional.get().getUsername())) {
+                                                                friends.replace(
+                                                                        userOptional.get().getUsername(),
+                                                                        userOptional.get()
+                                                                );
+                                                            } else {
+                                                                friends.put(
+                                                                        userOptional.get().getUsername(),
+                                                                        userOptional.get()
+                                                                );
+                                                                if (friends.size() == conversation.getMembers().size() - 1) {
+                                                                    loadMessages();
+                                                                }
+                                                            }
+                                                        })
+                                        );
+                                    }
+                                })
+                );
+            }
+        }
+    }
+
+    private void loadMessages() {
+        disposable.add(
+                conversationRepository
+                        .loadLocalMessagesGroupHolder(this, conversationKey)
+                        .subscribeOn(Schedulers.from(executor))
+                        .observeOn(scheduler)
+                        .subscribeWith(new DisposableSingleObserver<MessagesGroupHolder>(){
+                            @Override
+                            public void onSuccess(MessagesGroupHolder messagesGroupHolder) {
+                                holder = messagesGroupHolder;
+                                needUpdateMessage = true;
+                                for (Message message : holder.getSendingMessage().values()) {
+                                    disposable.add(
+                                            conversationRepository
+                                                    .pushNetworkMessage(conversationKey, message)
+                                                    .subscribeOn(Schedulers.from(executor))
+                                                    .observeOn(scheduler)
+                                                    .subscribe(result -> {
+                                                        if (result == true) {
+                                                            holder.sendSuccessMessage(message);
+                                                            needUpdateMessage = true;
+                                                        }
+                                                    })
+                                    );
+                                }
+                                onError(null);
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                disposable.add(
+                                        conversationRepository
+                                                .loadNetworkMessages(conversationKey, username)
+                                                .subscribe(message -> {
+                                                    holder.addNewMessage(message);
+                                                    needUpdateMessage = true;
+                                                })
+                                );
+                            }
+                        })
+        );
     }
 
     @Override
     public void endTask() {
         messageHandler.removeCallbacksAndMessages(null);
-        /*conversationRepository.putLocalMessagesPersonHolder(
+        conversationRepository.putLocalMessagesGroupHolder(
                 conversationKey,
                 holder
-        );*/
+        );
         if (disposable.size() > 0) {
             disposable.clear();
         }
@@ -186,21 +281,142 @@ public class ChatGroupUsecase implements Usecase {
         public MessagesGroupHolder(Map<String, Message> rawMessages,
                                    Map<String, Message> sendingMessage,
                                    List<MessageGroupItem> messages) {
-            this.rawMessages = rawMessages;
+            this.rawMessages    = rawMessages;
             this.sendingMessage = sendingMessage;
-            this.messages = messages;
+            this.messages       = messages;
         }
 
         public void addNewMessage(Message message) {
-            //TODO
+            if (!rawMessages.containsKey(message.getKey())) {
+                rawMessages.put(
+                        message.getKey(),
+                        message
+                );
+                MessageGroupItem newItem = new MessageGroupItem(message)
+                        .newData(decodeData(message.getData(), message.getType()))
+                        .newTime(decodeTime(message.getTime()))
+                        .newTimeVisible(View.VISIBLE);
+                if (message.getSender().equals(username)) {
+                    newItem = newItem
+                            .newMe(true)
+                            .newAvatar(SENT_URL)
+                            .newAvatarVisible(View.VISIBLE);
+                    Map<String, String> seens = newItem.getSeen();
+                    for (Map.Entry<String, Long> entry : conversation.getMembers().entrySet()) {
+                        if (!entry.getKey().equals(username)) {
+                            if (entry.getValue() > message.getTime()) {
+                                seens.put(
+                                        entry.getKey(),
+                                        friends.get(entry.getKey()).getAvatar()
+                                );
+                                for (int i = messages.size() - 1; i >= 0; --i) {
+                                    if (messages.get(i).getSeen().containsKey(entry.getKey())){
+                                        Map<String, String> map = messages.get(i).getSeen();
+                                        map.remove(entry.getKey());
+                                        messages.set(
+                                                i,
+                                                messages.get(i).newSeen(map)
+                                        );
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (!seens.isEmpty()) {
+                        newItem = newItem
+                                .newSeen(seens)
+                                .newAvatarVisible(View.GONE);
+                    }
+                    if (!messages.isEmpty() && messages.get(messages.size() - 1).isMe()) {
+                        messages.set(
+                                messages.size() - 1,
+                                messages.get(messages.size() - 1).newTimeVisible(View.GONE)
+                        );
+                    }
+                } else {
+                    newItem = newItem
+                            .newMe(false)
+                            .newName(friends.get(message.getSender()).getName())
+                            .newNameVisible(View.VISIBLE)
+                            .newAvatar(friends.get(message.getSender()).getAvatar())
+                            .newAvatarVisible(View.VISIBLE);
+                    Map<String, String> seens = newItem.getSeen();
+                    for (Map.Entry<String, Long> entry : conversation.getMembers().entrySet()) {
+                        if (!entry.getKey().equals(username) && !entry.getKey().equals(message.getSender())) {
+                            if (entry.getValue() > message.getTime()) {
+                                seens.put(
+                                        entry.getKey(),
+                                        friends.get(entry.getKey()).getAvatar()
+                                );
+                                for (int i = messages.size() - 1; i >= 0; --i) {
+                                    if (messages.get(i).getSeen().containsKey(entry.getKey())){
+                                        Map<String, String> map = messages.get(i).getSeen();
+                                        map.remove(entry.getKey());
+                                        messages.set(
+                                                i,
+                                                messages.get(i).newSeen(map)
+                                        );
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (!seens.isEmpty()) {
+                        newItem = newItem.newSeen(seens);
+                    }
+                    if (!messages.isEmpty() && messages.get(messages.size() - 1).getMessage().getSender().equals(newItem.getMessage().getSender())) {
+                        messages.set(
+                                messages.size() - 1,
+                                messages.get(messages.size() - 1).newTimeVisible(View.GONE)
+                        );
+                        newItem = newItem
+                                .newAvatarVisible(View.GONE)
+                                .newNameVisible(View.GONE);
+                    }
+                }
+                messages.add(newItem);
+            } else if (sendingMessage.containsKey(message.getKey())) {
+                sendingMessage.get(message.getKey()).setServerTime(message.getTime());
+            }
         }
 
         public void sendNewMessage(Message message) {
-            //TODO
+            sendingMessage.put(message.getKey(), message);
+            rawMessages.put(message.getKey(), message);
+            MessageGroupItem newItem = new MessageGroupItem(
+                    message,
+                    true,
+                    null,
+                    View.GONE,
+                    decodeData(message.getData(), message.getType()),
+                    SENDING_URL,
+                    View.VISIBLE,
+                    decodeTime(Long.parseLong(message.getKey().substring(username.length()))),
+                    View.VISIBLE
+            );
+            messages.add(newItem);
+            if (messages.size() > 1 && messages.get(messages.size() - 2).isMe()) {
+                messages.set(
+                        messages.size() - 2,
+                        messages.get(messages.size() - 2).newTimeVisible(View.GONE)
+                );
+            }
         }
 
         public void sendSuccessMessage(Message message) {
-            //TODO
+            sendingMessage.remove(message.getKey());
+            for (int i = messages.size() - 1; i >= 0; --i) {
+                if (messages.get(i).getMessage().getKey().equals(message.getKey())) {
+                    messages.set(
+                            i,
+                            messages.get(i).newAvatar(SENT_URL)
+                    );
+                    messages.get(i).getMessage().setServerTime(Long.parseLong(message.getKey().substring(username.length())));
+                    break;
+                }
+            }
         }
 
         public void newConversationInfo(Conversation conversation) {

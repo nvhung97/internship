@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.PopupMenu;
+import android.widget.Toast;
+
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityContentBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
@@ -31,6 +33,7 @@ public class ContentActivity extends BaseActivity {
 
     private Disposable  disposable;
     private Dialog      dialog;
+    private long        timePressBack = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +101,16 @@ public class ContentActivity extends BaseActivity {
     private void onLogout() {
         startActivity(new Intent(this, WelcomeActivity.class));
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - timePressBack > 2000) {
+            timePressBack = System.currentTimeMillis();
+            Toast.makeText(this, getString(R.string.app_back_press), Toast.LENGTH_SHORT).show();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private class ContentObserver implements Observer<Event> {

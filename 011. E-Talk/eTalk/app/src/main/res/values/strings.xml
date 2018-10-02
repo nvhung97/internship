@@ -18,6 +18,7 @@
     <string name="app_members">members</string>
     <string name="app_online">Online</string>
     <string name="app_offline">Offline</string>
+    <string name="app_back_press">Tap again to exit</string>
 
     <!--Welcome activity-->
     <string name="welcome_activity_btn_login">LOGIN</string>
