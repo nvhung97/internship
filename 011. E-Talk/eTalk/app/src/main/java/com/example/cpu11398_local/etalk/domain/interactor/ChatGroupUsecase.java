@@ -60,7 +60,7 @@ public class ChatGroupUsecase implements Usecase {
     private String username;
     private String conversationKey;
 
-    private Conversation        conversation;
+    private Conversation oldConversation, newConversation;
     private Map<String, User>   friends = new HashMap<>();
 
     private MessagesGroupHolder holder = new MessagesGroupHolder();
@@ -69,7 +69,7 @@ public class ChatGroupUsecase implements Usecase {
     public void execute(Object observer, Object... params) {
         switch ((String)params[2]) {
             case SEND:
-                //executeSendMessage((Message)params[0]);
+                executeSendMessage((Message)params[0]);
                 break;
             case FIRST_LOAD:
                 username        = (String)params[0];
@@ -127,7 +127,7 @@ public class ChatGroupUsecase implements Usecase {
                         .subscribeWith(new DisposableSingleObserver<Conversation>() {
                             @Override
                             public void onSuccess(Conversation item) {
-                                conversation = item;
+                                newConversation = item;
                                 loadFriend();
                                 onError(null);
                             }
@@ -138,28 +138,28 @@ public class ChatGroupUsecase implements Usecase {
                                         conversationRepository
                                                 .loadNetworkConversation(conversationKey)
                                                 .subscribe(item -> {
-                                                    Conversation oldConversation = conversation;
-                                                    if (conversation == null) {
-                                                        conversation = item;
+                                                    oldConversation = newConversation;
+                                                    newConversation = item;
+                                                    if (oldConversation == null) {
                                                         loadFriend();
-                                                    } else {
-                                                        conversation = item;
                                                     }
-                                                    if (friends.size() == conversation.getMembers().size() - 1) {
-                                                        for (Map.Entry<String, Long> entry : conversation.getMembers().entrySet()) {
-                                                            if (entry.getValue() != oldConversation.getMembers().get(entry.getKey())) {
-                                                                new Handler().postDelayed(
-                                                                        () -> {
-                                                                            holder.newConversationInfo(conversation);
-                                                                            needUpdateMessage = true;
-                                                                        },
-                                                                        500
-                                                                );
-                                                                break;
+                                                    if (friends.size() == newConversation.getMembers().size() - 1) {
+                                                        for (Map.Entry<String, Long> entry : newConversation.getMembers().entrySet()) {
+                                                            if (!entry.getKey().equals(username)) {
+                                                                if (entry.getValue() != oldConversation.getMembers().get(entry.getKey())) {
+                                                                    new Handler().postDelayed(
+                                                                            () -> {
+                                                                                holder.newConversationInfo(oldConversation, newConversation);
+                                                                                needUpdateMessage = true;
+                                                                            },
+                                                                            500
+                                                                    );
+                                                                    break;
+                                                                }
                                                             }
                                                         }
                                                     }
-                                                    conversationRepository.insertLocalConversation(conversation);
+                                                    conversationRepository.insertLocalConversation(newConversation);
                                                 })
                                 );
                             }
@@ -168,7 +168,7 @@ public class ChatGroupUsecase implements Usecase {
     }
 
     private void loadFriend() {
-        for (String key : conversation.getMembers().keySet()) {
+        for (String key : newConversation.getMembers().keySet()) {
             if (!key.equals(username)) {
                 disposable.add(
                         userRepository
@@ -180,7 +180,7 @@ public class ChatGroupUsecase implements Usecase {
                                     @Override
                                     public void onSuccess(User user) {
                                         friends.put(user.getUsername(), user);
-                                        if (friends.size() == conversation.getMembers().size() - 1) {
+                                        if (friends.size() == newConversation.getMembers().size() - 1) {
                                             loadMessages();
                                         }
                                         onError(null);
@@ -203,7 +203,7 @@ public class ChatGroupUsecase implements Usecase {
                                                                         userOptional.get().getUsername(),
                                                                         userOptional.get()
                                                                 );
-                                                                if (friends.size() == conversation.getMembers().size() - 1) {
+                                                                if (friends.size() == newConversation.getMembers().size() - 1) {
                                                                     loadMessages();
                                                                 }
                                                             }
@@ -258,6 +258,23 @@ public class ChatGroupUsecase implements Usecase {
         );
     }
 
+    private void executeSendMessage(Message message) {
+        holder.sendNewMessage(message);
+        needUpdateMessage = true;
+        disposable.add(
+                conversationRepository
+                        .pushNetworkMessage(conversationKey, message)
+                        .subscribeOn(Schedulers.from(executor))
+                        .observeOn(scheduler)
+                        .subscribe(result -> {
+                            if (result == true) {
+                                holder.sendSuccessMessage(message);
+                                needUpdateMessage = true;
+                            }
+                        })
+        );
+    }
+
     @Override
     public void endTask() {
         messageHandler.removeCallbacksAndMessages(null);
@@ -302,7 +319,7 @@ public class ChatGroupUsecase implements Usecase {
                             .newAvatar(SENT_URL)
                             .newAvatarVisible(View.VISIBLE);
                     Map<String, String> seens = newItem.getSeen();
-                    for (Map.Entry<String, Long> entry : conversation.getMembers().entrySet()) {
+                    for (Map.Entry<String, Long> entry : newConversation.getMembers().entrySet()) {
                         if (!entry.getKey().equals(username)) {
                             if (entry.getValue() > message.getTime()) {
                                 seens.put(
@@ -327,6 +344,15 @@ public class ChatGroupUsecase implements Usecase {
                         newItem = newItem
                                 .newSeen(seens)
                                 .newAvatarVisible(View.GONE);
+                        for (int i = messages.size() - 1; i >= 0; --i) {
+                            if (messages.get(i).isMe() && !sendingMessage.containsKey(messages.get(i).getMessage().getKey())) {
+                                if (messages.get(i).getAvatarVisible() == View.GONE) break;
+                                messages.set(
+                                        i,
+                                        messages.get(i).newAvatarVisible(View.GONE)
+                                );
+                            }
+                        }
                     }
                     if (!messages.isEmpty() && messages.get(messages.size() - 1).isMe()) {
                         messages.set(
@@ -342,7 +368,7 @@ public class ChatGroupUsecase implements Usecase {
                             .newAvatar(friends.get(message.getSender()).getAvatar())
                             .newAvatarVisible(View.VISIBLE);
                     Map<String, String> seens = newItem.getSeen();
-                    for (Map.Entry<String, Long> entry : conversation.getMembers().entrySet()) {
+                    for (Map.Entry<String, Long> entry : newConversation.getMembers().entrySet()) {
                         if (!entry.getKey().equals(username) && !entry.getKey().equals(message.getSender())) {
                             if (entry.getValue() > message.getTime()) {
                                 seens.put(
@@ -365,6 +391,15 @@ public class ChatGroupUsecase implements Usecase {
                     }
                     if (!seens.isEmpty()) {
                         newItem = newItem.newSeen(seens);
+                        for (int i = messages.size() - 1; i >= 0; --i) {
+                            if (messages.get(i).isMe() && !sendingMessage.containsKey(messages.get(i).getMessage().getKey())) {
+                                if (messages.get(i).getAvatarVisible() == View.GONE) break;
+                                messages.set(
+                                        i,
+                                        messages.get(i).newAvatarVisible(View.GONE)
+                                );
+                            }
+                        }
                     }
                     if (!messages.isEmpty() && messages.get(messages.size() - 1).getMessage().getSender().equals(newItem.getMessage().getSender())) {
                         messages.set(
@@ -419,8 +454,52 @@ public class ChatGroupUsecase implements Usecase {
             }
         }
 
-        public void newConversationInfo(Conversation conversation) {
-            //TODO
+        public void newConversationInfo(Conversation oldConversation, Conversation newConversation) {
+            for (Map.Entry<String, Long> entry : newConversation.getMembers().entrySet()) {
+                if (!entry.getKey().equals(username)) {
+                    if (entry.getValue() != oldConversation.getMembers().get(entry.getKey())) {
+                        for (int i = messages.size() - 1; i >= 0; --i) {
+                            if (!sendingMessage.containsKey(messages.get(i).getMessage().getKey())) {
+                                if (entry.getValue() > messages.get(i).getMessage().getTime()
+                                        && !entry.getKey().equals(messages.get(i).getMessage().getSender())) {
+                                    if (!messages.get(i).getSeen().containsKey(entry.getKey())) {
+                                        Map<String, String> map = messages.get(i).getSeen();
+                                        map.put(
+                                                entry.getKey(),
+                                                friends.get(entry.getKey()).getAvatar()
+                                        );
+                                        messages.set(
+                                                i,
+                                                messages.get(i).newSeen(map)
+                                        );
+                                        for (int j = i; j >= 0; --j) {
+                                            if (messages.get(j).isMe() && !sendingMessage.containsKey(messages.get(j).getMessage().getKey())){
+                                                if (messages.get(j).getAvatarVisible() == View.GONE) break;
+                                                messages.set(
+                                                        j,
+                                                        messages.get(j).newAvatarVisible(View.GONE)
+                                                );
+                                            }
+                                        }
+                                        for (int j = i - 1; j >= 0; --j) {
+                                            if (messages.get(j).getSeen().containsKey(entry.getKey())) {
+                                                Map<String, String> _map = messages.get(j).getSeen();
+                                                _map.remove(entry.getKey());
+                                                messages.set(
+                                                        j,
+                                                        messages.get(j).newSeen(_map)
+                                                );
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public Map<String, Message> getRawMessages() {

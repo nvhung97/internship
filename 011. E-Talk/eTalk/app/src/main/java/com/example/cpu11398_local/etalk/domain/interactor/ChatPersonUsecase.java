@@ -277,7 +277,6 @@ public class ChatPersonUsecase implements Usecase {
 
     @SuppressLint("CheckResult")
     private void executeSendMessage(Message message){
-        message.setSender(username);
         holder.sendNewMessage(message);
         needUpdateMessage = true;
         disposable.add(

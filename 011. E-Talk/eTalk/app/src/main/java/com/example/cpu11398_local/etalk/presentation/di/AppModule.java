@@ -337,12 +337,14 @@ public class AppModule {
     public Usecase provideLogoutUsecase(Executor executor,
                                         Scheduler scheduler,
                                         CompositeDisposable compositeDisposable,
-                                        UserRepository userRepository) {
+                                        UserRepository userRepository,
+                                        ConversationRepository conversationRepository) {
         return new LogoutUsecase(
                 executor,
                 scheduler,
                 compositeDisposable,
-                userRepository
+                userRepository,
+                conversationRepository
         );
     }
 
