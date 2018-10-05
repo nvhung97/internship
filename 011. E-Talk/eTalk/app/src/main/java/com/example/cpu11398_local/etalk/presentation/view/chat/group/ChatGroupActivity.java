@@ -1,8 +1,13 @@
 package com.example.cpu11398_local.etalk.presentation.view.chat.group;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
@@ -19,6 +24,9 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 public class ChatGroupActivity extends BaseActivity {
+
+    private final int REQUEST_CAMERA_CODE  = 0;
+    private final int REQUEST_GALLERY_CODE = 1;
 
     @Inject
     @Named("ChatGroupViewModel")
@@ -120,6 +128,12 @@ public class ChatGroupActivity extends BaseActivity {
                             binding.chatActivityLstMessage.getAdapter().getItemCount() - 1
                     );
                     break;
+                case Event.CHAT_ACTIVITY_GET_MEDIA:
+                    Tool.createMediaOptionDialog(
+                            ChatGroupActivity.this,
+                            REQUEST_CAMERA_CODE,
+                            REQUEST_GALLERY_CODE
+                    ).show();
             }
         }
 
@@ -131,6 +145,39 @@ public class ChatGroupActivity extends BaseActivity {
         @Override
         public void onComplete() {
 
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data != null) {
+            if (requestCode == REQUEST_CAMERA_CODE) {
+                Log.e("Test", " " + data.getExtras().get("data"));
+                /*Bitmap bitmapAvatar = (Bitmap)data.getExtras().get("data");
+                avatarCopy.copy(bitmapAvatar);*/
+            }
+            else if (requestCode == REQUEST_GALLERY_CODE) {
+                /*try {
+                    InputStream is = getContentResolver().openInputStream(data.getData());
+                    OutputStream os = new FileOutputStream(new File(getFilesDir(), "test." + MimeTypeMap.getSingleton().getExtensionFromMimeType(getContentResolver().getType(data.getData()))));
+                    byte[] buff = new byte[1024];
+                    int len;
+                    while((len = is.read(buff)) > 0){
+                        os.write(buff,0, len);
+                    }
+                    is.close();
+                    os.close();
+                } catch (FileNotFoundException e) {
+                    Log.e("=========", "====================");
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }*/
+                /*Bitmap bitmapAvatar = Tool.getImageWithUri(this, data.getData());
+                avatarCopy.copy(bitmapAvatar);*/
+            }
         }
     }
 }

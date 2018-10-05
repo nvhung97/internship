@@ -191,6 +191,49 @@ public class Tool {
         return imageOptionDialog;
     }
 
+    /**
+     * Show pop up to allow user to choose to take photo or video from camera or gallery
+     */
+    public static Dialog createMediaOptionDialog(final Context context,
+                                                 final int REQUEST_CAMERA_CODE,
+                                                 final int REQUEST_GALLERY_CODE){
+        View view = LayoutInflater
+                .from(context)
+                .inflate(R.layout.lyt_image_option, null);
+        Button btn_option_camera  = view.findViewById(R.id.profile_activity_image_option_camera);
+        Button btn_option_gallery = view.findViewById(R.id.profile_activity_image_option_library);
+        Dialog imageOptionDialog  = new Dialog(context);
+        imageOptionDialog.setContentView(view);
+        imageOptionDialog.setCancelable(true);
+        imageOptionDialog.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT)
+        );
+
+        btn_option_camera.setOnClickListener(view1 -> {
+            imageOptionDialog.dismiss();
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            Intent chooserIntent = Intent.createChooser(takePictureIntent, "Capture Image or Video");
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{takeVideoIntent});
+            ((FragmentActivity) context).startActivityForResult(chooserIntent, REQUEST_CAMERA_CODE);
+        });
+
+        btn_option_gallery.setOnClickListener(view2 -> {
+            imageOptionDialog.dismiss();
+            Intent intent = new Intent();
+            intent.setType("*/*");
+            String[] mimeTypes = {"image/*", "video/*"};
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            ((FragmentActivity) context).startActivityForResult(
+                    Intent.createChooser(intent, "Select Image"),
+                    REQUEST_GALLERY_CODE
+            );
+        });
+
+        return imageOptionDialog;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static Bitmap getImageWithUri(Context context, Uri uri) {
         Bitmap bitmapAvatar = null;

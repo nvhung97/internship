@@ -5,21 +5,17 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.messages.MessageAdapter;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
 import com.example.cpu11398_local.etalk.utils.Event;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.inject.Inject;
-
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
@@ -54,6 +50,7 @@ public class MessageViewModel extends BaseObservable implements ViewModel {
         public void chatWith(Conversation conversation, User friend) {
             publisher.onNext(Event.create(
                     Event.MESSAGE_FRAGMENT_CHAT,
+                    currentUser,
                     conversation,
                     friend
             ));

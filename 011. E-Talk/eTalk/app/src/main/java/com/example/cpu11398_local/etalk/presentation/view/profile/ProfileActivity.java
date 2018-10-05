@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
+import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityProfileBinding;
@@ -16,6 +18,15 @@ import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.profile.ProfileViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.Tool;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observer;
@@ -166,6 +177,22 @@ public class ProfileActivity extends BaseActivity {
                 avatarCopy.copy(bitmapAvatar);
             }
             else if (requestCode == REQUEST_GALLERY_CODE) {
+                /*try {
+                    InputStream is = getContentResolver().openInputStream(data.getData());
+                    OutputStream os = new FileOutputStream(new File(getFilesDir(), "test." + MimeTypeMap.getSingleton().getExtensionFromMimeType(getContentResolver().getType(data.getData()))));
+                    byte[] buff = new byte[1024];
+                    int len;
+                    while((len = is.read(buff)) > 0){
+                        os.write(buff,0, len);
+                    }
+                    is.close();
+                    os.close();
+                } catch (FileNotFoundException e) {
+                    Log.e("=========", "====================");
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }*/
                 Bitmap bitmapAvatar = Tool.getImageWithUri(this, data.getData());
                 avatarCopy.copy(bitmapAvatar);
             }

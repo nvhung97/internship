@@ -79,8 +79,8 @@
     <string name="profile_activity_txt_title">Edit profile</string>
     <string name="profile_activity_btn_update">UPDATE</string>
     <string name="profile_activity_image_option_title">Update avatar</string>
-    <string name="profile_activity_image_option_camera">Take photo</string>
-    <string name="profile_activity_image_option_library">Choose existing photos</string>
+    <string name="profile_activity_image_option_camera">Camera</string>
+    <string name="profile_activity_image_option_library">Choose from gallery</string>
     <string name="profile_activity_request_timeout">Request timeout</string>
     <string name="profile_activity_update_successfully">Update successfully</string>
     <string name="profile_activity_update_failed">Update failed!\n Check connection again.</string>

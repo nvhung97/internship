@@ -13,6 +13,7 @@ import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.FragmentMessagesBinding;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.User;
+import com.example.cpu11398_local.etalk.presentation.view.chat.group.ChatGroupActivity;
 import com.example.cpu11398_local.etalk.presentation.view.chat.person.ChatPersonActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
@@ -38,7 +39,6 @@ public class MessagesFragment extends Fragment {
     public MessagesFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -95,19 +95,24 @@ public class MessagesFragment extends Fragment {
             Object[] data = event.getData();
             switch (event.getType()) {
                 case Event.MESSAGE_FRAGMENT_CHAT:
-                    Conversation conversation = (Conversation)data[0];
-                    User friend = (User)data[1];
-                    Intent intent = new Intent(getActivity(), ChatPersonActivity.class);
-                    intent.putExtra("Key", conversation.getCreator() + conversation.getTime());
-                    intent.putExtra("type", conversation.getType());
+                    User user = (User)data[0];
+                    Conversation conversation = (Conversation)data[1];
+                    User friend = (User)data[2];
                     if (conversation.getType() == Conversation.PERSON) {
+                        Intent intent = new Intent(getActivity(), ChatPersonActivity.class);
+                        intent.putExtra("user", user.getUsername());
+                        intent.putExtra("key", conversation.getKey());
                         intent.putExtra("name", friend.getName());
                         intent.putExtra("number", friend.getActive());
+                        startActivity(intent);
                     } else {
+                        Intent intent = new Intent(getActivity(), ChatGroupActivity.class);
+                        intent.putExtra("user", user.getUsername());
+                        intent.putExtra("key", conversation.getKey());
                         intent.putExtra("name", conversation.getName());
                         intent.putExtra("number", conversation.getMembers().size());
+                        startActivity(intent);
                     }
-                    startActivity(intent);
                     break;
                 case Event.MESSAGE_FRAGMENT_HIDE_PROGRESS_BAR:
                     progressBar.setVisibility(View.GONE);

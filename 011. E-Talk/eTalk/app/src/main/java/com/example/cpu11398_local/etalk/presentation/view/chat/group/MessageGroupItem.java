@@ -6,14 +6,14 @@ import java.util.Map;
 
 public final class MessageGroupItem {
 
-    private Message             message;//
+    private Message             message;
     private boolean             isMe;
-    private Object              data;//
+    private Object              data;
     private String              name;
     private int                 nameVisible;
     private String              avatar;
     private int                 avatarVisible;
-    private String              time;//
+    private String              time;
     private int                 timeVisible;
     private Map<String, String> seen = new HashMap<>();
 

@@ -150,7 +150,7 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
      * @param view
      */
     public void onImageClick(View view) {
-        Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+        publisher.onNext(Event.create(Event.CHAT_ACTIVITY_GET_MEDIA));
     }
 
     /**
