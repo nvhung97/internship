@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_background">
+
+    <TextView
+        android:id="@id/chat_activity_media_option_title"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/colorBlack"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="@string/chat_activity_media_title"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <Button
+        android:id="@id/chat_activity_media_option_take_photo"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="@string/chat_activity_media_take_photo"
+        android:textAllCaps="false"
+        android:gravity="left|center_vertical"
+        android:stateListAnimator="@null"
+        android:drawablePadding="10dp"
+        android:background="@drawable/btn_dialog"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/chat_activity_media_option_choose_photos"
+        app:layout_constraintTop_toBottomOf="@id/chat_activity_media_option_title"/>
+
+    <Button
+        android:id="@id/chat_activity_media_option_record"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="70dp"
+        android:text="@string/chat_activity_media_record"
+        android:textAllCaps="false"
+        android:gravity="left|center_vertical"
+        android:stateListAnimator="@null"
+        android:drawablePadding="10dp"
+        android:background="@drawable/btn_dialog"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/chat_activity_media_option_choose_photos"
+        app:layout_constraintTop_toBottomOf="@id/chat_activity_media_option_take_photo"/>
+
+    <Button
+        android:id="@id/chat_activity_media_option_choose_photos"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="70dp"
+        android:text="@string/chat_activity_media_choose_photos"
+        android:textAllCaps="false"
+        android:gravity="left|center_vertical"
+        android:stateListAnimator="@null"
+        android:drawablePadding="10dp"
+        android:background="@drawable/btn_dialog"
+        app:layout_constraintTop_toBottomOf="@id/chat_activity_media_option_record"/>
+
+    <Button
+        android:id="@id/chat_activity_media_option_choose_videos"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="70dp"
+        android:text="@string/chat_activity_media_choose_video"
+        android:textAllCaps="false"
+        android:gravity="left|center_vertical"
+        android:stateListAnimator="@null"
+        android:drawablePadding="10dp"
+        android:background="@drawable/btn_dialog"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="@id/chat_activity_media_option_choose_photos"
+        app:layout_constraintTop_toBottomOf="@id/chat_activity_media_option_choose_photos"/>
+
+</android.support.constraint.ConstraintLayout>

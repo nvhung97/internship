@@ -74,13 +74,18 @@
 
     <!--Chat activity-->
     <string name="chat_activity_edt_message">Message</string>
+    <string name="chat_activity_media_title">Media</string>
+    <string name="chat_activity_media_take_photo">Take photo</string>
+    <string name="chat_activity_media_record">Record</string>
+    <string name="chat_activity_media_choose_photos">Choose existing photos</string>
+    <string name="chat_activity_media_choose_video">Choose existing videos</string>
 
     <!--Profile activity-->
     <string name="profile_activity_txt_title">Edit profile</string>
     <string name="profile_activity_btn_update">UPDATE</string>
     <string name="profile_activity_image_option_title">Update avatar</string>
-    <string name="profile_activity_image_option_camera">Camera</string>
-    <string name="profile_activity_image_option_library">Choose from gallery</string>
+    <string name="profile_activity_image_option_camera">Take photo</string>
+    <string name="profile_activity_image_option_library">Choose existing photos</string>
     <string name="profile_activity_request_timeout">Request timeout</string>
     <string name="profile_activity_update_successfully">Update successfully</string>
     <string name="profile_activity_update_failed">Update failed!\n Check connection again.</string>

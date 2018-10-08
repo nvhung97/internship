@@ -195,43 +195,59 @@ public class Tool {
      * Show pop up to allow user to choose to take photo or video from camera or gallery
      */
     public static Dialog createMediaOptionDialog(final Context context,
-                                                 final int REQUEST_CAMERA_CODE,
-                                                 final int REQUEST_GALLERY_CODE){
+                                                 final int REQUEST_TAKE_PHOTO_CODE,
+                                                 final int REQUEST_RECORD_CODE,
+                                                 final int REQUEST_CHOOSE_PHOTOS_CODE,
+                                                 final int REQUEST_CHOOSE_VIDEOS_CODE){
         View view = LayoutInflater
                 .from(context)
-                .inflate(R.layout.lyt_image_option, null);
-        Button btn_option_camera  = view.findViewById(R.id.profile_activity_image_option_camera);
-        Button btn_option_gallery = view.findViewById(R.id.profile_activity_image_option_library);
-        Dialog imageOptionDialog  = new Dialog(context);
-        imageOptionDialog.setContentView(view);
-        imageOptionDialog.setCancelable(true);
-        imageOptionDialog.getWindow().setBackgroundDrawable(
+                .inflate(R.layout.lyt_media_option, null);
+        Button btn_take_photo       = view.findViewById(R.id.chat_activity_media_option_take_photo);
+        Button btn_record           = view.findViewById(R.id.chat_activity_media_option_record);
+        Button btn_choose_photos    = view.findViewById(R.id.chat_activity_media_option_choose_photos);
+        Button btn_choose_videos    = view.findViewById(R.id.chat_activity_media_option_choose_videos);
+        Dialog mediaOptionDialog  = new Dialog(context);
+        mediaOptionDialog.setContentView(view);
+        mediaOptionDialog.setCancelable(true);
+        mediaOptionDialog.getWindow().setBackgroundDrawable(
                 new ColorDrawable(android.graphics.Color.TRANSPARENT)
         );
 
-        btn_option_camera.setOnClickListener(view1 -> {
-            imageOptionDialog.dismiss();
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-            Intent chooserIntent = Intent.createChooser(takePictureIntent, "Capture Image or Video");
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{takeVideoIntent});
-            ((FragmentActivity) context).startActivityForResult(chooserIntent, REQUEST_CAMERA_CODE);
+        btn_take_photo.setOnClickListener(view1 -> {
+            mediaOptionDialog.dismiss();
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            ((FragmentActivity) context).startActivityForResult(intent, REQUEST_TAKE_PHOTO_CODE);
         });
 
-        btn_option_gallery.setOnClickListener(view2 -> {
-            imageOptionDialog.dismiss();
+        btn_record.setOnClickListener(view1 -> {
+            mediaOptionDialog.dismiss();
+            Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            ((FragmentActivity) context).startActivityForResult(intent, REQUEST_RECORD_CODE);
+        });
+
+        btn_choose_photos.setOnClickListener(view2 -> {
+            mediaOptionDialog.dismiss();
             Intent intent = new Intent();
-            intent.setType("*/*");
-            String[] mimeTypes = {"image/*", "video/*"};
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+            intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             ((FragmentActivity) context).startActivityForResult(
                     Intent.createChooser(intent, "Select Image"),
-                    REQUEST_GALLERY_CODE
+                    REQUEST_CHOOSE_PHOTOS_CODE
             );
         });
 
-        return imageOptionDialog;
+        btn_choose_videos.setOnClickListener(view2 -> {
+            mediaOptionDialog.dismiss();
+            Intent intent = new Intent();
+            intent.setType("video/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            ((FragmentActivity) context).startActivityForResult(
+                    Intent.createChooser(intent, "Select Video"),
+                    REQUEST_CHOOSE_VIDEOS_CODE
+            );
+        });
+
+        return mediaOptionDialog;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

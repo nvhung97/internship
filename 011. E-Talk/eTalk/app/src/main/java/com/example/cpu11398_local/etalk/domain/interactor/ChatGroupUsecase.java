@@ -1,10 +1,15 @@
 package com.example.cpu11398_local.etalk.domain.interactor;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
+
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
@@ -12,6 +17,13 @@ import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.presentation.view.chat.group.MessageGroupItem;
 import com.example.cpu11398_local.etalk.utils.Event;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -33,8 +45,10 @@ public class ChatGroupUsecase implements Usecase {
     private final String SENDING_URL    = "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/sending.png?alt=media&token=32ca8ddf-6b82-42e8-85d9-2e5d726dfe97";
     private final String FIRST_LOAD     = "first_load";
     private final String LOAD_MORE      = "load_more";
-    private final String SEND           = "send";
+    private final String SEND_TEXT      = "send_text";
+    private final String SEND_IMAGE_URI = "send_image_uri";
 
+    private Context                 context;
     private Executor                executor;
     private Scheduler               scheduler;
     private CompositeDisposable     disposable;
@@ -45,11 +59,13 @@ public class ChatGroupUsecase implements Usecase {
     private boolean needUpdateMessage   = false;
 
     @Inject
-    public ChatGroupUsecase(Executor executor,
+    public ChatGroupUsecase(Context context,
+                            Executor executor,
                             Scheduler scheduler,
                             CompositeDisposable disposable,
                             UserRepository userRepository,
                             ConversationRepository conversationRepository) {
+        this.context                = context;
         this.executor               = executor;
         this.scheduler              = scheduler;
         this.disposable             = disposable;
@@ -68,8 +84,11 @@ public class ChatGroupUsecase implements Usecase {
     @Override
     public void execute(Object observer, Object... params) {
         switch ((String)params[2]) {
-            case SEND:
+            case SEND_TEXT:
                 executeSendMessage((Message)params[0]);
+                break;
+            case SEND_IMAGE_URI:
+                executeSendImageUri((Uri)params[0]);
                 break;
             case FIRST_LOAD:
                 username        = (String)params[0];
@@ -273,6 +292,36 @@ public class ChatGroupUsecase implements Usecase {
                             }
                         })
         );
+    }
+
+    private void executeSendImageUri(Uri uri) {
+        Message message = new Message(
+                username,
+                null,
+                Message.IMAGE
+        );
+        File file = new File(
+                context.getFilesDir(),
+                message.getKey() + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(context.getContentResolver().getType(uri))
+        );
+        try {
+            InputStream is = context.getContentResolver().openInputStream(uri);
+            OutputStream os = new FileOutputStream(file);
+            byte[] buff = new byte[1024];
+            int len;
+            while((len = is.read(buff)) > 0){
+                os.write(buff,0, len);
+            }
+            is.close();
+            os.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        message.setData(file.getAbsolutePath());
+        holder.sendNewMessage(message);
+        needUpdateMessage = true;
     }
 
     @Override
@@ -528,6 +577,9 @@ public class ChatGroupUsecase implements Usecase {
 
         private Object decodeData(String data, long type) {
             if (type == Message.TEXT) {
+                return data;
+            }
+            if (type == Message.IMAGE) {
                 return data;
             }
             return null;

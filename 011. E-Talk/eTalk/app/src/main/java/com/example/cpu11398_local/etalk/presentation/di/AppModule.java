@@ -318,12 +318,14 @@ public class AppModule {
 
     @Provides
     @Named("ChatGroupUsecase")
-    public Usecase provideChatGroupUsecase(Executor executor,
+    public Usecase provideChatGroupUsecase(Context context,
+                                           Executor executor,
                                            Scheduler scheduler,
                                            CompositeDisposable compositeDisposable,
                                            UserRepository userRepository,
                                            ConversationRepository conversationRepository) {
         return new ChatGroupUsecase(
+                context,
                 executor,
                 scheduler,
                 compositeDisposable,

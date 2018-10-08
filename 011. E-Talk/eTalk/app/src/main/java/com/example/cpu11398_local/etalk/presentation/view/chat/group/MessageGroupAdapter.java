@@ -1,6 +1,8 @@
 package com.example.cpu11398_local.etalk.presentation.view.chat.group;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.util.DiffUtil;
@@ -8,10 +10,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
+import com.example.cpu11398_local.etalk.presentation.view.chat.media.MediaPhotoActivity;
+import com.example.cpu11398_local.etalk.utils.GlideApp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -22,7 +27,9 @@ import io.reactivex.schedulers.Schedulers;
 public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapter.MessageGroupViewHolder>{
 
     private final int ME_TEXT       = 0;
+    private final int ME_IMAGE      = 1;
     private final int FRIEND_TEXT   = 5;
+    private final int FRIEND_IMAGE  = 6;
 
     private List<MessageGroupItem> messages;
 
@@ -89,6 +96,67 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         }
     }
 
+    public class MessageImageMeViewHolder extends MessageGroupViewHolder {
+        private Context              context;
+        public ConstraintLayout      content;
+        public ImageView             data;
+        public TextView              time;
+        public AvatarImageView       avatar;
+        public List<AvatarImageView> seens = new ArrayList<>();
+        public TextView              more;
+        public MessageImageMeViewHolder(View view) {
+            super(view);
+            context = view.getContext();
+            content = view.findViewById(R.id.lyt_message_group_image_me_content);
+            data    = view.findViewById(R.id.lyt_message_group_image_me_data);
+            time    = view.findViewById(R.id.lyt_message_group_image_me_time);
+            avatar  = view.findViewById(R.id.lyt_message_group_image_me_status);
+            more    = view.findViewById(R.id.lyt_message_group_image_me_more);
+            seens.add(view.findViewById(R.id.lyt_message_group_image_me_seen1));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_me_seen2));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_me_seen3));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_me_seen4));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_me_seen5));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_me_seen6));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_me_seen7));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_me_seen8));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_me_seen9));
+            data.setClipToOutline(true);
+        }
+        @Override
+        public void bindView(MessageGroupItem item) {
+            GlideApp
+                    .with(context)
+                    .load(item.getTextData())
+                    .into(data);
+            time.setText(item.getTime());
+            time.setVisibility(item.getTimeVisible());
+            avatar.setImageFromObject(item.getAvatar());
+            avatar.setVisibility(item.getAvatarVisible());
+            List<String> seenAvatars = new ArrayList<>(item.getSeen().values());
+            for (int i = 0; i < 9; ++i) {
+                if (i < seenAvatars.size()) {
+                    seens.get(i).setImageFromObject(seenAvatars.get(i));
+                    seens.get(i).setVisibility(View.VISIBLE);
+                } else {
+                    seens.get(i).setVisibility(View.GONE);
+                }
+            }
+            if (seenAvatars.size() > 9) {
+                more.setText("+" + (seenAvatars.size() - 9));
+                more.setVisibility(View.VISIBLE);
+            } else {
+                more.setVisibility(View.GONE);
+            }
+            content.setOnClickListener(v -> {
+                Intent intent = new Intent(context, MediaPhotoActivity.class);
+                intent.putExtra("name", "");
+                intent.putExtra("link", item.getTextData());
+                context.startActivity(intent);
+            });
+        }
+    }
+
     public class MessageTextFriendViewHolder extends MessageGroupViewHolder {
         public TextView              name;
         public ConstraintLayout      content;
@@ -149,6 +217,68 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         }
     }
 
+    public class MessageImageFriendViewHolder extends MessageGroupViewHolder {
+        private Context              context;
+        public TextView              name;
+        public ConstraintLayout      content;
+        public TextView              data;
+        public TextView              time;
+        public AvatarImageView       avatar;
+        public List<AvatarImageView> seens = new ArrayList<>();
+        public TextView              more;
+        public MessageImageFriendViewHolder(View view) {
+            super(view);
+            context = view.getContext();
+            name    = view.findViewById(R.id.lyt_message_group_image_friend_name);
+            content = view.findViewById(R.id.lyt_message_group_image_friend_content);
+            data    = view.findViewById(R.id.lyt_message_group_image_friend_data);
+            time    = view.findViewById(R.id.lyt_message_group_image_friend_time);
+            avatar  = view.findViewById(R.id.lyt_message_group_image_friend_avatar);
+            more    = view.findViewById(R.id.lyt_message_group_image_friend_more);
+            seens.add(view.findViewById(R.id.lyt_message_group_image_friend_seen1));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_friend_seen2));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_friend_seen3));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_friend_seen4));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_friend_seen5));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_friend_seen6));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_friend_seen7));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_friend_seen8));
+            seens.add(view.findViewById(R.id.lyt_message_group_image_friend_seen9));
+            data.setClipToOutline(true);
+        }
+        @Override
+        public void bindView(MessageGroupItem item) {
+            name.setText(item.getName());
+            name.setVisibility(item.getNameVisible());
+            data.setText(item.getTextData());
+            time.setText(item.getTime());
+            time.setVisibility(item.getTimeVisible());
+            avatar.setImageFromObject(item.getAvatar());
+            avatar.setVisibility(item.getAvatarVisible());
+            List<String> seenAvatars = new ArrayList<>(item.getSeen().values());
+            for (int i = 0; i < 9; ++i) {
+                if (i < seenAvatars.size()) {
+                    seens.get(i).setImageFromObject(seenAvatars.get(i));
+                    seens.get(i).setVisibility(View.VISIBLE);
+                } else {
+                    seens.get(i).setVisibility(View.GONE);
+                }
+            }
+            if (seenAvatars.size() > 9) {
+                more.setText("+" + (seenAvatars.size() - 9));
+                more.setVisibility(View.VISIBLE);
+            } else {
+                more.setVisibility(View.GONE);
+            }
+            content.setOnClickListener(v -> {
+                Intent intent = new Intent(context, MediaPhotoActivity.class);
+                intent.putExtra("name", item.getName());
+                intent.putExtra("link", item.getTextData());
+                context.startActivity(intent);
+            });
+        }
+    }
+
     public MessageGroupAdapter(List<MessageGroupItem> messages) {
         this.messages = messages;
     }
@@ -161,9 +291,15 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             if (message.getType() == Message.TEXT) {
                 return ME_TEXT;
             }
+            if (message.getType() == Message.IMAGE) {
+                return ME_IMAGE;
+            }
         } else {
             if (message.getType() == Message.TEXT) {
                 return FRIEND_TEXT;
+            }
+            if (message.getType() == Message.IMAGE) {
+                return FRIEND_IMAGE;
             }
         }
         return 0;
@@ -179,11 +315,23 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                                 .from(parent.getContext())
                                 .inflate(R.layout.lyt_message_group_text_me, parent, false)
                 );
+            case ME_IMAGE:
+                return new MessageImageMeViewHolder(
+                        LayoutInflater
+                                .from(parent.getContext())
+                                .inflate(R.layout.lyt_message_group_image_me, parent, false)
+                );
             case FRIEND_TEXT:
                 return new MessageTextFriendViewHolder(
                         LayoutInflater
                                 .from(parent.getContext())
                                 .inflate(R.layout.lyt_message_group_text_friend, parent, false)
+                );
+            case FRIEND_IMAGE:
+                return new MessageTextFriendViewHolder(
+                        LayoutInflater
+                                .from(parent.getContext())
+                                .inflate(R.layout.lyt_message_group_image_friend, parent, false)
                 );
         }
         return null;

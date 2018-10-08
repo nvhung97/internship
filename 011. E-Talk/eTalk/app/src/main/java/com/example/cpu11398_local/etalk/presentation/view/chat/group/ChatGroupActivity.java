@@ -2,7 +2,6 @@ package com.example.cpu11398_local.etalk.presentation.view.chat.group;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -25,8 +24,10 @@ import io.reactivex.disposables.Disposable;
 
 public class ChatGroupActivity extends BaseActivity {
 
-    private final int REQUEST_CAMERA_CODE  = 0;
-    private final int REQUEST_GALLERY_CODE = 1;
+    private final int REQUEST_TAKE_PHOTO_CODE       = 0;
+    private final int REQUEST_RECORD_CODE           = 1;
+    private final int REQUEST_CHOOSE_PHOTOS_CODE    = 2;
+    private final int REQUEST_CHOOSE_VIDEOS_CODE    = 3;
 
     @Inject
     @Named("ChatGroupViewModel")
@@ -131,9 +132,12 @@ public class ChatGroupActivity extends BaseActivity {
                 case Event.CHAT_ACTIVITY_GET_MEDIA:
                     Tool.createMediaOptionDialog(
                             ChatGroupActivity.this,
-                            REQUEST_CAMERA_CODE,
-                            REQUEST_GALLERY_CODE
+                            REQUEST_TAKE_PHOTO_CODE,
+                            REQUEST_RECORD_CODE,
+                            REQUEST_CHOOSE_PHOTOS_CODE,
+                            REQUEST_CHOOSE_VIDEOS_CODE
                     ).show();
+                    break;
             }
         }
 
@@ -153,31 +157,27 @@ public class ChatGroupActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
-            if (requestCode == REQUEST_CAMERA_CODE) {
-                Log.e("Test", " " + data.getExtras().get("data"));
+            switch (requestCode) {
+                case REQUEST_TAKE_PHOTO_CODE:
+                    break;
+                case REQUEST_RECORD_CODE:
+                    break;
+                case REQUEST_CHOOSE_PHOTOS_CODE:
+                    helper.onHelp(Event.create(
+                            Event.CHAT_ACTIVITY_SEND_IMAGE_URI,
+                            data.getData()
+                    ));
+                    break;
+                case REQUEST_CHOOSE_VIDEOS_CODE:
+                    break;
+            }
+            //if (requestCode == REQUEST_TAKE_PHOTO_CODE) {
                 /*Bitmap bitmapAvatar = (Bitmap)data.getExtras().get("data");
                 avatarCopy.copy(bitmapAvatar);*/
-            }
-            else if (requestCode == REQUEST_GALLERY_CODE) {
-                /*try {
-                    InputStream is = getContentResolver().openInputStream(data.getData());
-                    OutputStream os = new FileOutputStream(new File(getFilesDir(), "test." + MimeTypeMap.getSingleton().getExtensionFromMimeType(getContentResolver().getType(data.getData()))));
-                    byte[] buff = new byte[1024];
-                    int len;
-                    while((len = is.read(buff)) > 0){
-                        os.write(buff,0, len);
-                    }
-                    is.close();
-                    os.close();
-                } catch (FileNotFoundException e) {
-                    Log.e("=========", "====================");
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
-                /*Bitmap bitmapAvatar = Tool.getImageWithUri(this, data.getData());
-                avatarCopy.copy(bitmapAvatar);*/
-            }
+            //}
+            //else if (requestCode == REQUEST_RECORD_CODE) {
+
+            //}
         }
     }
 }

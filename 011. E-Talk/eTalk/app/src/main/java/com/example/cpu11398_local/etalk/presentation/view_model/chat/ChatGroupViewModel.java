@@ -3,6 +3,7 @@ package com.example.cpu11398_local.etalk.presentation.view_model.chat;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -167,7 +168,7 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
                         Message.TEXT
                 ),
                 null,
-                "send"
+                "send_text"
         );
         setTextMessage("");
     }
@@ -195,13 +196,30 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
             case Event.CHAT_ACTIVITY_VALUE:
                 username = (String)data[0];
                 conversationKey = (String)data[1];
-                chatGroupUsecase.execute(
-                        new ChatObserver(),
-                        username,
-                        conversationKey,
-                        "first_load"
-                );
+                executeFirstLoad();
+                break;
+            case Event.CHAT_ACTIVITY_SEND_IMAGE_URI:
+                executeSendImageUri((Uri)data[0]);
+                break;
         }
+    }
+
+    private void executeFirstLoad() {
+        chatGroupUsecase.execute(
+                new ChatObserver(),
+                username,
+                conversationKey,
+                "first_load"
+        );
+    }
+
+    private void executeSendImageUri(Uri uri) {
+        chatGroupUsecase.execute(
+                null,
+                uri,
+                null,
+                "send_image_uri"
+        );
     }
 
     /**

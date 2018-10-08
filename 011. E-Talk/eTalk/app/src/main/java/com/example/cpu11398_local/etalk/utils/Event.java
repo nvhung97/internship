@@ -30,14 +30,15 @@ public class Event {
     /**
      * Bellow commands for {@code ChatPersonActivity} and {@code ChatGroupActivity}.
      */
-    private static final int CHAT_ACTIVITY_MARK     = 1 << MODE_SHIFT;
-    public static final int CHAT_ACTIVITY_BACK      = CHAT_ACTIVITY_MARK | 0;
-    public static final int CHAT_ACTIVITY_HELPER    = CHAT_ACTIVITY_MARK | 1;
-    public static final int CHAT_ACTIVITY_VALUE     = CHAT_ACTIVITY_MARK | 2;
-    public static final int CHAT_ACTIVITY_FRIEND    = CHAT_ACTIVITY_MARK | 3;
-    public static final int CHAT_ACTIVITY_MESSAGES  = CHAT_ACTIVITY_MARK | 4;
-    public static final int CHAT_ACTIVITY_GOTO_LAST = CHAT_ACTIVITY_MARK | 5;
-    public static final int CHAT_ACTIVITY_GET_MEDIA = CHAT_ACTIVITY_MARK | 6;
+    private static final int CHAT_ACTIVITY_MARK             = 1 << MODE_SHIFT;
+    public static final int CHAT_ACTIVITY_BACK              = CHAT_ACTIVITY_MARK | 0;
+    public static final int CHAT_ACTIVITY_HELPER            = CHAT_ACTIVITY_MARK | 1;
+    public static final int CHAT_ACTIVITY_VALUE             = CHAT_ACTIVITY_MARK | 2;
+    public static final int CHAT_ACTIVITY_FRIEND            = CHAT_ACTIVITY_MARK | 3;
+    public static final int CHAT_ACTIVITY_MESSAGES          = CHAT_ACTIVITY_MARK | 4;
+    public static final int CHAT_ACTIVITY_GOTO_LAST         = CHAT_ACTIVITY_MARK | 5;
+    public static final int CHAT_ACTIVITY_GET_MEDIA         = CHAT_ACTIVITY_MARK | 6;
+    public static final int CHAT_ACTIVITY_SEND_IMAGE_URI    = CHAT_ACTIVITY_MARK | 7;
 
     /**
      * Bellow commands for {@code LoginActivity}.

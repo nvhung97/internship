@@ -142,6 +142,11 @@
     <item name="chat_activity_btn_record" type="id"/>
     <item name="chat_activity_btn_image" type="id"/>
     <item name="chat_activity_btn_send" type="id"/>
+    <item name="chat_activity_media_option_title" type="id"/>
+    <item name="chat_activity_media_option_take_photo" type="id"/>
+    <item name="chat_activity_media_option_record" type="id"/>
+    <item name="chat_activity_media_option_choose_photos" type="id"/>
+    <item name="chat_activity_media_option_choose_videos" type="id"/>
     <item name="lyt_message_person_text_me_row" type="id"/>
     <item name="lyt_message_person_text_me_content" type="id"/>
     <item name="lyt_message_person_text_me_data" type="id"/>
@@ -186,6 +191,45 @@
     <item name="lyt_message_group_text_friend_seen8" type="id"/>
     <item name="lyt_message_group_text_friend_seen9" type="id"/>
     <item name="lyt_message_group_text_friend_more" type="id"/>
+    <item name="lyt_message_group_image_me_row" type="id"/>
+    <item name="lyt_message_group_image_me_bound_content" type="id"/>
+    <item name="lyt_message_group_image_me_content" type="id"/>
+    <item name="lyt_message_group_image_me_data" type="id"/>
+    <item name="lyt_message_group_image_me_time" type="id"/>
+    <item name="lyt_message_group_image_me_status" type="id"/>
+    <item name="lyt_message_group_image_me_seen1" type="id"/>
+    <item name="lyt_message_group_image_me_seen2" type="id"/>
+    <item name="lyt_message_group_image_me_seen3" type="id"/>
+    <item name="lyt_message_group_image_me_seen4" type="id"/>
+    <item name="lyt_message_group_image_me_seen5" type="id"/>
+    <item name="lyt_message_group_image_me_seen6" type="id"/>
+    <item name="lyt_message_group_image_me_seen7" type="id"/>
+    <item name="lyt_message_group_image_me_seen8" type="id"/>
+    <item name="lyt_message_group_image_me_seen9" type="id"/>
+    <item name="lyt_message_group_image_me_more" type="id"/>
+    <item name="lyt_message_group_image_friend_row" type="id"/>
+    <item name="lyt_message_group_image_friend_bound_content" type="id"/>
+    <item name="lyt_message_group_image_friend_avatar" type="id"/>
+    <item name="lyt_message_group_image_friend_name" type="id"/>
+    <item name="lyt_message_group_image_friend_content" type="id"/>
+    <item name="lyt_message_group_image_friend_data" type="id"/>
+    <item name="lyt_message_group_image_friend_time" type="id"/>
+    <item name="lyt_message_group_image_friend_status" type="id"/>
+    <item name="lyt_message_group_image_friend_seen1" type="id"/>
+    <item name="lyt_message_group_image_friend_seen2" type="id"/>
+    <item name="lyt_message_group_image_friend_seen3" type="id"/>
+    <item name="lyt_message_group_image_friend_seen4" type="id"/>
+    <item name="lyt_message_group_image_friend_seen5" type="id"/>
+    <item name="lyt_message_group_image_friend_seen6" type="id"/>
+    <item name="lyt_message_group_image_friend_seen7" type="id"/>
+    <item name="lyt_message_group_image_friend_seen8" type="id"/>
+    <item name="lyt_message_group_image_friend_seen9" type="id"/>
+    <item name="lyt_message_group_image_friend_more" type="id"/>
+
+    <!--Media photo activity-->
+    <item name="media_photo_activity_content" type="id"/>
+    <item name="media_photo_activity_back" type="id"/>
+    <item name="media_photo_activity_name" type="id"/>
 
     <!--Profile activity-->
     <item name="profile_activity_status_bar" type="id"/>

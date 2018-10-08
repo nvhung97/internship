@@ -48,6 +48,9 @@
         <activity
             android:name=".presentation.view.chat.group.ChatGroupActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".presentation.view.chat.media.MediaPhotoActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

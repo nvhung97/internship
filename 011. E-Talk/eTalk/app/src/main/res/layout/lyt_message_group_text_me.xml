@@ -127,6 +127,7 @@
         android:paddingRight="3dp"
         android:textSize="10sp"
         android:gravity="center"
+        android:background="@drawable/img_rounded_group_number"
         app:layout_constraintTop_toBottomOf="@id/lyt_message_group_text_me_bound_content"
         app:layout_constraintRight_toRightOf="parent"/>
 </android.support.constraint.ConstraintLayout>
