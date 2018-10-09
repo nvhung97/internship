@@ -7,6 +7,8 @@ import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesPersonHolder;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
+
+import java.io.File;
 import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -67,6 +69,15 @@ public interface ConversationRepository {
      * @return an observable emit result or any new message.
      */
     Observable<Message> loadNetworkMessages(String conversationKey, String username);
+
+    /**
+     * Upload given file to network.
+     * @param conversationKey conversation that file upload to.
+     * @param file file need to upload.
+     * @param code used to determine type of file.
+     * @return an observable contain link of file.
+     */
+    Single<String> uploadNetworkFile(String conversationKey, File file, long code);
 
     /**
      * Load container that contain messages of conversation given by {@code conversationKey}.

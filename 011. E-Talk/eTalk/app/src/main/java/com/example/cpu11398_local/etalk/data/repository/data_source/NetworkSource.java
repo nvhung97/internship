@@ -6,6 +6,8 @@ import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.utils.Optional;
 
+import java.io.File;
+
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
@@ -113,4 +115,13 @@ public interface NetworkSource {
      * @return an observable emit result or any new message.
      */
     Observable<Message> loadMessages(String conversationKey, String username);
+
+    /**
+     * Upload given file to network.
+     * @param conversationKey conversation that file upload to.
+     * @param file file need to upload.
+     * @param code used to determine type of file.
+     * @return an observable contain link of file.
+     */
+    Single<String> uploadFile(String conversationKey, File file, long code);
 }

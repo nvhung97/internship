@@ -7,11 +7,14 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.request.target.Target;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
@@ -221,7 +224,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         private Context              context;
         public TextView              name;
         public ConstraintLayout      content;
-        public TextView              data;
+        public ImageView             data;
         public TextView              time;
         public AvatarImageView       avatar;
         public List<AvatarImageView> seens = new ArrayList<>();
@@ -250,7 +253,11 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         public void bindView(MessageGroupItem item) {
             name.setText(item.getName());
             name.setVisibility(item.getNameVisible());
-            data.setText(item.getTextData());
+            GlideApp
+                    .with(context)
+                    .load(item.getTextData())
+                    .override(Target.SIZE_ORIGINAL)
+                    .into(data);
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
             avatar.setImageFromObject(item.getAvatar());
@@ -328,7 +335,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                                 .inflate(R.layout.lyt_message_group_text_friend, parent, false)
                 );
             case FRIEND_IMAGE:
-                return new MessageTextFriendViewHolder(
+                return new MessageImageFriendViewHolder(
                         LayoutInflater
                                 .from(parent.getContext())
                                 .inflate(R.layout.lyt_message_group_image_friend, parent, false)

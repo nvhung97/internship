@@ -3,7 +3,9 @@ package com.example.cpu11398_local.etalk.presentation.view_model.chat;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -201,6 +203,9 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
             case Event.CHAT_ACTIVITY_SEND_IMAGE_URI:
                 executeSendImageUri((Uri)data[0]);
                 break;
+            case Event.CHAT_ACTIVITY_SEND_IMAGE_BITMAP:
+                executeSendImageBitmap((Bitmap)data[0]);
+                break;
         }
     }
 
@@ -222,6 +227,15 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
         );
     }
 
+    private void executeSendImageBitmap(Bitmap bitmap) {
+        chatGroupUsecase.execute(
+                null,
+                bitmap,
+                null,
+                "send_image_bitmap"
+        );
+    }
+
     /**
      * {@code ChatObserver} is subscribed to usecase to listen event from it.
      */
@@ -235,7 +249,10 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
                     adapter.onNewData(
                             (List<MessageGroupItem>) data[0],
                             () -> {
-                                publisher.onNext(Event.create(Event.CHAT_ACTIVITY_GOTO_LAST));
+                                new Handler().postDelayed(
+                                        () -> publisher.onNext(Event.create(Event.CHAT_ACTIVITY_GOTO_LAST)),
+                                        250
+                                );
                                 return null;
                             });
                     break;

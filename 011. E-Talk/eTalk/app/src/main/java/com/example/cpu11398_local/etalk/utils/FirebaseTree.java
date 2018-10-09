@@ -104,6 +104,9 @@ public final class FirebaseTree {
                     public static final String NODE_NAME = "avatar";
                     public static final String POSTFIX = ".png";
                 }
+                public final class Image {
+                    public static final String NODE_NAME = "image";
+                }
             }
         }
     }

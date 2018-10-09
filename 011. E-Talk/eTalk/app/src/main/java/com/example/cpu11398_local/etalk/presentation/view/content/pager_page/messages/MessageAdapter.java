@@ -256,7 +256,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 for (String key : bundle.keySet()) {
                     switch (key) {
                         case "data":
-                            holder.data.setData(bundle.getString(key), bundle.getLong("type"));
+                            holder.data.setData(bundle.getString(key), bundle.getLong("data_type"));
                             break;
                         case "time":
                             holder.time.setTime(bundle.getLong(key));
@@ -280,7 +280,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 for (String key : bundle.keySet()) {
                     switch (key) {
                         case "data":
-                            holder.data.setData(bundle.getString(key), bundle.getLong("type"));
+                            holder.data.setData(bundle.getString(key), bundle.getLong("data_type"));
                             break;
                         case "time":
                             holder.time.setTime(bundle.getLong(key));

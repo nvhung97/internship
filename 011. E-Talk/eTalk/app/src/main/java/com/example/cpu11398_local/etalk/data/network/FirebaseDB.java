@@ -25,7 +25,12 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import io.reactivex.Observable;
@@ -383,5 +388,32 @@ public class FirebaseDB implements NetworkSource{
                     emitter.setCancellable(() -> databaseRef.removeEventListener(listener));
                 }
         );
+    }
+
+    @Override
+    public Single<String> uploadFile(String conversationKey, File file, long code) {
+        if (code == Message.IMAGE) {
+            return Single.create(emitter -> {
+                try {
+                    InputStream stream = new FileInputStream(file);
+                    StorageReference storageRef  = storageReference
+                            .child(FirebaseTree.Storage.Conversations.NODE_NAME)
+                            .child(conversationKey)
+                            .child(FirebaseTree.Storage.Conversations.Key.Image.NODE_NAME)
+                            .child(file.getName());
+                    UploadTask uploadTask = storageRef.putStream(stream);
+                    uploadTask.addOnFailureListener(exception ->
+                        Log.i("eTalk", exception.getMessage())
+                    ).addOnSuccessListener(taskSnapshot ->
+                            storageRef
+                                .getDownloadUrl()
+                                .addOnSuccessListener(uri -> emitter.onSuccess(uri.toString()))
+                    );
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+        return null;
     }
 }

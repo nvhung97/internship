@@ -11,10 +11,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -22,11 +25,14 @@ import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import com.example.cpu11398_local.etalk.R;
+
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.concurrent.Callable;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-public class Tool {
+public class Tool { public static Uri uri = null;
 
     /**
      * Calculate status bar height with given activity to set height of view as statusBar.
@@ -198,7 +204,7 @@ public class Tool {
                                                  final int REQUEST_TAKE_PHOTO_CODE,
                                                  final int REQUEST_RECORD_CODE,
                                                  final int REQUEST_CHOOSE_PHOTOS_CODE,
-                                                 final int REQUEST_CHOOSE_VIDEOS_CODE){
+                                                 final int REQUEST_CHOOSE_VIDEOS_CODE) {
         View view = LayoutInflater
                 .from(context)
                 .inflate(R.layout.lyt_media_option, null);
@@ -216,6 +222,17 @@ public class Tool {
         btn_take_photo.setOnClickListener(view1 -> {
             mediaOptionDialog.dismiss();
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            try {
+                File file = File.createTempFile(
+                        "123",
+                        ".jpg",
+                        context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                );
+                uri = FileProvider.getUriForFile(context, "com.example.cpu11398_local.etalk.provider", file);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             ((FragmentActivity) context).startActivityForResult(intent, REQUEST_TAKE_PHOTO_CODE);
         });
 

@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
-import com.example.cpu11398_local.etalk.utils.FirebaseTree;
 
 public class ShortMessage extends android.support.v7.widget.AppCompatTextView{
 

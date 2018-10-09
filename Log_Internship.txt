@@ -351,12 +351,20 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 2:11 PM 10/2/2018
 	- Hiện thực tầng domain của phần chat nhóm.
 2:12 PM 10/5/2018
-	- Hiện thực gửi hình ảnh khi chat
+	- Tìm hiểu hiện thực gửi hình ảnh khi chat
 		+ https://stackoverflow.com/a/30824334
 		+ https://stackoverflow.com/a/7036743
 		+ https://stackoverflow.com/a/12473985
 		+ https://stackoverflow.com/a/45226345
 		+ https://stackoverflow.com/questions/7720383/camera-intent-not-saving-photo
+1:46 PM 10/8/2018
+	- Hiện thực layout item image chat và hiển thị item
+		+ https://stackoverflow.com/a/6143521
+		+ https://stackoverflow.com/a/12473985
+1:47 PM 10/9/2018
+	- Hoàn thành gửi hình ảnh
+		+ https://firebase.google.com/docs/storage/android/upload-files
+		+ https://android.jlelse.eu/androids-new-image-capture-from-a-camera-using-file-provider-dd178519a954
 
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/

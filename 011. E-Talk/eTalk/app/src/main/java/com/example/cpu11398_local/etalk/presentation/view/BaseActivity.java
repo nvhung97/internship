@@ -18,7 +18,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * reassigned to {@code true} in {@link #onSaveInstanceState(Bundle)} if
      * activity recreating.
      */
-    private boolean isReCreating;
+    private long lastTimeSaveInstance = 0;
 
     /**
      * Container contain all {@code View} in activity need to consider for hide keyboard
@@ -32,7 +32,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         onDataBinding();
-        isReCreating = false;
     }
 
     @Override
@@ -55,12 +54,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        isReCreating = true;
+        lastTimeSaveInstance = System.currentTimeMillis();
     }
 
     @Override
     protected void onDestroy() {
-        if (!isReCreating) {
+        if (System.currentTimeMillis() - lastTimeSaveInstance > 100) {
             onEndTaskViewModel();
         }
         super.onDestroy();
@@ -99,7 +98,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @return
      */
     protected boolean isReCreating() {
-        return isReCreating;
+        return System.currentTimeMillis() - lastTimeSaveInstance < 100;
     }
 
     /**

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallbac
 import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatGroupViewModel;
 import com.example.cpu11398_local.etalk.databinding.ActivityChatGroupBinding;
 import com.example.cpu11398_local.etalk.utils.Event;
+import com.example.cpu11398_local.etalk.utils.GlideApp;
 import com.example.cpu11398_local.etalk.utils.Tool;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -159,6 +161,10 @@ public class ChatGroupActivity extends BaseActivity {
         if (resultCode == RESULT_OK && data != null) {
             switch (requestCode) {
                 case REQUEST_TAKE_PHOTO_CODE:
+                    helper.onHelp(Event.create(
+                            Event.CHAT_ACTIVITY_SEND_IMAGE_URI,
+                            Tool.uri
+                    ));
                     break;
                 case REQUEST_RECORD_CODE:
                     break;
@@ -171,13 +177,6 @@ public class ChatGroupActivity extends BaseActivity {
                 case REQUEST_CHOOSE_VIDEOS_CODE:
                     break;
             }
-            //if (requestCode == REQUEST_TAKE_PHOTO_CODE) {
-                /*Bitmap bitmapAvatar = (Bitmap)data.getExtras().get("data");
-                avatarCopy.copy(bitmapAvatar);*/
-            //}
-            //else if (requestCode == REQUEST_RECORD_CODE) {
-
-            //}
         }
     }
 }

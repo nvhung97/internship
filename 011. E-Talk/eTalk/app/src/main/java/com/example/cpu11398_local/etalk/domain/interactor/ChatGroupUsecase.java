@@ -2,14 +2,13 @@ package com.example.cpu11398_local.etalk.domain.interactor;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
@@ -17,7 +16,6 @@ import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.presentation.view.chat.group.MessageGroupItem;
 import com.example.cpu11398_local.etalk.utils.Event;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -41,12 +39,13 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ChatGroupUsecase implements Usecase {
 
-    private final String SENT_URL       = "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/sent.png?alt=media&token=4e7cf2d2-22d5-47d8-9e5a-12bdbbcaedb1";
-    private final String SENDING_URL    = "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/sending.png?alt=media&token=32ca8ddf-6b82-42e8-85d9-2e5d726dfe97";
-    private final String FIRST_LOAD     = "first_load";
-    private final String LOAD_MORE      = "load_more";
-    private final String SEND_TEXT      = "send_text";
-    private final String SEND_IMAGE_URI = "send_image_uri";
+    private final String SENT_URL           = "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/sent.png?alt=media&token=4e7cf2d2-22d5-47d8-9e5a-12bdbbcaedb1";
+    private final String SENDING_URL        = "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/sending.png?alt=media&token=32ca8ddf-6b82-42e8-85d9-2e5d726dfe97";
+    private final String FIRST_LOAD         = "first_load";
+    private final String LOAD_MORE          = "load_more";
+    private final String SEND_TEXT          = "send_text";
+    private final String SEND_IMAGE_URI     = "send_image_uri";
+    private final String SEND_IMAGE_BITMAP  = "send_image_bitmap";
 
     private Context                 context;
     private Executor                executor;
@@ -89,6 +88,9 @@ public class ChatGroupUsecase implements Usecase {
                 break;
             case SEND_IMAGE_URI:
                 executeSendImageUri((Uri)params[0]);
+                break;
+            case SEND_IMAGE_BITMAP:
+                executeSendImageBitmap((Bitmap)params[0]);
                 break;
             case FIRST_LOAD:
                 username        = (String)params[0];
@@ -300,9 +302,72 @@ public class ChatGroupUsecase implements Usecase {
                 null,
                 Message.IMAGE
         );
+        File file = copyToInternalStorageFromUri(uri, message.getKey());
+        message.setData(file.getAbsolutePath());
+        holder.sendNewMessage(message);
+        needUpdateMessage = true;
+        disposable.add(
+                conversationRepository
+                        .uploadNetworkFile(conversationKey, file, Message.IMAGE)
+                        .subscribeOn(Schedulers.from(executor))
+                        .observeOn(scheduler)
+                        .subscribe(url -> {
+                            file.delete();
+                            message.setData(url);
+                            disposable.add(
+                                    conversationRepository
+                                            .pushNetworkMessage(conversationKey, message)
+                                            .subscribeOn(Schedulers.from(executor))
+                                            .observeOn(scheduler)
+                                            .subscribe(result -> {
+                                                if (result == true) {
+                                                    holder.sendSuccessMessage(message);
+                                                    needUpdateMessage = true;
+                                                }
+                                            })
+                            );
+                        })
+        );
+    }
+
+    private void executeSendImageBitmap(Bitmap bitmap) {
+        Message message = new Message(
+                username,
+                null,
+                Message.IMAGE
+        );
+        File file = copyToInternalStorageFromBitmap(bitmap, message.getKey());
+        message.setData(file.getAbsolutePath());
+        holder.sendNewMessage(message);
+        needUpdateMessage = true;
+        disposable.add(
+                conversationRepository
+                        .uploadNetworkFile(conversationKey, file, Message.IMAGE)
+                        .subscribeOn(Schedulers.from(executor))
+                        .observeOn(scheduler)
+                        .subscribe(url -> {
+                            file.delete();
+                            message.setData(url);
+                            disposable.add(
+                                    conversationRepository
+                                            .pushNetworkMessage(conversationKey, message)
+                                            .subscribeOn(Schedulers.from(executor))
+                                            .observeOn(scheduler)
+                                            .subscribe(result -> {
+                                                if (result == true) {
+                                                    holder.sendSuccessMessage(message);
+                                                    needUpdateMessage = true;
+                                                }
+                                            })
+                            );
+                        })
+        );
+    }
+
+    private File copyToInternalStorageFromUri(Uri uri, String name) {
         File file = new File(
                 context.getFilesDir(),
-                message.getKey() + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(context.getContentResolver().getType(uri))
+                name + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(context.getContentResolver().getType(uri))
         );
         try {
             InputStream is = context.getContentResolver().openInputStream(uri);
@@ -319,9 +384,24 @@ public class ChatGroupUsecase implements Usecase {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        message.setData(file.getAbsolutePath());
-        holder.sendNewMessage(message);
-        needUpdateMessage = true;
+        return file;
+    }
+
+    private File copyToInternalStorageFromBitmap(Bitmap bitmap, String name) {
+        File file = new File(
+                context.getFilesDir(),
+                name + ".jpg"
+        );
+        try {
+            OutputStream os = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
     }
 
     @Override
@@ -498,6 +578,12 @@ public class ChatGroupUsecase implements Usecase {
                             messages.get(i).newAvatar(SENT_URL)
                     );
                     messages.get(i).getMessage().setServerTime(Long.parseLong(message.getKey().substring(username.length())));
+                    if (message.getType() != Message.TEXT) {
+                        messages.set(
+                                i,
+                                messages.get(i).newMessage(message).newData(message.getData())
+                        );
+                    }
                     break;
                 }
             }

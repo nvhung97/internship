@@ -11,6 +11,7 @@ import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.Mess
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 
+import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -62,6 +63,11 @@ public class ConversationRepositoryImpl  implements ConversationRepository{
     @Override
     public Observable<Message> loadNetworkMessages(String conversationKey, String username) {
         return networkSource.loadMessages(conversationKey, username);
+    }
+
+    @Override
+    public Single<String> uploadNetworkFile(String conversationKey, File file, long code) {
+        return networkSource.uploadFile(conversationKey, file, code);
     }
 
     @Override
