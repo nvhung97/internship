@@ -32,7 +32,12 @@ import java.lang.reflect.Field;
 import java.util.concurrent.Callable;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-public class Tool { public static Uri uri = null;
+public class Tool {
+
+    /**
+     * {@code imageCaptureUri} used to hold {@code Uri} of image from intent camera.
+     */
+    public static Uri imageCaptureUri = null;
 
     /**
      * Calculate status bar height with given activity to set height of view as statusBar.
@@ -224,12 +229,12 @@ public class Tool { public static Uri uri = null;
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             try {
                 File file = File.createTempFile(
-                        "123",
+                        "IMG_",
                         ".jpg",
                         context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
                 );
-                uri = FileProvider.getUriForFile(context, "com.example.cpu11398_local.etalk.provider", file);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                imageCaptureUri = FileProvider.getUriForFile(context, "com.example.cpu11398_local.etalk.provider", file);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageCaptureUri);
             } catch (IOException e) {
                 e.printStackTrace();
             }

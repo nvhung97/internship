@@ -39,7 +39,8 @@ public class Event {
     public static final int CHAT_ACTIVITY_GOTO_LAST         = CHAT_ACTIVITY_MARK | 5;
     public static final int CHAT_ACTIVITY_GET_MEDIA         = CHAT_ACTIVITY_MARK | 6;
     public static final int CHAT_ACTIVITY_SEND_IMAGE_URI    = CHAT_ACTIVITY_MARK | 7;
-    public static final int CHAT_ACTIVITY_SEND_IMAGE_BITMAP = CHAT_ACTIVITY_MARK | 8;
+    public static final int CHAT_ACTIVITY_ATTACH            = CHAT_ACTIVITY_MARK | 8;
+    public static final int CHAT_ACTIVITY_SEND_FILE         = CHAT_ACTIVITY_MARK | 9;
 
     /**
      * Bellow commands for {@code LoginActivity}.

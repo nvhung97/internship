@@ -1,7 +1,10 @@
 package com.example.cpu11398_local.etalk.presentation.custom;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.text.Html;
 import android.util.AttributeSet;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
@@ -20,9 +23,10 @@ public class ShortMessage extends android.support.v7.widget.AppCompatTextView{
         super(context, attrs, defStyleAttr);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void setData(String data, long type) {
         if (type == Message.TEXT) {
-            setText(data);
+            setText(Html.fromHtml(data, Html.FROM_HTML_MODE_COMPACT));
         }
         if (type == Message.IMAGE) {
             setText(getContext().getString(R.string.app_image));

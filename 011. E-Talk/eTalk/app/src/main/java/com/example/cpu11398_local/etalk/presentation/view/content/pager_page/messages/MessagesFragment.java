@@ -98,21 +98,18 @@ public class MessagesFragment extends Fragment {
                     User user = (User)data[0];
                     Conversation conversation = (Conversation)data[1];
                     User friend = (User)data[2];
+                    Intent intent = new Intent(getActivity(), ChatGroupActivity.class);
+                    intent.putExtra("user", user.getUsername());
+                    intent.putExtra("key", conversation.getKey());
+                    intent.putExtra("type", conversation.getType());
                     if (conversation.getType() == Conversation.PERSON) {
-                        Intent intent = new Intent(getActivity(), ChatPersonActivity.class);
-                        intent.putExtra("user", user.getUsername());
-                        intent.putExtra("key", conversation.getKey());
                         intent.putExtra("name", friend.getName());
                         intent.putExtra("number", friend.getActive());
-                        startActivity(intent);
                     } else {
-                        Intent intent = new Intent(getActivity(), ChatGroupActivity.class);
-                        intent.putExtra("user", user.getUsername());
-                        intent.putExtra("key", conversation.getKey());
                         intent.putExtra("name", conversation.getName());
                         intent.putExtra("number", conversation.getMembers().size());
-                        startActivity(intent);
                     }
+                    startActivity(intent);
                     break;
                 case Event.MESSAGE_FRAGMENT_HIDE_PROGRESS_BAR:
                     progressBar.setVisibility(View.GONE);

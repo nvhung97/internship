@@ -107,6 +107,9 @@ public final class FirebaseTree {
                 public final class Image {
                     public static final String NODE_NAME = "image";
                 }
+                public final class File {
+                    public static final String NODE_NAME = "file";
+                }
             }
         }
     }

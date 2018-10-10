@@ -2,11 +2,14 @@ package com.example.cpu11398_local.etalk.domain.interactor;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.provider.OpenableColumns;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
@@ -24,6 +27,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +49,7 @@ public class ChatGroupUsecase implements Usecase {
     private final String LOAD_MORE          = "load_more";
     private final String SEND_TEXT          = "send_text";
     private final String SEND_IMAGE_URI     = "send_image_uri";
-    private final String SEND_IMAGE_BITMAP  = "send_image_bitmap";
+    private final String SEND_FILE          = "send_file";
 
     private Context                 context;
     private Executor                executor;
@@ -84,13 +88,13 @@ public class ChatGroupUsecase implements Usecase {
     public void execute(Object observer, Object... params) {
         switch ((String)params[2]) {
             case SEND_TEXT:
-                executeSendMessage((Message)params[0]);
+                executeSendMessage((String)params[0]);
                 break;
             case SEND_IMAGE_URI:
                 executeSendImageUri((Uri)params[0]);
                 break;
-            case SEND_IMAGE_BITMAP:
-                executeSendImageBitmap((Bitmap)params[0]);
+            case SEND_FILE:
+                executeSendFile((Uri)params[0]);
                 break;
             case FIRST_LOAD:
                 username        = (String)params[0];
@@ -248,20 +252,7 @@ public class ChatGroupUsecase implements Usecase {
                             public void onSuccess(MessagesGroupHolder messagesGroupHolder) {
                                 holder = messagesGroupHolder;
                                 needUpdateMessage = true;
-                                for (Message message : holder.getSendingMessage().values()) {
-                                    disposable.add(
-                                            conversationRepository
-                                                    .pushNetworkMessage(conversationKey, message)
-                                                    .subscribeOn(Schedulers.from(executor))
-                                                    .observeOn(scheduler)
-                                                    .subscribe(result -> {
-                                                        if (result == true) {
-                                                            holder.sendSuccessMessage(message);
-                                                            needUpdateMessage = true;
-                                                        }
-                                                    })
-                                    );
-                                }
+                                resendFailedMessage(holder.getSendingMessage().values());
                                 onError(null);
                             }
                             @Override
@@ -279,7 +270,55 @@ public class ChatGroupUsecase implements Usecase {
         );
     }
 
-    private void executeSendMessage(Message message) {
+    private void resendFailedMessage(Collection<Message> collection) {
+        for (Message message : collection) {
+            if (message.getType() == Message.TEXT) {
+                disposable.add(
+                        conversationRepository
+                                .pushNetworkMessage(conversationKey, message)
+                                .subscribeOn(Schedulers.from(executor))
+                                .observeOn(scheduler)
+                                .subscribe(result -> {
+                                    if (result == true) {
+                                        holder.sendSuccessMessage(message);
+                                        needUpdateMessage = true;
+                                    }
+                                })
+                );
+            } else if (message.getType() == Message.IMAGE) {
+                File file = new File(message.getData());
+                disposable.add(
+                        conversationRepository
+                                .uploadNetworkFile(conversationKey, file, Message.IMAGE)
+                                .subscribeOn(Schedulers.from(executor))
+                                .observeOn(scheduler)
+                                .subscribe(url -> {
+                                    file.delete();
+                                    message.setData(url);
+                                    disposable.add(
+                                            conversationRepository
+                                                    .pushNetworkMessage(conversationKey, message)
+                                                    .subscribeOn(Schedulers.from(executor))
+                                                    .observeOn(scheduler)
+                                                    .subscribe(result -> {
+                                                        if (result == true) {
+                                                            holder.sendSuccessMessage(message);
+                                                            needUpdateMessage = true;
+                                                        }
+                                                    })
+                                    );
+                                })
+                );
+            }
+        }
+    }
+
+    private void executeSendMessage(String text) {
+        Message message = new Message(
+                username,
+                formatText(text),
+                Message.TEXT
+        );
         holder.sendNewMessage(message);
         needUpdateMessage = true;
         disposable.add(
@@ -296,13 +335,36 @@ public class ChatGroupUsecase implements Usecase {
         );
     }
 
+    private String formatText(String text) {
+        int firstMark, secondMark;
+        while ((firstMark = text.indexOf("*")) >= 0) {
+            if ((secondMark = text.indexOf("*", firstMark + 1)) < 0) break;
+            text = text
+                    .replaceFirst("\\*", "<b>")
+                    .replaceFirst("\\*", "</b>");
+        }
+        while ((firstMark = text.indexOf("~")) >= 0) {
+            if ((secondMark = text.indexOf("~", firstMark + 1)) < 0) break;
+            text = text
+                    .replaceFirst("~", "<i>")
+                    .replaceFirst("~", "</i>");
+        }
+        while ((firstMark = text.indexOf("_")) >= 0) {
+            if ((secondMark = text.indexOf("_", firstMark + 1)) < 0) break;
+            text = text
+                    .replaceFirst("_", "<u>")
+                    .replaceFirst("_", "</u>");
+        }
+        return text;
+    }
+
     private void executeSendImageUri(Uri uri) {
         Message message = new Message(
                 username,
                 null,
                 Message.IMAGE
         );
-        File file = copyToInternalStorageFromUri(uri, message.getKey());
+        File file = copyToInternalStorageFromUri(uri, message.getKey(), Message.IMAGE);
         message.setData(file.getAbsolutePath());
         holder.sendNewMessage(message);
         needUpdateMessage = true;
@@ -330,25 +392,32 @@ public class ChatGroupUsecase implements Usecase {
         );
     }
 
-    private void executeSendImageBitmap(Bitmap bitmap) {
+    private void executeSendFile(Uri uri) {
         Message message = new Message(
                 username,
                 null,
-                Message.IMAGE
+                Message.FILE
         );
-        File file = copyToInternalStorageFromBitmap(bitmap, message.getKey());
-        message.setData(file.getAbsolutePath());
-        holder.sendNewMessage(message);
-        needUpdateMessage = true;
+        String fileName = getFileName(uri);
+        String[] fileNamePart = fileName.split("\\.");
+        File file = copyToInternalStorageFromUri(
+                uri,
+                fileNamePart[0] + "_" + message.getKey() + "." + fileNamePart[1],
+                Message.FILE
+        );
+        message.setData(file.getAbsolutePath()+"eTaLkFiLe"+fileName);
+        /*holder.sendNewMessage(message);
+        needUpdateMessage = true;*/
         disposable.add(
                 conversationRepository
-                        .uploadNetworkFile(conversationKey, file, Message.IMAGE)
+                        .uploadNetworkFile(conversationKey, file, Message.FILE)
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
                         .subscribe(url -> {
+                            Log.e("Test", url);
                             file.delete();
                             message.setData(url);
-                            disposable.add(
+                            /*disposable.add(
                                     conversationRepository
                                             .pushNetworkMessage(conversationKey, message)
                                             .subscribeOn(Schedulers.from(executor))
@@ -359,16 +428,25 @@ public class ChatGroupUsecase implements Usecase {
                                                     needUpdateMessage = true;
                                                 }
                                             })
-                            );
+                            );*/
                         })
         );
     }
 
-    private File copyToInternalStorageFromUri(Uri uri, String name) {
-        File file = new File(
-                context.getFilesDir(),
-                name + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(context.getContentResolver().getType(uri))
-        );
+    private File copyToInternalStorageFromUri(Uri uri, String name, long type) {
+        File file = null;
+        if (type == Message.IMAGE) {
+            file = new File(
+                    context.getFilesDir(),
+                    name + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(context.getContentResolver().getType(uri))
+            );
+        } else if (type == Message.FILE) {
+
+            file = new File(
+                    context.getFilesDir(),
+                    name
+            );
+        }
         try {
             InputStream is = context.getContentResolver().openInputStream(uri);
             OutputStream os = new FileOutputStream(file);
@@ -387,21 +465,26 @@ public class ChatGroupUsecase implements Usecase {
         return file;
     }
 
-    private File copyToInternalStorageFromBitmap(Bitmap bitmap, String name) {
-        File file = new File(
-                context.getFilesDir(),
-                name + ".jpg"
-        );
-        try {
-            OutputStream os = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-            os.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
         }
-        return file;
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
     }
 
     @Override
@@ -538,6 +621,9 @@ public class ChatGroupUsecase implements Usecase {
                         newItem = newItem
                                 .newAvatarVisible(View.GONE)
                                 .newNameVisible(View.GONE);
+                    }
+                    if (newConversation.getType() == Conversation.PERSON && newItem.getNameVisible() == View.VISIBLE) {
+                        newItem = newItem.newNameVisible(View.GONE);
                     }
                 }
                 messages.add(newItem);

@@ -365,6 +365,13 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Hoàn thành gửi hình ảnh
 		+ https://firebase.google.com/docs/storage/android/upload-files
 		+ https://android.jlelse.eu/androids-new-image-capture-from-a-camera-using-file-provider-dd178519a954
+8:40 AM 10/10/2018
+	- Đưa chat 2 người và chat nhom về một
+	- Thực hiện hỗ trợ Bold, Italic, Underline text
+		+ https://stackoverflow.com/a/2116191
+		+ https://www.myandroidsolutions.com/2017/09/29/android-html-textview/#.W73Y12gzaUk
+	- Hiện thực load file và gửi file.
+
 
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/

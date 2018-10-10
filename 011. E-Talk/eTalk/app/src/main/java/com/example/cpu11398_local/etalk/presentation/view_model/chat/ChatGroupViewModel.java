@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 import com.example.cpu11398_local.etalk.BR;
 import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
-import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.view.chat.group.MessageGroupAdapter;
 import com.example.cpu11398_local.etalk.presentation.view.chat.group.MessageGroupItem;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
@@ -137,7 +136,7 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
      * @param view
      */
     public void onAttachClick(View view) {
-        Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+        publisher.onNext(Event.create(Event.CHAT_ACTIVITY_ATTACH));
     }
 
     /**
@@ -164,11 +163,7 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
     public void onSendMessage(View view) {
         chatGroupUsecase.execute(
                 null,
-                new Message(
-                        username,
-                        textMessage,
-                        Message.TEXT
-                ),
+                textMessage,
                 null,
                 "send_text"
         );
@@ -203,8 +198,8 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
             case Event.CHAT_ACTIVITY_SEND_IMAGE_URI:
                 executeSendImageUri((Uri)data[0]);
                 break;
-            case Event.CHAT_ACTIVITY_SEND_IMAGE_BITMAP:
-                executeSendImageBitmap((Bitmap)data[0]);
+            case Event.CHAT_ACTIVITY_SEND_FILE:
+                executeSendFile((Uri)data[0]);
                 break;
         }
     }
@@ -227,12 +222,12 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
         );
     }
 
-    private void executeSendImageBitmap(Bitmap bitmap) {
+    private void executeSendFile(Uri uri) {
         chatGroupUsecase.execute(
                 null,
-                bitmap,
+                uri,
                 null,
-                "send_image_bitmap"
+                "send_file"
         );
     }
 

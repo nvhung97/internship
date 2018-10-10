@@ -101,6 +101,7 @@ public class GroupsFragment extends Fragment {
                     intent.putExtra("user", user.getUsername());
                     intent.putExtra("key", conversation.getKey());
                     intent.putExtra("name", conversation.getName());
+                    intent.putExtra("type", conversation.getType());
                     intent.putExtra("number", conversation.getMembers().size());
                     startActivity(intent);
                     break;

@@ -4,12 +4,11 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 import com.example.cpu11398_local.etalk.R;
+import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
@@ -17,7 +16,6 @@ import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallbac
 import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatGroupViewModel;
 import com.example.cpu11398_local.etalk.databinding.ActivityChatGroupBinding;
 import com.example.cpu11398_local.etalk.utils.Event;
-import com.example.cpu11398_local.etalk.utils.GlideApp;
 import com.example.cpu11398_local.etalk.utils.Tool;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -30,6 +28,7 @@ public class ChatGroupActivity extends BaseActivity {
     private final int REQUEST_RECORD_CODE           = 1;
     private final int REQUEST_CHOOSE_PHOTOS_CODE    = 2;
     private final int REQUEST_CHOOSE_VIDEOS_CODE    = 3;
+    private final int REQUEST_CHOOSE_FILE           = 4;
 
     @Inject
     @Named("ChatGroupViewModel")
@@ -73,11 +72,24 @@ public class ChatGroupActivity extends BaseActivity {
             }
         });
         binding.chatActivityTxtFriendName.setText(getIntent().getExtras().getString("name"));
-        binding.chatActivityTxtFriendStatus.setText(
-                getIntent().getExtras().getInt("number")
-                        + " "
-                        + getString(R.string.app_members)
-        );
+        if (getIntent().getExtras().getLong("type") == Conversation.PERSON) {
+            Long time = getIntent().getExtras().getLong("number");
+            if (System.currentTimeMillis() - time < 10000) {
+                binding.chatActivityTxtFriendStatus.setText(
+                        getString(R.string.app_online)
+                );
+            } else {
+                binding.chatActivityTxtFriendStatus.setText(
+                        getString(R.string.app_offline)
+                );
+            }
+        } else {
+            binding.chatActivityTxtFriendStatus.setText(
+                    getIntent().getExtras().getInt("number")
+                            + " "
+                            + getString(R.string.app_members)
+            );
+        }
         addControlKeyboardView(binding.chatActivityLytMessage);
     }
 
@@ -140,6 +152,15 @@ public class ChatGroupActivity extends BaseActivity {
                             REQUEST_CHOOSE_VIDEOS_CODE
                     ).show();
                     break;
+                case Event.CHAT_ACTIVITY_ATTACH:
+                    Intent intent = new Intent();
+                    intent.setType("*/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(
+                            Intent.createChooser(intent, "Select File"),
+                            REQUEST_CHOOSE_FILE
+                    );
+                    break;
             }
         }
 
@@ -158,12 +179,12 @@ public class ChatGroupActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && data != null) {
+        if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_TAKE_PHOTO_CODE:
                     helper.onHelp(Event.create(
                             Event.CHAT_ACTIVITY_SEND_IMAGE_URI,
-                            Tool.uri
+                            Tool.imageCaptureUri
                     ));
                     break;
                 case REQUEST_RECORD_CODE:
@@ -175,6 +196,12 @@ public class ChatGroupActivity extends BaseActivity {
                     ));
                     break;
                 case REQUEST_CHOOSE_VIDEOS_CODE:
+                    break;
+                case REQUEST_CHOOSE_FILE:
+                    helper.onHelp(Event.create(
+                            Event.CHAT_ACTIVITY_SEND_FILE,
+                            data.getData()
+                    ));
                     break;
             }
         }

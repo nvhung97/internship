@@ -3,17 +3,18 @@ package com.example.cpu11398_local.etalk.presentation.view.chat.group;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.request.target.Target;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView;
@@ -74,9 +75,10 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                     )
             );
         }
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void bindView(MessageGroupItem item) {
-            data.setText(item.getTextData());
+            data.setText(Html.fromHtml(item.getTextData(), Html.FROM_HTML_MODE_COMPACT));
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
             avatar.setImageFromObject(item.getAvatar());
@@ -131,6 +133,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             GlideApp
                     .with(context)
                     .load(item.getTextData())
+                    .override(Target.SIZE_ORIGINAL)
                     .into(data);
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
@@ -193,11 +196,12 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                     )
             );
         }
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void bindView(MessageGroupItem item) {
             name.setText(item.getName());
             name.setVisibility(item.getNameVisible());
-            data.setText(item.getTextData());
+            data.setText(Html.fromHtml(item.getTextData(), Html.FROM_HTML_MODE_COMPACT));
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
             avatar.setImageFromObject(item.getAvatar());
