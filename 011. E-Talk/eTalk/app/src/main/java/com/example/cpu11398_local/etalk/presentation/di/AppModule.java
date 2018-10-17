@@ -435,9 +435,8 @@ public class AppModule {
 
     @Provides
     @Named("ChatGroupViewModel")
-    public ViewModel provideChatGroupViewModel(Context context,
-                                               @Named("ChatGroupUsecase") Usecase usecase) {
-        return new ChatGroupViewModel(context, usecase);
+    public ViewModel provideChatGroupViewModel(@Named("ChatGroupUsecase") Usecase usecase) {
+        return new ChatGroupViewModel(usecase);
     }
 
     @Provides

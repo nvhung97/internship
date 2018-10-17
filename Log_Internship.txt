@@ -371,6 +371,17 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://stackoverflow.com/a/2116191
 		+ https://www.myandroidsolutions.com/2017/09/29/android-html-textview/#.W73Y12gzaUk
 	- Hiện thực load file và gửi file.
+6:33 PM 10/12/2018
+	- Hiện thực layout item message file và mô phỏng downfile
+		+ https://stackoverflow.com/questions/21333866/how-to-create-a-circular-progressbar-in-android-which-rotates-on-it
+2:14 PM 10/16/2018
+	- Lưu file download xuống bộ nhớ
+		+ https://developer.android.com/training/data-storage/files
+9:01 AM 10/17/2018
+	- Hiện thực gửi location
+		+ http://ramsandroid4all.blogspot.com/2016/01/google-maps-android-example-in-android.html
+		+ http://www.zoftino.com/android-google-maps-tutorial
+		+ http://www.zoftino.com/android-mapview-tutorial
 
 
 

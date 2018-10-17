@@ -1,5 +1,6 @@
 package com.example.cpu11398_local.etalk.presentation.view.chat.group;
 
+import android.view.View;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,10 @@ public final class MessageGroupItem {
     private String              time;
     private int                 timeVisible;
     private Map<String, String> seen = new HashMap<>();
+    private int                 downloadVisible = View.VISIBLE;
+    private int                 cancelVisible   = View.GONE;
+    private int                 progressVisible = View.GONE;
+    private int                 progressPercent = 0;
 
     public MessageGroupItem(Message message) {
         this.message = message;
@@ -75,6 +80,36 @@ public final class MessageGroupItem {
         this.seen           = seen;
     }
 
+    public MessageGroupItem(Message message,
+                            boolean isMe,
+                            Object data,
+                            String name,
+                            int nameVisible,
+                            String avatar,
+                            int avatarVisible,
+                            String time,
+                            int timeVisible,
+                            Map<String, String> seen,
+                            int downloadVisible,
+                            int cancelVisible,
+                            int progressVisible,
+                            int progressPercent) {
+        this.message            = message;
+        this.isMe               = isMe;
+        this.data               = data;
+        this.name               = name;
+        this.nameVisible        = nameVisible;
+        this.avatar             = avatar;
+        this.avatarVisible      = avatarVisible;
+        this.time               = time;
+        this.timeVisible        = timeVisible;
+        this.seen               = seen;
+        this.downloadVisible    = downloadVisible;
+        this.cancelVisible      = cancelVisible;
+        this.progressVisible    = progressVisible;
+        this.progressPercent    = progressPercent;
+    }
+
     public Message getMessage() {
         return new Message(message);
     }
@@ -83,14 +118,18 @@ public final class MessageGroupItem {
         return new MessageGroupItem(
                 message,
                 isMe,
+                data,
                 name,
                 nameVisible,
-                data,
                 avatar,
                 avatarVisible,
                 time,
                 timeVisible,
-                new HashMap<>(seen)
+                new HashMap<>(seen),
+                downloadVisible,
+                cancelVisible,
+                progressVisible,
+                progressPercent
         );
     }
 
@@ -102,14 +141,18 @@ public final class MessageGroupItem {
         return new MessageGroupItem(
                 new Message(message),
                 me,
+                data,
                 name,
                 nameVisible,
-                data,
                 avatar,
                 avatarVisible,
                 time,
                 timeVisible,
-                new HashMap<>(seen)
+                new HashMap<>(seen),
+                downloadVisible,
+                cancelVisible,
+                progressVisible,
+                progressPercent
         );
     }
 
@@ -121,14 +164,18 @@ public final class MessageGroupItem {
         return new MessageGroupItem(
                 new Message(message),
                 isMe,
+                data,
                 name,
                 nameVisible,
-                data,
                 avatar,
                 avatarVisible,
                 time,
                 timeVisible,
-                new HashMap<>(seen)
+                new HashMap<>(seen),
+                downloadVisible,
+                cancelVisible,
+                progressVisible,
+                progressPercent
         );
     }
 
@@ -140,14 +187,18 @@ public final class MessageGroupItem {
         return new MessageGroupItem(
                 new Message(message),
                 isMe,
+                data,
                 name,
                 nameVisible,
-                data,
                 avatar,
                 avatarVisible,
                 time,
                 timeVisible,
-                new HashMap<>(seen)
+                new HashMap<>(seen),
+                downloadVisible,
+                cancelVisible,
+                progressVisible,
+                progressPercent
         );
     }
 
@@ -163,14 +214,18 @@ public final class MessageGroupItem {
         return new MessageGroupItem(
                 new Message(message),
                 isMe,
+                data,
                 name,
                 nameVisible,
-                data,
                 avatar,
                 avatarVisible,
                 time,
                 timeVisible,
-                new HashMap<>(seen)
+                new HashMap<>(seen),
+                downloadVisible,
+                cancelVisible,
+                progressVisible,
+                progressPercent
         );
     }
 
@@ -182,14 +237,18 @@ public final class MessageGroupItem {
         return new MessageGroupItem(
                 new Message(message),
                 isMe,
+                data,
                 name,
                 nameVisible,
-                data,
                 avatar,
                 avatarVisible,
                 time,
                 timeVisible,
-                new HashMap<>(seen)
+                new HashMap<>(seen),
+                downloadVisible,
+                cancelVisible,
+                progressVisible,
+                progressPercent
         );
     }
 
@@ -201,14 +260,18 @@ public final class MessageGroupItem {
         return new MessageGroupItem(
                 new Message(message),
                 isMe,
+                data,
                 name,
                 nameVisible,
-                data,
                 avatar,
                 avatarVisible,
                 time,
                 timeVisible,
-                new HashMap<>(seen)
+                new HashMap<>(seen),
+                downloadVisible,
+                cancelVisible,
+                progressVisible,
+                progressPercent
         );
     }
 
@@ -220,14 +283,18 @@ public final class MessageGroupItem {
         return new MessageGroupItem(
                 new Message(message),
                 isMe,
+                data,
                 name,
                 nameVisible,
-                data,
                 avatar,
                 avatarVisible,
                 time,
                 timeVisible,
-                new HashMap<>(seen)
+                new HashMap<>(seen),
+                downloadVisible,
+                cancelVisible,
+                progressVisible,
+                progressPercent
         );
     }
 
@@ -239,14 +306,18 @@ public final class MessageGroupItem {
         return new MessageGroupItem(
                 new Message(message),
                 isMe,
+                data,
                 name,
                 nameVisible,
-                data,
                 avatar,
                 avatarVisible,
                 time,
                 timeVisible,
-                new HashMap<>(seen)
+                new HashMap<>(seen),
+                downloadVisible,
+                cancelVisible,
+                progressVisible,
+                progressPercent
         );
     }
 
@@ -258,14 +329,110 @@ public final class MessageGroupItem {
         return new MessageGroupItem(
                 new Message(message),
                 isMe,
+                data,
                 name,
                 nameVisible,
-                data,
                 avatar,
                 avatarVisible,
                 time,
                 timeVisible,
-                new HashMap<>(seen)
+                new HashMap<>(seen),
+                downloadVisible,
+                cancelVisible,
+                progressVisible,
+                progressPercent
+        );
+    }
+
+    public int getDownloadVisible() {
+        return downloadVisible;
+    }
+
+    public MessageGroupItem newDownloadVisible(int downloadVisible) {
+        return new MessageGroupItem(
+                new Message(message),
+                isMe,
+                data,
+                name,
+                nameVisible,
+                avatar,
+                avatarVisible,
+                time,
+                timeVisible,
+                new HashMap<>(seen),
+                downloadVisible,
+                cancelVisible,
+                progressVisible,
+                progressPercent
+        );
+    }
+
+    public int getCancelVisible() {
+        return cancelVisible;
+    }
+
+    public MessageGroupItem newCancelVisible(int cancelVisible) {
+        return new MessageGroupItem(
+                new Message(message),
+                isMe,
+                data,
+                name,
+                nameVisible,
+                avatar,
+                avatarVisible,
+                time,
+                timeVisible,
+                new HashMap<>(seen),
+                downloadVisible,
+                cancelVisible,
+                progressVisible,
+                progressPercent
+        );
+    }
+
+    public int getProgressVisible() {
+        return progressVisible;
+    }
+
+    public MessageGroupItem newProgressVisible(int progressVisible) {
+        return new MessageGroupItem(
+                new Message(message),
+                isMe,
+                data,
+                name,
+                nameVisible,
+                avatar,
+                avatarVisible,
+                time,
+                timeVisible,
+                new HashMap<>(seen),
+                downloadVisible,
+                cancelVisible,
+                progressVisible,
+                progressPercent
+        );
+    }
+
+    public int getProgressPercent() {
+        return progressPercent;
+    }
+
+    public MessageGroupItem newProgressPercent(int progressPercent) {
+        return new MessageGroupItem(
+                new Message(message),
+                isMe,
+                data,
+                name,
+                nameVisible,
+                avatar,
+                avatarVisible,
+                time,
+                timeVisible,
+                new HashMap<>(seen),
+                downloadVisible,
+                cancelVisible,
+                progressVisible,
+                progressPercent
         );
     }
 
@@ -276,6 +443,10 @@ public final class MessageGroupItem {
     }
 
     public boolean equalsContent(MessageGroupItem other) {
+        if (this.downloadVisible != other.downloadVisible) return false;
+        if (this.cancelVisible != other.cancelVisible) return false;
+        if (this.progressVisible != other.progressVisible) return false;
+        if (this.progressPercent != other.progressPercent) return false;
         if (this.nameVisible != other.nameVisible) return false;
         if (this.timeVisible != other.timeVisible) return false;
         if (this.avatarVisible != other.avatarVisible) return false;

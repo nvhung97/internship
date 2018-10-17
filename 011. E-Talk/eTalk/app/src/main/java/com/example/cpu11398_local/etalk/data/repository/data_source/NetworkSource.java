@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.model.User;
+import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.Optional;
 
 import java.io.File;
@@ -124,4 +125,11 @@ public interface NetworkSource {
      * @return an observable contain link of file.
      */
     Single<String> uploadFile(String conversationKey, File file, long code);
+
+    /**
+     * Download file from network and save to external storage.
+     * @param url contain link and filename.
+     * @return an observable contain event during download.
+     */
+    Observable<Event> downloadFile(String url);
 }

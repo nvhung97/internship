@@ -1,15 +1,21 @@
 package com.example.cpu11398_local.etalk.presentation.view_model.chat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 import com.example.cpu11398_local.etalk.BR;
+import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.domain.interactor.Usecase;
 import com.example.cpu11398_local.etalk.presentation.view.chat.group.MessageGroupAdapter;
 import com.example.cpu11398_local.etalk.presentation.view.chat.group.MessageGroupItem;
@@ -24,7 +30,10 @@ import io.reactivex.Observer;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.subjects.PublishSubject;
 
-public class ChatGroupViewModel  extends BaseObservable implements ViewModel, ViewModelCallback {
+public class ChatGroupViewModel extends     BaseObservable
+                                implements  ViewModel,
+                                            ViewModelCallback,
+                                            PopupMenu.OnMenuItemClickListener {
 
     /**
      * Container contain messages.
@@ -34,7 +43,7 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
     /**
      * Binding {@code adapter} and {@code RecyclerView} for contacts on view.
      */
-    private MessageGroupAdapter adapter = new MessageGroupAdapter(messages);
+    private MessageGroupAdapter adapter = new MessageGroupAdapter(messages, this);
 
     @Bindable
     public MessageGroupAdapter getAdapter(){
@@ -75,9 +84,7 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
      * create new {@code ChatGroupViewModel} with a context.
      */
     @Inject
-    public ChatGroupViewModel(Context context,
-                              @Named("ChatGroupUsecase") Usecase chatGroupUsecase) {
-        this.context            = context;
+    public ChatGroupViewModel(@Named("ChatGroupUsecase") Usecase chatGroupUsecase) {
         this.chatGroupUsecase   = chatGroupUsecase;
     }
 
@@ -120,7 +127,12 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
      * @param view
      */
     public void onMoreClick(View view) {
-        Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+        publisher.onNext(
+                Event.create(
+                        Event.CHAT_ACTIVITY_SHOW_POPUP_MENU,
+                        view, this
+                )
+        );
     }
 
     /**
@@ -193,6 +205,7 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
             case Event.CHAT_ACTIVITY_VALUE:
                 username = (String)data[0];
                 conversationKey = (String)data[1];
+                context = (Context)data[2];
                 executeFirstLoad();
                 break;
             case Event.CHAT_ACTIVITY_SEND_IMAGE_URI:
@@ -200,6 +213,26 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
                 break;
             case Event.CHAT_ACTIVITY_SEND_FILE:
                 executeSendFile((Uri)data[0]);
+                break;
+            case Event.CHAT_ACTIVITY_DOWNLOAD:
+                executeDownload((int)data[0]);
+                break;
+            case Event.CHAT_ACTIVITY_CANCEL:
+                executeCancel();
+                break;
+            case Event.CHAT_ACTIVITY_DOWNLOAD_OK:
+                Toast.makeText(
+                        context,
+                        context.getString(R.string.chat_activity_download_ok) + data[0],
+                        Toast.LENGTH_SHORT
+                ).show();
+                break;
+            case Event.CHAT_ACTIVITY_DOWNLOAD_FAILED:
+                Toast.makeText(
+                        context,
+                        context.getString(R.string.chat_activity_download_failed),
+                        Toast.LENGTH_SHORT
+                ).show();
                 break;
         }
     }
@@ -228,6 +261,33 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
                 uri,
                 null,
                 "send_file"
+        );
+    }
+
+    private void executeDownload(int index) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            chatGroupUsecase.execute(
+                    null,
+                    index,
+                    this,
+                    "download"
+            );
+        }
+        else {
+            ActivityCompat.requestPermissions(
+                    (Activity)context,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    0
+            );
+        }
+    }
+
+    private void executeCancel() {
+        chatGroupUsecase.execute(
+                null,
+                null,
+                null,
+                "cancel"
         );
     }
 
@@ -263,5 +323,23 @@ public class ChatGroupViewModel  extends BaseObservable implements ViewModel, Vi
         public void onComplete() {
 
         }
+    }
+
+    /**
+     * Catch event and do action corresponding to item clicked.
+     * @param item item clicked.
+     * @return {@code true} mean the listener handler this click event.
+     */
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.chat_activity_menu_send_location:
+                publisher.onNext(Event.create(Event.CHAT_ACTIVITY_SHOW_MAP));
+                break;
+            case R.id.chat_activity_menu_send_contact:
+                Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return true;
     }
 }

@@ -7,6 +7,7 @@ import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesPersonHolder;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
+import com.example.cpu11398_local.etalk.utils.Event;
 
 import java.io.File;
 import java.util.List;
@@ -78,6 +79,13 @@ public interface ConversationRepository {
      * @return an observable contain link of file.
      */
     Single<String> uploadNetworkFile(String conversationKey, File file, long code);
+
+    /**
+     * Download file from network and save to external storage.
+     * @param url contain link and filename.
+     * @return an observable contain event during download.
+     */
+    Observable<Event> downloadNetworkFile(String url);
 
     /**
      * Load container that contain messages of conversation given by {@code conversationKey}.

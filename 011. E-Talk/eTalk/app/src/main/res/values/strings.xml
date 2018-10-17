@@ -79,6 +79,10 @@
     <string name="chat_activity_media_record">Record</string>
     <string name="chat_activity_media_choose_photos">Choose existing photos</string>
     <string name="chat_activity_media_choose_video">Choose existing videos</string>
+    <string name="chat_activity_download_ok">File saved in\ </string>
+    <string name="chat_activity_download_failed">Download failed</string>
+    <string name="chat_activity_menu_send_location">Share location</string>
+    <string name="chat_activity_menu_send_contact">Send contact</string>
 
     <!--Profile activity-->
     <string name="profile_activity_txt_title">Edit profile</string>

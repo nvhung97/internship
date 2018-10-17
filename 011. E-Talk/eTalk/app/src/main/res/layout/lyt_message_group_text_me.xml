@@ -43,7 +43,7 @@
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_marginRight="5dp"
-            android:layout_gravity="right|bottom"/>
+            android:layout_gravity="bottom|right"/>
     </FrameLayout>
     <com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView
         android:id="@+id/lyt_message_group_text_me_seen1"

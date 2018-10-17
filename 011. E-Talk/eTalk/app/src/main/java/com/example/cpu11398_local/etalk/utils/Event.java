@@ -41,6 +41,13 @@ public class Event {
     public static final int CHAT_ACTIVITY_SEND_IMAGE_URI    = CHAT_ACTIVITY_MARK | 7;
     public static final int CHAT_ACTIVITY_ATTACH            = CHAT_ACTIVITY_MARK | 8;
     public static final int CHAT_ACTIVITY_SEND_FILE         = CHAT_ACTIVITY_MARK | 9;
+    public static final int CHAT_ACTIVITY_DOWNLOAD          = CHAT_ACTIVITY_MARK | 10;
+    public static final int CHAT_ACTIVITY_CANCEL            = CHAT_ACTIVITY_MARK | 11;
+    public static final int CHAT_ACTIVITY_DOWNLOAD_PROGRESS = CHAT_ACTIVITY_MARK | 12;
+    public static final int CHAT_ACTIVITY_DOWNLOAD_OK       = CHAT_ACTIVITY_MARK | 13;
+    public static final int CHAT_ACTIVITY_DOWNLOAD_FAILED   = CHAT_ACTIVITY_MARK | 14;
+    public static final int CHAT_ACTIVITY_SHOW_POPUP_MENU   = CHAT_ACTIVITY_MARK | 15;
+    public static final int CHAT_ACTIVITY_SHOW_MAP          = CHAT_ACTIVITY_MARK | 16;
 
     /**
      * Bellow commands for {@code LoginActivity}.

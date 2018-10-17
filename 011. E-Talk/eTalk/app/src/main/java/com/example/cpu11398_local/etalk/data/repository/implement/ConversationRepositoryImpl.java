@@ -10,6 +10,7 @@ import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase;
 import com.example.cpu11398_local.etalk.domain.interactor.ChatPersonUsecase.MessagesPersonHolder;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
+import com.example.cpu11398_local.etalk.utils.Event;
 
 import java.io.File;
 import java.util.List;
@@ -68,6 +69,11 @@ public class ConversationRepositoryImpl  implements ConversationRepository{
     @Override
     public Single<String> uploadNetworkFile(String conversationKey, File file, long code) {
         return networkSource.uploadFile(conversationKey, file, code);
+    }
+
+    @Override
+    public Observable<Event> downloadNetworkFile(String url) {
+        return networkSource.downloadFile(url);
     }
 
     @Override

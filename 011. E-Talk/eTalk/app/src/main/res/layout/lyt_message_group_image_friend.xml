@@ -35,7 +35,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/img_logo"
                 android:background="@drawable/message_friend_background"/>
             <TextView
                 android:id="@id/lyt_message_group_image_friend_time"

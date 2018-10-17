@@ -38,7 +38,7 @@ public class ShortMessage extends android.support.v7.widget.AppCompatTextView{
             setText(getContext().getString(R.string.app_video));
         }
         if (type == Message.FILE) {
-            setText(getContext().getString(R.string.app_sound));
+            setText(getContext().getString(R.string.app_file));
         }
     }
 }

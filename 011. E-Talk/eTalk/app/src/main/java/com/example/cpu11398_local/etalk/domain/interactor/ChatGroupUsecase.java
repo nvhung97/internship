@@ -18,6 +18,7 @@ import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.presentation.view.chat.group.MessageGroupItem;
+import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
 import com.example.cpu11398_local.etalk.utils.Event;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,8 +36,10 @@ import java.util.concurrent.Executor;
 import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
+import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -50,6 +53,8 @@ public class ChatGroupUsecase implements Usecase {
     private final String SEND_TEXT          = "send_text";
     private final String SEND_IMAGE_URI     = "send_image_uri";
     private final String SEND_FILE          = "send_file";
+    private final String DOWNLOAD           = "download";
+    private final String CANCEL             = "cancel";
 
     private Context                 context;
     private Executor                executor;
@@ -102,6 +107,12 @@ public class ChatGroupUsecase implements Usecase {
                 executeFirstLoadCase((DisposableObserver<Event>)observer);
                 break;
             case LOAD_MORE:
+                break;
+            case DOWNLOAD:
+                executeDownload((int)params[0], (ViewModelCallback)params[1]);
+                break;
+            case CANCEL:
+                executeCancel();
                 break;
         }
     }
@@ -405,19 +416,18 @@ public class ChatGroupUsecase implements Usecase {
                 fileNamePart[0] + "_" + message.getKey() + "." + fileNamePart[1],
                 Message.FILE
         );
-        message.setData(file.getAbsolutePath()+"eTaLkFiLe"+fileName);
-        /*holder.sendNewMessage(message);
-        needUpdateMessage = true;*/
+        message.setData(file.getAbsolutePath() + "eTaLkFiLe" + fileName);
+        holder.sendNewMessage(message);
+        needUpdateMessage = true;
         disposable.add(
                 conversationRepository
                         .uploadNetworkFile(conversationKey, file, Message.FILE)
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
                         .subscribe(url -> {
-                            Log.e("Test", url);
                             file.delete();
-                            message.setData(url);
-                            /*disposable.add(
+                            message.setData(url + "eTaLkFiLe" + fileName);
+                            disposable.add(
                                     conversationRepository
                                             .pushNetworkMessage(conversationKey, message)
                                             .subscribeOn(Schedulers.from(executor))
@@ -428,7 +438,7 @@ public class ChatGroupUsecase implements Usecase {
                                                     needUpdateMessage = true;
                                                 }
                                             })
-                            );*/
+                            );
                         })
         );
     }
@@ -485,6 +495,72 @@ public class ChatGroupUsecase implements Usecase {
             }
         }
         return result;
+    }
+
+    private Disposable downloadDisposable = null;
+    private int downloadingIndex = -1;
+
+    @SuppressLint("CheckResult")
+    private void executeDownload(int index, ViewModelCallback callback) {
+        if (downloadingIndex == -1) {
+            downloadingIndex = index;
+            String url = holder.startDownloadAt(index);
+            if (url != null) {
+                needUpdateMessage = true;
+                conversationRepository
+                        .downloadNetworkFile(url)
+                        .subscribeOn(Schedulers.from(executor))
+                        .observeOn(scheduler)
+                        .subscribeWith(new Observer<Event>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+                                downloadDisposable = d;
+                            }
+
+                            @Override
+                            public void onNext(Event event) {
+                                switch (event.getType()) {
+                                    case Event.CHAT_ACTIVITY_DOWNLOAD_OK:
+                                        holder.stopDownloadAt(index);
+                                        needUpdateMessage = true;
+                                        callback.onHelp(Event.create(
+                                                Event.CHAT_ACTIVITY_DOWNLOAD_OK,
+                                                "\\download\\eTalk\\" + url.split("eTaLkFiLe")[1]
+                                        ));
+                                        downloadingIndex = -1;
+                                        break;
+                                    case Event.CHAT_ACTIVITY_DOWNLOAD_FAILED:
+                                        holder.stopDownloadAt(index);
+                                        needUpdateMessage = true;
+                                        callback.onHelp(Event.create(Event.CHAT_ACTIVITY_DOWNLOAD_FAILED));
+                                        downloadingIndex = -1;
+                                        break;
+                                    case Event.CHAT_ACTIVITY_DOWNLOAD_PROGRESS:
+                                        holder.changeProgressStateAt(index, ((Long) event.getData()[0]).intValue());
+                                        needUpdateMessage = true;
+                                        break;
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
+            }
+        }
+    }
+
+    private void executeCancel() {
+        holder.stopDownloadAt(downloadingIndex);
+        downloadingIndex = -1;
+        downloadDisposable.dispose();
+        needUpdateMessage = true;
     }
 
     @Override
@@ -723,6 +799,40 @@ public class ChatGroupUsecase implements Usecase {
             }
         }
 
+        public String startDownloadAt(int index) {
+            if (sendingMessage.containsKey(messages.get(index).getMessage().getKey())) {
+                return null;
+            } else {
+                messages.set(
+                        index,
+                        messages.get(index)
+                                .newDownloadVisible(View.GONE)
+                                .newCancelVisible(View.VISIBLE)
+                                .newProgressVisible(View.VISIBLE)
+                                .newProgressPercent(0)
+                );
+                return messages.get(index).getMessage().getData();
+            }
+        }
+
+        public void changeProgressStateAt(int index, int percent) {
+            messages.set(
+                    index,
+                    messages.get(index)
+                            .newProgressPercent(percent)
+            );
+        }
+
+        public void stopDownloadAt(int index) {
+            messages.set(
+                    index,
+                    messages.get(index)
+                            .newDownloadVisible(View.VISIBLE)
+                            .newCancelVisible(View.GONE)
+                            .newProgressVisible(View.GONE)
+            );
+        }
+
         public Map<String, Message> getRawMessages() {
             return rawMessages;
         }
@@ -752,6 +862,9 @@ public class ChatGroupUsecase implements Usecase {
                 return data;
             }
             if (type == Message.IMAGE) {
+                return data;
+            }
+            if (type == Message.FILE) {
                 return data;
             }
             return null;

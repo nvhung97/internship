@@ -3,6 +3,7 @@ package com.example.cpu11398_local.etalk.data.network;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import com.example.cpu11398_local.etalk.data.repository.data_source.NetworkSourc
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.model.User;
+import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.FirebaseTree;
 import com.example.cpu11398_local.etalk.utils.Optional;
 import com.example.cpu11398_local.etalk.utils.Tool;
@@ -436,5 +438,44 @@ public class FirebaseDB implements NetworkSource{
             });
         }
         return null;
+    }
+
+    @Override
+    public Observable<Event> downloadFile(String url) {
+        return Observable.create(emitter -> {
+            String[] urlPart = url.split("eTaLkFiLe");
+            StorageReference storageReference  = FirebaseStorage
+                    .getInstance(FirebaseTree.Storage.NODE_NAME)
+                    .getReferenceFromUrl(urlPart[0]);
+            File dir = new File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                    "eTalk"
+            );
+            if (!dir.exists() && !dir.mkdirs()) {
+                emitter.onNext(Event.create(
+                        Event.CHAT_ACTIVITY_DOWNLOAD_FAILED
+                ));
+            } else {
+                File file = new File(dir, urlPart[1]);
+                storageReference
+                        .getFile(file)
+                        .addOnProgressListener(taskSnapshot ->
+                                emitter.onNext(Event.create(
+                                        Event.CHAT_ACTIVITY_DOWNLOAD_PROGRESS,
+                                        100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount()
+                                ))
+                        )
+                        .addOnSuccessListener(taskSnapshot ->
+                                emitter.onNext(Event.create(
+                                        Event.CHAT_ACTIVITY_DOWNLOAD_OK
+                                ))
+                        )
+                        .addOnFailureListener(e ->
+                                emitter.onNext(Event.create(
+                                        Event.CHAT_ACTIVITY_DOWNLOAD_FAILED
+                                ))
+                        );
+            }
+        });
     }
 }

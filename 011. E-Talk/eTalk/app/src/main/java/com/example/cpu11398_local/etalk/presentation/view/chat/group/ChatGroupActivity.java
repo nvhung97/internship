@@ -1,15 +1,21 @@
 package com.example.cpu11398_local.etalk.presentation.view.chat.group;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.PopupMenu;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
+import com.example.cpu11398_local.etalk.presentation.view.chat.media.MapActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
@@ -115,6 +121,14 @@ public class ChatGroupActivity extends BaseActivity {
         viewModel.endTask();
     }
 
+    public void onShowPopupMenu(View view, PopupMenu.OnMenuItemClickListener listener) {
+        PopupMenu popupMenu = new PopupMenu(this, view, Gravity.RIGHT);
+        popupMenu.inflate(R.menu.menu_chat_more);
+        popupMenu.setOnMenuItemClickListener(listener);
+        Tool.forcePopupMenuShowIcon(popupMenu);
+        popupMenu.show();
+    }
+
     private class ChatObserver implements Observer<Event> {
         @Override
         public void onSubscribe(Disposable d) {
@@ -134,7 +148,8 @@ public class ChatGroupActivity extends BaseActivity {
                         helper.onHelp(Event.create(
                                 Event.CHAT_ACTIVITY_VALUE,
                                 getIntent().getExtras().getString("user"),
-                                getIntent().getExtras().getString("key")
+                                getIntent().getExtras().getString("key"),
+                                ChatGroupActivity.this
                         ));
                     }
                     break;
@@ -160,6 +175,28 @@ public class ChatGroupActivity extends BaseActivity {
                             Intent.createChooser(intent, "Select File"),
                             REQUEST_CHOOSE_FILE
                     );
+                    break;
+                case Event.CHAT_ACTIVITY_SHOW_POPUP_MENU:
+                    onShowPopupMenu(
+                            (View)data[0],
+                            (PopupMenu.OnMenuItemClickListener)data[1]
+                    );
+                    break;
+                case Event.CHAT_ACTIVITY_SHOW_MAP:
+                    if (ActivityCompat.checkSelfPermission(ChatGroupActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(ChatGroupActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(
+                                ChatGroupActivity.this,
+                                new String[]{
+                                        Manifest.permission.ACCESS_FINE_LOCATION,
+                                        Manifest.permission.ACCESS_COARSE_LOCATION
+                                },
+                                0
+                        );
+                        return;
+                    } else {
+                        startActivityForResult(new Intent(ChatGroupActivity.this, MapActivity.class), 0);
+                    }
                     break;
             }
         }
