@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="50dp"
+    android:height="50dp"
+    android:viewportWidth="128"
+    android:viewportHeight="128">
+
+    <path
+        android:pathData="M -1 -1 H 129 V 129 H -1 V -1 Z" />
+    <path
+        android:fillColor="#ffffff"
+        android:pathData="M 64 -0.00000200000000206 C 99.3462239892 -0.00000200000000206 128 28.6537740108 128 63.999998 C 128 99.3462219892 99.3462239892 127.999998 64 127.999998 C 28.6537760108 127.999998 0 99.3462219892 0 63.999998 C 0 28.6537740108 28.6537760108 -0.00000200000000206 64 -0.00000200000000206 Z" />
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="4"
+        android:pathData="M 64 43.999999 C 75.0456949966 43.999999 84 52.9543040034 84 63.999999 C 84 75.0456939966 75.0456949966 83.999999 64 83.999999 C 52.9543050034 83.999999 44 75.0456939966 44 63.999999 C 44 52.9543040034 52.9543050034 43.999999 64 43.999999 Z" />
+    <path
+        android:fillColor="#000000"
+        android:strokeColor="#000000"
+        android:strokeWidth="3"
+        android:pathData="M 64.000001 54.000001 C 69.5228484983 54.000001 74.000001 58.4771535017 74.000001 64.000001 C 74.000001 69.5228484983 69.5228484983 74.000001 64.000001 74.000001 C 58.4771535017 74.000001 54.000001 69.5228484983 54.000001 64.000001 C 54.000001 58.4771535017 58.4771535017 54.000001 64.000001 54.000001 Z" />
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="4"
+        android:pathData="M 64 37 L 64 44" />
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="4"
+        android:pathData="M 64 84 L 64 91" />
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="4"
+        android:pathData="M 84 64 L 91 64" />
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="4"
+        android:pathData="M 37 64 L 44 64" />
+    <path
+        android:strokeColor="#777777"
+        android:strokeWidth="1"
+        android:pathData="M 63.999998 0.499999 C 99.0700796143 0.499999 127.499998 28.9299173857 127.499998 63.999999 C 127.499998 99.0700806143 99.0700796143 127.499999 63.999998 127.499999 C 28.9299163857 127.499999 0.499998 99.0700806143 0.499998 63.999999 C 0.499998 28.9299173857 28.9299163857 0.499999 63.999998 0.499999 Z" />
+</vector>

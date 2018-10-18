@@ -11,6 +11,7 @@ public class Message {
     public static final long SOUND = 2;
     public static final long VIDEO = 3;
     public static final long FILE  = 4;
+    public static final long MAP   = 5;
 
     private String key;
     private String sender;

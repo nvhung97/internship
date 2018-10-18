@@ -234,6 +234,9 @@ public class ChatGroupViewModel extends     BaseObservable
                         Toast.LENGTH_SHORT
                 ).show();
                 break;
+            case Event.CHAT_ACTIVITY_SEND_LOCATION:
+                executeSendLocation((double)data[0], (double)data[1]);
+                break;
         }
     }
 
@@ -288,6 +291,15 @@ public class ChatGroupViewModel extends     BaseObservable
                 null,
                 null,
                 "cancel"
+        );
+    }
+
+    private void executeSendLocation(double lat, double lng) {
+        chatGroupUsecase.execute(
+                null,
+                lat,
+                lng,
+                "send_location"
         );
     }
 

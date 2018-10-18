@@ -53,6 +53,7 @@ public class ChatGroupUsecase implements Usecase {
     private final String SEND_TEXT          = "send_text";
     private final String SEND_IMAGE_URI     = "send_image_uri";
     private final String SEND_FILE          = "send_file";
+    private final String SEND_LOCATION      = "send_location";
     private final String DOWNLOAD           = "download";
     private final String CANCEL             = "cancel";
 
@@ -114,6 +115,8 @@ public class ChatGroupUsecase implements Usecase {
             case CANCEL:
                 executeCancel();
                 break;
+            case SEND_LOCATION:
+                executeSendLocation((double)params[0], (double)params[1]);
         }
     }
 
@@ -557,15 +560,40 @@ public class ChatGroupUsecase implements Usecase {
     }
 
     private void executeCancel() {
-        holder.stopDownloadAt(downloadingIndex);
-        downloadingIndex = -1;
-        downloadDisposable.dispose();
+        if (downloadingIndex != -1) {
+            holder.stopDownloadAt(downloadingIndex);
+            downloadingIndex = -1;
+            downloadDisposable.dispose();
+            needUpdateMessage = true;
+        }
+    }
+
+    private void executeSendLocation(double lat, double lng) {
+        Message message = new Message(
+                username,
+                lat + ", " + lng,
+                Message.MAP
+        );
+        holder.sendNewMessage(message);
         needUpdateMessage = true;
+        disposable.add(
+                conversationRepository
+                        .pushNetworkMessage(conversationKey, message)
+                        .subscribeOn(Schedulers.from(executor))
+                        .observeOn(scheduler)
+                        .subscribe(result -> {
+                            if (result == true) {
+                                holder.sendSuccessMessage(message);
+                                needUpdateMessage = true;
+                            }
+                        })
+        );
     }
 
     @Override
     public void endTask() {
         messageHandler.removeCallbacksAndMessages(null);
+        executeCancel();
         conversationRepository.putLocalMessagesGroupHolder(
                 conversationKey,
                 holder
@@ -865,6 +893,9 @@ public class ChatGroupUsecase implements Usecase {
                 return data;
             }
             if (type == Message.FILE) {
+                return data;
+            }
+            if (type == Message.MAP) {
                 return data;
             }
             return null;

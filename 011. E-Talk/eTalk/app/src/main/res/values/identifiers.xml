@@ -266,6 +266,44 @@
     <item name="lyt_message_group_file_friend_seen8" type="id"/>
     <item name="lyt_message_group_file_friend_seen9" type="id"/>
     <item name="lyt_message_group_file_friend_more" type="id"/>
+    <item name="lyt_message_group_map_me_row" type="id"/>
+    <item name="lyt_message_group_map_me_bound_content" type="id"/>
+    <item name="lyt_message_group_map_me_content" type="id"/>
+    <item name="lyt_message_group_map_me_data" type="id"/>
+    <item name="lyt_message_group_map_me_mask" type="id"/>
+    <item name="lyt_message_group_map_me_time" type="id"/>
+    <item name="lyt_message_group_map_me_status" type="id"/>
+    <item name="lyt_message_group_map_me_seen1" type="id"/>
+    <item name="lyt_message_group_map_me_seen2" type="id"/>
+    <item name="lyt_message_group_map_me_seen3" type="id"/>
+    <item name="lyt_message_group_map_me_seen4" type="id"/>
+    <item name="lyt_message_group_map_me_seen5" type="id"/>
+    <item name="lyt_message_group_map_me_seen6" type="id"/>
+    <item name="lyt_message_group_map_me_seen7" type="id"/>
+    <item name="lyt_message_group_map_me_seen8" type="id"/>
+    <item name="lyt_message_group_map_me_seen9" type="id"/>
+    <item name="lyt_message_group_map_me_more" type="id"/>
+    <item name="lyt_message_group_map_friend_row" type="id"/>
+    <item name="lyt_message_group_map_friend_bound_content" type="id"/>
+    <item name="lyt_message_group_map_friend_avatar" type="id"/>
+    <item name="lyt_message_group_map_friend_name" type="id"/>
+    <item name="lyt_message_group_map_friend_content" type="id"/>
+    <item name="lyt_message_group_map_friend_data" type="id"/>
+    <item name="lyt_message_group_map_friend_mask" type="id"/>
+    <item name="lyt_message_group_map_friend_marker" type="id"/>
+    <item name="lyt_message_group_map_friend_marker_avatar" type="id"/>
+    <item name="lyt_message_group_map_friend_time" type="id"/>
+    <item name="lyt_message_group_map_friend_status" type="id"/>
+    <item name="lyt_message_group_map_friend_seen1" type="id"/>
+    <item name="lyt_message_group_map_friend_seen2" type="id"/>
+    <item name="lyt_message_group_map_friend_seen3" type="id"/>
+    <item name="lyt_message_group_map_friend_seen4" type="id"/>
+    <item name="lyt_message_group_map_friend_seen5" type="id"/>
+    <item name="lyt_message_group_map_friend_seen6" type="id"/>
+    <item name="lyt_message_group_map_friend_seen7" type="id"/>
+    <item name="lyt_message_group_map_friend_seen8" type="id"/>
+    <item name="lyt_message_group_map_friend_seen9" type="id"/>
+    <item name="lyt_message_group_map_friend_more" type="id"/>
 
     <!--Media photo activity-->
     <item name="media_photo_activity_content" type="id"/>

@@ -6,4 +6,6 @@
     <dimen name="divider_chat_space_same">3dp</dimen>
     <dimen name="divider_chat_space_diff">15dp</dimen>
     <dimen name="status_view_stroke_width">3dp</dimen>
+    <dimen name="map_activity_button_size">50dp</dimen>
+    <dimen name="map_view_corner">10dp</dimen>
 </resources>

@@ -382,6 +382,11 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ http://ramsandroid4all.blogspot.com/2016/01/google-maps-android-example-in-android.html
 		+ http://www.zoftino.com/android-google-maps-tutorial
 		+ http://www.zoftino.com/android-mapview-tutorial
+2:00 PM 10/18/2018
+	- Thay đổi vị trí MyLocationButton
+		+ https://stackoverflow.com/a/44674481
+	- Lấy LatLog center map
+		+ https://stackoverflow.com/a/13932053
 
 
 
@@ -405,3 +410,5 @@ Tháng Tư Là Lời Nói Dối Của Em
 https://www.youtube.com/watch?v=55F8bT91KG4&index=27&list=RDEV-91JV4Fws
 http://www.phunutoday.vn/news/152750.amp
 https://www.youtube.com/watch?v=0sYrlalfbWw
+
+https://www.youtube.com/watch?v=wsCmB0KQxbM

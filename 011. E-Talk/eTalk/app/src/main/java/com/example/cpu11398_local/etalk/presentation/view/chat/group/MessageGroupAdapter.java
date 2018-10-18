@@ -21,11 +21,19 @@ import android.widget.TextView;
 import com.bumptech.glide.request.target.Target;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView;
+import com.example.cpu11398_local.etalk.presentation.custom.RoundedMapView;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
+import com.example.cpu11398_local.etalk.presentation.view.chat.media.MapActivity;
 import com.example.cpu11398_local.etalk.presentation.view.chat.media.MediaPhotoActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.GlideApp;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -38,9 +46,11 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
     private final int ME_TEXT       = 0;
     private final int ME_IMAGE      = 1;
     private final int ME_FILE       = 4;
+    private final int ME_MAP        = 5;
     private final int FRIEND_TEXT   = 7;
     private final int FRIEND_IMAGE  = 8;
     private final int FRIEND_FILE   = 11;
+    private final int FRIEND_MAP    = 12;
 
     private List<MessageGroupItem>  messages;
     private ViewModelCallback       callback;
@@ -246,6 +256,85 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                             Event.CHAT_ACTIVITY_CANCEL
                     ))
             );
+        }
+    }
+
+    public class MessageMapMeViewHolder extends MessageGroupViewHolder implements OnMapReadyCallback {
+        private Context              context;
+        public ConstraintLayout      content;
+        public RoundedMapView        data;
+        public View                  mask;
+        public TextView              time;
+        public AvatarImageView       avatar;
+        public List<AvatarImageView> seens = new ArrayList<>();
+        public TextView              more;
+        public GoogleMap             googleMap;
+        public LatLng                latLng;
+        public MessageMapMeViewHolder(View view) {
+            super(view);
+            context = view.getContext();
+            content = view.findViewById(R.id.lyt_message_group_map_me_content);
+            data    = view.findViewById(R.id.lyt_message_group_map_me_data);
+            mask    = view.findViewById(R.id.lyt_message_group_map_me_mask);
+            time    = view.findViewById(R.id.lyt_message_group_map_me_time);
+            avatar  = view.findViewById(R.id.lyt_message_group_map_me_status);
+            more    = view.findViewById(R.id.lyt_message_group_map_me_more);
+            seens.add(view.findViewById(R.id.lyt_message_group_map_me_seen1));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_me_seen2));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_me_seen3));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_me_seen4));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_me_seen5));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_me_seen6));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_me_seen7));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_me_seen8));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_me_seen9));
+            data.onCreate(null);
+            data.getMapAsync(this);
+            data.onResume();
+            data.onStart();
+            mask.setOnClickListener(v -> {
+                Intent intent = new Intent(context, MapActivity.class);
+                intent.putExtra("lat", latLng.latitude);
+                intent.putExtra("lng", latLng.longitude);
+                context.startActivity(intent);
+            });
+        }
+        @Override
+        public void bindView(MessageGroupItem item) {
+            String[] location = item.getTextData().split(",");
+            latLng = new LatLng(Double.parseDouble(location[0]), Double.parseDouble(location[1]));
+            time.setText(item.getTime());
+            time.setVisibility(item.getTimeVisible());
+            avatar.setImageFromObject(item.getAvatar());
+            avatar.setVisibility(item.getAvatarVisible());
+            List<String> seenAvatars = new ArrayList<>(item.getSeen().values());
+            for (int i = 0; i < 9; ++i) {
+                if (i < seenAvatars.size()) {
+                    seens.get(i).setImageFromObject(seenAvatars.get(i));
+                    seens.get(i).setVisibility(View.VISIBLE);
+                } else {
+                    seens.get(i).setVisibility(View.GONE);
+                }
+            }
+            if (seenAvatars.size() > 9) {
+                more.setText("+" + (seenAvatars.size() - 9));
+                more.setVisibility(View.VISIBLE);
+            } else {
+                more.setVisibility(View.GONE);
+            }
+            if (googleMap != null) {
+                updateMap();
+            }
+        }
+
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            this.googleMap = googleMap;
+            updateMap();
+        }
+
+        private void updateMap() {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
         }
     }
 
@@ -477,6 +566,9 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             if (message.getType() == Message.FILE) {
                 return ME_FILE;
             }
+            if (message.getType() == Message.MAP) {
+                return ME_MAP;
+            }
         } else {
             if (message.getType() == Message.TEXT) {
                 return FRIEND_TEXT;
@@ -512,6 +604,12 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                         LayoutInflater
                                 .from(parent.getContext())
                                 .inflate(R.layout.lyt_message_group_file_me, parent, false)
+                );
+            case ME_MAP:
+                return new MessageMapMeViewHolder(
+                        LayoutInflater
+                                .from(parent.getContext())
+                                .inflate(R.layout.lyt_message_group_map_me, parent, false)
                 );
             case FRIEND_TEXT:
                 return new MessageTextFriendViewHolder(

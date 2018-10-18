@@ -48,6 +48,7 @@ public class Event {
     public static final int CHAT_ACTIVITY_DOWNLOAD_FAILED   = CHAT_ACTIVITY_MARK | 14;
     public static final int CHAT_ACTIVITY_SHOW_POPUP_MENU   = CHAT_ACTIVITY_MARK | 15;
     public static final int CHAT_ACTIVITY_SHOW_MAP          = CHAT_ACTIVITY_MARK | 16;
+    public static final int CHAT_ACTIVITY_SEND_LOCATION     = CHAT_ACTIVITY_MARK | 17;
 
     /**
      * Bellow commands for {@code LoginActivity}.

@@ -13,6 +13,6 @@
         android:gravity="center"
         android:text="Timeline" />
     <include layout="@layout/lyt_message_person_text_me"/>
-    <include layout="@layout/lyt_message_group_file_me"/>
+    <include layout="@layout/lyt_message_group_map_friend"/>
 
 </FrameLayout>

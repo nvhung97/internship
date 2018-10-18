@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.PopupMenu;
@@ -35,6 +36,7 @@ public class ChatGroupActivity extends BaseActivity {
     private final int REQUEST_CHOOSE_PHOTOS_CODE    = 2;
     private final int REQUEST_CHOOSE_VIDEOS_CODE    = 3;
     private final int REQUEST_CHOOSE_FILE           = 4;
+    private final int REQUEST_MAP                   = 5;
 
     @Inject
     @Named("ChatGroupViewModel")
@@ -193,9 +195,8 @@ public class ChatGroupActivity extends BaseActivity {
                                 },
                                 0
                         );
-                        return;
                     } else {
-                        startActivityForResult(new Intent(ChatGroupActivity.this, MapActivity.class), 0);
+                        startActivityForResult(new Intent(ChatGroupActivity.this, MapActivity.class), REQUEST_MAP);
                     }
                     break;
             }
@@ -238,6 +239,13 @@ public class ChatGroupActivity extends BaseActivity {
                     helper.onHelp(Event.create(
                             Event.CHAT_ACTIVITY_SEND_FILE,
                             data.getData()
+                    ));
+                    break;
+                case REQUEST_MAP:
+                    helper.onHelp(Event.create(
+                            Event.CHAT_ACTIVITY_SEND_LOCATION,
+                            data.getExtras().getDouble("lat"),
+                            data.getExtras().getDouble("lng")
                     ));
                     break;
             }
