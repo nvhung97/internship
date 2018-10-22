@@ -9,6 +9,7 @@
     <string name="app_sound">[Record]</string>
     <string name="app_video">[Video]</string>
     <string name="app_file">[File]</string>
+    <string name="app_map">[Location]</string>
     <string name="app_time_day">day</string>
     <string name="app_time_days">days</string>
     <string name="app_time_hour">hour</string>

@@ -26,6 +26,7 @@ public class AvatarImageView extends AppCompatImageView {
     }
 
     private void init() {
+        setDrawingCacheEnabled(true);
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
         shape.setCornerRadius(Float.MAX_VALUE);

@@ -547,6 +547,93 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         }
     }
 
+    public class MessageMapFriendViewHolder extends MessageGroupViewHolder  implements OnMapReadyCallback {
+        private Context              context;
+        public TextView              name;
+        public ConstraintLayout      content;
+        public RoundedMapView        data;
+        public AvatarImageView       avatarMarker;
+        public View                  mask;
+        public TextView              time;
+        public AvatarImageView       avatar;
+        public List<AvatarImageView> seens = new ArrayList<>();
+        public TextView              more;
+        public GoogleMap             googleMap;
+        public LatLng                latLng;
+        public MessageMapFriendViewHolder(View view) {
+            super(view);
+            context = view.getContext();
+            name    = view.findViewById(R.id.lyt_message_group_map_friend_name);
+            content = view.findViewById(R.id.lyt_message_group_map_friend_content);
+            data    = view.findViewById(R.id.lyt_message_group_map_friend_data);
+            mask    = view.findViewById(R.id.lyt_message_group_map_friend_mask);
+            time    = view.findViewById(R.id.lyt_message_group_map_friend_time);
+            avatar  = view.findViewById(R.id.lyt_message_group_map_friend_avatar);
+            more    = view.findViewById(R.id.lyt_message_group_map_friend_more);
+            avatarMarker = view.findViewById(R.id.lyt_message_group_map_friend_marker_avatar);
+            seens.add(view.findViewById(R.id.lyt_message_group_map_friend_seen1));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_friend_seen2));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_friend_seen3));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_friend_seen4));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_friend_seen5));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_friend_seen6));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_friend_seen7));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_friend_seen8));
+            seens.add(view.findViewById(R.id.lyt_message_group_map_friend_seen9));
+            data.onCreate(null);
+            data.getMapAsync(this);
+            data.onResume();
+            data.onStart();
+            mask.setOnClickListener(v -> {
+                Intent intent = new Intent(context, MapActivity.class);
+                intent.putExtra("lat", latLng.latitude);
+                intent.putExtra("lng", latLng.longitude);
+                intent.putExtra("avatar", avatarMarker.getDrawingCache());
+                context.startActivity(intent);
+            });
+        }
+        @Override
+        public void bindView(MessageGroupItem item) {
+            String[] location = item.getTextData().split(",");
+            latLng = new LatLng(Double.parseDouble(location[0]), Double.parseDouble(location[1]));
+            name.setText(item.getName());
+            name.setVisibility(item.getNameVisible());
+            time.setText(item.getTime());
+            time.setVisibility(item.getTimeVisible());
+            avatar.setImageFromObject(item.getAvatar());
+            avatar.setVisibility(item.getAvatarVisible());
+            avatarMarker.setImageFromObject(item.getAvatar());
+            List<String> seenAvatars = new ArrayList<>(item.getSeen().values());
+            for (int i = 0; i < 9; ++i) {
+                if (i < seenAvatars.size()) {
+                    seens.get(i).setImageFromObject(seenAvatars.get(i));
+                    seens.get(i).setVisibility(View.VISIBLE);
+                } else {
+                    seens.get(i).setVisibility(View.GONE);
+                }
+            }
+            if (seenAvatars.size() > 9) {
+                more.setText("+" + (seenAvatars.size() - 9));
+                more.setVisibility(View.VISIBLE);
+            } else {
+                more.setVisibility(View.GONE);
+            }
+            if (googleMap != null) {
+                updateMap();
+            }
+        }
+
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            this.googleMap = googleMap;
+            updateMap();
+        }
+
+        private void updateMap() {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
+        }
+    }
+
     public MessageGroupAdapter(List<MessageGroupItem> messages, ViewModelCallback callback) {
         this.messages = messages;
         this.callback = callback;
@@ -578,6 +665,9 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             }
             if (message.getType() == Message.FILE) {
                 return FRIEND_FILE;
+            }
+            if (message.getType() == Message.MAP) {
+                return FRIEND_MAP;
             }
         }
         return 0;
@@ -629,6 +719,12 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                                 .from(parent.getContext())
                                 .inflate(R.layout.lyt_message_group_file_friend, parent, false)
                 );
+            case FRIEND_MAP:
+                return new MessageMapFriendViewHolder(
+                        LayoutInflater
+                                .from(parent.getContext())
+                                .inflate(R.layout.lyt_message_group_map_friend, parent, false)
+                );
         }
         return null;
     }
@@ -655,9 +751,12 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(diffResult -> {
+                    boolean isMoreItem = this.messages.size() != messages.size();
                     this.messages = messages;
                     diffResult.dispatchUpdatesTo(this);
-                    func.call();
+                    if (isMoreItem) {
+                        func.call();
+                    }
                 });
     }
 }

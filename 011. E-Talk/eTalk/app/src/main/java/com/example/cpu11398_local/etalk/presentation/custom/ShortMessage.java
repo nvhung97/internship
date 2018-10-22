@@ -40,5 +40,8 @@ public class ShortMessage extends android.support.v7.widget.AppCompatTextView{
         if (type == Message.FILE) {
             setText(getContext().getString(R.string.app_file));
         }
+        if (type == Message.MAP) {
+            setText(getContext().getString(R.string.app_map));
+        }
     }
 }

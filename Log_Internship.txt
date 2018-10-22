@@ -387,6 +387,18 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://stackoverflow.com/a/44674481
 	- Lấy LatLog center map
 		+ https://stackoverflow.com/a/13932053
+1:47 PM 10/19/2018
+	- Tạo bitmap từ file layout
+		+ https://stackoverflow.com/a/45438905
+	- Truyền bitmap giữa các activity qua intent
+		+ https://stackoverflow.com/a/2459624
+	- Crop bitmap to circle
+		+ https://stackoverflow.com/a/15489830
+	- Hiển thị emoji từ mã unicode
+		+ https://stackoverflow.com/a/26894146
+	- Web lấy mã Unicode của emoji
+		+ https://unicode.org/emoji/charts/full-emoji-list.html
+9:03 AM 10/22/2018
 
 
 

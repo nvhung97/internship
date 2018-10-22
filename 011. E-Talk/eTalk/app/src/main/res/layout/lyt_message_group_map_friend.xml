@@ -35,27 +35,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"/>
             <View
-                android:id="@id/lyt_message_group_map_friend_mask"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                app:layout_constraintRight_toRightOf="parent"/>
-            <ImageView
-                android:id="@id/lyt_message_group_map_friend_marker"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:src="@drawable/ic_avatar_marker"
+                android:id="@+id/align"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
                 app:layout_constraintTop_toTopOf="@id/lyt_message_group_map_friend_data"
                 app:layout_constraintLeft_toLeftOf="@id/lyt_message_group_map_friend_data"
                 app:layout_constraintRight_toRightOf="@id/lyt_message_group_map_friend_data"
                 app:layout_constraintBottom_toBottomOf="@id/lyt_message_group_map_friend_data"/>
+            <ImageView
+                android:id="@id/lyt_message_group_map_friend_marker"
+                android:layout_width="33dp"
+                android:layout_height="40.5dp"
+                android:src="@drawable/ic_avatar_marker"
+                app:layout_constraintLeft_toLeftOf="@id/lyt_message_group_map_friend_data"
+                app:layout_constraintRight_toRightOf="@id/lyt_message_group_map_friend_data"
+                app:layout_constraintBottom_toBottomOf="@id/align"/>
             <com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView
                 android:id="@id/lyt_message_group_map_friend_marker_avatar"
-                android:layout_width="27dp"
-                android:layout_height="27dp"
+                android:layout_width="31dp"
+                android:layout_height="31dp"
                 android:layout_marginTop="1dp"
                 app:layout_constraintTop_toTopOf="@id/lyt_message_group_map_friend_marker"
                 app:layout_constraintLeft_toLeftOf="@id/lyt_message_group_map_friend_marker"
                 app:layout_constraintRight_toRightOf="@id/lyt_message_group_map_friend_marker"/>
+            <View
+                android:id="@id/lyt_message_group_map_friend_mask"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@drawable/message_friend_map_mask"
+                app:layout_constraintRight_toRightOf="parent"/>
             <TextView
                 android:id="@id/lyt_message_group_map_friend_time"
                 android:layout_width="wrap_content"

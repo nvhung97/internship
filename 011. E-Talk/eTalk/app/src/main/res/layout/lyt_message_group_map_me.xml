@@ -21,12 +21,6 @@
                 android:layout_height="200dp"
                 android:layout_marginRight="25dp"
                 app:layout_constraintRight_toRightOf="parent"/>
-            <View
-                android:id="@id/lyt_message_group_map_me_mask"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginRight="25dp"
-                app:layout_constraintRight_toRightOf="parent"/>
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -35,6 +29,13 @@
                 app:layout_constraintLeft_toLeftOf="@id/lyt_message_group_map_me_data"
                 app:layout_constraintRight_toRightOf="@id/lyt_message_group_map_me_data"
                 app:layout_constraintBottom_toBottomOf="@id/lyt_message_group_map_me_data"/>
+            <View
+                android:id="@id/lyt_message_group_map_me_mask"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginRight="25dp"
+                android:background="@drawable/message_me_map_mask"
+                app:layout_constraintRight_toRightOf="parent"/>
             <TextView
                 android:id="@id/lyt_message_group_map_me_time"
                 android:layout_width="wrap_content"

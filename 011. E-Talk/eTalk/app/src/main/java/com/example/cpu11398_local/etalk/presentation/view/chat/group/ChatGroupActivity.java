@@ -7,10 +7,12 @@ import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.PopupMenu;
 import com.example.cpu11398_local.etalk.R;
@@ -45,6 +47,7 @@ public class ChatGroupActivity extends BaseActivity {
     private ActivityChatGroupBinding binding;
     private Disposable disposable;
     private ViewModelCallback helper;
+    private int keyboardHeight = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,7 @@ public class ChatGroupActivity extends BaseActivity {
                         ),
                         100
                 );
+                keyboardHeight = oldBottom - bottom;
             }
         });
         binding.chatActivityTxtFriendName.setText(getIntent().getExtras().getString("name"));
@@ -99,6 +103,33 @@ public class ChatGroupActivity extends BaseActivity {
             );
         }
         addControlKeyboardView(binding.chatActivityLytMessage);
+        binding.chatActivityEdtMessage.setOnFocusChangeListener((View.OnFocusChangeListener) (v, hasFocus) -> {
+            if (hasFocus) {
+                if (binding.chatActivityLstEmoticon.getVisibility() == View.VISIBLE) {
+                    binding.chatActivityLstEmoticon.setVisibility(View.GONE);
+                }
+            }
+        });
+        binding.chatActivityEdtMessage.setOnClickListener(v -> {
+            if (binding.chatActivityLstEmoticon.getVisibility() == View.VISIBLE) {
+                binding.chatActivityLstEmoticon.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            int     locationY        = (int)ev.getY();
+            int[]   viewLocation     = new int[2];
+            binding.chatActivityLstMessage.getLocationOnScreen(viewLocation);
+            if (locationY <= (viewLocation[1] + binding.chatActivityLstMessage.getHeight())) {
+                if (binding.chatActivityLstEmoticon.getVisibility() == View.VISIBLE) {
+                    binding.chatActivityLstEmoticon.setVisibility(View.GONE);
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override
@@ -197,6 +228,25 @@ public class ChatGroupActivity extends BaseActivity {
                         );
                     } else {
                         startActivityForResult(new Intent(ChatGroupActivity.this, MapActivity.class), REQUEST_MAP);
+                    }
+                    break;
+                case Event.CHAT_ACTIVITY_EMOTICON:
+                    if (binding.chatActivityLstEmoticon.getVisibility() == View.GONE) {
+                        if (keyboardHeight != 0) {
+                            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)binding.chatActivityLstEmoticon.getLayoutParams();
+                            if (keyboardHeight != layoutParams.height) {
+                                layoutParams.height = keyboardHeight;
+                                binding.chatActivityLstEmoticon.setLayoutParams(layoutParams);
+                            }
+                        }
+                        Tool.hideSoftKeyboard(ChatGroupActivity.this);
+                        binding.chatActivityLstEmoticon.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.chatActivityLstEmoticon.setVisibility(View.GONE);
+                        Tool.showSoftKeyboard(
+                                binding.chatActivityEdtMessage,
+                                ChatGroupActivity.this
+                        );
                     }
                     break;
             }

@@ -21,7 +21,7 @@
             android:layout_height="25dp"
             android:background="@drawable/status_bar_background"/>
 
-        <FrameLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@id/chat_activity_lyt_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -102,35 +102,26 @@
                     app:layout_constraintRight_toRightOf="parent"/>
             </android.support.constraint.ConstraintLayout>
 
-            <View
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="?attr/actionBarSize"
-                android:layout_marginBottom="?attr/actionBarSize"
-                android:background="@color/colorBackground"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@id/chat_activity_lst_message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginTop="?attr/actionBarSize"
-                android:layout_marginBottom="?attr/actionBarSize"
-                bind:setRecyclerViewAdapter="@{viewModel.adapter}"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="?attr/actionBarSize"
-                android:layout_gravity="bottom"
-                android:background="@color/colorLightGray" />
+                android:layout_height="0dp"
+                android:background="@color/colorBackground"
+                app:layout_constraintTop_toBottomOf="@id/chat_activity_tool_bar"
+                app:layout_constraintBottom_toTopOf="@id/chat_activity_lyt_message">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@id/chat_activity_lst_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    bind:setRecyclerViewAdapter="@{viewModel.adapter}"/>
+            </FrameLayout>
 
             <android.support.constraint.ConstraintLayout
                 android:id="@id/chat_activity_lyt_message"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_gravity="bottom"
-                android:background="@color/colorWhite">
+                android:background="@color/colorWhite"
+                app:layout_constraintBottom_toTopOf="@id/chat_activity_lst_emoticon">
                 <ImageButton
                     android:id="@id/chat_activity_btn_emoticon"
                     android:layout_width="?attr/actionBarSize"
@@ -151,7 +142,6 @@
                     android:text="@={viewModel.textMessage}"
                     android:textCursorDrawable="@drawable/edt_cursor_normal"
                     android:backgroundTint="@color/colorTransparent"
-                    android:gravity="center_vertical"
                     app:layout_constraintLeft_toRightOf="@id/chat_activity_btn_emoticon"
                     app:layout_constraintRight_toLeftOf="@id/chat_activity_btn_send"/>
                 <ImageButton
@@ -200,7 +190,14 @@
                     app:layout_constraintRight_toRightOf="parent"/>
             </android.support.constraint.ConstraintLayout>
 
-        </FrameLayout>
+            <GridView
+                android:id="@id/chat_activity_lst_emoticon"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
 
     </FrameLayout>
 </layout>

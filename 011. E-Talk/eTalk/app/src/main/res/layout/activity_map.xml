@@ -12,6 +12,13 @@
         android:layout_height="match_parent" />
 
     <Button
+        android:id="@+id/direction"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|right"
+        android:background="@drawable/ic_direction"/>
+
+    <Button
         android:id="@+id/send_location"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -19,6 +26,7 @@
         android:background="@drawable/ic_send_location"/>
 
     <ImageView
+        android:id="@+id/marker"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_gravity="center"
