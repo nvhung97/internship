@@ -156,7 +156,7 @@ public class ChatGroupViewModel extends     BaseObservable
      * @param view
      */
     public void onRecordClick(View view) {
-        Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+        publisher.onNext(Event.create(Event.CHAT_ACTIVITY_AUDIO));
     }
 
     /**

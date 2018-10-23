@@ -1,23 +1,29 @@
 package com.example.cpu11398_local.etalk.presentation.view.chat.group;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.PopupMenu;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
+import com.example.cpu11398_local.etalk.presentation.view.chat.media.EmojiAdapter;
 import com.example.cpu11398_local.etalk.presentation.view.chat.media.MapActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
@@ -31,7 +37,7 @@ import javax.inject.Named;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
-public class ChatGroupActivity extends BaseActivity {
+public class ChatGroupActivity extends BaseActivity{
 
     private final int REQUEST_TAKE_PHOTO_CODE       = 0;
     private final int REQUEST_RECORD_CODE           = 1;
@@ -49,6 +55,7 @@ public class ChatGroupActivity extends BaseActivity {
     private ViewModelCallback helper;
     private int keyboardHeight = 0;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +64,24 @@ public class ChatGroupActivity extends BaseActivity {
                 this,
                 findViewById(R.id.chat_activity_status_bar)
         );
+
+        binding.chatActivityLstEmoticon.setAdapter(new EmojiAdapter(this));
+        binding.chatActivityLstEmoticon.setOnItemClickListener(
+                (AdapterView.OnItemClickListener) (parent, v, position, id) -> {
+                    binding.chatActivityEdtMessage.append(((TextView)v).getText());
+                }
+        );
+        binding.chatActivityBtnAudioRecord.setOnTouchListener((View.OnTouchListener) (v, event) -> {
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    Toast.makeText(this, "Recording", Toast.LENGTH_SHORT).show();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    Toast.makeText(this, "Stop", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            return false;
+        });
     }
 
     @Override
@@ -108,13 +133,20 @@ public class ChatGroupActivity extends BaseActivity {
                 if (binding.chatActivityLstEmoticon.getVisibility() == View.VISIBLE) {
                     binding.chatActivityLstEmoticon.setVisibility(View.GONE);
                 }
+                if (binding.chatActivityLytAudio.getVisibility() == View.VISIBLE) {
+                    binding.chatActivityLytAudio.setVisibility(View.GONE);
+                }
             }
         });
         binding.chatActivityEdtMessage.setOnClickListener(v -> {
             if (binding.chatActivityLstEmoticon.getVisibility() == View.VISIBLE) {
                 binding.chatActivityLstEmoticon.setVisibility(View.GONE);
             }
+            if (binding.chatActivityLytAudio.getVisibility() == View.VISIBLE) {
+                binding.chatActivityLytAudio.setVisibility(View.GONE);
+            }
         });
+
     }
 
     @Override
@@ -126,6 +158,9 @@ public class ChatGroupActivity extends BaseActivity {
             if (locationY <= (viewLocation[1] + binding.chatActivityLstMessage.getHeight())) {
                 if (binding.chatActivityLstEmoticon.getVisibility() == View.VISIBLE) {
                     binding.chatActivityLstEmoticon.setVisibility(View.GONE);
+                }
+                if (binding.chatActivityLytAudio.getVisibility() == View.VISIBLE) {
+                    binding.chatActivityLytAudio.setVisibility(View.GONE);
                 }
             }
         }
@@ -233,16 +268,39 @@ public class ChatGroupActivity extends BaseActivity {
                 case Event.CHAT_ACTIVITY_EMOTICON:
                     if (binding.chatActivityLstEmoticon.getVisibility() == View.GONE) {
                         if (keyboardHeight != 0) {
-                            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)binding.chatActivityLstEmoticon.getLayoutParams();
+                            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams)binding.chatActivityLstEmoticon.getLayoutParams();
                             if (keyboardHeight != layoutParams.height) {
                                 layoutParams.height = keyboardHeight;
-                                binding.chatActivityLstEmoticon.setLayoutParams(layoutParams);
                             }
                         }
                         Tool.hideSoftKeyboard(ChatGroupActivity.this);
-                        binding.chatActivityLstEmoticon.setVisibility(View.VISIBLE);
+                        new Handler().postDelayed(
+                                () -> binding.chatActivityLstEmoticon.setVisibility(View.VISIBLE),
+                                100
+                        );
                     } else {
                         binding.chatActivityLstEmoticon.setVisibility(View.GONE);
+                        Tool.showSoftKeyboard(
+                                binding.chatActivityEdtMessage,
+                                ChatGroupActivity.this
+                        );
+                    }
+                    break;
+                case Event.CHAT_ACTIVITY_AUDIO:
+                    if (binding.chatActivityLytAudio.getVisibility() == View.GONE) {
+                        if (keyboardHeight != 0) {
+                            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams)binding.chatActivityLytAudio.getLayoutParams();
+                            if (keyboardHeight != layoutParams.height) {
+                                layoutParams.height = keyboardHeight;
+                            }
+                        }
+                        Tool.hideSoftKeyboard(ChatGroupActivity.this);
+                        new Handler().postDelayed(
+                                () -> binding.chatActivityLytAudio.setVisibility(View.VISIBLE),
+                                100
+                        );
+                    } else {
+                        binding.chatActivityLytAudio.setVisibility(View.GONE);
                         Tool.showSoftKeyboard(
                                 binding.chatActivityEdtMessage,
                                 ChatGroupActivity.this

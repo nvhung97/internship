@@ -142,7 +142,14 @@
     <item name="chat_activity_btn_record" type="id"/>
     <item name="chat_activity_btn_image" type="id"/>
     <item name="chat_activity_btn_send" type="id"/>
+    <item name="chat_activity_extension" type="id"/>
     <item name="chat_activity_lst_emoticon" type="id"/>
+    <item name="chat_activity_lyt_audio" type="id"/>
+    <item name="chat_activity_btn_audio_record" type="id"/>
+    <item name="chat_activity_btn_audio_cancel" type="id"/>
+    <item name="chat_activity_btn_audio_send" type="id"/>
+    <item name="chat_activity_edt_audio_hint" type="id"/>
+    <item name="chat_activity_edt_audio_time" type="id"/>
     <item name="chat_activity_menu_send_location" type="id"/>
     <item name="chat_activity_menu_send_contact" type="id"/>
     <item name="chat_activity_media_option_title" type="id"/>

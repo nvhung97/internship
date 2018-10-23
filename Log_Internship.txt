@@ -399,6 +399,10 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Web lấy mã Unicode của emoji
 		+ https://unicode.org/emoji/charts/full-emoji-list.html
 9:03 AM 10/22/2018
+	- Chuyển đổi qua lại giữa bàn phím và bảng chọn emoji
+1:36 PM 10/23/2018
+	- Lấy chiều cao bàn phím khi layout không đổi (có hiện bàn phím lên)
+		+ https://github.com/siebeprojects/samples-keyboardheight/tree/master/app/src/main/res/layout
 
 
 
