@@ -51,6 +51,9 @@ public class Event {
     public static final int CHAT_ACTIVITY_SEND_LOCATION     = CHAT_ACTIVITY_MARK | 17;
     public static final int CHAT_ACTIVITY_EMOTICON          = CHAT_ACTIVITY_MARK | 18;
     public static final int CHAT_ACTIVITY_AUDIO             = CHAT_ACTIVITY_MARK | 19;
+    public static final int CHAT_ACTIVITY_AUDIO_RECORDING   = CHAT_ACTIVITY_MARK | 20;
+    public static final int CHAT_ACTIVITY_AUDIO_COMPLETE    = CHAT_ACTIVITY_MARK | 21;
+    public static final int CHAT_ACTIVITY_AUDIO_RESET       = CHAT_ACTIVITY_MARK | 22;
 
     /**
      * Bellow commands for {@code LoginActivity}.

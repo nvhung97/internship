@@ -454,7 +454,6 @@ public class ChatGroupUsecase implements Usecase {
                     name + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(context.getContentResolver().getType(uri))
             );
         } else if (type == Message.FILE) {
-
             file = new File(
                     context.getFilesDir(),
                     name

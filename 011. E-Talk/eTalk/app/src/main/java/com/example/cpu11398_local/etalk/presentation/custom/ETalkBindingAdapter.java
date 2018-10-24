@@ -1,6 +1,7 @@
 package com.example.cpu11398_local.etalk.presentation.custom;
 
 import android.content.res.Resources;
+import android.databinding.Bindable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
@@ -150,5 +151,25 @@ public class ETalkBindingAdapter {
     @BindingAdapter("setRecyclerViewAdapter")
     public static void setRecyclerViewAdapter(RecyclerView rv, RecyclerView.Adapter adapter) {
         rv.setAdapter(adapter);
+    }
+
+    /**
+     * Add setter to bind {@code View.OnTouchListener} to a {@code View}.
+     * @param view view need to set listener.
+     * @param listener used to set into view.
+     */
+    @BindingAdapter("onTouch")
+    public static void setOnTouchListener(View view, View.OnTouchListener listener) {
+        view.setOnTouchListener(listener);
+    }
+
+    /**
+     * Add setter to bind {@code time} to {@Code ClockView}.
+     * @param view ClockView.
+     * @param time  time to bind.
+     */
+    @BindingAdapter("countTime")
+    public static void setCountTime(ClockView view, long time) {
+        view.setCountTime(time);
     }
 }

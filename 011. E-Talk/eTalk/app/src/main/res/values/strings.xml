@@ -79,6 +79,8 @@
     <string name="chat_activity_media_take_photo">Take photo</string>
     <string name="chat_activity_media_record">Record</string>
     <string name="chat_activity_media_record_hint">Press and hold to record</string>
+    <string name="chat_activity_media_recording_hint">Release to complete recording</string>
+    <string name="chat_activity_media_recorded_hint">Press and hold to record again</string>
     <string name="chat_activity_media_choose_photos">Choose existing photos</string>
     <string name="chat_activity_media_choose_video">Choose existing videos</string>
     <string name="chat_activity_download_ok">File saved in\ </string>

@@ -125,6 +125,7 @@
     <item name="more_fragment_btn_logout" type="id"/>
 
     <!--Chat activity-->
+    <item name="chat_activity_root" type="id"/>
     <item name="chat_activity_status_bar" type="id"/>
     <item name="chat_activity_lyt_content" type="id"/>
     <item name="chat_activity_tool_bar" type="id"/>
@@ -312,6 +313,43 @@
     <item name="lyt_message_group_map_friend_seen8" type="id"/>
     <item name="lyt_message_group_map_friend_seen9" type="id"/>
     <item name="lyt_message_group_map_friend_more" type="id"/>
+    <item name="lyt_message_group_sound_me_row" type="id"/>
+    <item name="lyt_message_group_sound_me_bound_content" type="id"/>
+    <item name="lyt_message_group_sound_me_content" type="id"/>
+    <item name="lyt_message_group_sound_me_data" type="id"/>
+    <item name="lyt_message_group_sound_me_play" type="id"/>
+    <item name="lyt_message_group_sound_me_stop" type="id"/>
+    <item name="lyt_message_group_sound_me_time" type="id"/>
+    <item name="lyt_message_group_sound_me_status" type="id"/>
+    <item name="lyt_message_group_sound_me_seen1" type="id"/>
+    <item name="lyt_message_group_sound_me_seen2" type="id"/>
+    <item name="lyt_message_group_sound_me_seen3" type="id"/>
+    <item name="lyt_message_group_sound_me_seen4" type="id"/>
+    <item name="lyt_message_group_sound_me_seen5" type="id"/>
+    <item name="lyt_message_group_sound_me_seen6" type="id"/>
+    <item name="lyt_message_group_sound_me_seen7" type="id"/>
+    <item name="lyt_message_group_sound_me_seen8" type="id"/>
+    <item name="lyt_message_group_sound_me_seen9" type="id"/>
+    <item name="lyt_message_group_sound_me_more" type="id"/>
+    <item name="lyt_message_group_sound_friend_row" type="id"/>
+    <item name="lyt_message_group_sound_friend_bound_content" type="id"/>
+    <item name="lyt_message_group_sound_friend_content" type="id"/>
+    <item name="lyt_message_group_sound_friend_name" type="id"/>
+    <item name="lyt_message_group_sound_friend_data" type="id"/>
+    <item name="lyt_message_group_sound_friend_play" type="id"/>
+    <item name="lyt_message_group_sound_friend_stop" type="id"/>
+    <item name="lyt_message_group_sound_friend_time" type="id"/>
+    <item name="lyt_message_group_sound_friend_avatar" type="id"/>
+    <item name="lyt_message_group_sound_friend_seen1" type="id"/>
+    <item name="lyt_message_group_sound_friend_seen2" type="id"/>
+    <item name="lyt_message_group_sound_friend_seen3" type="id"/>
+    <item name="lyt_message_group_sound_friend_seen4" type="id"/>
+    <item name="lyt_message_group_sound_friend_seen5" type="id"/>
+    <item name="lyt_message_group_sound_friend_seen6" type="id"/>
+    <item name="lyt_message_group_sound_friend_seen7" type="id"/>
+    <item name="lyt_message_group_sound_friend_seen8" type="id"/>
+    <item name="lyt_message_group_sound_friend_seen9" type="id"/>
+    <item name="lyt_message_group_sound_friend_more" type="id"/>
 
     <!--Media photo activity-->
     <item name="media_photo_activity_content" type="id"/>

@@ -1,16 +1,20 @@
 package com.example.cpu11398_local.etalk.presentation.view_model.chat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -22,8 +26,14 @@ import com.example.cpu11398_local.etalk.presentation.view.chat.group.MessageGrou
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
 import com.example.cpu11398_local.etalk.utils.Event;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observer;
@@ -156,7 +166,111 @@ public class ChatGroupViewModel extends     BaseObservable
      * @param view
      */
     public void onRecordClick(View view) {
-        publisher.onNext(Event.create(Event.CHAT_ACTIVITY_AUDIO));
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    (Activity)context,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    0
+            );
+        } else {
+            publisher.onNext(Event.create(Event.CHAT_ACTIVITY_AUDIO));
+        }
+    }
+
+    private Handler         recordHandler   = new Handler();
+    private Timer           timer;
+    private long            recordingTime   = 0;
+    private boolean         isRecording     = false;
+    private MediaRecorder   recorder;
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Bindable
+    public View.OnTouchListener getRecordTouchListener() {
+        return (v, event) -> {
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    recordHandler.postDelayed(
+                            () -> {
+                                publisher.onNext(Event.create(Event.CHAT_ACTIVITY_AUDIO_RECORDING));
+                                startRecord();
+                            },
+                            500
+                    );
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (isRecording) {
+                        publisher.onNext(Event.create(Event.CHAT_ACTIVITY_AUDIO_COMPLETE));
+                        stopRecord();
+                    } else {
+                        recordHandler.removeCallbacksAndMessages(null);
+                    }
+                    break;
+            }
+            return false;
+        };
+    }
+
+    @Bindable
+    public long getRecordingTime() {
+        if (recordingTime == 60) {
+            vibrate(50);
+            publisher.onNext(Event.create(Event.CHAT_ACTIVITY_AUDIO_COMPLETE));
+            stopRecord();
+        }
+        return recordingTime;
+    }
+
+    public void onRecordDeleteClick(View view) {
+        publisher.onNext(Event.create(Event.CHAT_ACTIVITY_AUDIO_RESET));
+    }
+
+    public void onRecordSendClick(View view) {
+        publisher.onNext(Event.create(Event.CHAT_ACTIVITY_AUDIO_RESET));
+    }
+
+    private void startRecord() {
+        recorder = new MediaRecorder();
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        recorder.setOutputFile(context.getExternalCacheDir().getAbsolutePath() + "/audio.3gp");
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        try {
+            recorder.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        vibrate(50);
+        timer = new Timer(true);
+        recordingTime = 0;
+        isRecording = true;
+        notifyPropertyChanged(BR.recordingTime);
+        timer.scheduleAtFixedRate(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        recordingTime += 1;
+                        notifyPropertyChanged(BR.recordingTime);
+                    }
+                },
+                1000,
+                1000
+        );
+        recorder.start();
+    }
+
+    private void stopRecord() {
+        isRecording = false;
+        timer.cancel();
+        recorder.stop();
+        recorder.release();
+        recorder = null;
+        /*Uri uri = Uri.fromFile(new File(context.getExternalCacheDir().getAbsolutePath() + "/audio.3gp"));
+        Log.e("Test", uri.toString());*/
+    }
+
+    private void vibrate(long duration) {
+        Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(duration);
     }
 
     /**

@@ -7,8 +7,8 @@ import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Gravity;
@@ -18,8 +18,6 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
@@ -32,12 +30,14 @@ import com.example.cpu11398_local.etalk.presentation.view_model.chat.ChatGroupVi
 import com.example.cpu11398_local.etalk.databinding.ActivityChatGroupBinding;
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.Tool;
+import com.example.cpu11398_local.etalk.utils.keyboard_height.KeyboardHeightObserver;
+import com.example.cpu11398_local.etalk.utils.keyboard_height.KeyboardHeightProvider;
 import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
-public class ChatGroupActivity extends BaseActivity{
+public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObserver {
 
     private final int REQUEST_TAKE_PHOTO_CODE       = 0;
     private final int REQUEST_RECORD_CODE           = 1;
@@ -50,10 +50,11 @@ public class ChatGroupActivity extends BaseActivity{
     @Named("ChatGroupViewModel")
     public ViewModel viewModel;
 
-    private ActivityChatGroupBinding binding;
-    private Disposable disposable;
-    private ViewModelCallback helper;
-    private int keyboardHeight = 0;
+    private ActivityChatGroupBinding    binding;
+    private Disposable                  disposable;
+    private ViewModelCallback           helper;
+    private KeyboardHeightProvider      keyboardHeightProvider;
+    private int                         keyboardHeight = 0;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -71,17 +72,9 @@ public class ChatGroupActivity extends BaseActivity{
                     binding.chatActivityEdtMessage.append(((TextView)v).getText());
                 }
         );
-        binding.chatActivityBtnAudioRecord.setOnTouchListener((View.OnTouchListener) (v, event) -> {
-            switch (event.getActionMasked()) {
-                case MotionEvent.ACTION_DOWN:
-                    Toast.makeText(this, "Recording", Toast.LENGTH_SHORT).show();
-                    break;
-                case MotionEvent.ACTION_UP:
-                    Toast.makeText(this, "Stop", Toast.LENGTH_SHORT).show();
-                    break;
-            }
-            return false;
-        });
+
+        keyboardHeightProvider = new KeyboardHeightProvider(this);
+        binding.chatActivityRoot.post((Runnable) () -> keyboardHeightProvider.start());
     }
 
     @Override
@@ -105,7 +98,6 @@ public class ChatGroupActivity extends BaseActivity{
                         ),
                         100
                 );
-                keyboardHeight = oldBottom - bottom;
             }
         });
         binding.chatActivityTxtFriendName.setText(getIntent().getExtras().getString("name"));
@@ -128,25 +120,23 @@ public class ChatGroupActivity extends BaseActivity{
             );
         }
         addControlKeyboardView(binding.chatActivityLytMessage);
-        binding.chatActivityEdtMessage.setOnFocusChangeListener((View.OnFocusChangeListener) (v, hasFocus) -> {
-            if (hasFocus) {
-                if (binding.chatActivityLstEmoticon.getVisibility() == View.VISIBLE) {
-                    binding.chatActivityLstEmoticon.setVisibility(View.GONE);
-                }
-                if (binding.chatActivityLytAudio.getVisibility() == View.VISIBLE) {
-                    binding.chatActivityLytAudio.setVisibility(View.GONE);
-                }
-            }
-        });
-        binding.chatActivityEdtMessage.setOnClickListener(v -> {
-            if (binding.chatActivityLstEmoticon.getVisibility() == View.VISIBLE) {
-                binding.chatActivityLstEmoticon.setVisibility(View.GONE);
-            }
-            if (binding.chatActivityLytAudio.getVisibility() == View.VISIBLE) {
-                binding.chatActivityLytAudio.setVisibility(View.GONE);
-            }
-        });
 
+        binding.chatActivityEdtMessage.setOnClickListener(v -> {
+            hideEmoji();
+            hideAudio();
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        keyboardHeightProvider.setKeyboardHeightObserver(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        keyboardHeightProvider.setKeyboardHeightObserver(null);
     }
 
     @Override
@@ -156,12 +146,9 @@ public class ChatGroupActivity extends BaseActivity{
             int[]   viewLocation     = new int[2];
             binding.chatActivityLstMessage.getLocationOnScreen(viewLocation);
             if (locationY <= (viewLocation[1] + binding.chatActivityLstMessage.getHeight())) {
-                if (binding.chatActivityLstEmoticon.getVisibility() == View.VISIBLE) {
-                    binding.chatActivityLstEmoticon.setVisibility(View.GONE);
-                }
-                if (binding.chatActivityLytAudio.getVisibility() == View.VISIBLE) {
-                    binding.chatActivityLytAudio.setVisibility(View.GONE);
-                }
+                hideEmoji();
+                hideAudio();
+                downMessageBar();
             }
         }
         return super.dispatchTouchEvent(ev);
@@ -187,6 +174,12 @@ public class ChatGroupActivity extends BaseActivity{
     @Override
     public void onEndTaskViewModel() {
         viewModel.endTask();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        keyboardHeightProvider.close();
     }
 
     public void onShowPopupMenu(View view, PopupMenu.OnMenuItemClickListener listener) {
@@ -266,46 +259,48 @@ public class ChatGroupActivity extends BaseActivity{
                     }
                     break;
                 case Event.CHAT_ACTIVITY_EMOTICON:
-                    if (binding.chatActivityLstEmoticon.getVisibility() == View.GONE) {
-                        if (keyboardHeight != 0) {
-                            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams)binding.chatActivityLstEmoticon.getLayoutParams();
-                            if (keyboardHeight != layoutParams.height) {
-                                layoutParams.height = keyboardHeight;
-                            }
-                        }
-                        Tool.hideSoftKeyboard(ChatGroupActivity.this);
-                        new Handler().postDelayed(
-                                () -> binding.chatActivityLstEmoticon.setVisibility(View.VISIBLE),
-                                100
-                        );
+                    if (keyboardHeight == 0) {
+                        showKeyboard();
                     } else {
-                        binding.chatActivityLstEmoticon.setVisibility(View.GONE);
-                        Tool.showSoftKeyboard(
-                                binding.chatActivityEdtMessage,
-                                ChatGroupActivity.this
-                        );
+                        if (!isEmojiShow()) {
+                            hideAudio();
+                            showEmoji();
+                            upMessageBar();
+                            hideKeyboard();
+                        } else {
+                            showKeyboard();
+                            hideEmoji();
+                        }
                     }
                     break;
                 case Event.CHAT_ACTIVITY_AUDIO:
-                    if (binding.chatActivityLytAudio.getVisibility() == View.GONE) {
-                        if (keyboardHeight != 0) {
-                            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams)binding.chatActivityLytAudio.getLayoutParams();
-                            if (keyboardHeight != layoutParams.height) {
-                                layoutParams.height = keyboardHeight;
-                            }
-                        }
-                        Tool.hideSoftKeyboard(ChatGroupActivity.this);
-                        new Handler().postDelayed(
-                                () -> binding.chatActivityLytAudio.setVisibility(View.VISIBLE),
-                                100
-                        );
+                    if (keyboardHeight == 0) {
+                        showKeyboard();
                     } else {
-                        binding.chatActivityLytAudio.setVisibility(View.GONE);
-                        Tool.showSoftKeyboard(
-                                binding.chatActivityEdtMessage,
-                                ChatGroupActivity.this
-                        );
+                        if (!isAudioShow()) {
+                            hideEmoji();
+                            showAudio();
+                            upMessageBar();
+                            hideKeyboard();
+                        } else {
+                            showKeyboard();
+                            hideAudio();
+                        }
                     }
+                    break;
+                case Event.CHAT_ACTIVITY_AUDIO_RECORDING:
+                    binding.chatActivityEdtAudioTime.setVisibility(View.VISIBLE);
+                    binding.chatActivityBtnAudioCancel.setVisibility(View.GONE);
+                    binding.chatActivityBtnAudioSend.setVisibility(View.GONE);
+                    binding.chatActivityEdtAudioHint.setText(getString(R.string.chat_activity_media_recording_hint));
+                    break;
+                case Event.CHAT_ACTIVITY_AUDIO_COMPLETE:
+                    binding.chatActivityBtnAudioCancel.setVisibility(View.VISIBLE);
+                    binding.chatActivityBtnAudioSend.setVisibility(View.VISIBLE);
+                    binding.chatActivityEdtAudioHint.setText(getString(R.string.chat_activity_media_recorded_hint));
+                    break;
+                case Event.CHAT_ACTIVITY_AUDIO_RESET:
+                    showAudio();
                     break;
             }
         }
@@ -356,6 +351,77 @@ public class ChatGroupActivity extends BaseActivity{
                             data.getExtras().getDouble("lng")
                     ));
                     break;
+            }
+        }
+    }
+
+    private void showKeyboard() {
+        Tool.showSoftKeyboard(
+                binding.chatActivityEdtMessage,
+                ChatGroupActivity.this
+        );
+    }
+
+    private void hideKeyboard() {
+        Tool.hideSoftKeyboard(ChatGroupActivity.this);
+    }
+
+    private boolean isEmojiShow() {
+        return binding.chatActivityLstEmoticon.getVisibility() == View.VISIBLE;
+    }
+
+    private void showEmoji() {
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams)binding.chatActivityLstEmoticon.getLayoutParams();
+        if (keyboardHeight != layoutParams.height) {
+            layoutParams.height = keyboardHeight;
+        }
+        binding.chatActivityLstEmoticon.setVisibility(View.VISIBLE);
+    }
+
+    private void hideEmoji() {
+        binding.chatActivityLstEmoticon.setVisibility(View.GONE);
+    }
+
+    private boolean isAudioShow() {
+        return binding.chatActivityLytAudio.getVisibility() == View.VISIBLE;
+    }
+
+    private void showAudio() {
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams)binding.chatActivityLytAudio.getLayoutParams();
+        if (keyboardHeight != layoutParams.height) {
+            layoutParams.height = keyboardHeight;
+        }
+        binding.chatActivityLytAudio.setVisibility(View.VISIBLE);
+        binding.chatActivityBtnAudioCancel.setVisibility(View.GONE);
+        binding.chatActivityBtnAudioSend.setVisibility(View.GONE);
+        binding.chatActivityEdtAudioTime.setVisibility(View.GONE);
+        binding.chatActivityEdtAudioHint.setText(getString(R.string.chat_activity_media_record_hint));
+    }
+
+    private void hideAudio() {
+        binding.chatActivityLytAudio.setVisibility(View.GONE);
+    }
+
+    private void upMessageBar() {
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)binding.chatActivityLytMessage.getLayoutParams();
+        layoutParams.setMargins(0, 0, 0, keyboardHeight);
+        binding.chatActivityLytMessage.setLayoutParams(layoutParams);
+    }
+
+    private void downMessageBar() {
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)binding.chatActivityLytMessage.getLayoutParams();
+        layoutParams.setMargins(0, 0, 0, 0);
+        binding.chatActivityLytMessage.setLayoutParams(layoutParams);
+    }
+
+    @Override
+    public void onKeyboardHeightChanged(int height, int orientation) {
+        if (height > 0) {
+             keyboardHeight = height;
+             upMessageBar();
+        } else {
+            if (!isEmojiShow() && !isAudioShow()) {
+                downMessageBar();
             }
         }
     }

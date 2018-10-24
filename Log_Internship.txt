@@ -403,6 +403,11 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 1:36 PM 10/23/2018
 	- Lấy chiều cao bàn phím khi layout không đổi (có hiện bàn phím lên)
 		+ https://github.com/siebeprojects/samples-keyboardheight/tree/master/app/src/main/res/layout
+1:59 PM 10/24/2018
+	- Rung
+		+ https://stackoverflow.com/a/5775988
+	- Timer
+		+ https://developer.android.com/reference/java/util/Timer
 
 
 
