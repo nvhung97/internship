@@ -408,6 +408,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://stackoverflow.com/a/5775988
 	- Timer
 		+ https://developer.android.com/reference/java/util/Timer
+	- MediaRecoder
+		+ https://developer.android.com/guide/topics/media/mediarecorder
 
 
 
