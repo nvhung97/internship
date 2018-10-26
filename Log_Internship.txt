@@ -382,6 +382,12 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ http://ramsandroid4all.blogspot.com/2016/01/google-maps-android-example-in-android.html
 		+ http://www.zoftino.com/android-google-maps-tutorial
 		+ http://www.zoftino.com/android-mapview-tutorial
+			GoogleMapMyLocationButton
+			GoogleMapZoomInButton
+			GoogleMapZoomOutButton
+			GoogleMapDirectionsButton
+			GoogleMapOpenGmmButton
+			GoogleMapCompass
 2:00 PM 10/18/2018
 	- Thay đổi vị trí MyLocationButton
 		+ https://stackoverflow.com/a/44674481
@@ -413,6 +419,7 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://developer.android.com/guide/topics/media/mediarecorder
 	- Debug layout
 		+ https://developer.android.com/studio/debug/layout-inspector
+Đưa check permission map sang activity map để có thể mở activity từ nhiều nguồn.
 
 
 
