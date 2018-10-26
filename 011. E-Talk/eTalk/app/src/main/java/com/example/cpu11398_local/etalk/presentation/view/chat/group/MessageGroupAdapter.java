@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.bumptech.glide.request.target.Target;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView;
+import com.example.cpu11398_local.etalk.presentation.custom.ClockView;
 import com.example.cpu11398_local.etalk.presentation.custom.RoundedMapView;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.view.chat.media.MapActivity;
@@ -45,10 +46,12 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
 
     private final int ME_TEXT       = 0;
     private final int ME_IMAGE      = 1;
+    private final int ME_SOUND      = 2;
     private final int ME_FILE       = 4;
     private final int ME_MAP        = 5;
     private final int FRIEND_TEXT   = 7;
     private final int FRIEND_IMAGE  = 8;
+    private final int FRIEND_SOUND  = 9;
     private final int FRIEND_FILE   = 11;
     private final int FRIEND_MAP    = 12;
 
@@ -178,6 +181,80 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                 intent.putExtra("link", item.getTextData());
                 context.startActivity(intent);
             });
+        }
+    }
+
+    public class MessageSoundMeViewHolder extends MessageGroupViewHolder {
+        public ConstraintLayout      content;
+        public ClockView             data;
+        public ImageButton           play;
+        public ImageButton           stop;
+        public TextView              time;
+        public AvatarImageView       avatar;
+        public List<AvatarImageView> seens = new ArrayList<>();
+        public TextView              more;
+        public MessageSoundMeViewHolder(View view) {
+            super(view);
+            content     = view.findViewById(R.id.lyt_message_group_sound_me_content);
+            data        = view.findViewById(R.id.lyt_message_group_sound_me_data);
+            play        = view.findViewById(R.id.lyt_message_group_sound_me_play);
+            stop        = view.findViewById(R.id.lyt_message_group_sound_me_stop);
+            time        = view.findViewById(R.id.lyt_message_group_sound_me_time);
+            avatar      = view.findViewById(R.id.lyt_message_group_sound_me_status);
+            more        = view.findViewById(R.id.lyt_message_group_sound_me_more);
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_me_seen1));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_me_seen2));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_me_seen3));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_me_seen4));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_me_seen5));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_me_seen6));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_me_seen7));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_me_seen8));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_me_seen9));
+            content.setOnClickListener(v ->
+                    time.setVisibility(
+                            time.getVisibility() == View.VISIBLE
+                                    ? View.GONE
+                                    : View.VISIBLE
+                    )
+            );
+        }
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        public void bindView(MessageGroupItem item) {
+            data.setCountTime(Long.parseLong(item.getTextData().split("eTaLkAuDiO")[1]));
+            time.setText(item.getTime());
+            time.setVisibility(item.getTimeVisible());
+            avatar.setImageFromObject(item.getAvatar());
+            avatar.setVisibility(item.getAvatarVisible());
+            List<String> seenAvatars = new ArrayList<>(item.getSeen().values());
+            for (int i = 0; i < 9; ++i) {
+                if (i < seenAvatars.size()) {
+                    seens.get(i).setImageFromObject(seenAvatars.get(i));
+                    seens.get(i).setVisibility(View.VISIBLE);
+                } else {
+                    seens.get(i).setVisibility(View.GONE);
+                }
+            }
+            if (seenAvatars.size() > 9) {
+                more.setText("+" + (seenAvatars.size() - 9));
+                more.setVisibility(View.VISIBLE);
+            } else {
+                more.setVisibility(View.GONE);
+            }
+            /*download.setVisibility(item.getDownloadVisible());
+            cancel.setVisibility(item.getCancelVisible());
+            play.setOnClickListener(v ->
+                    callback.onHelp(Event.create(
+                            Event.CHAT_ACTIVITY_DOWNLOAD,
+                            messages.indexOf(item)
+                    ))
+            );
+            stop.setOnClickListener(v ->
+                    callback.onHelp(Event.create(
+                            Event.CHAT_ACTIVITY_CANCEL
+                    ))
+            );*/
         }
     }
 
@@ -465,6 +542,86 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         }
     }
 
+    public class MessageSoundFriendViewHolder extends MessageGroupViewHolder {
+        public TextView              name;
+        public ConstraintLayout      content;
+        public ClockView             data;
+        public ImageButton           play;
+        public ImageButton           stop;
+        public TextView              time;
+        public AvatarImageView       avatar;
+        public List<AvatarImageView> seens = new ArrayList<>();
+        public TextView              more;
+        public MessageSoundFriendViewHolder(View view) {
+            super(view);
+            name        = view.findViewById(R.id.lyt_message_group_sound_friend_name);
+            content     = view.findViewById(R.id.lyt_message_group_sound_friend_content);
+            data        = view.findViewById(R.id.lyt_message_group_sound_friend_data);
+            play        = view.findViewById(R.id.lyt_message_group_sound_friend_play);
+            stop        = view.findViewById(R.id.lyt_message_group_sound_friend_stop);
+            time        = view.findViewById(R.id.lyt_message_group_sound_friend_time);
+            avatar      = view.findViewById(R.id.lyt_message_group_sound_friend_avatar);
+            more        = view.findViewById(R.id.lyt_message_group_sound_friend_more);
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_friend_seen1));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_friend_seen2));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_friend_seen3));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_friend_seen4));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_friend_seen5));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_friend_seen6));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_friend_seen7));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_friend_seen8));
+            seens.add(view.findViewById(R.id.lyt_message_group_sound_friend_seen9));
+            content.setOnClickListener(v ->
+                    time.setVisibility(
+                            time.getVisibility() == View.VISIBLE
+                                    ? View.GONE
+                                    : View.VISIBLE
+                    )
+            );
+        }
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        public void bindView(MessageGroupItem item) {
+            name.setText(item.getName());
+            name.setVisibility(item.getNameVisible());
+            data.setCountTime(Long.parseLong(item.getTextData().split("eTaLkAuDiO")[1]));
+            time.setText(item.getTime());
+            time.setVisibility(item.getTimeVisible());
+            avatar.setImageFromObject(item.getAvatar());
+            avatar.setVisibility(item.getAvatarVisible());
+            List<String> seenAvatars = new ArrayList<>(item.getSeen().values());
+            for (int i = 0; i < 9; ++i) {
+                if (i < seenAvatars.size()) {
+                    seens.get(i).setImageFromObject(seenAvatars.get(i));
+                    seens.get(i).setVisibility(View.VISIBLE);
+                } else {
+                    seens.get(i).setVisibility(View.GONE);
+                }
+            }
+            if (seenAvatars.size() > 9) {
+                more.setText("+" + (seenAvatars.size() - 9));
+                more.setVisibility(View.VISIBLE);
+            } else {
+                more.setVisibility(View.GONE);
+            }
+            /*download.setVisibility(item.getDownloadVisible());
+            cancel.setVisibility(item.getCancelVisible());
+            progressBar.setVisibility(item.getProgressVisible());
+            progressBar.setProgress(item.getProgressPercent(), true);
+            download.setOnClickListener(v ->
+                    callback.onHelp(Event.create(
+                            Event.CHAT_ACTIVITY_DOWNLOAD,
+                            messages.indexOf(item)
+                    ))
+            );
+            cancel.setOnClickListener(v ->
+                    callback.onHelp(Event.create(
+                            Event.CHAT_ACTIVITY_CANCEL
+                    ))
+            );*/
+        }
+    }
+
     public class MessageFileFriendViewHolder extends MessageGroupViewHolder {
         public TextView              name;
         public ConstraintLayout      content;
@@ -656,6 +813,9 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             if (message.getType() == Message.MAP) {
                 return ME_MAP;
             }
+            if (message.getType() == Message.SOUND) {
+                return ME_SOUND;
+            }
         } else {
             if (message.getType() == Message.TEXT) {
                 return FRIEND_TEXT;
@@ -668,6 +828,9 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             }
             if (message.getType() == Message.MAP) {
                 return FRIEND_MAP;
+            }
+            if (message.getType() == Message.SOUND) {
+                return FRIEND_SOUND;
             }
         }
         return 0;
@@ -701,6 +864,12 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                                 .from(parent.getContext())
                                 .inflate(R.layout.lyt_message_group_map_me, parent, false)
                 );
+            case ME_SOUND:
+                return new MessageSoundMeViewHolder(
+                        LayoutInflater
+                                .from(parent.getContext())
+                                .inflate(R.layout.lyt_message_group_sound_me, parent, false)
+                );
             case FRIEND_TEXT:
                 return new MessageTextFriendViewHolder(
                         LayoutInflater
@@ -724,6 +893,12 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                         LayoutInflater
                                 .from(parent.getContext())
                                 .inflate(R.layout.lyt_message_group_map_friend, parent, false)
+                );
+            case FRIEND_SOUND:
+                return new MessageSoundFriendViewHolder(
+                        LayoutInflater
+                                .from(parent.getContext())
+                                .inflate(R.layout.lyt_message_group_sound_friend, parent, false)
                 );
         }
         return null;

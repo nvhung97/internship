@@ -54,6 +54,7 @@ public class ChatGroupUsecase implements Usecase {
     private final String SEND_IMAGE_URI     = "send_image_uri";
     private final String SEND_FILE          = "send_file";
     private final String SEND_LOCATION      = "send_location";
+    private final String SEND_AUDIO         = "send_audio";
     private final String DOWNLOAD           = "download";
     private final String CANCEL             = "cancel";
 
@@ -117,6 +118,10 @@ public class ChatGroupUsecase implements Usecase {
                 break;
             case SEND_LOCATION:
                 executeSendLocation((double)params[0], (double)params[1]);
+                break;
+            case SEND_AUDIO:
+                executeSendAudio((Uri)params[0], (long)params[1]);
+                break;
         }
     }
 
@@ -446,6 +451,44 @@ public class ChatGroupUsecase implements Usecase {
         );
     }
 
+    private void executeSendAudio(Uri uri, long time) {
+        Message message = new Message(
+                username,
+                null,
+                Message.SOUND
+        );
+        File file = copyToInternalStorageFromUri(
+                uri,
+                "audio_" + message.getKey() + ".3gp",
+                Message.SOUND
+        );
+        message.setData(file.getAbsolutePath() + "eTaLkAuDiO" + time);
+        holder.sendNewMessage(message);
+        needUpdateMessage = true;
+        disposable.add(
+                conversationRepository
+                        .uploadNetworkFile(conversationKey, file, Message.SOUND)
+                        .subscribeOn(Schedulers.from(executor))
+                        .observeOn(scheduler)
+                        .subscribe(url -> {
+                            file.delete();
+                            message.setData(url + "eTaLkAuDiO" + time);
+                            disposable.add(
+                                    conversationRepository
+                                            .pushNetworkMessage(conversationKey, message)
+                                            .subscribeOn(Schedulers.from(executor))
+                                            .observeOn(scheduler)
+                                            .subscribe(result -> {
+                                                if (result == true) {
+                                                    holder.sendSuccessMessage(message);
+                                                    needUpdateMessage = true;
+                                                }
+                                            })
+                            );
+                        })
+        );
+    }
+
     private File copyToInternalStorageFromUri(Uri uri, String name, long type) {
         File file = null;
         if (type == Message.IMAGE) {
@@ -454,6 +497,11 @@ public class ChatGroupUsecase implements Usecase {
                     name + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(context.getContentResolver().getType(uri))
             );
         } else if (type == Message.FILE) {
+            file = new File(
+                    context.getFilesDir(),
+                    name
+            );
+        } else if (type == Message.SOUND) {
             file = new File(
                     context.getFilesDir(),
                     name
@@ -885,7 +933,7 @@ public class ChatGroupUsecase implements Usecase {
         }
 
         private Object decodeData(String data, long type) {
-            if (type == Message.TEXT) {
+            /*if (type == Message.TEXT) {
                 return data;
             }
             if (type == Message.IMAGE) {
@@ -897,7 +945,8 @@ public class ChatGroupUsecase implements Usecase {
             if (type == Message.MAP) {
                 return data;
             }
-            return null;
+            return null;*/
+            return data;
         }
 
         private String decodeTime(long time) {

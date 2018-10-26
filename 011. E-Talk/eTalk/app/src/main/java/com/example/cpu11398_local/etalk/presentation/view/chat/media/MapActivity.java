@@ -1,21 +1,25 @@
 package com.example.cpu11398_local.etalk.presentation.view.chat.media;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Path;
+import android.net.Uri;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,9 +32,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    MapView   mapView;
-    LatLng    latLng;
-    Bitmap    avatar;
+    private final int REQUEST_MY_LOCATION = 100;
+
+    GoogleMap   googleMap;
+    MapView     mapView;
+    LatLng      latLng;
+    Bitmap      avatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +92,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView.onLowMemory();
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        googleMap.setMyLocationEnabled(true);
-        ImageView locationButton = ((View)mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                    },
+                    REQUEST_MY_LOCATION
+            );
+        } else {
+            googleMap.setMyLocationEnabled(true);
+        }
+        ImageView locationButton = mapView.findViewWithTag("GoogleMapMyLocationButton");
         locationButton.setImageResource(R.drawable.ic_my_location);
         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
         rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
@@ -146,7 +166,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     rlp.rightMargin
             );
             direction.setOnClickListener(v -> {
-                Toast.makeText(this, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(
+                        android.content.Intent.ACTION_VIEW,
+                        Uri.parse(
+                                "http://maps.google.com/maps?daddr="
+                                        + latLng.latitude
+                                        + ", "
+                                        + latLng.longitude
+                        )
+
+                ));
             });
         }
     }
@@ -182,5 +211,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         canvas.clipPath(path);
         canvas.drawBitmap(bitmap, 0, 0, null);
         return outputBitmap;
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_MY_LOCATION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    googleMap.setMyLocationEnabled(true);
+                }
+                return;
+            }
+        }
     }
 }

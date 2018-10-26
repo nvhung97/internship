@@ -26,14 +26,12 @@ import com.example.cpu11398_local.etalk.presentation.view.chat.group.MessageGrou
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
 import com.example.cpu11398_local.etalk.utils.Event;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observer;
@@ -177,6 +175,7 @@ public class ChatGroupViewModel extends     BaseObservable
         }
     }
 
+    private String          fileName        = "/audio.3gp";
     private Handler         recordHandler   = new Handler();
     private Timer           timer;
     private long            recordingTime   = 0;
@@ -226,13 +225,19 @@ public class ChatGroupViewModel extends     BaseObservable
 
     public void onRecordSendClick(View view) {
         publisher.onNext(Event.create(Event.CHAT_ACTIVITY_AUDIO_RESET));
+        chatGroupUsecase.execute(
+                null,
+                Uri.fromFile(new File(context.getExternalCacheDir().getAbsolutePath() + fileName)),
+                recordingTime,
+                "send_audio"
+        );
     }
 
     private void startRecord() {
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        recorder.setOutputFile(context.getExternalCacheDir().getAbsolutePath() + "/audio.3gp");
+        recorder.setOutputFile(context.getExternalCacheDir().getAbsolutePath() + fileName);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         try {
             recorder.prepare();
@@ -259,13 +264,16 @@ public class ChatGroupViewModel extends     BaseObservable
     }
 
     private void stopRecord() {
-        isRecording = false;
-        timer.cancel();
-        recorder.stop();
-        recorder.release();
-        recorder = null;
-        /*Uri uri = Uri.fromFile(new File(context.getExternalCacheDir().getAbsolutePath() + "/audio.3gp"));
-        Log.e("Test", uri.toString());*/
+        try {
+            isRecording = false;
+            timer.cancel();
+            recorder.stop();
+            recorder.release();
+            recorder = null;
+        } catch (Exception e) {
+            publisher.onNext(Event.create(Event.CHAT_ACTIVITY_AUDIO_RESET));
+            Toast.makeText(context, context.getString(R.string.chat_activity_media_recorded_too_short), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void vibrate(long duration) {

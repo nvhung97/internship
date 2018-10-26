@@ -382,6 +382,12 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ http://ramsandroid4all.blogspot.com/2016/01/google-maps-android-example-in-android.html
 		+ http://www.zoftino.com/android-google-maps-tutorial
 		+ http://www.zoftino.com/android-mapview-tutorial
+			GoogleMapMyLocationButton
+			GoogleMapZoomInButton
+			GoogleMapZoomOutButton
+			GoogleMapDirectionsButton
+			GoogleMapOpenGmmButton
+			GoogleMapCompass
 2:00 PM 10/18/2018
 	- Thay đổi vị trí MyLocationButton
 		+ https://stackoverflow.com/a/44674481
@@ -408,8 +414,15 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://stackoverflow.com/a/5775988
 	- Timer
 		+ https://developer.android.com/reference/java/util/Timer
-	- MediaRecoder
+	- MeidaRecoder
+		+ https://developer.android.com/reference/android/media/MediaRecorder
 		+ https://developer.android.com/guide/topics/media/mediarecorder
+	- Debug layout
+		+ https://developer.android.com/studio/debug/layout-inspector
+5:37 PM 10/26/2018
+	- Thực hiện gửi audio
+	- Play audio
+		+ https://google.github.io/ExoPlayer/guide.html
 
 
 

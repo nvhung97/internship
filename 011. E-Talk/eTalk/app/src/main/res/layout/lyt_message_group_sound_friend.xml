@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:layout_gravity="left">
-            <TextView
+            <com.example.cpu11398_local.etalk.presentation.custom.ClockView
                 android:id="@id/lyt_message_group_sound_friend_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,21 +43,21 @@
                 app:layout_constraintRight_toRightOf="parent"
                 android:background="@drawable/message_friend_background"/>
             <ImageButton
-                android:id="@id/lyt_message_group_sound_friend_play"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/ic_play"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-            <ImageButton
                 android:id="@id/lyt_message_group_sound_friend_stop"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/ic_stop"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+            <ImageButton
+                android:id="@id/lyt_message_group_sound_friend_play"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/ic_play"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
             <TextView
