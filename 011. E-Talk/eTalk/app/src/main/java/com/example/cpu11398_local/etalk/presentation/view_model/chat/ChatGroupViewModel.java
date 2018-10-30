@@ -336,11 +336,11 @@ public class ChatGroupViewModel extends     BaseObservable
             case Event.CHAT_ACTIVITY_SEND_FILE:
                 executeSendFile((Uri)data[0]);
                 break;
-            case Event.CHAT_ACTIVITY_DOWNLOAD:
-                executeDownload((int)data[0]);
+            case Event.CHAT_ACTIVITY_START_DOWNLOAD:
+                executeStartDownload((int)data[0]);
                 break;
-            case Event.CHAT_ACTIVITY_CANCEL:
-                executeCancel();
+            case Event.CHAT_ACTIVITY_STOP_DOWNLOAD:
+                executeStopDownload();
                 break;
             case Event.CHAT_ACTIVITY_DOWNLOAD_OK:
                 Toast.makeText(
@@ -358,6 +358,12 @@ public class ChatGroupViewModel extends     BaseObservable
                 break;
             case Event.CHAT_ACTIVITY_SEND_LOCATION:
                 executeSendLocation((double)data[0], (double)data[1]);
+                break;
+            case Event.CHAT_ACTIVITY_START_PLAY:
+                executeStartPlay((int)data[0]);
+                break;
+            case Event.CHAT_ACTIVITY_STOP_PLAY:
+                executeStopPlay();
                 break;
         }
     }
@@ -389,13 +395,13 @@ public class ChatGroupViewModel extends     BaseObservable
         );
     }
 
-    private void executeDownload(int index) {
+    private void executeStartDownload(int index) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             chatGroupUsecase.execute(
                     null,
                     index,
                     this,
-                    "download"
+                    "start_download"
             );
         }
         else {
@@ -407,12 +413,30 @@ public class ChatGroupViewModel extends     BaseObservable
         }
     }
 
-    private void executeCancel() {
+    private void executeStopDownload() {
         chatGroupUsecase.execute(
                 null,
                 null,
                 null,
-                "cancel"
+                "stop_download"
+        );
+    }
+
+    private void executeStartPlay(int index) {
+        chatGroupUsecase.execute(
+                null,
+                index,
+                this,
+                "start_play"
+        );
+    }
+
+    private void executeStopPlay() {
+        chatGroupUsecase.execute(
+                null,
+                null,
+                null,
+                "stop_play"
         );
     }
 

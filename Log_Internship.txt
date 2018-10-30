@@ -423,6 +423,10 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Thực hiện gửi audio
 	- Play audio
 		+ https://google.github.io/ExoPlayer/guide.html
+11:36 AM 10/29/2018
+	- Cập nhật tính năng gửi lại message file và audio khi chưa gửi được.
+6:23 PM 10/30/2018
+	- Tìm hiểu background service
 
 
 

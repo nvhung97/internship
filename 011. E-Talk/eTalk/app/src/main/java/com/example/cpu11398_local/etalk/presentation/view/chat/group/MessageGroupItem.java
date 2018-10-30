@@ -17,8 +17,8 @@ public final class MessageGroupItem {
     private String              time;
     private int                 timeVisible;
     private Map<String, String> seen = new HashMap<>();
-    private int                 downloadVisible = View.VISIBLE;
-    private int                 cancelVisible   = View.GONE;
+    private int                 startVisible = View.VISIBLE;
+    private int                 stopVisible = View.GONE;
     private int                 progressVisible = View.GONE;
     private int                 progressPercent = 0;
 
@@ -90,8 +90,8 @@ public final class MessageGroupItem {
                             String time,
                             int timeVisible,
                             Map<String, String> seen,
-                            int downloadVisible,
-                            int cancelVisible,
+                            int startVisible,
+                            int stopVisible,
                             int progressVisible,
                             int progressPercent) {
         this.message            = message;
@@ -104,8 +104,8 @@ public final class MessageGroupItem {
         this.time               = time;
         this.timeVisible        = timeVisible;
         this.seen               = seen;
-        this.downloadVisible    = downloadVisible;
-        this.cancelVisible      = cancelVisible;
+        this.startVisible       = startVisible;
+        this.stopVisible        = stopVisible;
         this.progressVisible    = progressVisible;
         this.progressPercent    = progressPercent;
     }
@@ -126,8 +126,8 @@ public final class MessageGroupItem {
                 time,
                 timeVisible,
                 new HashMap<>(seen),
-                downloadVisible,
-                cancelVisible,
+                startVisible,
+                stopVisible,
                 progressVisible,
                 progressPercent
         );
@@ -149,8 +149,8 @@ public final class MessageGroupItem {
                 time,
                 timeVisible,
                 new HashMap<>(seen),
-                downloadVisible,
-                cancelVisible,
+                startVisible,
+                stopVisible,
                 progressVisible,
                 progressPercent
         );
@@ -172,8 +172,8 @@ public final class MessageGroupItem {
                 time,
                 timeVisible,
                 new HashMap<>(seen),
-                downloadVisible,
-                cancelVisible,
+                startVisible,
+                stopVisible,
                 progressVisible,
                 progressPercent
         );
@@ -195,8 +195,8 @@ public final class MessageGroupItem {
                 time,
                 timeVisible,
                 new HashMap<>(seen),
-                downloadVisible,
-                cancelVisible,
+                startVisible,
+                stopVisible,
                 progressVisible,
                 progressPercent
         );
@@ -222,8 +222,8 @@ public final class MessageGroupItem {
                 time,
                 timeVisible,
                 new HashMap<>(seen),
-                downloadVisible,
-                cancelVisible,
+                startVisible,
+                stopVisible,
                 progressVisible,
                 progressPercent
         );
@@ -245,8 +245,8 @@ public final class MessageGroupItem {
                 time,
                 timeVisible,
                 new HashMap<>(seen),
-                downloadVisible,
-                cancelVisible,
+                startVisible,
+                stopVisible,
                 progressVisible,
                 progressPercent
         );
@@ -268,8 +268,8 @@ public final class MessageGroupItem {
                 time,
                 timeVisible,
                 new HashMap<>(seen),
-                downloadVisible,
-                cancelVisible,
+                startVisible,
+                stopVisible,
                 progressVisible,
                 progressPercent
         );
@@ -291,8 +291,8 @@ public final class MessageGroupItem {
                 time,
                 timeVisible,
                 new HashMap<>(seen),
-                downloadVisible,
-                cancelVisible,
+                startVisible,
+                stopVisible,
                 progressVisible,
                 progressPercent
         );
@@ -314,8 +314,8 @@ public final class MessageGroupItem {
                 time,
                 timeVisible,
                 new HashMap<>(seen),
-                downloadVisible,
-                cancelVisible,
+                startVisible,
+                stopVisible,
                 progressVisible,
                 progressPercent
         );
@@ -337,18 +337,18 @@ public final class MessageGroupItem {
                 time,
                 timeVisible,
                 new HashMap<>(seen),
-                downloadVisible,
-                cancelVisible,
+                startVisible,
+                stopVisible,
                 progressVisible,
                 progressPercent
         );
     }
 
-    public int getDownloadVisible() {
-        return downloadVisible;
+    public int getStartVisible() {
+        return startVisible;
     }
 
-    public MessageGroupItem newDownloadVisible(int downloadVisible) {
+    public MessageGroupItem newStartVisible(int startVisible) {
         return new MessageGroupItem(
                 new Message(message),
                 isMe,
@@ -360,18 +360,18 @@ public final class MessageGroupItem {
                 time,
                 timeVisible,
                 new HashMap<>(seen),
-                downloadVisible,
-                cancelVisible,
+                startVisible,
+                stopVisible,
                 progressVisible,
                 progressPercent
         );
     }
 
-    public int getCancelVisible() {
-        return cancelVisible;
+    public int getStopVisible() {
+        return stopVisible;
     }
 
-    public MessageGroupItem newCancelVisible(int cancelVisible) {
+    public MessageGroupItem newStopVisible(int stopVisible) {
         return new MessageGroupItem(
                 new Message(message),
                 isMe,
@@ -383,8 +383,8 @@ public final class MessageGroupItem {
                 time,
                 timeVisible,
                 new HashMap<>(seen),
-                downloadVisible,
-                cancelVisible,
+                startVisible,
+                stopVisible,
                 progressVisible,
                 progressPercent
         );
@@ -406,8 +406,8 @@ public final class MessageGroupItem {
                 time,
                 timeVisible,
                 new HashMap<>(seen),
-                downloadVisible,
-                cancelVisible,
+                startVisible,
+                stopVisible,
                 progressVisible,
                 progressPercent
         );
@@ -429,8 +429,8 @@ public final class MessageGroupItem {
                 time,
                 timeVisible,
                 new HashMap<>(seen),
-                downloadVisible,
-                cancelVisible,
+                startVisible,
+                stopVisible,
                 progressVisible,
                 progressPercent
         );
@@ -443,8 +443,8 @@ public final class MessageGroupItem {
     }
 
     public boolean equalsContent(MessageGroupItem other) {
-        if (this.downloadVisible != other.downloadVisible) return false;
-        if (this.cancelVisible != other.cancelVisible) return false;
+        if (this.startVisible != other.startVisible) return false;
+        if (this.stopVisible != other.stopVisible) return false;
         if (this.progressVisible != other.progressVisible) return false;
         if (this.progressPercent != other.progressPercent) return false;
         if (this.nameVisible != other.nameVisible) return false;
@@ -466,16 +466,20 @@ public final class MessageGroupItem {
 
     public MessageGroupItem clone() {
         return new MessageGroupItem(
-                new Message(message),
+                message,
                 isMe,
+                data,
                 name,
                 nameVisible,
-                data,
                 avatar,
                 avatarVisible,
                 time,
                 timeVisible,
-                new HashMap<>(seen)
+                seen,
+                startVisible,
+                stopVisible,
+                progressVisible,
+                progressPercent
         );
     }
 }

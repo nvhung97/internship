@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,6 +38,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     LatLng      latLng;
     Bitmap      avatar;
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +54,60 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView = findViewById(R.id.map_view);
         mapView.onCreate(null);
         mapView.getMapAsync(this);
+
+        /*LocationManager locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                3000,
+                0,
+                new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        Toast.makeText(MapActivity.this, location.toString(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String provider) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+
+                    }
+                }
+        );
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                3000,
+                0,
+                new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        Toast.makeText(MapActivity.this, location.toString(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String provider) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+
+                    }
+                }
+        );*/
     }
 
     @Override

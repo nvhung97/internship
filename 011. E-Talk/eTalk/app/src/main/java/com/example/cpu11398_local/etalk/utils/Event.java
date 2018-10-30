@@ -41,8 +41,8 @@ public class Event {
     public static final int CHAT_ACTIVITY_SEND_IMAGE_URI    = CHAT_ACTIVITY_MARK | 7;
     public static final int CHAT_ACTIVITY_ATTACH            = CHAT_ACTIVITY_MARK | 8;
     public static final int CHAT_ACTIVITY_SEND_FILE         = CHAT_ACTIVITY_MARK | 9;
-    public static final int CHAT_ACTIVITY_DOWNLOAD          = CHAT_ACTIVITY_MARK | 10;
-    public static final int CHAT_ACTIVITY_CANCEL            = CHAT_ACTIVITY_MARK | 11;
+    public static final int CHAT_ACTIVITY_START_DOWNLOAD    = CHAT_ACTIVITY_MARK | 10;
+    public static final int CHAT_ACTIVITY_STOP_DOWNLOAD     = CHAT_ACTIVITY_MARK | 11;
     public static final int CHAT_ACTIVITY_DOWNLOAD_PROGRESS = CHAT_ACTIVITY_MARK | 12;
     public static final int CHAT_ACTIVITY_DOWNLOAD_OK       = CHAT_ACTIVITY_MARK | 13;
     public static final int CHAT_ACTIVITY_DOWNLOAD_FAILED   = CHAT_ACTIVITY_MARK | 14;
@@ -54,6 +54,8 @@ public class Event {
     public static final int CHAT_ACTIVITY_AUDIO_RECORDING   = CHAT_ACTIVITY_MARK | 20;
     public static final int CHAT_ACTIVITY_AUDIO_COMPLETE    = CHAT_ACTIVITY_MARK | 21;
     public static final int CHAT_ACTIVITY_AUDIO_RESET       = CHAT_ACTIVITY_MARK | 22;
+    public static final int CHAT_ACTIVITY_START_PLAY        = CHAT_ACTIVITY_MARK | 23;
+    public static final int CHAT_ACTIVITY_STOP_PLAY         = CHAT_ACTIVITY_MARK | 24;
 
     /**
      * Bellow commands for {@code LoginActivity}.

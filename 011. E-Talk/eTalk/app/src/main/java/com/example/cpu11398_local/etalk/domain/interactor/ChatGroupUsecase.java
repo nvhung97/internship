@@ -3,13 +3,11 @@ package com.example.cpu11398_local.etalk.domain.interactor;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.OpenableColumns;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
@@ -55,8 +53,10 @@ public class ChatGroupUsecase implements Usecase {
     private final String SEND_FILE          = "send_file";
     private final String SEND_LOCATION      = "send_location";
     private final String SEND_AUDIO         = "send_audio";
-    private final String DOWNLOAD           = "download";
-    private final String CANCEL             = "cancel";
+    private final String START_DOWNLOAD     = "start_download";
+    private final String STOP_DOWNLOAD      = "stop_download";
+    private final String START_PLAY         = "start_play";
+    private final String STOP_PLAY          = "stop_play";
 
     private Context                 context;
     private Executor                executor;
@@ -110,17 +110,23 @@ public class ChatGroupUsecase implements Usecase {
                 break;
             case LOAD_MORE:
                 break;
-            case DOWNLOAD:
-                executeDownload((int)params[0], (ViewModelCallback)params[1]);
+            case START_DOWNLOAD:
+                executeStartDownload((int)params[0], (ViewModelCallback)params[1]);
                 break;
-            case CANCEL:
-                executeCancel();
+            case STOP_DOWNLOAD:
+                executeStopDownload();
                 break;
             case SEND_LOCATION:
                 executeSendLocation((double)params[0], (double)params[1]);
                 break;
             case SEND_AUDIO:
                 executeSendAudio((Uri)params[0], (long)params[1]);
+                break;
+            case START_PLAY:
+                executeStartPlay((int)params[0], (ViewModelCallback)params[1]);
+                break;
+            case STOP_PLAY:
+                executeStopPlay();
                 break;
         }
     }
@@ -314,6 +320,58 @@ public class ChatGroupUsecase implements Usecase {
                                 .subscribe(url -> {
                                     file.delete();
                                     message.setData(url);
+                                    disposable.add(
+                                            conversationRepository
+                                                    .pushNetworkMessage(conversationKey, message)
+                                                    .subscribeOn(Schedulers.from(executor))
+                                                    .observeOn(scheduler)
+                                                    .subscribe(result -> {
+                                                        if (result == true) {
+                                                            holder.sendSuccessMessage(message);
+                                                            needUpdateMessage = true;
+                                                        }
+                                                    })
+                                    );
+                                })
+                );
+            } else if (message.getType() == Message.FILE) {
+                String[] dataPart = message.getData().split("eTaLkFiLe");
+                File file = new File(dataPart[0]);
+                String fileName = dataPart[1];
+                disposable.add(
+                        conversationRepository
+                                .uploadNetworkFile(conversationKey, file, Message.FILE)
+                                .subscribeOn(Schedulers.from(executor))
+                                .observeOn(scheduler)
+                                .subscribe(url -> {
+                                    file.delete();
+                                    message.setData(url + "eTaLkFiLe" + fileName);
+                                    disposable.add(
+                                            conversationRepository
+                                                    .pushNetworkMessage(conversationKey, message)
+                                                    .subscribeOn(Schedulers.from(executor))
+                                                    .observeOn(scheduler)
+                                                    .subscribe(result -> {
+                                                        if (result == true) {
+                                                            holder.sendSuccessMessage(message);
+                                                            needUpdateMessage = true;
+                                                        }
+                                                    })
+                                    );
+                                })
+                );
+            } else if (message.getType() == Message.SOUND) {
+                String[] dataPart = message.getData().split("eTaLkAuDiO");
+                File file = new File(dataPart[0]);
+                String time = dataPart[1];
+                disposable.add(
+                        conversationRepository
+                                .uploadNetworkFile(conversationKey, file, Message.SOUND)
+                                .subscribeOn(Schedulers.from(executor))
+                                .observeOn(scheduler)
+                                .subscribe(url -> {
+                                    file.delete();
+                                    message.setData(url + "eTaLkAuDiO" + time);
                                     disposable.add(
                                             conversationRepository
                                                     .pushNetworkMessage(conversationKey, message)
@@ -551,7 +609,7 @@ public class ChatGroupUsecase implements Usecase {
     private int downloadingIndex = -1;
 
     @SuppressLint("CheckResult")
-    private void executeDownload(int index, ViewModelCallback callback) {
+    private void executeStartDownload(int index, ViewModelCallback callback) {
         if (downloadingIndex == -1) {
             downloadingIndex = index;
             String url = holder.startDownloadAt(index);
@@ -586,7 +644,7 @@ public class ChatGroupUsecase implements Usecase {
                                         downloadingIndex = -1;
                                         break;
                                     case Event.CHAT_ACTIVITY_DOWNLOAD_PROGRESS:
-                                        holder.changeProgressStateAt(index, ((Long) event.getData()[0]).intValue());
+                                        holder.updateProgressAt(index, ((Long) event.getData()[0]).intValue());
                                         needUpdateMessage = true;
                                         break;
                                 }
@@ -606,11 +664,78 @@ public class ChatGroupUsecase implements Usecase {
         }
     }
 
-    private void executeCancel() {
+    private void executeStopDownload() {
         if (downloadingIndex != -1) {
             holder.stopDownloadAt(downloadingIndex);
             downloadingIndex = -1;
             downloadDisposable.dispose();
+            needUpdateMessage = true;
+        }
+    }
+
+    private Disposable playDisposable = null;
+    private int playIndex = -1;
+
+    private void executeStartPlay(int index, ViewModelCallback callback) {
+        if (playIndex == -1) {
+            playIndex = index;
+            String url = holder.startPlayAt(index);
+            if (url != null) {
+                needUpdateMessage = true;
+                /*conversationRepository
+                        .downloadNetworkFile(url)
+                        .subscribeOn(Schedulers.from(executor))
+                        .observeOn(scheduler)
+                        .subscribeWith(new Observer<Event>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+                                downloadDisposable = d;
+                            }
+
+                            @Override
+                            public void onNext(Event event) {
+                                switch (event.getType()) {
+                                    case Event.CHAT_ACTIVITY_DOWNLOAD_OK:
+                                        holder.stopDownloadAt(index);
+                                        needUpdateMessage = true;
+                                        callback.onHelp(Event.create(
+                                                Event.CHAT_ACTIVITY_DOWNLOAD_OK,
+                                                "\\download\\eTalk\\" + url.split("eTaLkFiLe")[1]
+                                        ));
+                                        downloadingIndex = -1;
+                                        break;
+                                    case Event.CHAT_ACTIVITY_DOWNLOAD_FAILED:
+                                        holder.stopDownloadAt(index);
+                                        needUpdateMessage = true;
+                                        callback.onHelp(Event.create(Event.CHAT_ACTIVITY_DOWNLOAD_FAILED));
+                                        downloadingIndex = -1;
+                                        break;
+                                    case Event.CHAT_ACTIVITY_DOWNLOAD_PROGRESS:
+                                        holder.updateProgressAt(index, ((Long) event.getData()[0]).intValue());
+                                        needUpdateMessage = true;
+                                        break;
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });*/
+            }
+        }
+    }
+
+    private void executeStopPlay() {
+        if (playIndex != -1) {
+            holder.stopPlayAt(playIndex);
+            playIndex = -1;
+            //playDisposable.dispose();
             needUpdateMessage = true;
         }
     }
@@ -640,7 +765,7 @@ public class ChatGroupUsecase implements Usecase {
     @Override
     public void endTask() {
         messageHandler.removeCallbacksAndMessages(null);
-        executeCancel();
+        executeStopDownload();
         conversationRepository.putLocalMessagesGroupHolder(
                 conversationKey,
                 holder
@@ -881,8 +1006,8 @@ public class ChatGroupUsecase implements Usecase {
                 messages.set(
                         index,
                         messages.get(index)
-                                .newDownloadVisible(View.GONE)
-                                .newCancelVisible(View.VISIBLE)
+                                .newStartVisible(View.GONE)
+                                .newStopVisible(View.VISIBLE)
                                 .newProgressVisible(View.VISIBLE)
                                 .newProgressPercent(0)
                 );
@@ -890,7 +1015,7 @@ public class ChatGroupUsecase implements Usecase {
             }
         }
 
-        public void changeProgressStateAt(int index, int percent) {
+        public void updateProgressAt(int index, int percent) {
             messages.set(
                     index,
                     messages.get(index)
@@ -902,8 +1027,42 @@ public class ChatGroupUsecase implements Usecase {
             messages.set(
                     index,
                     messages.get(index)
-                            .newDownloadVisible(View.VISIBLE)
-                            .newCancelVisible(View.GONE)
+                            .newStartVisible(View.VISIBLE)
+                            .newStopVisible(View.GONE)
+                            .newProgressVisible(View.GONE)
+            );
+        }
+
+        public String startPlayAt(int index) {
+            if (sendingMessage.containsKey(messages.get(index).getMessage().getKey())) {
+                return null;
+            } else {
+                messages.set(
+                        index,
+                        messages.get(index)
+                                .newStartVisible(View.GONE)
+                                .newStopVisible(View.VISIBLE)
+                                .newProgressVisible(View.VISIBLE)
+                                .newProgressPercent(Integer.parseInt(messages.get(index).getTextData().split("eTaLkAuDiO")[1])-1)
+                );
+                return messages.get(index).getMessage().getData();
+            }
+        }
+
+        public void updateTimeAt(int index, int time) {
+            messages.set(
+                    index,
+                    messages.get(index)
+                            .newProgressPercent(time)
+            );
+        }
+
+        public void stopPlayAt(int index) {
+            messages.set(
+                    index,
+                    messages.get(index)
+                            .newStartVisible(View.VISIBLE)
+                            .newStopVisible(View.GONE)
                             .newProgressVisible(View.GONE)
             );
         }

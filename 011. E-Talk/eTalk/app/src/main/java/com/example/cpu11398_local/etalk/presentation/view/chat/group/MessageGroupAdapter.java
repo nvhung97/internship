@@ -10,7 +10,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,6 @@ import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.GlideApp;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -222,7 +220,11 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void bindView(MessageGroupItem item) {
-            data.setCountTime(Long.parseLong(item.getTextData().split("eTaLkAuDiO")[1]));
+            if (item.getProgressVisible() == View.VISIBLE) {
+                data.setCountTime((long)item.getProgressPercent());
+            } else {
+                data.setCountTime(Long.parseLong(item.getTextData().split("eTaLkAuDiO")[1]));
+            }
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
             avatar.setImageFromObject(item.getAvatar());
@@ -242,19 +244,19 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             } else {
                 more.setVisibility(View.GONE);
             }
-            /*download.setVisibility(item.getDownloadVisible());
-            cancel.setVisibility(item.getCancelVisible());
+            play.setVisibility(item.getStartVisible());
+            stop.setVisibility(item.getStopVisible());
             play.setOnClickListener(v ->
                     callback.onHelp(Event.create(
-                            Event.CHAT_ACTIVITY_DOWNLOAD,
+                            Event.CHAT_ACTIVITY_START_PLAY,
                             messages.indexOf(item)
                     ))
             );
             stop.setOnClickListener(v ->
                     callback.onHelp(Event.create(
-                            Event.CHAT_ACTIVITY_CANCEL
+                            Event.CHAT_ACTIVITY_STOP_PLAY
                     ))
-            );*/
+            );
         }
     }
 
@@ -318,19 +320,19 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             } else {
                 more.setVisibility(View.GONE);
             }
-            download.setVisibility(item.getDownloadVisible());
-            cancel.setVisibility(item.getCancelVisible());
+            download.setVisibility(item.getStartVisible());
+            cancel.setVisibility(item.getStopVisible());
             progressBar.setVisibility(item.getProgressVisible());
             progressBar.setProgress(item.getProgressPercent(), true);
             download.setOnClickListener(v ->
                     callback.onHelp(Event.create(
-                            Event.CHAT_ACTIVITY_DOWNLOAD,
+                            Event.CHAT_ACTIVITY_START_DOWNLOAD,
                             messages.indexOf(item)
                     ))
             );
             cancel.setOnClickListener(v ->
                     callback.onHelp(Event.create(
-                            Event.CHAT_ACTIVITY_CANCEL
+                            Event.CHAT_ACTIVITY_STOP_DOWNLOAD
                     ))
             );
         }
@@ -584,7 +586,11 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         public void bindView(MessageGroupItem item) {
             name.setText(item.getName());
             name.setVisibility(item.getNameVisible());
-            data.setCountTime(Long.parseLong(item.getTextData().split("eTaLkAuDiO")[1]));
+            if (item.getProgressVisible() == View.VISIBLE) {
+                data.setCountTime((long)item.getProgressPercent());
+            } else {
+                data.setCountTime(Long.parseLong(item.getTextData().split("eTaLkAuDiO")[1]));
+            }
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
             avatar.setImageFromObject(item.getAvatar());
@@ -604,21 +610,19 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             } else {
                 more.setVisibility(View.GONE);
             }
-            /*download.setVisibility(item.getDownloadVisible());
-            cancel.setVisibility(item.getCancelVisible());
-            progressBar.setVisibility(item.getProgressVisible());
-            progressBar.setProgress(item.getProgressPercent(), true);
-            download.setOnClickListener(v ->
+            play.setVisibility(item.getStartVisible());
+            stop.setVisibility(item.getStopVisible());
+            play.setOnClickListener(v ->
                     callback.onHelp(Event.create(
-                            Event.CHAT_ACTIVITY_DOWNLOAD,
+                            Event.CHAT_ACTIVITY_START_PLAY,
                             messages.indexOf(item)
                     ))
             );
-            cancel.setOnClickListener(v ->
+            stop.setOnClickListener(v ->
                     callback.onHelp(Event.create(
-                            Event.CHAT_ACTIVITY_CANCEL
+                            Event.CHAT_ACTIVITY_STOP_PLAY
                     ))
-            );*/
+            );
         }
     }
 
@@ -686,19 +690,19 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             } else {
                 more.setVisibility(View.GONE);
             }
-            download.setVisibility(item.getDownloadVisible());
-            cancel.setVisibility(item.getCancelVisible());
+            download.setVisibility(item.getStartVisible());
+            cancel.setVisibility(item.getStopVisible());
             progressBar.setVisibility(item.getProgressVisible());
             progressBar.setProgress(item.getProgressPercent(), true);
             download.setOnClickListener(v ->
                 callback.onHelp(Event.create(
-                        Event.CHAT_ACTIVITY_DOWNLOAD,
+                        Event.CHAT_ACTIVITY_START_DOWNLOAD,
                         messages.indexOf(item)
                 ))
             );
             cancel.setOnClickListener(v ->
                 callback.onHelp(Event.create(
-                        Event.CHAT_ACTIVITY_CANCEL
+                        Event.CHAT_ACTIVITY_STOP_DOWNLOAD
                 ))
             );
         }
