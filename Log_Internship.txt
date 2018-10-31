@@ -427,6 +427,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Cập nhật tính năng gửi lại message file và audio khi chưa gửi được.
 6:23 PM 10/30/2018
 	- Tìm hiểu background service
+6:01 PM 10/31/2018
+	- Tìm hiểu chạy ứng dụng backgroung
 
 
 

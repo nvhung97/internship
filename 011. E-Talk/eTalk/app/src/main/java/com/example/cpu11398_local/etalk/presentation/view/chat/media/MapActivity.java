@@ -7,18 +7,25 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Path;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,6 +45,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     LatLng      latLng;
     Bitmap      avatar;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +63,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView.onCreate(null);
         mapView.getMapAsync(this);
 
-        /*LocationManager locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
         locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
+                LocationManager.NETWORK_PROVIDER,
                 3000,
                 0,
                 new LocationListener() {
                     @Override
                     public void onLocationChanged(Location location) {
                         Toast.makeText(MapActivity.this, location.toString(), Toast.LENGTH_SHORT).show();
+                        Log.e("Test", location.toString());
                     }
 
                     @Override
@@ -90,6 +99,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     @Override
                     public void onLocationChanged(Location location) {
                         Toast.makeText(MapActivity.this, location.toString(), Toast.LENGTH_SHORT).show();
+                        Log.e("Test", location.toString());
                     }
 
                     @Override
@@ -107,7 +117,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                     }
                 }
-        );*/
+        );
     }
 
     @Override
