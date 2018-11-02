@@ -428,7 +428,17 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 6:23 PM 10/30/2018
 	- Tìm hiểu background service
 6:01 PM 10/31/2018
-	- Tìm hiểu chạy ứng dụng backgroung
+	- Tìm hiểu chạy ứng dụng background
+		+ https://fabcirablog.weebly.com/blog/creating-a-never-ending-background-service-in-android
+		+ https://medium.com/google-developers/scheduling-jobs-like-a-pro-with-jobscheduler-286ef8510129
+		+ https://blog.klinkerapps.com/android-o-background-services/
+2:30 PM 11/2/2018
+	- Android versions
+		+ https://developer.android.com/about/versions/pie/
+	- Background Execution Limits
+		+ https://developer.android.com/about/versions/oreo/background
+	- JobIntentService
+		+ https://developer.android.com/reference/android/support/v4/app/JobIntentService
 
 
 

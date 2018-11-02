@@ -8,11 +8,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <uses-feature android:name="android.hardware.location.gps" />
-    <uses-feature android:name="android.hardware.location.network" />
-
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,7 +24,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
         <activity
             android:name=".presentation.view.welcome.WelcomeActivity"
             android:screenOrientation="portrait">
@@ -79,10 +73,6 @@
         <activity
             android:name=".presentation.view.chat.media.MapActivity"
             android:screenOrientation="portrait" />
-        <service
-            android:name=".presentation.view.chat.media.LocationService"
-            android:enabled="true"
-            android:exported="true"></service>
     </application>
 
 </manifest>
