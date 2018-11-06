@@ -437,8 +437,18 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://developer.android.com/about/versions/pie/
 	- Background Execution Limits
 		+ https://developer.android.com/about/versions/oreo/background
+11:17 AM 11/5/2018
+	- Lỗi App not installed
+		+ https://stackoverflow.com/questions/4226132/app-not-installed-error-on-android
+	- Firebase không hoạt động ở background
+		+ https://stackoverflow.com/questions/38227450/android-firebase-update-issue-when-the-app-is-in-background
+4:21 PM 11/6/2018
 	- JobIntentService
 		+ https://developer.android.com/reference/android/support/v4/app/JobIntentService
+		+ https://medium.com/til-kotlin/jobintentservice-for-background-processing-on-android-o-39535460e060
+		+ https://github.com/JimSeker/service
+	- JobScheduer
+		+ https://www.youtube.com/watch?v=QdINLG5QrJc
 
 
 
