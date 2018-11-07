@@ -8,6 +8,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.provider.OpenableColumns;
 import android.support.annotation.RequiresApi;
+import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
@@ -18,6 +20,14 @@ import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.presentation.view.chat.group.MessageGroupItem;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
 import com.example.cpu11398_local.etalk.utils.Event;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -610,56 +620,58 @@ public class ChatGroupUsecase implements Usecase {
 
     @SuppressLint("CheckResult")
     private void executeStartDownload(int index, ViewModelCallback callback) {
-        if (downloadingIndex == -1) {
-            downloadingIndex = index;
-            String url = holder.startDownloadAt(index);
-            if (url != null) {
-                needUpdateMessage = true;
-                conversationRepository
-                        .downloadNetworkFile(url)
-                        .subscribeOn(Schedulers.from(executor))
-                        .observeOn(scheduler)
-                        .subscribeWith(new Observer<Event>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-                                downloadDisposable = d;
-                            }
-
-                            @Override
-                            public void onNext(Event event) {
-                                switch (event.getType()) {
-                                    case Event.CHAT_ACTIVITY_DOWNLOAD_OK:
-                                        holder.stopDownloadAt(index);
-                                        needUpdateMessage = true;
-                                        callback.onHelp(Event.create(
-                                                Event.CHAT_ACTIVITY_DOWNLOAD_OK,
-                                                "\\download\\eTalk\\" + url.split("eTaLkFiLe")[1]
-                                        ));
-                                        downloadingIndex = -1;
-                                        break;
-                                    case Event.CHAT_ACTIVITY_DOWNLOAD_FAILED:
-                                        holder.stopDownloadAt(index);
-                                        needUpdateMessage = true;
-                                        callback.onHelp(Event.create(Event.CHAT_ACTIVITY_DOWNLOAD_FAILED));
-                                        downloadingIndex = -1;
-                                        break;
-                                    case Event.CHAT_ACTIVITY_DOWNLOAD_PROGRESS:
-                                        holder.updateProgressAt(index, ((Long) event.getData()[0]).intValue());
-                                        needUpdateMessage = true;
-                                        break;
+        if (index != -1) {
+            if (downloadingIndex == -1) {
+                downloadingIndex = index;
+                String url = holder.startDownloadAt(index);
+                if (url != null) {
+                    needUpdateMessage = true;
+                    conversationRepository
+                            .downloadNetworkFile(url)
+                            .subscribeOn(Schedulers.from(executor))
+                            .observeOn(scheduler)
+                            .subscribeWith(new Observer<Event>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+                                    downloadDisposable = d;
                                 }
-                            }
 
-                            @Override
-                            public void onError(Throwable e) {
+                                @Override
+                                public void onNext(Event event) {
+                                    switch (event.getType()) {
+                                        case Event.CHAT_ACTIVITY_DOWNLOAD_OK:
+                                            holder.stopDownloadAt(index);
+                                            needUpdateMessage = true;
+                                            callback.onHelp(Event.create(
+                                                    Event.CHAT_ACTIVITY_DOWNLOAD_OK,
+                                                    "\\download\\eTalk\\" + url.split("eTaLkFiLe")[1]
+                                            ));
+                                            downloadingIndex = -1;
+                                            break;
+                                        case Event.CHAT_ACTIVITY_DOWNLOAD_FAILED:
+                                            holder.stopDownloadAt(index);
+                                            needUpdateMessage = true;
+                                            callback.onHelp(Event.create(Event.CHAT_ACTIVITY_DOWNLOAD_FAILED));
+                                            downloadingIndex = -1;
+                                            break;
+                                        case Event.CHAT_ACTIVITY_DOWNLOAD_PROGRESS:
+                                            holder.updateProgressAt(index, ((Long) event.getData()[0]).intValue());
+                                            needUpdateMessage = true;
+                                            break;
+                                    }
+                                }
 
-                            }
+                                @Override
+                                public void onError(Throwable e) {
 
-                            @Override
-                            public void onComplete() {
+                                }
 
-                            }
-                        });
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                }
             }
         }
     }
@@ -673,60 +685,58 @@ public class ChatGroupUsecase implements Usecase {
         }
     }
 
-    private Disposable playDisposable = null;
+    private ExoPlayer player;
+    private Handler playHandler = new Handler();
     private int playIndex = -1;
 
     private void executeStartPlay(int index, ViewModelCallback callback) {
-        if (playIndex == -1) {
-            playIndex = index;
-            String url = holder.startPlayAt(index);
-            if (url != null) {
-                needUpdateMessage = true;
-                /*conversationRepository
-                        .downloadNetworkFile(url)
-                        .subscribeOn(Schedulers.from(executor))
-                        .observeOn(scheduler)
-                        .subscribeWith(new Observer<Event>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-                                downloadDisposable = d;
+        if (index != -1) {
+            if (playIndex == -1) {
+                playIndex = index;
+                String url = holder.startPlayAt(index);
+                if (url != null) {
+                    needUpdateMessage = true;
+                    player = ExoPlayerFactory.newSimpleInstance(
+                            new DefaultRenderersFactory(context),
+                            new DefaultTrackSelector(),
+                            new DefaultLoadControl()
+                    );
+                    player.setPlayWhenReady(true);
+                    player.addListener(new Player.DefaultEventListener() {
+                        @Override
+                        public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                            switch (playbackState) {
+                                case PlaybackStateCompat.STATE_PLAYING:
+                                    playHandler.postDelayed(
+                                            new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    playHandler.postDelayed(this, 500);
+                                                    holder.updateTimeAt(playIndex, (int) (player.getDuration() - player.getCurrentPosition()) / 1000);
+                                                    needUpdateMessage = true;
+                                                }
+                                            },
+                                            500
+                                    );
+                                    break;
+                                case PlaybackStateCompat.STATE_FAST_FORWARDING:
+                                    playHandler.removeCallbacksAndMessages(null);
+                                    executeStopPlay();
+                                    break;
                             }
-
-                            @Override
-                            public void onNext(Event event) {
-                                switch (event.getType()) {
-                                    case Event.CHAT_ACTIVITY_DOWNLOAD_OK:
-                                        holder.stopDownloadAt(index);
-                                        needUpdateMessage = true;
-                                        callback.onHelp(Event.create(
-                                                Event.CHAT_ACTIVITY_DOWNLOAD_OK,
-                                                "\\download\\eTalk\\" + url.split("eTaLkFiLe")[1]
-                                        ));
-                                        downloadingIndex = -1;
-                                        break;
-                                    case Event.CHAT_ACTIVITY_DOWNLOAD_FAILED:
-                                        holder.stopDownloadAt(index);
-                                        needUpdateMessage = true;
-                                        callback.onHelp(Event.create(Event.CHAT_ACTIVITY_DOWNLOAD_FAILED));
-                                        downloadingIndex = -1;
-                                        break;
-                                    case Event.CHAT_ACTIVITY_DOWNLOAD_PROGRESS:
-                                        holder.updateProgressAt(index, ((Long) event.getData()[0]).intValue());
-                                        needUpdateMessage = true;
-                                        break;
-                                }
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-
-                            @Override
-                            public void onComplete() {
-
-                            }
-                        });*/
+                        }
+                    });
+                    player.prepare(
+                            new ExtractorMediaSource.Factory(
+                                    new DefaultHttpDataSourceFactory(context.getPackageName())
+                            ).createMediaSource(
+                                    Uri.parse(url.split("eTaLkAuDiO")[0])
+                            )
+                    );
+                }
+            } else {
+                executeStopPlay();
+                executeStartPlay(index, callback);
             }
         }
     }
@@ -734,8 +744,11 @@ public class ChatGroupUsecase implements Usecase {
     private void executeStopPlay() {
         if (playIndex != -1) {
             holder.stopPlayAt(playIndex);
+            playHandler.removeCallbacksAndMessages(null);
             playIndex = -1;
-            //playDisposable.dispose();
+            player.stop();
+            player.release();
+            player = null;
             needUpdateMessage = true;
         }
     }
@@ -1042,8 +1055,6 @@ public class ChatGroupUsecase implements Usecase {
                         messages.get(index)
                                 .newStartVisible(View.GONE)
                                 .newStopVisible(View.VISIBLE)
-                                .newProgressVisible(View.VISIBLE)
-                                .newProgressPercent(Integer.parseInt(messages.get(index).getTextData().split("eTaLkAuDiO")[1])-1)
                 );
                 return messages.get(index).getMessage().getData();
             }
@@ -1054,6 +1065,7 @@ public class ChatGroupUsecase implements Usecase {
                     index,
                     messages.get(index)
                             .newProgressPercent(time)
+                            .newProgressVisible(View.VISIBLE)
             );
         }
 

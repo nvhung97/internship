@@ -319,6 +319,7 @@
     <item name="lyt_message_group_sound_me_data" type="id"/>
     <item name="lyt_message_group_sound_me_play" type="id"/>
     <item name="lyt_message_group_sound_me_stop" type="id"/>
+    <item name="lyt_message_group_sound_me_equalizer" type="id"/>
     <item name="lyt_message_group_sound_me_time" type="id"/>
     <item name="lyt_message_group_sound_me_status" type="id"/>
     <item name="lyt_message_group_sound_me_seen1" type="id"/>
@@ -338,6 +339,7 @@
     <item name="lyt_message_group_sound_friend_data" type="id"/>
     <item name="lyt_message_group_sound_friend_play" type="id"/>
     <item name="lyt_message_group_sound_friend_stop" type="id"/>
+    <item name="lyt_message_group_sound_friend_equalizer" type="id"/>
     <item name="lyt_message_group_sound_friend_time" type="id"/>
     <item name="lyt_message_group_sound_friend_avatar" type="id"/>
     <item name="lyt_message_group_sound_friend_seen1" type="id"/>

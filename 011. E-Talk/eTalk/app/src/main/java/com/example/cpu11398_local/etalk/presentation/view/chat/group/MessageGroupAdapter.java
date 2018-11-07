@@ -183,20 +183,24 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
     }
 
     public class MessageSoundMeViewHolder extends MessageGroupViewHolder {
+        private Context              context;
         public ConstraintLayout      content;
         public ClockView             data;
         public ImageButton           play;
         public ImageButton           stop;
+        public ImageView             equalizer;
         public TextView              time;
         public AvatarImageView       avatar;
         public List<AvatarImageView> seens = new ArrayList<>();
         public TextView              more;
         public MessageSoundMeViewHolder(View view) {
             super(view);
+            context     = view.getContext();
             content     = view.findViewById(R.id.lyt_message_group_sound_me_content);
             data        = view.findViewById(R.id.lyt_message_group_sound_me_data);
             play        = view.findViewById(R.id.lyt_message_group_sound_me_play);
             stop        = view.findViewById(R.id.lyt_message_group_sound_me_stop);
+            equalizer   = view.findViewById(R.id.lyt_message_group_sound_me_equalizer);
             time        = view.findViewById(R.id.lyt_message_group_sound_me_time);
             avatar      = view.findViewById(R.id.lyt_message_group_sound_me_status);
             more        = view.findViewById(R.id.lyt_message_group_sound_me_more);
@@ -222,8 +226,18 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         public void bindView(MessageGroupItem item) {
             if (item.getProgressVisible() == View.VISIBLE) {
                 data.setCountTime((long)item.getProgressPercent());
+                GlideApp
+                        .with(context)
+                        .load(R.drawable.equalizer_animation)
+                        .override(Target.SIZE_ORIGINAL)
+                        .into(equalizer);
             } else {
                 data.setCountTime(Long.parseLong(item.getTextData().split("eTaLkAuDiO")[1]));
+                GlideApp
+                        .with(context)
+                        .load(R.drawable.equalizer_no_animation)
+                        .override(Target.SIZE_ORIGINAL)
+                        .into(equalizer);
             }
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
@@ -546,21 +560,25 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
 
     public class MessageSoundFriendViewHolder extends MessageGroupViewHolder {
         public TextView              name;
+        public Context               context;
         public ConstraintLayout      content;
         public ClockView             data;
         public ImageButton           play;
         public ImageButton           stop;
+        public ImageView             equalizer;
         public TextView              time;
         public AvatarImageView       avatar;
         public List<AvatarImageView> seens = new ArrayList<>();
         public TextView              more;
         public MessageSoundFriendViewHolder(View view) {
             super(view);
+            context     = view.getContext();
             name        = view.findViewById(R.id.lyt_message_group_sound_friend_name);
             content     = view.findViewById(R.id.lyt_message_group_sound_friend_content);
             data        = view.findViewById(R.id.lyt_message_group_sound_friend_data);
             play        = view.findViewById(R.id.lyt_message_group_sound_friend_play);
             stop        = view.findViewById(R.id.lyt_message_group_sound_friend_stop);
+            equalizer   = view.findViewById(R.id.lyt_message_group_sound_friend_equalizer);
             time        = view.findViewById(R.id.lyt_message_group_sound_friend_time);
             avatar      = view.findViewById(R.id.lyt_message_group_sound_friend_avatar);
             more        = view.findViewById(R.id.lyt_message_group_sound_friend_more);
@@ -588,8 +606,18 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             name.setVisibility(item.getNameVisible());
             if (item.getProgressVisible() == View.VISIBLE) {
                 data.setCountTime((long)item.getProgressPercent());
+                GlideApp
+                        .with(context)
+                        .load(R.drawable.equalizer_animation)
+                        .override(Target.SIZE_ORIGINAL)
+                        .into(equalizer);
             } else {
                 data.setCountTime(Long.parseLong(item.getTextData().split("eTaLkAuDiO")[1]));
+                GlideApp
+                        .with(context)
+                        .load(R.drawable.equalizer_no_animation)
+                        .override(Target.SIZE_ORIGINAL)
+                        .into(equalizer);
             }
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());

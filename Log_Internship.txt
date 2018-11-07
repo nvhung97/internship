@@ -449,6 +449,9 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://github.com/JimSeker/service
 	- JobScheduer
 		+ https://www.youtube.com/watch?v=QdINLG5QrJc
+9:01 AM 11/7/2018
+	- Hoàn thành gửi audio
+		+ https://codelabs.developers.google.com/codelabs/exoplayer-intro/
 
 
 

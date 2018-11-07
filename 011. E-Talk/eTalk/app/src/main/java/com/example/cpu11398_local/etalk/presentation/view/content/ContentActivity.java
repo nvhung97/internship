@@ -8,7 +8,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.Toast;
-
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityContentBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
