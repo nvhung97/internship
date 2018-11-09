@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.cpu11398_local.etalk">
 
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -25,6 +24,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <activity
             android:name=".presentation.view.welcome.WelcomeActivity"
             android:screenOrientation="portrait">
@@ -68,12 +68,16 @@
         <activity
             android:name=".presentation.view.chat.media.MediaPhotoActivity"
             android:screenOrientation="portrait" />
+
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyB0cqy8YAHfYWvpAMWH-XovV7SCi5qy13E" />
+
         <activity
             android:name=".presentation.view.chat.media.MapActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.view.chat.media.MediaVideoActivity"/>
     </application>
 
 </manifest>

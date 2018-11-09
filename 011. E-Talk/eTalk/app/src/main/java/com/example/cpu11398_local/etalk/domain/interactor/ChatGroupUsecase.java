@@ -26,7 +26,9 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -698,7 +700,11 @@ public class ChatGroupUsecase implements Usecase {
                     needUpdateMessage = true;
                     player = ExoPlayerFactory.newSimpleInstance(
                             new DefaultRenderersFactory(context),
-                            new DefaultTrackSelector(),
+                            new DefaultTrackSelector(
+                                    new AdaptiveTrackSelection.Factory(
+                                            new DefaultBandwidthMeter()
+                                    )
+                            ),
                             new DefaultLoadControl()
                     );
                     player.setPlayWhenReady(true);
@@ -779,6 +785,7 @@ public class ChatGroupUsecase implements Usecase {
     public void endTask() {
         messageHandler.removeCallbacksAndMessages(null);
         executeStopDownload();
+        executeStopPlay();
         conversationRepository.putLocalMessagesGroupHolder(
                 conversationKey,
                 holder

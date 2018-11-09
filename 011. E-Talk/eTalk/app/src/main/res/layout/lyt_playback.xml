@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:layout_gravity="bottom"
+    android:orientation="horizontal"
+    android:background="#CC000000">
+
+    <ImageButton
+        android:id="@id/exo_play"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        style="@style/ExoMediaButton.Play"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+
+    <ImageButton
+        android:id="@id/exo_pause"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        style="@style/ExoMediaButton.Pause"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@id/exo_position"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="40dp"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:includeFontPadding="false"
+        android:textColor="#FFBEBEBE"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <com.google.android.exoplayer2.ui.DefaultTimeBar
+        android:id="@id/exo_progress"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toRightOf="@id/exo_position"
+        app:layout_constraintRight_toLeftOf="@id/exo_duration"/>
+
+    <TextView
+        android:id="@id/exo_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="40dp"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:includeFontPadding="false"
+        android:textColor="#FFBEBEBE"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <ImageButton
+        android:id="@+id/exo_full_screen"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/ic_full_screen"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <ImageButton
+        android:id="@+id/exo_exit_full_screen"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/ic_exit_full_screen"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

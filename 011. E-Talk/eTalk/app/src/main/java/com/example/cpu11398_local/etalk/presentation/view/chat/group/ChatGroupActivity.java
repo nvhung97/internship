@@ -23,6 +23,7 @@ import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.chat.media.EmojiAdapter;
 import com.example.cpu11398_local.etalk.presentation.view.chat.media.MapActivity;
+import com.example.cpu11398_local.etalk.presentation.view.chat.media.MediaVideoActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
@@ -75,6 +76,7 @@ public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObs
 
         keyboardHeightProvider = new KeyboardHeightProvider(this);
         binding.chatActivityRoot.post((Runnable) () -> keyboardHeightProvider.start());
+        startActivity(new Intent(this, MediaVideoActivity.class));
     }
 
     @Override
