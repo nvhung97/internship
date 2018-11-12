@@ -3,8 +3,8 @@ package com.example.cpu11398_local.etalk.presentation.view.chat.media;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -23,65 +23,41 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 
 public class MediaVideoActivity extends AppCompatActivity {
-
-    private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
 
     private ExoPlayer   player;
     private PlayerView  playerView;
     private ProgressBar progressBar;
+    private ImageButton fullScreen;
     private ImageButton exitFullScreen;
+    private ImageButton exit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        /*if (getIntent().getExtras().getInt("orientation") == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }*/
         setContentView(R.layout.activity_media_video);
 
         playerView      = findViewById(R.id.exo_player);
+        fullScreen      = findViewById(R.id.exo_full_screen);
         exitFullScreen  = findViewById(R.id.exo_exit_full_screen);
         progressBar     = findViewById(R.id.exo_loading);
+        exit            = findViewById(R.id.exo_cancel);
 
-        exitFullScreen.setOnClickListener(v ->finish());
-    }
+        fullScreen.setOnClickListener(v -> {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            fullScreen.setVisibility(View.GONE);
+            exitFullScreen.setVisibility(View.VISIBLE);
+        });
+        exitFullScreen.setOnClickListener(v -> {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            fullScreen.setVisibility(View.VISIBLE);
+            exitFullScreen.setVisibility(View.GONE);
+        });
+        exit.setOnClickListener(v -> finish());
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (Util.SDK_INT > 23) {
-            initializePlayer();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if ((Util.SDK_INT <= 23 || player == null)) {
-            initializePlayer();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (Util.SDK_INT <= 23) {
-            releasePlayer();
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (Util.SDK_INT > 23) {
-            releasePlayer();
-        }
+        initializePlayer();
     }
 
     private void initializePlayer() {
@@ -89,7 +65,9 @@ public class MediaVideoActivity extends AppCompatActivity {
             player = ExoPlayerFactory.newSimpleInstance(
                     new DefaultRenderersFactory(this),
                     new DefaultTrackSelector(
-                            new AdaptiveTrackSelection.Factory(BANDWIDTH_METER)
+                            new AdaptiveTrackSelection.Factory(
+                                    new DefaultBandwidthMeter()
+                            )
                     ),
                     new DefaultLoadControl()
             );
@@ -98,6 +76,9 @@ public class MediaVideoActivity extends AppCompatActivity {
                 @Override
                 public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                     switch (playbackState) {
+                        case PlaybackStateCompat.STATE_PAUSED:
+                            progressBar.setVisibility(View.VISIBLE);
+                            break;
                         case PlaybackStateCompat.STATE_PLAYING:
                             progressBar.setVisibility(View.GONE);
                             break;
@@ -108,20 +89,16 @@ public class MediaVideoActivity extends AppCompatActivity {
                 }
             });
             playerView.setPlayer(player);
-            /*player.seekTo(
+            player.seekTo(
                     player.getCurrentWindowIndex(),
-                    getIntent().getExtras().getLong("position")
-            );*/
+                    60000/*getIntent().getExtras().getLong("position")*/
+            );
         }
-        MediaSource mediaSource = buildMediaSource("http://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4"/*getIntent().getExtras().getString("url")*/);
-        player.prepare(mediaSource, false, true);
-    }
-
-    private void releasePlayer() {
-        if (player != null) {
-            player.release();
-            player = null;
-        }
+        player.prepare(
+                buildMediaSource("http://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4"/*getIntent().getExtras().getString("url")*/),
+                false,
+                true
+        );
     }
 
     private MediaSource buildMediaSource(String link) {
@@ -134,5 +111,18 @@ public class MediaVideoActivity extends AppCompatActivity {
                         true
                 )
         ).createMediaSource(Uri.parse(link));
+    }
+
+    private void releasePlayer() {
+        if (player != null) {
+            player.release();
+            player = null;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        releasePlayer();
+        super.onDestroy();
     }
 }

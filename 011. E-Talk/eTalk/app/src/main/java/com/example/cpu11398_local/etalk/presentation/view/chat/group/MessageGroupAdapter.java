@@ -3,8 +3,10 @@ package com.example.cpu11398_local.etalk.presentation.view.chat.group;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.util.DiffUtil;
@@ -18,9 +20,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView;
+import com.example.cpu11398_local.etalk.presentation.custom.BaseTarget;
 import com.example.cpu11398_local.etalk.presentation.custom.ClockView;
+import com.example.cpu11398_local.etalk.presentation.custom.ImageMessageView;
 import com.example.cpu11398_local.etalk.presentation.custom.RoundedMapView;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.view.chat.media.MapActivity;
@@ -32,7 +37,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -123,7 +127,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
     public class MessageImageMeViewHolder extends MessageGroupViewHolder {
         private Context              context;
         public ConstraintLayout      content;
-        public ImageView             data;
+        public ImageMessageView      data;
         public TextView              time;
         public AvatarImageView       avatar;
         public List<AvatarImageView> seens = new ArrayList<>();
@@ -153,7 +157,12 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                     .with(context)
                     .load(item.getTextData())
                     .override(Target.SIZE_ORIGINAL)
-                    .into(data);
+                    .into(new BaseTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            data.setData(resource);
+                        }
+                    });
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
             avatar.setImageFromObject(item.getAvatar());
@@ -496,7 +505,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         private Context              context;
         public TextView              name;
         public ConstraintLayout      content;
-        public ImageView             data;
+        public ImageMessageView      data;
         public TextView              time;
         public AvatarImageView       avatar;
         public List<AvatarImageView> seens = new ArrayList<>();
@@ -529,7 +538,12 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                     .with(context)
                     .load(item.getTextData())
                     .override(Target.SIZE_ORIGINAL)
-                    .into(data);
+                    .into(new BaseTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            data.setData(resource);
+                        }
+                    });
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
             avatar.setImageFromObject(item.getAvatar());

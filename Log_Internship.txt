@@ -454,6 +454,10 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://codelabs.developers.google.com/codelabs/exoplayer-intro/
 6:15 PM 11/9/2018
 	- Thiết kế layout activity video
+11:58 AM 11/12/2018
+	- Thay đổi size hình theo tỉ lệ
+	- Resume player khi xoay màn hình
+		+ https://stackoverflow.com/a/49356312
 
 
 
