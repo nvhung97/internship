@@ -12,6 +12,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +28,14 @@ import com.example.cpu11398_local.etalk.presentation.custom.BaseTarget;
 import com.example.cpu11398_local.etalk.presentation.custom.ClockView;
 import com.example.cpu11398_local.etalk.presentation.custom.ImageMessageView;
 import com.example.cpu11398_local.etalk.presentation.custom.RoundedMapView;
+import com.example.cpu11398_local.etalk.presentation.custom.RoundedPlayerView;
 import com.example.cpu11398_local.etalk.presentation.model.Message;
 import com.example.cpu11398_local.etalk.presentation.view.chat.media.MapActivity;
 import com.example.cpu11398_local.etalk.presentation.view.chat.media.MediaPhotoActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.GlideApp;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -51,11 +54,13 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
     private final int ME_SOUND      = 2;
     private final int ME_FILE       = 4;
     private final int ME_MAP        = 5;
+    private final int ME_VIDEO      = 6;
     private final int FRIEND_TEXT   = 7;
     private final int FRIEND_IMAGE  = 8;
     private final int FRIEND_SOUND  = 9;
     private final int FRIEND_FILE   = 11;
     private final int FRIEND_MAP    = 12;
+    private final int FRIEND_VIDEO  = 13;
 
     private List<MessageGroupItem>  messages;
     private ViewModelCallback       callback;
@@ -153,16 +158,25 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         }
         @Override
         public void bindView(MessageGroupItem item) {
-            GlideApp
-                    .with(context)
-                    .load(item.getTextData())
-                    .override(Target.SIZE_ORIGINAL)
-                    .into(new BaseTarget<Drawable>() {
-                        @Override
-                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                            data.setData(resource);
-                        }
-                    });
+            if (item.getTextData().isEmpty()) {
+                GlideApp
+                        .with(context)
+                        .load(R.drawable.ic_sending)
+                        .override(200, 200)
+                        .into(data);
+            } else {
+                data.setImageResource(R.drawable.img_holder);
+                GlideApp
+                        .with(context)
+                        .load(item.getTextData())
+                        .override(Target.SIZE_ORIGINAL)
+                        .into(new BaseTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                data.setData(resource);
+                            }
+                        });
+            }
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
             avatar.setImageFromObject(item.getAvatar());
@@ -195,6 +209,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         private Context              context;
         public ConstraintLayout      content;
         public ClockView             data;
+        public ProgressBar           sending;
         public ImageButton           play;
         public ImageButton           stop;
         public ImageView             equalizer;
@@ -208,6 +223,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             content     = view.findViewById(R.id.lyt_message_group_sound_me_content);
             data        = view.findViewById(R.id.lyt_message_group_sound_me_data);
             play        = view.findViewById(R.id.lyt_message_group_sound_me_play);
+            sending     = view.findViewById(R.id.lyt_message_group_sound_me_sending);
             stop        = view.findViewById(R.id.lyt_message_group_sound_me_stop);
             equalizer   = view.findViewById(R.id.lyt_message_group_sound_me_equalizer);
             time        = view.findViewById(R.id.lyt_message_group_sound_me_time);
@@ -233,20 +249,28 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void bindView(MessageGroupItem item) {
-            if (item.getProgressVisible() == View.VISIBLE) {
-                data.setCountTime((long)item.getProgressPercent());
-                GlideApp
-                        .with(context)
-                        .load(R.drawable.equalizer_animation)
-                        .override(Target.SIZE_ORIGINAL)
-                        .into(equalizer);
-            } else {
-                data.setCountTime(Long.parseLong(item.getTextData().split("eTaLkAuDiO")[1]));
+            if (item.getTextData().isEmpty()) {
                 GlideApp
                         .with(context)
                         .load(R.drawable.equalizer_no_animation)
                         .override(Target.SIZE_ORIGINAL)
                         .into(equalizer);
+            } else {
+                if (item.getProgressVisible() == View.VISIBLE) {
+                    data.setCountTime((long) item.getProgressPercent());
+                    GlideApp
+                            .with(context)
+                            .load(R.drawable.equalizer_animation)
+                            .override(Target.SIZE_ORIGINAL)
+                            .into(equalizer);
+                } else {
+                    data.setCountTime(Long.parseLong(item.getTextData().split("eTaLkAuDiO")[1]));
+                    GlideApp
+                            .with(context)
+                            .load(R.drawable.equalizer_no_animation)
+                            .override(Target.SIZE_ORIGINAL)
+                            .into(equalizer);
+                }
             }
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
@@ -267,19 +291,115 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             } else {
                 more.setVisibility(View.GONE);
             }
-            play.setVisibility(item.getStartVisible());
-            stop.setVisibility(item.getStopVisible());
-            play.setOnClickListener(v ->
-                    callback.onHelp(Event.create(
-                            Event.CHAT_ACTIVITY_START_PLAY,
-                            messages.indexOf(item)
-                    ))
-            );
-            stop.setOnClickListener(v ->
-                    callback.onHelp(Event.create(
-                            Event.CHAT_ACTIVITY_STOP_PLAY
-                    ))
-            );
+            if (item.getTextData().isEmpty()) {
+                sending.setVisibility(View.VISIBLE);
+                play.setVisibility(View.GONE);
+                stop.setVisibility(View.GONE);
+            } else {
+                sending.setVisibility(View.GONE);
+                play.setVisibility(item.getStartVisible());
+                stop.setVisibility(item.getStopVisible());
+                play.setOnClickListener(v ->
+                        callback.onHelp(Event.create(
+                                Event.CHAT_ACTIVITY_START_PLAY,
+                                messages.indexOf(item)
+                        ))
+                );
+                stop.setOnClickListener(v ->
+                        callback.onHelp(Event.create(
+                                Event.CHAT_ACTIVITY_STOP_PLAY
+                        ))
+                );
+            }
+        }
+    }
+
+    public class MessageVideoMeViewHolder extends MessageGroupViewHolder {
+        private Context              context;
+        public ImageMessageView      data;
+        public ImageButton           play;
+        public TextView              time;
+        public AvatarImageView       avatar;
+        public List<AvatarImageView> seens = new ArrayList<>();
+        public TextView              more;
+        public ProgressBar           loading;
+        private ExoPlayer            player;
+        private RoundedPlayerView    playerView;
+        public MessageVideoMeViewHolder(View view) {
+            super(view);
+            context = view.getContext();
+            data    = view.findViewById(R.id.lyt_message_group_video_me_data);
+            play    = view.findViewById(R.id.lyt_message_group_video_me_play);
+            loading = view.findViewById(R.id.lyt_message_group_video_me_loading);
+            time    = view.findViewById(R.id.lyt_message_group_video_me_time);
+            avatar  = view.findViewById(R.id.lyt_message_group_video_me_status);
+            more    = view.findViewById(R.id.lyt_message_group_video_me_more);
+            playerView = view.findViewById(R.id.lyt_message_group_video_me_player);
+            seens.add(view.findViewById(R.id.lyt_message_group_video_me_seen1));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_me_seen2));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_me_seen3));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_me_seen4));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_me_seen5));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_me_seen6));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_me_seen7));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_me_seen8));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_me_seen9));
+            data.setClipToOutline(true);
+        }
+        @Override
+        public void bindView(MessageGroupItem item) {
+            playerView.setVisibility(View.GONE);
+            loading.setVisibility(View.GONE);
+            if (item.getTextData().isEmpty()) {
+                play.setVisibility(View.GONE);
+                data.setVisibility(View.VISIBLE);
+                GlideApp
+                        .with(context)
+                        .load(R.drawable.ic_sending)
+                        .override(200, 200)
+                        .into(data);
+            } else {
+                data.setImageResource(R.drawable.vid_holder);
+                data.setVisibility(View.VISIBLE);
+                play.setVisibility(View.GONE);
+                GlideApp
+                        .with(context)
+                        .load(item.getTextData().split("eTaLkViDeO")[1])
+                        .override(Target.SIZE_ORIGINAL)
+                        .into(new BaseTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                data.setData(resource);
+                                play.setVisibility(View.VISIBLE);
+                            }
+                        });
+            }
+            time.setText(item.getTime());
+            time.setVisibility(item.getTimeVisible());
+            avatar.setImageFromObject(item.getAvatar());
+            avatar.setVisibility(item.getAvatarVisible());
+            List<String> seenAvatars = new ArrayList<>(item.getSeen().values());
+            for (int i = 0; i < 9; ++i) {
+                if (i < seenAvatars.size()) {
+                    seens.get(i).setImageFromObject(seenAvatars.get(i));
+                    seens.get(i).setVisibility(View.VISIBLE);
+                } else {
+                    seens.get(i).setVisibility(View.GONE);
+                }
+            }
+            if (seenAvatars.size() > 9) {
+                more.setText("+" + (seenAvatars.size() - 9));
+                more.setVisibility(View.VISIBLE);
+            } else {
+                more.setVisibility(View.GONE);
+            }
+            play.setOnClickListener(v -> {
+                playerView.setVisibility(View.INVISIBLE);
+                playerView.getLayoutParams().width = data.getMeasuredWidth();
+                playerView.getLayoutParams().height = data.getMeasuredHeight();
+                play.setVisibility(View.GONE);
+                loading.setVisibility(View.VISIBLE);
+            });
         }
     }
 
@@ -288,6 +408,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         public TextView              data;
         public ImageButton           download;
         public ProgressBar           progressBar;
+        public ProgressBar           sending;
         public ImageButton           cancel;
         public TextView              time;
         public AvatarImageView       avatar;
@@ -299,6 +420,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             data        = view.findViewById(R.id.lyt_message_group_file_me_data);
             download    = view.findViewById(R.id.lyt_message_group_file_me_download);
             progressBar = view.findViewById(R.id.lyt_message_group_file_me_progress);
+            sending     = view.findViewById(R.id.lyt_message_group_file_me_sending);
             cancel      = view.findViewById(R.id.lyt_message_group_file_me_cancel);
             time        = view.findViewById(R.id.lyt_message_group_file_me_time);
             avatar      = view.findViewById(R.id.lyt_message_group_file_me_status);
@@ -343,21 +465,29 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             } else {
                 more.setVisibility(View.GONE);
             }
-            download.setVisibility(item.getStartVisible());
-            cancel.setVisibility(item.getStopVisible());
-            progressBar.setVisibility(item.getProgressVisible());
-            progressBar.setProgress(item.getProgressPercent(), true);
-            download.setOnClickListener(v ->
-                    callback.onHelp(Event.create(
-                            Event.CHAT_ACTIVITY_START_DOWNLOAD,
-                            messages.indexOf(item)
-                    ))
-            );
-            cancel.setOnClickListener(v ->
-                    callback.onHelp(Event.create(
-                            Event.CHAT_ACTIVITY_STOP_DOWNLOAD
-                    ))
-            );
+            if (item.getTextData().split("eTaLkFiLe")[0].equalsIgnoreCase("null")) {
+                sending.setVisibility(View.VISIBLE);
+                download.setVisibility(View.GONE);
+                cancel.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+            } else {
+                sending.setVisibility(View.GONE);
+                download.setVisibility(item.getStartVisible());
+                cancel.setVisibility(item.getStopVisible());
+                progressBar.setVisibility(item.getProgressVisible());
+                progressBar.setProgress(item.getProgressPercent(), true);
+                download.setOnClickListener(v ->
+                        callback.onHelp(Event.create(
+                                Event.CHAT_ACTIVITY_START_DOWNLOAD,
+                                messages.indexOf(item)
+                        ))
+                );
+                cancel.setOnClickListener(v ->
+                        callback.onHelp(Event.create(
+                                Event.CHAT_ACTIVITY_STOP_DOWNLOAD
+                        ))
+                );
+            }
         }
     }
 
@@ -534,6 +664,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         public void bindView(MessageGroupItem item) {
             name.setText(item.getName());
             name.setVisibility(item.getNameVisible());
+            data.setImageResource(R.drawable.img_holder);
             GlideApp
                     .with(context)
                     .load(item.getTextData())
@@ -665,6 +796,89 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                             Event.CHAT_ACTIVITY_STOP_PLAY
                     ))
             );
+        }
+    }
+
+    public class MessageVideoFriendViewHolder extends MessageGroupViewHolder {
+        private Context              context;
+        public TextView              name;
+        public ImageMessageView      data;
+        public ImageButton           play;
+        public TextView              time;
+        public AvatarImageView       avatar;
+        public List<AvatarImageView> seens = new ArrayList<>();
+        public TextView              more;
+        public ProgressBar           loading;
+        private ExoPlayer            player;
+        private RoundedPlayerView    playerView;
+        public MessageVideoFriendViewHolder(View view) {
+            super(view);
+            context = view.getContext();
+            name    = view.findViewById(R.id.lyt_message_group_video_friend_name);
+            data    = view.findViewById(R.id.lyt_message_group_video_friend_data);
+            play    = view.findViewById(R.id.lyt_message_group_video_friend_play);
+            loading = view.findViewById(R.id.lyt_message_group_video_friend_loading);
+            time    = view.findViewById(R.id.lyt_message_group_video_friend_time);
+            avatar  = view.findViewById(R.id.lyt_message_group_video_friend_avatar);
+            more    = view.findViewById(R.id.lyt_message_group_video_friend_more);
+            playerView = view.findViewById(R.id.lyt_message_group_video_friend_player);
+            seens.add(view.findViewById(R.id.lyt_message_group_video_friend_seen1));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_friend_seen2));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_friend_seen3));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_friend_seen4));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_friend_seen5));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_friend_seen6));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_friend_seen7));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_friend_seen8));
+            seens.add(view.findViewById(R.id.lyt_message_group_video_friend_seen9));
+            data.setClipToOutline(true);
+        }
+        @Override
+        public void bindView(MessageGroupItem item) {
+            name.setText(item.getName());
+            name.setVisibility(item.getNameVisible());
+            data.setImageResource(R.drawable.vid_holder);
+            play.setVisibility(View.GONE);
+            playerView.setVisibility(View.GONE);
+            data.setVisibility(View.VISIBLE);
+            loading.setVisibility(View.GONE);
+            GlideApp
+                    .with(context)
+                    .load(item.getTextData().split("eTaLkViDeO")[1])
+                    .override(Target.SIZE_ORIGINAL)
+                    .into(new BaseTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            data.setData(resource);
+                            play.setVisibility(View.VISIBLE);
+                        }
+                    });
+            time.setText(item.getTime());
+            time.setVisibility(item.getTimeVisible());
+            avatar.setImageFromObject(item.getAvatar());
+            avatar.setVisibility(item.getAvatarVisible());
+            List<String> seenAvatars = new ArrayList<>(item.getSeen().values());
+            for (int i = 0; i < 9; ++i) {
+                if (i < seenAvatars.size()) {
+                    seens.get(i).setImageFromObject(seenAvatars.get(i));
+                    seens.get(i).setVisibility(View.VISIBLE);
+                } else {
+                    seens.get(i).setVisibility(View.GONE);
+                }
+            }
+            if (seenAvatars.size() > 9) {
+                more.setText("+" + (seenAvatars.size() - 9));
+                more.setVisibility(View.VISIBLE);
+            } else {
+                more.setVisibility(View.GONE);
+            }
+            play.setOnClickListener(v -> {
+                playerView.setVisibility(View.INVISIBLE);
+                playerView.getLayoutParams().width = data.getMeasuredWidth();
+                playerView.getLayoutParams().height = data.getMeasuredHeight();
+                play.setVisibility(View.GONE);
+                loading.setVisibility(View.VISIBLE);
+            });
         }
     }
 
@@ -862,6 +1076,9 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             if (message.getType() == Message.SOUND) {
                 return ME_SOUND;
             }
+            if (message.getType() == Message.VIDEO) {
+                return ME_VIDEO;
+            }
         } else {
             if (message.getType() == Message.TEXT) {
                 return FRIEND_TEXT;
@@ -877,6 +1094,9 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             }
             if (message.getType() == Message.SOUND) {
                 return FRIEND_SOUND;
+            }
+            if (message.getType() == Message.VIDEO) {
+                return FRIEND_VIDEO;
             }
         }
         return 0;
@@ -916,6 +1136,12 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                                 .from(parent.getContext())
                                 .inflate(R.layout.lyt_message_group_sound_me, parent, false)
                 );
+            case ME_VIDEO:
+                return new MessageVideoMeViewHolder(
+                        LayoutInflater
+                                .from(parent.getContext())
+                                .inflate(R.layout.lyt_message_group_video_me, parent, false)
+                );
             case FRIEND_TEXT:
                 return new MessageTextFriendViewHolder(
                         LayoutInflater
@@ -945,6 +1171,12 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                         LayoutInflater
                                 .from(parent.getContext())
                                 .inflate(R.layout.lyt_message_group_sound_friend, parent, false)
+                );
+            case FRIEND_VIDEO:
+                return new MessageVideoFriendViewHolder(
+                        LayoutInflater
+                                .from(parent.getContext())
+                                .inflate(R.layout.lyt_message_group_video_friend, parent, false)
                 );
         }
         return null;

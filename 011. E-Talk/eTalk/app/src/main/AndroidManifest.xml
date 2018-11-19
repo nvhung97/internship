@@ -67,7 +67,7 @@
             android:windowSoftInputMode="adjustNothing|stateHidden" />
         <activity
             android:name=".presentation.view.chat.media.MediaPhotoActivity"
-            android:screenOrientation="portrait" />
+            android:configChanges="orientation|screenSize|layoutDirection"/>
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyB0cqy8YAHfYWvpAMWH-XovV7SCi5qy13E" />
@@ -76,7 +76,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.view.chat.media.MediaVideoActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|screenSize|layoutDirection"/>
     </application>
 

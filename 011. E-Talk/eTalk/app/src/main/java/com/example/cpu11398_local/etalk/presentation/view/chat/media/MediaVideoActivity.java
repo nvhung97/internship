@@ -29,9 +29,7 @@ public class MediaVideoActivity extends AppCompatActivity {
     private ExoPlayer   player;
     private PlayerView  playerView;
     private ProgressBar progressBar;
-    private ImageButton fullScreen;
     private ImageButton exitFullScreen;
-    private ImageButton exit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,22 +38,10 @@ public class MediaVideoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_media_video);
 
         playerView      = findViewById(R.id.exo_player);
-        fullScreen      = findViewById(R.id.exo_full_screen);
         exitFullScreen  = findViewById(R.id.exo_exit_full_screen);
         progressBar     = findViewById(R.id.exo_loading);
-        exit            = findViewById(R.id.exo_cancel);
 
-        fullScreen.setOnClickListener(v -> {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            fullScreen.setVisibility(View.GONE);
-            exitFullScreen.setVisibility(View.VISIBLE);
-        });
-        exitFullScreen.setOnClickListener(v -> {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            fullScreen.setVisibility(View.VISIBLE);
-            exitFullScreen.setVisibility(View.GONE);
-        });
-        exit.setOnClickListener(v -> finish());
+        exitFullScreen.setOnClickListener(v -> finish());
 
         initializePlayer();
     }

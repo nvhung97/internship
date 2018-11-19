@@ -5,13 +5,13 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,8 +19,6 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
@@ -79,7 +77,6 @@ public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObs
 
         keyboardHeightProvider = new KeyboardHeightProvider(this);
         binding.chatActivityRoot.post((Runnable) () -> keyboardHeightProvider.start());
-        startActivity(new Intent(this, MediaVideoActivity.class));
     }
 
     @Override
@@ -325,6 +322,7 @@ public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObs
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        MediaMetadataRetriever mediaMetadataRetriever;
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_TAKE_PHOTO_CODE:
@@ -334,6 +332,10 @@ public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObs
                     ));
                     break;
                 case REQUEST_RECORD_CODE:
+                    helper.onHelp(Event.create(
+                            Event.CHAT_ACTIVITY_SEND_VIDEO_URI,
+                            data.getData()
+                    ));
                     break;
                 case REQUEST_CHOOSE_PHOTOS_CODE:
                     helper.onHelp(Event.create(
@@ -342,6 +344,10 @@ public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObs
                     ));
                     break;
                 case REQUEST_CHOOSE_VIDEOS_CODE:
+                    helper.onHelp(Event.create(
+                            Event.CHAT_ACTIVITY_SEND_VIDEO_URI,
+                            data.getData()
+                    ));
                     break;
                 case REQUEST_CHOOSE_FILE:
                     helper.onHelp(Event.create(

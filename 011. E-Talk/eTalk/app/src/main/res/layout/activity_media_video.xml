@@ -14,11 +14,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:controller_layout_id="@layout/lyt_playback"/>
-
-    <ProgressBar
-        android:id="@+id/exo_loading"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="center"
-        android:indeterminateTint="@color/colorWhite"/>
 </FrameLayout>

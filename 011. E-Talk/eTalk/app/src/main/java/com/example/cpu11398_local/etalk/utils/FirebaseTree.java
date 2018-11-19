@@ -113,6 +113,9 @@ public final class FirebaseTree {
                 public final class File {
                     public static final String NODE_NAME = "file";
                 }
+                public final class Video {
+                    public static final String NODE_NAME = "video";
+                }
             }
         }
     }

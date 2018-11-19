@@ -3,6 +3,8 @@ package com.example.cpu11398_local.etalk.domain.interactor;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -48,6 +50,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.Observer;
 import io.reactivex.Scheduler;
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
@@ -62,6 +65,7 @@ public class ChatGroupUsecase implements Usecase {
     private final String LOAD_MORE          = "load_more";
     private final String SEND_TEXT          = "send_text";
     private final String SEND_IMAGE_URI     = "send_image_uri";
+    private final String SEND_VIDEO_URI     = "send_video_uri";
     private final String SEND_FILE          = "send_file";
     private final String SEND_LOCATION      = "send_location";
     private final String SEND_AUDIO         = "send_audio";
@@ -140,6 +144,8 @@ public class ChatGroupUsecase implements Usecase {
             case STOP_PLAY:
                 executeStopPlay();
                 break;
+            case SEND_VIDEO_URI:
+                executeSendVideoUri((Uri)params[0]);
         }
     }
 
@@ -450,35 +456,108 @@ public class ChatGroupUsecase implements Usecase {
     private void executeSendImageUri(Uri uri) {
         Message message = new Message(
                 username,
-                null,
+                "",
                 Message.IMAGE
         );
-        File file = copyToInternalStorageFromUri(uri, message.getKey(), Message.IMAGE);
-        message.setData(file.getAbsolutePath());
         holder.sendNewMessage(message);
         needUpdateMessage = true;
         disposable.add(
-                conversationRepository
-                        .uploadNetworkFile(conversationKey, file, Message.IMAGE)
+                copyToInternalStorageFromUri(uri, message.getKey(), Message.IMAGE)
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
-                        .subscribe(url -> {
-                            file.delete();
-                            message.setData(url);
+                        .subscribe(file -> {
                             disposable.add(
                                     conversationRepository
-                                            .pushNetworkMessage(conversationKey, message)
+                                            .uploadNetworkFile(conversationKey, file, Message.IMAGE)
                                             .subscribeOn(Schedulers.from(executor))
                                             .observeOn(scheduler)
-                                            .subscribe(result -> {
-                                                if (result == true) {
-                                                    holder.sendSuccessMessage(message);
-                                                    needUpdateMessage = true;
-                                                }
+                                            .subscribe(url -> {
+                                                file.delete();
+                                                message.setData(url);
+                                                disposable.add(
+                                                        conversationRepository
+                                                                .pushNetworkMessage(conversationKey, message)
+                                                                .subscribeOn(Schedulers.from(executor))
+                                                                .observeOn(scheduler)
+                                                                .subscribe(result -> {
+                                                                    if (result == true) {
+                                                                        holder.sendSuccessMessage(message);
+                                                                        needUpdateMessage = true;
+                                                                    }
+                                                                })
+                                                );
                                             })
                             );
                         })
         );
+    }
+
+    private void executeSendVideoUri(Uri uri) {
+        Message message = new Message(
+                username,
+                "",
+                Message.VIDEO
+        );
+        holder.sendNewMessage(message);
+        needUpdateMessage = true;
+        disposable.add(
+                makeThumbnail(uri, message.getKey())
+                        .zipWith(
+                                copyToInternalStorageFromUri(uri, message.getKey(), Message.VIDEO),
+                                ((thumbnailFile, videoFile) -> new File[]{thumbnailFile, videoFile})
+                        )
+                        .subscribeOn(Schedulers.from(executor))
+                        .observeOn(scheduler)
+                        .subscribe(files ->
+                                disposable.add(
+                                        conversationRepository
+                                                .uploadNetworkFile(conversationKey, files[0], Message.VIDEO)
+                                                .zipWith(
+                                                        conversationRepository.uploadNetworkFile(conversationKey, files[1], Message.VIDEO),
+                                                        ((thumbnailUrl, videoUrl) -> new String[]{thumbnailUrl, videoUrl})
+                                                )
+                                                .subscribeOn(Schedulers.from(executor))
+                                                .observeOn(scheduler)
+                                                .subscribe(urls -> {
+                                                    files[0].delete();
+                                                    files[1].delete();
+                                                    message.setData(urls[0] + "eTaLkViDeO" + urls[1]);
+                                                    disposable.add(
+                                                            conversationRepository
+                                                                    .pushNetworkMessage(conversationKey, message)
+                                                                    .subscribeOn(Schedulers.from(executor))
+                                                                    .observeOn(scheduler)
+                                                                    .subscribe(result -> {
+                                                                        if (result == true) {
+                                                                            holder.sendSuccessMessage(message);
+                                                                            needUpdateMessage = true;
+                                                                        }
+                                                                    })
+                                                    );
+                                                })
+                                )
+                        )
+        );
+
+    }
+
+    private Single<File> makeThumbnail(Uri uri, String key) {
+        return Single.create(emitter -> {
+            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+            mediaMetadataRetriever.setDataSource(context, uri);
+            Bitmap bitmap = mediaMetadataRetriever.getFrameAtTime();
+            File file = new File(context.getFilesDir(), "video_" + key + "_thumbnail.png");
+            try {
+                OutputStream os = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 0, os);
+                os.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            emitter.onSuccess(file);
+        });
     }
 
     private void executeSendFile(Uri uri) {
@@ -489,110 +568,128 @@ public class ChatGroupUsecase implements Usecase {
         );
         String fileName = getFileName(uri);
         String[] fileNamePart = fileName.split("\\.");
-        File file = copyToInternalStorageFromUri(
-                uri,
-                fileNamePart[0] + "_" + message.getKey() + "." + fileNamePart[1],
-                Message.FILE
-        );
-        message.setData(file.getAbsolutePath() + "eTaLkFiLe" + fileName);
+        message.setData("null" + "eTaLkFiLe" + fileName);
         holder.sendNewMessage(message);
         needUpdateMessage = true;
         disposable.add(
-                conversationRepository
-                        .uploadNetworkFile(conversationKey, file, Message.FILE)
+                copyToInternalStorageFromUri(
+                        uri,
+                        fileNamePart[0] + "_" + message.getKey() + "." + fileNamePart[1],
+                        Message.FILE
+                )
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
-                        .subscribe(url -> {
-                            file.delete();
-                            message.setData(url + "eTaLkFiLe" + fileName);
-                            disposable.add(
-                                    conversationRepository
-                                            .pushNetworkMessage(conversationKey, message)
-                                            .subscribeOn(Schedulers.from(executor))
-                                            .observeOn(scheduler)
-                                            .subscribe(result -> {
-                                                if (result == true) {
-                                                    holder.sendSuccessMessage(message);
-                                                    needUpdateMessage = true;
-                                                }
-                                            })
-                            );
-                        })
+                        .subscribe(file ->
+                                disposable.add(
+                                        conversationRepository
+                                                .uploadNetworkFile(conversationKey, file, Message.FILE)
+                                                .subscribeOn(Schedulers.from(executor))
+                                                .observeOn(scheduler)
+                                                .subscribe(url -> {
+                                                    file.delete();
+                                                    message.setData(url + "eTaLkFiLe" + fileName);
+                                                    disposable.add(
+                                                            conversationRepository
+                                                                    .pushNetworkMessage(conversationKey, message)
+                                                                    .subscribeOn(Schedulers.from(executor))
+                                                                    .observeOn(scheduler)
+                                                                    .subscribe(result -> {
+                                                                        if (result == true) {
+                                                                            holder.sendSuccessMessage(message);
+                                                                            needUpdateMessage = true;
+                                                                        }
+                                                                    })
+                                                    );
+                                                })
+                                )
+                        )
         );
     }
 
     private void executeSendAudio(Uri uri, long time) {
         Message message = new Message(
                 username,
-                null,
+                "",
                 Message.SOUND
         );
-        File file = copyToInternalStorageFromUri(
-                uri,
-                "audio_" + message.getKey() + ".3gp",
-                Message.SOUND
-        );
-        message.setData(file.getAbsolutePath() + "eTaLkAuDiO" + time);
         holder.sendNewMessage(message);
         needUpdateMessage = true;
         disposable.add(
-                conversationRepository
-                        .uploadNetworkFile(conversationKey, file, Message.SOUND)
+                copyToInternalStorageFromUri(
+                        uri,
+                        "audio_" + message.getKey() + ".3gp",
+                        Message.SOUND
+                )
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
-                        .subscribe(url -> {
-                            file.delete();
-                            message.setData(url + "eTaLkAuDiO" + time);
-                            disposable.add(
-                                    conversationRepository
-                                            .pushNetworkMessage(conversationKey, message)
-                                            .subscribeOn(Schedulers.from(executor))
-                                            .observeOn(scheduler)
-                                            .subscribe(result -> {
-                                                if (result == true) {
-                                                    holder.sendSuccessMessage(message);
-                                                    needUpdateMessage = true;
-                                                }
-                                            })
-                            );
-                        })
+                        .subscribe(file ->
+                                disposable.add(
+                                        conversationRepository
+                                                .uploadNetworkFile(conversationKey, file, Message.SOUND)
+                                                .subscribeOn(Schedulers.from(executor))
+                                                .observeOn(scheduler)
+                                                .subscribe(url -> {
+                                                    file.delete();
+                                                    message.setData(url + "eTaLkAuDiO" + time);
+                                                    disposable.add(
+                                                            conversationRepository
+                                                                    .pushNetworkMessage(conversationKey, message)
+                                                                    .subscribeOn(Schedulers.from(executor))
+                                                                    .observeOn(scheduler)
+                                                                    .subscribe(result -> {
+                                                                        if (result == true) {
+                                                                            holder.sendSuccessMessage(message);
+                                                                            needUpdateMessage = true;
+                                                                        }
+                                                                    })
+                                                    );
+                                                })
+                            )
+                        )
         );
     }
 
-    private File copyToInternalStorageFromUri(Uri uri, String name, long type) {
-        File file = null;
-        if (type == Message.IMAGE) {
-            file = new File(
-                    context.getFilesDir(),
-                    name + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(context.getContentResolver().getType(uri))
-            );
-        } else if (type == Message.FILE) {
-            file = new File(
-                    context.getFilesDir(),
-                    name
-            );
-        } else if (type == Message.SOUND) {
-            file = new File(
-                    context.getFilesDir(),
-                    name
-            );
-        }
-        try {
-            InputStream is = context.getContentResolver().openInputStream(uri);
-            OutputStream os = new FileOutputStream(file);
-            byte[] buff = new byte[1024];
-            int len;
-            while((len = is.read(buff)) > 0){
-                os.write(buff,0, len);
-            }
-            is.close();
-            os.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return file;
+    private Single<File> copyToInternalStorageFromUri(Uri uri, String name, long type) {
+         return Single.create(emitter -> {
+             File file = null;
+             if (type == Message.IMAGE) {
+                 file = new File(
+                         context.getFilesDir(),
+                         name + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(context.getContentResolver().getType(uri))
+                 );
+             } else if (type == Message.FILE) {
+                 file = new File(
+                         context.getFilesDir(),
+                         name
+                 );
+             } else if (type == Message.SOUND) {
+                 file = new File(
+                         context.getFilesDir(),
+                         name
+                 );
+             } else if (type == Message.VIDEO) {
+                 file = new File(
+                         context.getFilesDir(),
+                         "video_" + name + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(context.getContentResolver().getType(uri))
+                 );
+             }
+             try {
+                 InputStream is = context.getContentResolver().openInputStream(uri);
+                 OutputStream os = new FileOutputStream(file);
+                 byte[] buff = new byte[1024];
+                 int len;
+                 while((len = is.read(buff)) > 0){
+                     os.write(buff,0, len);
+                 }
+                 is.close();
+                 os.close();
+             } catch (FileNotFoundException e) {
+                 e.printStackTrace();
+             } catch (IOException e) {
+                 e.printStackTrace();
+             }
+             emitter.onSuccess(file);
+        });
     }
 
     public String getFileName(Uri uri) {

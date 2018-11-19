@@ -458,7 +458,17 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Thay đổi size hình theo tỉ lệ
 	- Resume player khi xoay màn hình
 		+ https://stackoverflow.com/a/49356312
-
+5:40 PM 11/13/2018
+	- Lấy Thumbnail từ video
+		+ https://stackoverflow.com/a/52831480
+	- Chuyển Bitmap thành File
+		+ https://stackoverflow.com/a/22785013
+8:36 AM 11/14/2018
+	- Fix lỗi lock UI khi gửi file, video, audio, image
+5:16 PM 11/16/2018
+	- Soạn slide về Unet
+12:05 PM 11/19/2018
+	- Hiện thực gửi nhận video, View video
 
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/

@@ -56,6 +56,7 @@ public class Event {
     public static final int CHAT_ACTIVITY_AUDIO_RESET       = CHAT_ACTIVITY_MARK | 22;
     public static final int CHAT_ACTIVITY_START_PLAY        = CHAT_ACTIVITY_MARK | 23;
     public static final int CHAT_ACTIVITY_STOP_PLAY         = CHAT_ACTIVITY_MARK | 24;
+    public static final int CHAT_ACTIVITY_SEND_VIDEO_URI    = CHAT_ACTIVITY_MARK | 25;
 
     /**
      * Bellow commands for {@code LoginActivity}.

@@ -365,6 +365,8 @@ public class ChatGroupViewModel extends     BaseObservable
             case Event.CHAT_ACTIVITY_STOP_PLAY:
                 executeStopPlay();
                 break;
+            case Event.CHAT_ACTIVITY_SEND_VIDEO_URI:
+                executeSendVideoUri((Uri)data[0]);
         }
     }
 
@@ -383,6 +385,15 @@ public class ChatGroupViewModel extends     BaseObservable
                 uri,
                 null,
                 "send_image_uri"
+        );
+    }
+
+    private void executeSendVideoUri(Uri uri) {
+        chatGroupUsecase.execute(
+                null,
+                uri,
+                null,
+                "send_video_uri"
         );
     }
 
@@ -464,7 +475,7 @@ public class ChatGroupViewModel extends     BaseObservable
                             () -> {
                                 new Handler().postDelayed(
                                         () -> publisher.onNext(Event.create(Event.CHAT_ACTIVITY_GOTO_LAST)),
-                                        250
+                                        500
                                 );
                                 return null;
                             });

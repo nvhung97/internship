@@ -457,6 +457,27 @@ public class FirebaseDB implements NetworkSource{
                     e.printStackTrace();
                 }
             });
+        } else if (code == Message.VIDEO) {
+            return Single.create(emitter -> {
+                try {
+                    InputStream stream = new FileInputStream(file);
+                    StorageReference storageRef  = storageReference
+                            .child(FirebaseTree.Storage.Conversations.NODE_NAME)
+                            .child(conversationKey)
+                            .child(FirebaseTree.Storage.Conversations.Key.Video.NODE_NAME)
+                            .child(file.getName());
+                    UploadTask uploadTask = storageRef.putStream(stream);
+                    uploadTask.addOnFailureListener(exception ->
+                            Log.i("eTalk", exception.getMessage())
+                    ).addOnSuccessListener(taskSnapshot ->
+                            storageRef
+                                    .getDownloadUrl()
+                                    .addOnSuccessListener(uri -> emitter.onSuccess(uri.toString()))
+                    );
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
         }
         return null;
     }

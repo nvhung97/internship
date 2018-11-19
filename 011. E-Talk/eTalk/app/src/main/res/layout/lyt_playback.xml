@@ -5,13 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/exo_cancel"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="15dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/ic_exit"/>
+    <ProgressBar
+        android:id="@+id/exo_loading"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/colorWhite"/>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -73,6 +72,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/ic_full_screen"
+            android:visibility="gone"
             app:layout_constraintRight_toRightOf="parent"/>
 
         <ImageButton
@@ -80,7 +80,6 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/ic_exit_full_screen"
-            android:visibility="gone"
             app:layout_constraintRight_toRightOf="parent"/>
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>
