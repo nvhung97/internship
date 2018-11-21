@@ -27,7 +27,6 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 
 public class MediaVideoActivity extends AppCompatActivity {
 
-    private ExoPlayer   player;
     private PlayerView  playerView;
     private ProgressBar progressBar;
     private ImageButton exitFullScreen;
@@ -44,8 +43,7 @@ public class MediaVideoActivity extends AppCompatActivity {
 
         exitFullScreen.setOnClickListener(v -> finish());
 
-        player = MessageGroupAdapter.player;
-        player.addListener(new Player.DefaultEventListener() {
+        MessageGroupAdapter.player.addListener(new Player.DefaultEventListener() {
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 switch (playbackState) {
@@ -61,7 +59,7 @@ public class MediaVideoActivity extends AppCompatActivity {
                 }
             }
         });
-        playerView.setPlayer(player);
+        playerView.setPlayer(MessageGroupAdapter.player);
         //initializePlayer();
     }
 
@@ -119,9 +117,9 @@ public class MediaVideoActivity extends AppCompatActivity {
     }*/
 
     private void releasePlayer() {
-        if (player != null) {
-            player.release();
-            player = null;
+        if (MessageGroupAdapter.player != null) {
+            MessageGroupAdapter.player.release();
+            MessageGroupAdapter.player = null;
         }
     }
 

@@ -50,7 +50,6 @@ public class RoundedPlayerView extends PlayerView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-
         rectF.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
     }
 

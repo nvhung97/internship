@@ -14,6 +14,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +82,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
     private ViewModelCallback callback;
     public static ExoPlayer player;
     public static int       playItem = - 1;
+    private Player.DefaultEventListener listener;
 
     public abstract class MessageGroupViewHolder extends RecyclerView.ViewHolder {
         public MessageGroupViewHolder(View view) {
@@ -340,7 +342,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
 
     public class MessageVideoMeViewHolder extends MessageGroupViewHolder {
         private Context context;
-        public ImageMessageView data;
+        public ImageView data;
         public ImageButton play;
         public TextView time;
         public AvatarImageView avatar;
@@ -377,54 +379,22 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             String[] dataParts = item.getTextData().split("eTaLkViDeO");
             if (dataParts.length == 2) {
                 playerView.setSize(Integer.parseInt(dataParts[0]), Integer.parseInt(dataParts[1]));
-                data.setSize(Integer.parseInt(dataParts[0]), Integer.parseInt(dataParts[1]));
+                playerView.requestLayout();
                 data.setVisibility(View.GONE);
                 loading.setVisibility(View.GONE);
                 play.setVisibility(View.GONE);
             } else {
-                playerView.setSize(Integer.parseInt(dataParts[2]), Integer.parseInt(dataParts[2]));
-                data.setSize(Integer.parseInt(dataParts[2]), Integer.parseInt(dataParts[3]));
-                data.setVisibility(View.GONE);
+                playerView.setSize(Integer.parseInt(dataParts[2]), Integer.parseInt(dataParts[3]));
+                playerView.requestLayout();
+                data.setVisibility(View.VISIBLE);
                 loading.setVisibility(View.GONE);
-                play.setVisibility(View.GONE);
+                play.setVisibility(View.VISIBLE);
+                data.setImageDrawable(null);
                 GlideApp
                         .with(context)
                         .load(dataParts[0])
-                        .into(new BaseTarget<Drawable>() {
-                            @Override
-                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                data.setImageDrawable(resource);
-                                data.setVisibility(View.VISIBLE);
-                                play.setVisibility(View.VISIBLE);
-                            }
-                        });
-            }
-            /*playerView.setVisibility(View.GONE);
-            loading.setVisibility(View.GONE);
-            if (item.getTextData().isEmpty()) {
-                play.setVisibility(View.GONE);
-                data.setVisibility(View.VISIBLE);
-                GlideApp
-                        .with(context)
-                        .load(R.drawable.ic_sending)
-                        .override(200, 200)
                         .into(data);
-            } else {
-                data.setImageResource(R.drawable.vid_holder);
-                data.setVisibility(View.VISIBLE);
-                play.setVisibility(View.GONE);
-                GlideApp
-                        .with(context)
-                        .load(item.getTextData().split("eTaLkViDeO")[0])
-                        .override(Target.SIZE_ORIGINAL)
-                        .into(new BaseTarget<Drawable>() {
-                            @Override
-                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                data.setData(resource);
-                                play.setVisibility(View.VISIBLE);
-                            }
-                        });
-            }*/
+            }
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
             avatar.setImageFromObject(item.getAvatar());
@@ -445,9 +415,6 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                 more.setVisibility(View.GONE);
             }
             play.setOnClickListener(v -> {
-                playerView.setVisibility(View.INVISIBLE);
-                playerView.getLayoutParams().width = data.getMeasuredWidth();
-                playerView.getLayoutParams().height = data.getMeasuredHeight();
                 play.setVisibility(View.GONE);
                 loading.setVisibility(View.VISIBLE);
                 if (player != null) {
@@ -457,17 +424,20 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                     playItem = -1;
                 }
                 playItem = messages.indexOf(item);
-                initializePlayer(context, playerView, loading, item.getTextData().split("eTaLkViDeO")[1]);
+                initializePlayer(context, playerView, loading, data, item.getTextData().split("eTaLkViDeO")[1]);
             });
             playerView.setOnTouchListener(new OnSwipeTouchListener(context) {
                 @Override
                 public void onClick() {
-                    Intent intent = new Intent(context, MediaVideoActivity.class);
-                    intent.putExtra("url", item.getTextData().split("eTaLkViDeO")[1]);
-                    intent.putExtra("position", player.getCurrentPosition());
-                    MessageGroupAdapter.this.notifyItemChanged(playItem);
-                    playItem = -1;
-                    context.startActivity(intent);
+                    if (player != null) {
+                        player.removeListener(listener);
+                        Intent intent = new Intent(context, MediaVideoActivity.class);
+                        intent.putExtra("url", item.getTextData().split("eTaLkViDeO")[1]);
+                        intent.putExtra("position", player.getCurrentPosition());
+                        context.startActivity(intent);
+                        MessageGroupAdapter.this.notifyItemChanged(playItem);
+                        playItem = -1;
+                    }
                 }
             });
         }
@@ -882,7 +852,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
     public class MessageVideoFriendViewHolder extends MessageGroupViewHolder {
         private Context context;
         public TextView name;
-        public ImageMessageView data;
+        public ImageView data;
         public ImageButton play;
         public TextView time;
         public AvatarImageView avatar;
@@ -917,24 +887,19 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public void bindView(MessageGroupItem item) {
+            String[] dataParts = item.getTextData().split("eTaLkViDeO");
             name.setText(item.getName());
             name.setVisibility(item.getNameVisible());
-            data.setImageResource(R.drawable.vid_holder);
-            play.setVisibility(View.GONE);
-            playerView.setVisibility(View.GONE);
+            playerView.setSize(Integer.parseInt(dataParts[2]), Integer.parseInt(dataParts[3]));
+            playerView.requestLayout();
             data.setVisibility(View.VISIBLE);
             loading.setVisibility(View.GONE);
+            play.setVisibility(View.VISIBLE);
+            data.setImageDrawable(null);
             GlideApp
                     .with(context)
-                    .load(item.getTextData().split("eTaLkViDeO")[0])
-                    .override(Target.SIZE_ORIGINAL)
-                    .into(new BaseTarget<Drawable>() {
-                        @Override
-                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                            data.setData(resource);
-                            play.setVisibility(View.VISIBLE);
-                        }
-                    });
+                    .load(dataParts[0])
+                    .into(data);
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
             avatar.setImageFromObject(item.getAvatar());
@@ -955,9 +920,6 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                 more.setVisibility(View.GONE);
             }
             play.setOnClickListener(v -> {
-                playerView.setVisibility(View.INVISIBLE);
-                playerView.getLayoutParams().width = data.getMeasuredWidth();
-                playerView.getLayoutParams().height = data.getMeasuredHeight();
                 play.setVisibility(View.GONE);
                 loading.setVisibility(View.VISIBLE);
                 if (player != null) {
@@ -967,17 +929,20 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                     playItem = -1;
                 }
                 playItem = messages.indexOf(item);
-                initializePlayer(context, playerView, loading, item.getTextData().split("eTaLkViDeO")[1]);
+                initializePlayer(context, playerView, loading, data, item.getTextData().split("eTaLkViDeO")[1]);
             });
             playerView.setOnTouchListener(new OnSwipeTouchListener(context) {
                 @Override
                 public void onClick() {
-                    Intent intent = new Intent(context, MediaVideoActivity.class);
-                    intent.putExtra("url", item.getTextData().split("eTaLkViDeO")[1]);
-                    intent.putExtra("position", player.getCurrentPosition());
-                    MessageGroupAdapter.this.notifyItemChanged(playItem);
-                    playItem = -1;
-                    context.startActivity(intent);
+                    if (player != null) {
+                        player.removeListener(listener);
+                        Intent intent = new Intent(context, MediaVideoActivity.class);
+                        intent.putExtra("url", item.getTextData().split("eTaLkViDeO")[1]);
+                        intent.putExtra("position", player.getCurrentPosition());
+                        context.startActivity(intent);
+                        MessageGroupAdapter.this.notifyItemChanged(playItem);
+                        playItem = -1;
+                    }
                 }
             });
         }
@@ -1318,7 +1283,11 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                 });
     }
 
-    private void initializePlayer(Context context, PlayerView playerView, ProgressBar progressBar, String link) {
+    private void initializePlayer(Context context,
+                                  PlayerView playerView,
+                                  ProgressBar progressBar,
+                                  ImageView thumbnail,
+                                  String link) {
         player = ExoPlayerFactory.newSimpleInstance(
                 new DefaultRenderersFactory(context.getApplicationContext()),
                 new DefaultTrackSelector(
@@ -1329,7 +1298,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                 new DefaultLoadControl()
         );
         player.setPlayWhenReady(true);
-        player.addListener(new Player.DefaultEventListener() {
+        listener = new Player.DefaultEventListener() {
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 switch (playbackState) {
@@ -1338,7 +1307,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                         break;
                     case PlaybackStateCompat.STATE_PLAYING:
                         progressBar.setVisibility(View.GONE);
-                        playerView.setVisibility(View.VISIBLE);
+                        thumbnail.setVisibility(View.GONE);
                         break;
                     case PlaybackStateCompat.STATE_FAST_FORWARDING:
                         MessageGroupAdapter.this.notifyItemChanged(playItem);
@@ -1348,7 +1317,8 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
                         break;
                 }
             }
-        });
+        };
+        player.addListener(listener);
         playerView.setPlayer(player);
         player.prepare(
                 buildMediaSource(context, link),

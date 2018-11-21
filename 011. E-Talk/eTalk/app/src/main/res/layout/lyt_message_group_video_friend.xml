@@ -30,17 +30,21 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:layout_gravity="left">
-            <com.example.cpu11398_local.etalk.presentation.custom.ImageMessageView
-                android:id="@id/lyt_message_group_video_friend_data"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@drawable/message_friend_background"/>
             <com.example.cpu11398_local.etalk.presentation.custom.RoundedPlayerView
                 android:id="@id/lyt_message_group_video_friend_player"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:use_controller="false"/>
+            <ImageView
+                android:id="@id/lyt_message_group_video_friend_data"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:adjustViewBounds="true"
+                app:layout_constraintLeft_toLeftOf="@id/lyt_message_group_video_friend_player"
+                app:layout_constraintTop_toTopOf="@id/lyt_message_group_video_friend_player"
+                app:layout_constraintRight_toRightOf="@id/lyt_message_group_video_friend_player"
+                app:layout_constraintBottom_toBottomOf="@id/lyt_message_group_video_friend_player"
+                android:background="@drawable/thumbnail_background"/>
             <ImageButton
                 android:id="@id/lyt_message_group_video_friend_play"
                 android:layout_width="150px"
@@ -70,8 +74,8 @@
                 android:textSize="12sp"
                 android:textColor="@color/colorWhite"
                 android:background="@drawable/img_rounded_group_number"
-                app:layout_constraintLeft_toLeftOf="@id/lyt_message_group_video_friend_data"
-                app:layout_constraintTop_toBottomOf="@id/lyt_message_group_video_friend_data"/>
+                app:layout_constraintLeft_toLeftOf="@id/lyt_message_group_video_friend_player"
+                app:layout_constraintTop_toBottomOf="@id/lyt_message_group_video_friend_player"/>
         </android.support.constraint.ConstraintLayout>
     </FrameLayout>
     <com.example.cpu11398_local.etalk.presentation.custom.AvatarImageView

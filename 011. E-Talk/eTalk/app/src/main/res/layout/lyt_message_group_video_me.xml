@@ -29,13 +29,16 @@
                         android:layout_height="wrap_content"
                         app:use_controller="false"
                         app:layout_constraintRight_toRightOf="parent"/>
-                    <com.example.cpu11398_local.etalk.presentation.custom.ImageMessageView
+                    <ImageView
                         android:id="@id/lyt_message_group_video_me_data"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
                         android:adjustViewBounds="true"
-                        app:layout_constraintRight_toRightOf="parent"
-                        android:background="@drawable/message_me_background"/>
+                        app:layout_constraintLeft_toLeftOf="@id/lyt_message_group_video_me_player"
+                        app:layout_constraintTop_toTopOf="@id/lyt_message_group_video_me_player"
+                        app:layout_constraintRight_toRightOf="@id/lyt_message_group_video_me_player"
+                        app:layout_constraintBottom_toBottomOf="@id/lyt_message_group_video_me_player"
+                        android:background="@drawable/thumbnail_background"/>
                     <ImageButton
                         android:id="@id/lyt_message_group_video_me_play"
                         android:layout_width="150px"

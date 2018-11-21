@@ -475,6 +475,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 11:19 AM 11/21/2018
 	- CompressVideo
 		+ https://github.com/Tourenathan-G5organisation/SiliCompressor
+	- Item views are not layout correctly when recycled in the RecyclerView
+		+ https://stackoverflow.com/a/39735385
 
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
