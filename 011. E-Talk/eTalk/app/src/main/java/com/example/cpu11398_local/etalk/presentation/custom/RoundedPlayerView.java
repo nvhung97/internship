@@ -12,6 +12,8 @@ public class RoundedPlayerView extends PlayerView {
 
     private RectF rectF = new RectF();
     private int cornerRadius = getContext().getResources().getDimensionPixelSize(R.dimen.map_view_corner);
+    private int w = 0;
+    private int h = 0;
 
     public RoundedPlayerView(Context context) {
         super(context);
@@ -23,6 +25,26 @@ public class RoundedPlayerView extends PlayerView {
 
     public RoundedPlayerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    public void setSize(int w, int h) {
+        this.w = w;
+        this.h = h;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (w > h) {
+            super.onMeasure(
+                    MeasureSpec.getSize(widthMeasureSpec) | MeasureSpec.EXACTLY,
+                    MeasureSpec.getSize(widthMeasureSpec) * h / w | MeasureSpec.EXACTLY
+            );
+        } else {
+            super.onMeasure(
+                    MeasureSpec.getSize(widthMeasureSpec) * w / h| MeasureSpec.EXACTLY,
+                    MeasureSpec.getSize(widthMeasureSpec) | MeasureSpec.EXACTLY
+            );
+        }
     }
 
     @Override

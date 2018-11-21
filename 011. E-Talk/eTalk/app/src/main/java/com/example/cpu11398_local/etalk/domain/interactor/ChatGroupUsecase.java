@@ -8,6 +8,7 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.annotation.RequiresApi;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -32,6 +33,7 @@ import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -59,8 +61,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ChatGroupUsecase implements Usecase {
 
-    private final String SENT_URL           = "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/sent.png?alt=media&token=4e7cf2d2-22d5-47d8-9e5a-12bdbbcaedb1";
-    private final String SENDING_URL        = "https://firebasestorage.googleapis.com/v0/b/etalkchat.appspot.com/o/sending.png?alt=media&token=32ca8ddf-6b82-42e8-85d9-2e5d726dfe97";
+    private final String SENT_URL           = "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/status%2Fsent.png?alt=media&token=06a4cf9e-b36d-4b0b-933f-1006c704fd6c";
+    private final String SENDING_URL        = "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/status%2Fsending.png?alt=media&token=6ecff111-5197-4a46-940f-7dcb25702f35";
     private final String FIRST_LOAD         = "first_load";
     private final String LOAD_MORE          = "load_more";
     private final String SEND_TEXT          = "send_text";
@@ -404,6 +406,37 @@ public class ChatGroupUsecase implements Usecase {
                                     );
                                 })
                 );
+            } else if (message.getType() == Message.VIDEO) {
+                String[] dataPart = message.getData().split("eTaLkViDeO");
+                File thumbnailFile = new File(dataPart[0]);
+                File videoFile = new File(dataPart[1]);
+                disposable.add(
+                        conversationRepository
+                                .uploadNetworkFile(conversationKey, thumbnailFile, Message.VIDEO)
+                                .zipWith(
+                                        conversationRepository.uploadNetworkFile(conversationKey, videoFile, Message.VIDEO),
+                                        ((thumbnailUrl, videoUrl) -> new String[]{thumbnailUrl, videoUrl})
+                                )
+                                .subscribeOn(Schedulers.from(executor))
+                                .observeOn(scheduler)
+                                .subscribe(urls -> {
+                                    thumbnailFile.delete();
+                                    videoFile.delete();
+                                    message.setData(urls[0] + "eTaLkViDeO" + urls[1]);
+                                    disposable.add(
+                                            conversationRepository
+                                                    .pushNetworkMessage(conversationKey, message)
+                                                    .subscribeOn(Schedulers.from(executor))
+                                                    .observeOn(scheduler)
+                                                    .subscribe(result -> {
+                                                        if (result == true) {
+                                                            holder.sendSuccessMessage(message);
+                                                            needUpdateMessage = true;
+                                                        }
+                                                    })
+                                    );
+                                })
+                );
             }
         }
     }
@@ -492,16 +525,64 @@ public class ChatGroupUsecase implements Usecase {
         );
     }
 
+    private String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } catch (Exception e) {
+            Log.e("eTalk", e.getMessage());
+            return null;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
     private void executeSendVideoUri(Uri uri) {
+
+        Bitmap bitmap = makeThumbnail(context, uri);
+
         Message message = new Message(
                 username,
-                "",
+                bitmap.getWidth() + "eTaLkViDeO" + bitmap.getHeight(),
                 Message.VIDEO
         );
+
         holder.sendNewMessage(message);
         needUpdateMessage = true;
+
+        /*File file = new File(
+                context.getFilesDir(),
+                "video_" + message.getKey() + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(context.getContentResolver().getType(uri))
+        );
+
+        VideoCompress.compressVideoLow(getRealPathFromURI(context, uri), file.getAbsolutePath(), new VideoCompress.CompressListener() {
+            @Override
+            public void onStart() {}
+
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFail() {
+                Log.i("eTalk", "Compress video failed");
+            }
+
+            @Override
+            public void onProgress(float percent) {}
+        });*/
+
+        /*holder.sendNewMessage(message);
+        needUpdateMessage = true;
         disposable.add(
-                makeThumbnail(uri, message.getKey())
+                makeThumbnailFile(uri, message.getKey())
                         .zipWith(
                                 copyToInternalStorageFromUri(uri, message.getKey(), Message.VIDEO),
                                 ((thumbnailFile, videoFile) -> new File[]{thumbnailFile, videoFile})
@@ -537,11 +618,16 @@ public class ChatGroupUsecase implements Usecase {
                                                 })
                                 )
                         )
-        );
-
+        );*/
     }
 
-    private Single<File> makeThumbnail(Uri uri, String key) {
+    private Bitmap makeThumbnail(Context context, Uri uri) {
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        mediaMetadataRetriever.setDataSource(context, uri);
+        return mediaMetadataRetriever.getFrameAtTime();
+    }
+
+    private Single<File> makeThumbnailFile(Uri uri, String key) {
         return Single.create(emitter -> {
             MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
             mediaMetadataRetriever.setDataSource(context, uri);

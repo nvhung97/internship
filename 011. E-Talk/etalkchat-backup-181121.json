@@ -1,0 +1,97 @@
+{
+  "users" : {
+    "ducnguyen" : {
+      "active" : 1536836882290,
+      "name" : "Nguyễn Văn Đức",
+      "password" : "123456",
+      "phone" : "01665271621",
+      "username" : "ducnguyen"
+    },
+    "dumbledore" : {
+      "active" : 1538545159527,
+      "name" : "Albus Dumbledore",
+      "password" : "123456",
+      "phone" : "01234554321",
+      "username" : "dumbledore"
+    },
+    "ginny" : {
+      "active" : 1538542795487,
+      "name" : "Ginny Weasley",
+      "password" : "123456",
+      "phone" : "0909000000",
+      "username" : "ginny"
+    },
+    "hermione" : {
+      "active" : 1538544233082,
+      "name" : "Hermione Granger",
+      "password" : "123456",
+      "phone" : "01234512345",
+      "username" : "hermione"
+    },
+    "hungnv6" : {
+      "active" : 1539946660228,
+      "name" : "Nguyen Van Hung",
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Fhungnv6.png?alt=media&token=78674239-441b-48a0-9d82-8ca4ae3e6716",
+      "password" : "88888888",
+      "phone" : "01234503569",
+      "username" : "hungnv6"
+    },
+    "huutrongtdtp" : {
+      "active" : 1536629655075,
+      "name" : "Lê Hữu Trọng",
+      "password" : "123456",
+      "phone" : "0166 399 4366",
+      "username" : "huutrongtdtp"
+    },
+    "long" : {
+      "active" : 1539946656405,
+      "name" : "Lý Kim Long",
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Flong.png?alt=media&token=9912d9ba-1e11-41e5-ad92-b40eebcb1b4a",
+      "password" : "123456",
+      "phone" : "01207902297",
+      "username" : "long"
+    },
+    "mcgonagall" : {
+      "active" : 1538545437167,
+      "name" : "Minerva McGonagall",
+      "password" : "123456",
+      "phone" : "01234123123",
+      "username" : "mcgonagall"
+    },
+    "moody" : {
+      "active" : 1538543629858,
+      "name" : "Alastor Moody",
+      "password" : "123456",
+      "phone" : "0999888999",
+      "username" : "moody"
+    },
+    "potter" : {
+      "active" : 1538544285156,
+      "name" : "Harry Potter",
+      "password" : "123456",
+      "phone" : "0909090909",
+      "username" : "potter"
+    },
+    "ron" : {
+      "active" : 1538543549630,
+      "name" : "Ron Weasley",
+      "password" : "123456",
+      "phone" : "0909999888",
+      "username" : "ron"
+    },
+    "snape" : {
+      "active" : 1538544321540,
+      "name" : "Severus Snape",
+      "password" : "123456",
+      "phone" : "0888999888",
+      "username" : "snape"
+    },
+    "voldemort" : {
+      "active" : 1538544471171,
+      "name" : "Lord Voldemort",
+      "password" : "123456",
+      "phone" : "0935353353",
+      "username" : "voldemort"
+    }
+  }
+}

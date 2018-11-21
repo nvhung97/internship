@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "584628931000",
-    "firebase_url": "https://etalkchat.firebaseio.com",
-    "project_id": "etalkchat",
-    "storage_bucket": "etalkchat.appspot.com"
+    "project_number": "587587154164",
+    "firebase_url": "https://etalk-180808.firebaseio.com",
+    "project_id": "etalk-180808",
+    "storage_bucket": "etalk-180808.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:584628931000:android:79125d61630dfca3",
+        "mobilesdk_app_id": "1:587587154164:android:79125d61630dfca3",
         "android_client_info": {
           "package_name": "com.example.cpu11398_local.etalk"
         }
       },
       "oauth_client": [
         {
-          "client_id": "584628931000-k2e3mrrtn8pibevkh4vdna868kfsalcb.apps.googleusercontent.com",
+          "client_id": "587587154164-kln57codnd90oe76ro7fjmduc1nvamm5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.cpu11398_local.etalk",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "584628931000-ol539nja72jmj7ba5tfab4qa5s0n2vnt.apps.googleusercontent.com",
+          "client_id": "587587154164-9hsjuasdh9qocti0jk44kd7oeeg5o38a.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAZjs0vCqp81Aw1odVItsW1qAt1wiaVnwM"
+          "current_key": "AIzaSyAjLNl6DFepQMtoc87NwcBEaOdCWrtopxY"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "584628931000-ol539nja72jmj7ba5tfab4qa5s0n2vnt.apps.googleusercontent.com",
+              "client_id": "587587154164-9hsjuasdh9qocti0jk44kd7oeeg5o38a.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

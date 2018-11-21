@@ -443,6 +443,7 @@ public final class MessageGroupItem {
     }
 
     public boolean equalsContent(MessageGroupItem other) {
+        if (!this.data.equals(other.data)) return false;
         if (this.startVisible != other.startVisible) return false;
         if (this.stopVisible != other.stopVisible) return false;
         if (this.progressVisible != other.progressVisible) return false;

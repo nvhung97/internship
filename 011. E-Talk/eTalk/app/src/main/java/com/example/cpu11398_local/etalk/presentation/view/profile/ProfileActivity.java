@@ -177,22 +177,6 @@ public class ProfileActivity extends BaseActivity {
                 avatarCopy.copy(bitmapAvatar);
             }
             else if (requestCode == REQUEST_GALLERY_CODE) {
-                /*try {
-                    InputStream is = getContentResolver().openInputStream(data.getData());
-                    OutputStream os = new FileOutputStream(new File(getFilesDir(), "test." + MimeTypeMap.getSingleton().getExtensionFromMimeType(getContentResolver().getType(data.getData()))));
-                    byte[] buff = new byte[1024];
-                    int len;
-                    while((len = is.read(buff)) > 0){
-                        os.write(buff,0, len);
-                    }
-                    is.close();
-                    os.close();
-                } catch (FileNotFoundException e) {
-                    Log.e("=========", "====================");
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
                 Bitmap bitmapAvatar = Tool.getImageWithUri(this, data.getData());
                 avatarCopy.copy(bitmapAvatar);
             }

@@ -1,15 +1,16 @@
 package com.example.cpu11398_local.etalk.presentation.view.chat.media;
 
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import com.example.cpu11398_local.etalk.R;
+import com.example.cpu11398_local.etalk.presentation.view.chat.group.MessageGroupAdapter;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -43,10 +44,28 @@ public class MediaVideoActivity extends AppCompatActivity {
 
         exitFullScreen.setOnClickListener(v -> finish());
 
-        initializePlayer();
+        player = MessageGroupAdapter.player;
+        player.addListener(new Player.DefaultEventListener() {
+            @Override
+            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                switch (playbackState) {
+                    case PlaybackStateCompat.STATE_PAUSED:
+                        progressBar.setVisibility(View.VISIBLE);
+                        break;
+                    case PlaybackStateCompat.STATE_PLAYING:
+                        progressBar.setVisibility(View.GONE);
+                        break;
+                    case PlaybackStateCompat.STATE_FAST_FORWARDING:
+                        finish();
+                        break;
+                }
+            }
+        });
+        playerView.setPlayer(player);
+        //initializePlayer();
     }
 
-    private void initializePlayer() {
+    /*private void initializePlayer() {
         if (player == null) {
             player = ExoPlayerFactory.newSimpleInstance(
                     new DefaultRenderersFactory(this),
@@ -77,11 +96,11 @@ public class MediaVideoActivity extends AppCompatActivity {
             playerView.setPlayer(player);
             player.seekTo(
                     player.getCurrentWindowIndex(),
-                    60000/*getIntent().getExtras().getLong("position")*/
+                    getIntent().getExtras().getLong("position")
             );
         }
         player.prepare(
-                buildMediaSource("http://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4"/*getIntent().getExtras().getString("url")*/),
+                buildMediaSource(getIntent().getExtras().getString("url")),
                 false,
                 true
         );
@@ -97,7 +116,7 @@ public class MediaVideoActivity extends AppCompatActivity {
                         true
                 )
         ).createMediaSource(Uri.parse(link));
-    }
+    }*/
 
     private void releasePlayer() {
         if (player != null) {

@@ -28,6 +28,11 @@ public class ImageMessageView extends android.support.v7.widget.AppCompatImageVi
         setImageDrawable(drawable);
     }
 
+    public void setSize(int w, int h) {
+        this.w = w;
+        this.h = h;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(

@@ -88,7 +88,7 @@ public final class FirebaseTree {
 
     public final class Storage {
 
-        public static final String NODE_NAME = "gs://etalkchat.appspot.com";
+        public static final String NODE_NAME = "gs://etalk-180808.appspot.com";
 
         public final class Avatars {
             public static final String NODE_NAME = "avatars";

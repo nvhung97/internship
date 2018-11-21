@@ -39,7 +39,8 @@
             <com.example.cpu11398_local.etalk.presentation.custom.RoundedPlayerView
                 android:id="@id/lyt_message_group_video_friend_player"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                app:use_controller="false"/>
             <ImageButton
                 android:id="@id/lyt_message_group_video_friend_play"
                 android:layout_width="150px"
@@ -53,7 +54,7 @@
                 android:id="@id/lyt_message_group_video_friend_loading"
                 android:layout_width="75px"
                 android:layout_height="75px"
-                android:indeterminateTint="@color/colorGray"
+                android:indeterminateTint="#b0b0b0"
                 app:layout_constraintTop_toTopOf="@id/lyt_message_group_video_friend_player"
                 app:layout_constraintLeft_toLeftOf="@id/lyt_message_group_video_friend_player"
                 app:layout_constraintRight_toRightOf="@id/lyt_message_group_video_friend_player"

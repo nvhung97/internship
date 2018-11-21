@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -24,7 +23,6 @@ import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.chat.media.EmojiAdapter;
 import com.example.cpu11398_local.etalk.presentation.view.chat.media.MapActivity;
-import com.example.cpu11398_local.etalk.presentation.view.chat.media.MediaVideoActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
@@ -79,6 +77,7 @@ public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObs
         binding.chatActivityRoot.post((Runnable) () -> keyboardHeightProvider.start());
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onDataBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chat_group);
@@ -87,7 +86,8 @@ public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObs
             WelcomeActivity.getAppComponent(this).inject(this);
         }
         binding.setViewModel((ChatGroupViewModel)viewModel);
-        binding.chatActivityLstMessage.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        binding.chatActivityLstMessage.setLayoutManager(linearLayoutManager);
         binding.chatActivityLstMessage.addItemDecoration(new ChatGroupDivider(
                 (int)getResources().getDimension(R.dimen.divider_chat_space_same),
                 (int)getResources().getDimension(R.dimen.divider_chat_space_diff)
@@ -126,6 +126,18 @@ public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObs
         binding.chatActivityEdtMessage.setOnClickListener(v -> {
             hideEmoji();
             hideAudio();
+        });
+
+        binding.chatActivityLstMessage.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            if (MessageGroupAdapter.playItem != -1) {
+                if (MessageGroupAdapter.playItem < linearLayoutManager.findFirstVisibleItemPosition() ||
+                        MessageGroupAdapter.playItem > linearLayoutManager.findLastVisibleItemPosition()) {
+                    MessageGroupAdapter.player.release();
+                    binding.chatActivityLstMessage.getAdapter().notifyItemChanged(MessageGroupAdapter.playItem);
+                    MessageGroupAdapter.player = null;
+                    MessageGroupAdapter.playItem = -1;
+                }
+            }
         });
     }
 
@@ -176,6 +188,11 @@ public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObs
     @Override
     public void onEndTaskViewModel() {
         viewModel.endTask();
+        if (MessageGroupAdapter.playItem != -1) {
+            MessageGroupAdapter.player.release();
+            MessageGroupAdapter.player = null;
+            MessageGroupAdapter.playItem = -1;
+        }
     }
 
     @Override
@@ -222,13 +239,25 @@ public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObs
                     );
                     break;
                 case Event.CHAT_ACTIVITY_GET_MEDIA:
-                    Tool.createMediaOptionDialog(
-                            ChatGroupActivity.this,
-                            REQUEST_TAKE_PHOTO_CODE,
-                            REQUEST_RECORD_CODE,
-                            REQUEST_CHOOSE_PHOTOS_CODE,
-                            REQUEST_CHOOSE_VIDEOS_CODE
-                    ).show();
+                    if (ActivityCompat.checkSelfPermission(ChatGroupActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(ChatGroupActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(
+                                ChatGroupActivity.this,
+                                new String[]{
+                                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                },
+                                0
+                        );
+                    } else {
+                        Tool.createMediaOptionDialog(
+                                ChatGroupActivity.this,
+                                REQUEST_TAKE_PHOTO_CODE,
+                                REQUEST_RECORD_CODE,
+                                REQUEST_CHOOSE_PHOTOS_CODE,
+                                REQUEST_CHOOSE_VIDEOS_CODE
+                        ).show();
+                    }
                     break;
                 case Event.CHAT_ACTIVITY_ATTACH:
                     Intent intent = new Intent();
@@ -322,7 +351,6 @@ public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObs
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        MediaMetadataRetriever mediaMetadataRetriever;
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_TAKE_PHOTO_CODE:

@@ -12,6 +12,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class RegisterUsecase implements Usecase {
 
+    private final String DEFAULT_AVATAR = "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Fdefault.png?alt=media&token=b5e2840c-876e-4dcc-b1fd-d2f23f3d2d1b";
+
     private Executor            executor;
     private Scheduler           scheduler;
     private CompositeDisposable disposable;
@@ -53,7 +55,7 @@ public class RegisterUsecase implements Usecase {
                             } else {
                                 disposable.add(
                                         userRepository
-                                                .setNetworkUser(new User(name, username, password, phone))
+                                                .setNetworkUser(new User(name, username, password, phone, DEFAULT_AVATAR))
                                                 .subscribeOn(Schedulers.from(executor))
                                                 .observeOn(scheduler)
                                                 .subscribeWith((DisposableSingleObserver<Boolean>)observer)

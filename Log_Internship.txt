@@ -469,6 +469,12 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Soạn slide về Unet
 12:05 PM 11/19/2018
 	- Hiện thực gửi nhận video, View video
+6:19 PM 11/20/2018
+	- SetOnClickListener on PlayerView
+		+ https://stackoverflow.com/a/52366386
+11:19 AM 11/21/2018
+	- CompressVideo
+		+ https://github.com/Tourenathan-G5organisation/SiliCompressor
 
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
