@@ -29,6 +29,11 @@ public class LoadFriendConversationUsecase implements Usecase {
 
     @Override
     public void execute(Object observer, Object... params) {
+        try {
+            throw new Exception("test");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         disposable.add(
                 conversationRepository
                         .loadNetworkRelationships((String)params[0])

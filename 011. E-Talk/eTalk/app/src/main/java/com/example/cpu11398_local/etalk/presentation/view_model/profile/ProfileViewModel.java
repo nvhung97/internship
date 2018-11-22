@@ -208,7 +208,7 @@ public class ProfileViewModel extends    BaseObservable
     public void subscribeObserver(Observer<Event> observer) {
         publisher.subscribe(observer);
         if (currentUser == null) {
-            getUserInfoUsecase.execute(new GetUserInfoObserver(), false);
+            getUserInfoUsecase.execute(new GetUserInfoObserver());
         }
     }
 

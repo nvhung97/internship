@@ -30,24 +30,13 @@ public class GetUserInfoUsecase implements Usecase {
 
     @Override
     public void execute(Object observer, Object... params) {
-        boolean getChangeableUser = (boolean)params[0];
-        if (getChangeableUser) {
-            /*disposable.add(
-                    userRepository
-                            .getCacheChangeableUser()
-                            .subscribeOn(Schedulers.from(executor))
-                            .observeOn(scheduler)
-                            .subscribeWith((DisposableObserver<User>)observer)
-            );*/
-        } else {
-            disposable.add(
-                    userRepository
-                            .getCacheUser()
-                            .subscribeOn(Schedulers.from(executor))
-                            .observeOn(scheduler)
-                            .subscribeWith((DisposableSingleObserver<User>)observer)
-            );
-        }
+        disposable.add(
+                userRepository
+                        .getCacheUser()
+                        .subscribeOn(Schedulers.from(executor))
+                        .observeOn(scheduler)
+                        .subscribeWith((DisposableSingleObserver<User>)observer)
+        );
     }
 
     @Override

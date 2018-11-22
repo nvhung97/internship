@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <external-path name="etalk"
-        path="Android/data/com.example.cpu11398_local.etalk/files/Pictures" />
+    <external-path
+        name="etalk"
+        path="." />
 </paths>

@@ -17,6 +17,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -226,10 +227,17 @@ public class Tool {
             mediaOptionDialog.dismiss();
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             try {
+                File dir = new File(
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+                        "Camera"
+                );
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
                 File file = File.createTempFile(
                         "IMG_",
                         ".jpg",
-                        context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                        dir
                 );
                 imageCaptureUri = FileProvider.getUriForFile(context, "com.example.cpu11398_local.etalk.provider", file);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageCaptureUri);
@@ -314,19 +322,24 @@ public class Tool {
      */
     public static Bitmap resizeImage(Bitmap image, final int MAX_SIZE) {
 
-        int     width       = image.getWidth();
-        int     height      = image.getHeight();
-        float   bitmapRatio = (float) width / (float) height;
+        int width  = image.getWidth();
+        int height = image.getHeight();
 
-        if (bitmapRatio > 1) {
-            height = MAX_SIZE;
-            width  = (int) (height * bitmapRatio);
+        if (width > height) {
+            return Bitmap.createScaledBitmap(
+                    image,
+                    MAX_SIZE,
+                    MAX_SIZE * height / width,
+                    true
+            );
         } else {
-            width  = MAX_SIZE;
-            height = (int) (width / bitmapRatio);
+            return Bitmap.createScaledBitmap(
+                    image,
+                    MAX_SIZE * width / height,
+                    MAX_SIZE,
+                    true
+            );
         }
-
-        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
     /**

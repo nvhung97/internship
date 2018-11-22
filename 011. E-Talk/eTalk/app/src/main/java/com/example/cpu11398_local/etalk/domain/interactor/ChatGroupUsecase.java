@@ -23,6 +23,7 @@ import com.example.cpu11398_local.etalk.presentation.model.User;
 import com.example.cpu11398_local.etalk.presentation.view.chat.group.MessageGroupItem;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModelCallback;
 import com.example.cpu11398_local.etalk.utils.Event;
+import com.example.cpu11398_local.etalk.utils.Tool;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -64,6 +65,7 @@ public class ChatGroupUsecase implements Usecase {
 
     private final String SENT_URL           = "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/status%2Fsent.png?alt=media&token=06a4cf9e-b36d-4b0b-933f-1006c704fd6c";
     private final String SENDING_URL        = "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/status%2Fsending.png?alt=media&token=6ecff111-5197-4a46-940f-7dcb25702f35";
+    private final String FAILED_URL         = "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/status%2Ffailed.png?alt=media&token=d0826d53-2a92-419f-9d30-efce313de1a6";
     private final String FIRST_LOAD         = "first_load";
     private final String LOAD_MORE          = "load_more";
     private final String SEND_TEXT          = "send_text";
@@ -332,29 +334,33 @@ public class ChatGroupUsecase implements Usecase {
                                 })
                 );
             } else if (message.getType() == Message.IMAGE) {
-                File file = new File(message.getData());
-                disposable.add(
-                        conversationRepository
-                                .uploadNetworkFile(conversationKey, file, Message.IMAGE)
-                                .subscribeOn(Schedulers.from(executor))
-                                .observeOn(scheduler)
-                                .subscribe(url -> {
-                                    file.delete();
-                                    message.setData(url);
-                                    disposable.add(
-                                            conversationRepository
-                                                    .pushNetworkMessage(conversationKey, message)
-                                                    .subscribeOn(Schedulers.from(executor))
-                                                    .observeOn(scheduler)
-                                                    .subscribe(result -> {
-                                                        if (result == true) {
-                                                            holder.sendSuccessMessage(message);
-                                                            needUpdateMessage = true;
-                                                        }
-                                                    })
-                                    );
-                                })
-                );
+                String[] dataPart = message.getData().split("eTaLkImAgE");
+                File file = new File(dataPart[0]);
+                if (file.exists()) {
+                    disposable.add(
+                            conversationRepository
+                                    .uploadNetworkFile(conversationKey, file, Message.IMAGE)
+                                    .subscribeOn(Schedulers.from(executor))
+                                    .observeOn(scheduler)
+                                    .subscribe(url -> {
+                                        message.setData(url + "eTaLkImAgE" + dataPart[1] + "eTaLkImAgE" + dataPart[2]);
+                                        disposable.add(
+                                                conversationRepository
+                                                        .pushNetworkMessage(conversationKey, message)
+                                                        .subscribeOn(Schedulers.from(executor))
+                                                        .observeOn(scheduler)
+                                                        .subscribe(result -> {
+                                                            if (result == true) {
+                                                                holder.sendSuccessMessage(message);
+                                                                needUpdateMessage = true;
+                                                            }
+                                                        })
+                                        );
+                                    })
+                    );
+                } else {
+                    holder.sendFailedMessage(message);
+                }
             } else if (message.getType() == Message.FILE) {
                 String[] dataPart = message.getData().split("eTaLkFiLe");
                 File file = new File(dataPart[0]);
@@ -489,19 +495,26 @@ public class ChatGroupUsecase implements Usecase {
         return text;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void executeSendImageUri(Uri uri) {
+        String data = uri.getPath().contains("content")
+                ? getRealPathFromURI(context, uri)
+                : uri.getPath().replace("etalk","storage/emulated/0");
+        Bitmap bitmap = Tool.getImageWithUri(context, Uri.fromFile(new File(data)));
         Message message = new Message(
                 username,
-                "",
+                data + "eTaLkImAgE" + bitmap.getWidth() + "eTaLkImAgE" + bitmap.getHeight(),
                 Message.IMAGE
         );
         holder.sendNewMessage(message);
         needUpdateMessage = true;
         disposable.add(
-                copyToInternalStorageFromUri(uri, message.getKey(), Message.IMAGE)
+                resizeBitmapToInternalStorage(bitmap, message.getKey())
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
                         .subscribe(file -> {
+                            message.setData(file.getAbsolutePath()+ "eTaLkImAgE" + bitmap.getWidth() + "eTaLkImAgE" + bitmap.getHeight());
+                            holder.updateMessage(message);
                             disposable.add(
                                     conversationRepository
                                             .uploadNetworkFile(conversationKey, file, Message.IMAGE)
@@ -509,7 +522,7 @@ public class ChatGroupUsecase implements Usecase {
                                             .observeOn(scheduler)
                                             .subscribe(url -> {
                                                 file.delete();
-                                                message.setData(url);
+                                                message.setData(url + "eTaLkImAgE" + bitmap.getWidth() + "eTaLkImAgE" + bitmap.getHeight());
                                                 disposable.add(
                                                         conversationRepository
                                                                 .pushNetworkMessage(conversationKey, message)
@@ -544,6 +557,26 @@ public class ChatGroupUsecase implements Usecase {
                 cursor.close();
             }
         }
+    }
+
+    private Single<File> resizeBitmapToInternalStorage(Bitmap bitmap, String key) {
+        return Single.create(emitter -> {
+            Bitmap bm = bitmap;
+            if (bm.getWidth() > 512 || bm.getHeight() > 512) {
+                bm = Tool.resizeImage(bitmap, 512);
+            }
+            File file = new File(context.getFilesDir(), "IMG_" + key + ".png");
+            try {
+                OutputStream os = new FileOutputStream(file);
+                bm.compress(Bitmap.CompressFormat.PNG, 0, os);
+                os.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            emitter.onSuccess(file);
+        });
     }
 
     private void executeSendVideoUri(Uri uri) {
@@ -733,12 +766,7 @@ public class ChatGroupUsecase implements Usecase {
     private Single<File> copyToInternalStorageFromUri(Uri uri, String name, long type) {
          return Single.create(emitter -> {
              File file = null;
-             if (type == Message.IMAGE) {
-                 file = new File(
-                         context.getFilesDir(),
-                         name + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(context.getContentResolver().getType(uri))
-                 );
-             } else if (type == Message.FILE) {
+             if (type == Message.FILE) {
                  file = new File(
                          context.getFilesDir(),
                          name
@@ -747,11 +775,6 @@ public class ChatGroupUsecase implements Usecase {
                  file = new File(
                          context.getFilesDir(),
                          name
-                 );
-             } else if (type == Message.VIDEO) {
-                 file = new File(
-                         context.getFilesDir(),
-                         "video_" + name + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(context.getContentResolver().getType(uri))
                  );
              }
              try {
@@ -996,7 +1019,7 @@ public class ChatGroupUsecase implements Usecase {
                         message
                 );
                 MessageGroupItem newItem = new MessageGroupItem(message)
-                        .newData(decodeData(message.getData(), message.getType()))
+                        .newData(message.getData())
                         .newTime(decodeTime(message.getTime()))
                         .newTimeVisible(View.VISIBLE);
                 if (message.getSender().equals(username)) {
@@ -1114,7 +1137,7 @@ public class ChatGroupUsecase implements Usecase {
                     true,
                     null,
                     View.GONE,
-                    decodeData(message.getData(), message.getType()),
+                    message.getData(),
                     SENDING_URL,
                     View.VISIBLE,
                     decodeTime(Long.parseLong(message.getKey().substring(username.length()))),
@@ -1144,6 +1167,32 @@ public class ChatGroupUsecase implements Usecase {
                                 messages.get(i).newMessage(message).newData(message.getData())
                         );
                     }
+                    break;
+                }
+            }
+        }
+
+        public void sendFailedMessage(Message message) {
+            sendingMessage.remove(message.getKey());
+            for (int i = messages.size() - 1; i >= 0; --i) {
+                if (messages.get(i).getMessage().getKey().equals(message.getKey())) {
+                    messages.set(
+                            i,
+                            messages.get(i).newAvatar(FAILED_URL)
+                    );
+                    messages.get(i).getMessage().setServerTime(Long.parseLong(message.getKey().substring(username.length())));
+                    break;
+                }
+            }
+        }
+
+        public void updateMessage(Message message) {
+            for (int i = messages.size() - 1; i >= 0; --i) {
+                if (messages.get(i).getMessage().getKey().equals(message.getKey())) {
+                    messages.set(
+                            i,
+                            messages.get(i).newMessage(message).newData(message.getData())
+                    );
                     break;
                 }
             }
@@ -1286,23 +1335,6 @@ public class ChatGroupUsecase implements Usecase {
 
         public void setMessages(List<MessageGroupItem> messages) {
             this.messages = messages;
-        }
-
-        private Object decodeData(String data, long type) {
-            /*if (type == Message.TEXT) {
-                return data;
-            }
-            if (type == Message.IMAGE) {
-                return data;
-            }
-            if (type == Message.FILE) {
-                return data;
-            }
-            if (type == Message.MAP) {
-                return data;
-            }
-            return null;*/
-            return data;
         }
 
         private String decodeTime(long time) {

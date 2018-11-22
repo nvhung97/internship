@@ -1,0 +1,513 @@
+{
+  "conversations" : {
+    "hungnv61542768772313" : {
+      "create_time" : 1542768773619,
+      "creator" : "hungnv6",
+      "key" : "hungnv61542768772313",
+      "last_message" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542768772313",
+        "sender" : "hungnv6",
+        "time" : 1542768773333,
+        "type" : 0
+      },
+      "members" : {
+        "hungnv6" : 1542817546777,
+        "potter" : 0
+      },
+      "type" : 1
+    },
+    "hungnv61542768791037" : {
+      "create_time" : 1542768792236,
+      "creator" : "hungnv6",
+      "key" : "hungnv61542768791037",
+      "last_message" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542768791037",
+        "sender" : "hungnv6",
+        "time" : 1542768792236,
+        "type" : 0
+      },
+      "members" : {
+        "hermione" : 0,
+        "hungnv6" : 1542769824700
+      },
+      "type" : 1
+    },
+    "hungnv61542768806932" : {
+      "create_time" : 1542768808131,
+      "creator" : "hungnv6",
+      "key" : "hungnv61542768806932",
+      "last_message" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542768806931",
+        "sender" : "hungnv6",
+        "time" : 1542768808131,
+        "type" : 0
+      },
+      "members" : {
+        "hungnv6" : 1542770316038,
+        "ron" : 0
+      },
+      "type" : 1
+    },
+    "hungnv61542768839336" : {
+      "create_time" : 1542768840533,
+      "creator" : "hungnv6",
+      "key" : "hungnv61542768839336",
+      "last_message" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542768839336",
+        "sender" : "hungnv6",
+        "time" : 1542768840533,
+        "type" : 0
+      },
+      "members" : {
+        "dumbledore" : 0,
+        "hungnv6" : 1542770144240
+      },
+      "type" : 1
+    },
+    "hungnv61542768873846" : {
+      "create_time" : 1542768875072,
+      "creator" : "hungnv6",
+      "key" : "hungnv61542768873846",
+      "last_message" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542768873845",
+        "sender" : "hungnv6",
+        "time" : 1542768874843,
+        "type" : 0
+      },
+      "members" : {
+        "hungnv6" : 1542883888374,
+        "long" : 1542847371207
+      },
+      "type" : 1
+    },
+    "hungnv61542768945430" : {
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/conversations%2Fhungnv61542768945430%2Favatar%2Fhungnv61542768945430.png?alt=media&token=bf824f26-16ee-489c-9978-67e449b890f1",
+      "create_time" : 1542768949790,
+      "creator" : "hungnv6",
+      "key" : "hungnv61542768945430",
+      "last_message" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542768945430",
+        "sender" : "hungnv6",
+        "time" : 1542768949790,
+        "type" : 0
+      },
+      "members" : {
+        "dumbledore" : 0,
+        "hermione" : 0,
+        "hungnv6" : 1542850011550,
+        "potter" : 0,
+        "ron" : 0
+      },
+      "name" : "Hogwarts",
+      "type" : 0
+    },
+    "hungnv61542769012747" : {
+      "create_time" : 1542769013929,
+      "creator" : "hungnv6",
+      "key" : "hungnv61542769012747",
+      "last_message" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542769012747",
+        "sender" : "hungnv6",
+        "time" : 1542769013929,
+        "type" : 0
+      },
+      "members" : {
+        "ducnguyen" : 0,
+        "hungnv6" : 1542770344127
+      },
+      "type" : 1
+    },
+    "hungnv61542769605951" : {
+      "create_time" : 1542769607167,
+      "creator" : "hungnv6",
+      "key" : "hungnv61542769605951",
+      "last_message" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542769605951",
+        "sender" : "hungnv6",
+        "time" : 1542769606930,
+        "type" : 0
+      },
+      "members" : {
+        "ducnguyen" : 0,
+        "hungnv6" : 1542849827746,
+        "long" : 1542773331032
+      },
+      "name" : "ZMD Fresher",
+      "type" : 0
+    },
+    "hungnv61542770138802" : {
+      "create_time" : 1542770140023,
+      "creator" : "hungnv6",
+      "key" : "hungnv61542770138802",
+      "last_message" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542770138801",
+        "sender" : "hungnv6",
+        "time" : 1542770140023,
+        "type" : 0
+      },
+      "members" : {
+        "hungnv6" : 1542850014598,
+        "voldemort" : 0
+      },
+      "type" : 1
+    },
+    "hungnv61542770169169" : {
+      "create_time" : 1542770170371,
+      "creator" : "hungnv6",
+      "key" : "hungnv61542770169169",
+      "last_message" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542770169169",
+        "sender" : "hungnv6",
+        "time" : 1542770170371,
+        "type" : 0
+      },
+      "members" : {
+        "hungnv6" : 1542770301791,
+        "snape" : 0
+      },
+      "type" : 1
+    },
+    "hungnv61542770202523" : {
+      "create_time" : 1542770203744,
+      "creator" : "hungnv6",
+      "key" : "hungnv61542770202523",
+      "last_message" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542770202523",
+        "sender" : "hungnv6",
+        "time" : 1542770203744,
+        "type" : 0
+      },
+      "members" : {
+        "hungnv6" : 1542847479449,
+        "moody" : 0
+      },
+      "type" : 1
+    },
+    "hungnv61542770228621" : {
+      "create_time" : 1542770229820,
+      "creator" : "hungnv6",
+      "key" : "hungnv61542770228621",
+      "last_message" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542770228621",
+        "sender" : "hungnv6",
+        "time" : 1542770229820,
+        "type" : 0
+      },
+      "members" : {
+        "hungnv6" : 1542849824041,
+        "mcgonagall" : 0
+      },
+      "type" : 1
+    },
+    "test1542772935701" : {
+      "create_time" : 1542772937037,
+      "creator" : "test",
+      "key" : "test1542772935701",
+      "last_message" : {
+        "data" : "Hello!",
+        "key" : "test1542772935701",
+        "sender" : "test",
+        "time" : 1542772936462,
+        "type" : 0
+      },
+      "members" : {
+        "snape" : 0,
+        "test" : 1542791361949
+      },
+      "type" : 1
+    }
+  },
+  "messages" : {
+    "hungnv61542768772313" : {
+      "hungnv61542768772313" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542768772313",
+        "sender" : "hungnv6",
+        "time" : 1542768773333,
+        "type" : 0
+      }
+    },
+    "hungnv61542768791037" : {
+      "hungnv61542768791037" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542768791037",
+        "sender" : "hungnv6",
+        "time" : 1542768792001,
+        "type" : 0
+      }
+    },
+    "hungnv61542768806932" : {
+      "hungnv61542768806931" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542768806931",
+        "sender" : "hungnv6",
+        "time" : 1542768807900,
+        "type" : 0
+      }
+    },
+    "hungnv61542768839336" : {
+      "hungnv61542768839336" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542768839336",
+        "sender" : "hungnv6",
+        "time" : 1542768840306,
+        "type" : 0
+      }
+    },
+    "hungnv61542768873846" : {
+      "hungnv61542768873845" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542768873845",
+        "sender" : "hungnv6",
+        "time" : 1542768874843,
+        "type" : 0
+      }
+    },
+    "hungnv61542768945430" : {
+      "hungnv61542768945430" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542768945430",
+        "sender" : "hungnv6",
+        "time" : 1542768949549,
+        "type" : 0
+      }
+    },
+    "hungnv61542769012747" : {
+      "hungnv61542769012747" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542769012747",
+        "sender" : "hungnv6",
+        "time" : 1542769013703,
+        "type" : 0
+      }
+    },
+    "hungnv61542769605951" : {
+      "hungnv61542769605951" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542769605951",
+        "sender" : "hungnv6",
+        "time" : 1542769606930,
+        "type" : 0
+      }
+    },
+    "hungnv61542770138802" : {
+      "hungnv61542770138801" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542770138801",
+        "sender" : "hungnv6",
+        "time" : 1542770139774,
+        "type" : 0
+      }
+    },
+    "hungnv61542770169169" : {
+      "hungnv61542770169169" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542770169169",
+        "sender" : "hungnv6",
+        "time" : 1542770170141,
+        "type" : 0
+      }
+    },
+    "hungnv61542770202523" : {
+      "hungnv61542770202523" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542770202523",
+        "sender" : "hungnv6",
+        "time" : 1542770203491,
+        "type" : 0
+      }
+    },
+    "hungnv61542770228621" : {
+      "hungnv61542770228621" : {
+        "data" : "Hello!",
+        "key" : "hungnv61542770228621",
+        "sender" : "hungnv6",
+        "time" : 1542770229587,
+        "type" : 0
+      }
+    },
+    "test1542772935701" : {
+      "test1542772935701" : {
+        "data" : "Hello!",
+        "key" : "test1542772935701",
+        "sender" : "test",
+        "time" : 1542772936462,
+        "type" : 0
+      }
+    }
+  },
+  "relationships" : {
+    "ducnguyen" : {
+      "hungnv61542769012747" : 1,
+      "hungnv61542769605951" : 0
+    },
+    "dumbledore" : {
+      "hungnv61542768839336" : 1,
+      "hungnv61542768945430" : 0
+    },
+    "hermione" : {
+      "hungnv61542768791037" : 1,
+      "hungnv61542768945430" : 0
+    },
+    "hungnv6" : {
+      "hungnv61542768772313" : 1,
+      "hungnv61542768791037" : 1,
+      "hungnv61542768806932" : 1,
+      "hungnv61542768839336" : 1,
+      "hungnv61542768873846" : 1,
+      "hungnv61542768945430" : 0,
+      "hungnv61542769012747" : 1,
+      "hungnv61542769605951" : 0,
+      "hungnv61542770138802" : 1,
+      "hungnv61542770169169" : 1,
+      "hungnv61542770202523" : 1,
+      "hungnv61542770228621" : 1
+    },
+    "long" : {
+      "hungnv61542768873846" : 1,
+      "hungnv61542769605951" : 0
+    },
+    "mcgonagall" : {
+      "hungnv61542770228621" : 1
+    },
+    "moody" : {
+      "hungnv61542770202523" : 1
+    },
+    "potter" : {
+      "hungnv61542768772313" : 1,
+      "hungnv61542768945430" : 0
+    },
+    "ron" : {
+      "hungnv61542768806932" : 1,
+      "hungnv61542768945430" : 0
+    },
+    "snape" : {
+      "hungnv61542770169169" : 1,
+      "test1542772935701" : 1
+    },
+    "test" : {
+      "test1542772935701" : 1
+    },
+    "voldemort" : {
+      "hungnv61542770138802" : 1
+    }
+  },
+  "users" : {
+    "ducnguyen" : {
+      "active" : 1536836882290,
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Fdefault.png?alt=media&token=b5e2840c-876e-4dcc-b1fd-d2f23f3d2d1b",
+      "name" : "Nguyễn Văn Đức",
+      "password" : "123456",
+      "phone" : "0365271621",
+      "username" : "ducnguyen"
+    },
+    "dumbledore" : {
+      "active" : 1542768335834,
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Fdumbledore.png?alt=media&token=d52ffa66-3a5d-41cd-ad7a-b6c1ee25ef32",
+      "name" : "Albus Dumbledore",
+      "password" : "123456",
+      "phone" : "0834554321",
+      "username" : "dumbledore"
+    },
+    "ginny" : {
+      "active" : 1542768453102,
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Fginny.png?alt=media&token=51098857-5617-4029-af90-e74294d12103",
+      "name" : "Ginny Weasley",
+      "password" : "123456",
+      "phone" : "0909000000",
+      "username" : "ginny"
+    },
+    "hermione" : {
+      "active" : 1542768513088,
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Fhermione.png?alt=media&token=14adeb7f-9888-4522-9ee1-c3cdc5e7c10b",
+      "name" : "Hermione Granger",
+      "password" : "123456",
+      "phone" : "0834512345",
+      "username" : "hermione"
+    },
+    "hungnv6" : {
+      "active" : 1542883881841,
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Fhungnv6.png?alt=media&token=78674239-441b-48a0-9d82-8ca4ae3e6716",
+      "name" : "Nguyen Van Hung",
+      "password" : "88888888",
+      "phone" : "0834503569",
+      "username" : "hungnv6"
+    },
+    "long" : {
+      "active" : 1542847376660,
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Flong.png?alt=media&token=9912d9ba-1e11-41e5-ad92-b40eebcb1b4a",
+      "name" : "Lý Kim Long",
+      "password" : "123456",
+      "phone" : "0707902297",
+      "username" : "long"
+    },
+    "mcgonagall" : {
+      "active" : 1542768554455,
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Fmcgonagall.png?alt=media&token=265ce9e9-27de-41b4-9189-665ec7543192",
+      "name" : "Minerva McGonagall",
+      "password" : "123456",
+      "phone" : "0834123123",
+      "username" : "mcgonagall"
+    },
+    "moody" : {
+      "active" : 1542768608332,
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Fmoody.png?alt=media&token=9212db7a-592c-4d00-8272-71e924fd7c97",
+      "name" : "Alastor Moody",
+      "password" : "123456",
+      "phone" : "0999888999",
+      "username" : "moody"
+    },
+    "potter" : {
+      "active" : 1542768636975,
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Fpotter.png?alt=media&token=52ca8af7-7d72-4e35-9b5c-93b6f9470a3a",
+      "name" : "Harry Potter",
+      "password" : "123456",
+      "phone" : "0909090909",
+      "username" : "potter"
+    },
+    "ron" : {
+      "active" : 1542768663611,
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Fron.png?alt=media&token=c37354c9-a343-4124-a3bd-2ae590c1690c",
+      "name" : "Ron Weasley",
+      "password" : "123456",
+      "phone" : "0909999888",
+      "username" : "ron"
+    },
+    "snape" : {
+      "active" : 1542768692008,
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Fsnape.png?alt=media&token=bced50ea-51d0-4618-b4ef-e5a293994ea6",
+      "name" : "Severus Snape",
+      "password" : "123456",
+      "phone" : "0888999888",
+      "username" : "snape"
+    },
+    "test" : {
+      "active" : 1542792118123,
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Fdefault.png?alt=media&token=b5e2840c-876e-4dcc-b1fd-d2f23f3d2d1b",
+      "name" : "Hahaha",
+      "password" : "123456",
+      "phone" : "111111",
+      "username" : "test"
+    },
+    "voldemort" : {
+      "active" : 1542768730378,
+      "avatar" : "https://firebasestorage.googleapis.com/v0/b/etalk-180808.appspot.com/o/avatars%2Fvoldemort.png?alt=media&token=897ae7d2-6ad1-4ed0-9292-0fb8f269ba23",
+      "name" : "Lord Voldemort",
+      "password" : "123456",
+      "phone" : "0935353353",
+      "username" : "voldemort"
+    }
+  }
+}

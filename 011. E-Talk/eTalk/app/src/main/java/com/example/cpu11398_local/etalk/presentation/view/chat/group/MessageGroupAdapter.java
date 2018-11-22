@@ -182,25 +182,14 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
 
         @Override
         public void bindView(MessageGroupItem item) {
-            if (item.getTextData().isEmpty()) {
-                GlideApp
-                        .with(context)
-                        .load(R.drawable.ic_sending)
-                        .override(200, 200)
-                        .into(data);
-            } else {
-                data.setImageResource(R.drawable.img_holder);
-                GlideApp
-                        .with(context)
-                        .load(item.getTextData())
-                        .override(Target.SIZE_ORIGINAL)
-                        .into(new BaseTarget<Drawable>() {
-                            @Override
-                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                data.setData(resource);
-                            }
-                        });
-            }
+            String[] dataParts = item.getTextData().split("eTaLkImAgE");
+            data.setSize(Integer.parseInt(dataParts[1]), Integer.parseInt(dataParts[2]));
+            data.requestLayout();
+            GlideApp
+                    .with(context)
+                    .load(dataParts[0])
+                    .placeholder(R.drawable.img_holder)
+                    .into(data);
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
             avatar.setImageFromObject(item.getAvatar());
@@ -223,7 +212,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             content.setOnClickListener(v -> {
                 Intent intent = new Intent(context, MediaPhotoActivity.class);
                 intent.putExtra("name", "");
-                intent.putExtra("link", item.getTextData());
+                intent.putExtra("link", dataParts[0]);
                 context.startActivity(intent);
             });
         }
@@ -710,19 +699,16 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
 
         @Override
         public void bindView(MessageGroupItem item) {
+            String[] dataParts = item.getTextData().split("eTaLkImAgE");
             name.setText(item.getName());
             name.setVisibility(item.getNameVisible());
-            data.setImageResource(R.drawable.img_holder);
+            data.setSize(Integer.parseInt(dataParts[1]), Integer.parseInt(dataParts[2]));
+            data.requestLayout();
             GlideApp
                     .with(context)
-                    .load(item.getTextData())
-                    .override(Target.SIZE_ORIGINAL)
-                    .into(new BaseTarget<Drawable>() {
-                        @Override
-                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                            data.setData(resource);
-                        }
-                    });
+                    .load(dataParts[0])
+                    .placeholder(R.drawable.img_holder)
+                    .into(data);
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
             avatar.setImageFromObject(item.getAvatar());
@@ -745,7 +731,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             content.setOnClickListener(v -> {
                 Intent intent = new Intent(context, MediaPhotoActivity.class);
                 intent.putExtra("name", item.getName());
-                intent.putExtra("link", item.getTextData());
+                intent.putExtra("link", dataParts[0]);
                 context.startActivity(intent);
             });
         }
