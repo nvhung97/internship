@@ -1,5 +1,7 @@
 package com.example.cpu11398_local.etalk.domain.interactor;
 
+import android.util.Log;
+
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import java.util.concurrent.Executor;
 import javax.inject.Inject;
@@ -40,6 +42,7 @@ public class WelcomeUsecase implements Usecase {
     }
 
     private boolean onTask(String username) {
+        Log.e("Test", "Usernam = " + username);
         if (!username.isEmpty()) {
             userRepository.updateNetworkUserActive(username, true);
             return true;

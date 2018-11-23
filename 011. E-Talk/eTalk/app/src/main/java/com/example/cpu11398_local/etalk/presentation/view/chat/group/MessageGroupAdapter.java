@@ -177,14 +177,12 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             seens.add(view.findViewById(R.id.lyt_message_group_image_me_seen7));
             seens.add(view.findViewById(R.id.lyt_message_group_image_me_seen8));
             seens.add(view.findViewById(R.id.lyt_message_group_image_me_seen9));
-            data.setClipToOutline(true);
         }
 
         @Override
         public void bindView(MessageGroupItem item) {
             String[] dataParts = item.getTextData().split("eTaLkImAgE");
             data.setSize(Integer.parseInt(dataParts[1]), Integer.parseInt(dataParts[2]));
-            data.requestLayout();
             GlideApp
                     .with(context)
                     .load(dataParts[0])
@@ -264,7 +262,8 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void bindView(MessageGroupItem item) {
-            if (item.getTextData().isEmpty()) {
+            if (item.getTextData().isEmpty()
+                    || item.getTextData().equalsIgnoreCase("failed")) {
                 GlideApp
                         .with(context)
                         .load(R.drawable.equalizer_no_animation)
@@ -368,21 +367,24 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             String[] dataParts = item.getTextData().split("eTaLkViDeO");
             if (dataParts.length == 2) {
                 playerView.setSize(Integer.parseInt(dataParts[0]), Integer.parseInt(dataParts[1]));
-                playerView.requestLayout();
                 data.setVisibility(View.GONE);
                 loading.setVisibility(View.GONE);
                 play.setVisibility(View.GONE);
-            } else {
+            } else if (dataParts.length == 4) {
                 playerView.setSize(Integer.parseInt(dataParts[2]), Integer.parseInt(dataParts[3]));
-                playerView.requestLayout();
-                data.setVisibility(View.VISIBLE);
                 loading.setVisibility(View.GONE);
                 play.setVisibility(View.VISIBLE);
+                data.setVisibility(View.VISIBLE);
                 data.setImageDrawable(null);
                 GlideApp
                         .with(context)
                         .load(dataParts[0])
                         .into(data);
+            } else {
+                playerView.setSize(Integer.parseInt(dataParts[1]), Integer.parseInt(dataParts[2]));
+                data.setVisibility(View.GONE);
+                loading.setVisibility(View.GONE);
+                play.setVisibility(View.GONE);
             }
             time.setText(item.getTime());
             time.setVisibility(item.getTimeVisible());
@@ -418,7 +420,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             playerView.setOnTouchListener(new OnSwipeTouchListener(context) {
                 @Override
                 public void onClick() {
-                    if (player != null) {
+                    if (player != null && playItem == messages.indexOf(item)) {
                         player.removeListener(listener);
                         Intent intent = new Intent(context, MediaVideoActivity.class);
                         intent.putExtra("url", item.getTextData().split("eTaLkViDeO")[1]);
@@ -694,7 +696,6 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             seens.add(view.findViewById(R.id.lyt_message_group_image_friend_seen7));
             seens.add(view.findViewById(R.id.lyt_message_group_image_friend_seen8));
             seens.add(view.findViewById(R.id.lyt_message_group_image_friend_seen9));
-            data.setClipToOutline(true);
         }
 
         @Override
@@ -703,7 +704,6 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             name.setText(item.getName());
             name.setVisibility(item.getNameVisible());
             data.setSize(Integer.parseInt(dataParts[1]), Integer.parseInt(dataParts[2]));
-            data.requestLayout();
             GlideApp
                     .with(context)
                     .load(dataParts[0])
@@ -877,7 +877,6 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             name.setText(item.getName());
             name.setVisibility(item.getNameVisible());
             playerView.setSize(Integer.parseInt(dataParts[2]), Integer.parseInt(dataParts[3]));
-            playerView.requestLayout();
             data.setVisibility(View.VISIBLE);
             loading.setVisibility(View.GONE);
             play.setVisibility(View.VISIBLE);
@@ -920,7 +919,7 @@ public class MessageGroupAdapter extends RecyclerView.Adapter<MessageGroupAdapte
             playerView.setOnTouchListener(new OnSwipeTouchListener(context) {
                 @Override
                 public void onClick() {
-                    if (player != null) {
+                    if (player != null && playItem == messages.indexOf(item)) {
                         player.removeListener(listener);
                         Intent intent = new Intent(context, MediaVideoActivity.class);
                         intent.putExtra("url", item.getTextData().split("eTaLkViDeO")[1]);

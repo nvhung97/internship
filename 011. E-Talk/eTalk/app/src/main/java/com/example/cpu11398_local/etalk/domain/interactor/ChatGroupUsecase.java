@@ -35,7 +35,6 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.vincent.videocompressor.VideoCompress;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -112,6 +111,7 @@ public class ChatGroupUsecase implements Usecase {
 
     private MessagesGroupHolder holder = new MessagesGroupHolder();
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void execute(Object observer, Object... params) {
         switch ((String)params[2]) {
@@ -296,6 +296,7 @@ public class ChatGroupUsecase implements Usecase {
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
                         .subscribeWith(new DisposableSingleObserver<MessagesGroupHolder>(){
+                            @RequiresApi(api = Build.VERSION_CODES.N)
                             @Override
                             public void onSuccess(MessagesGroupHolder messagesGroupHolder) {
                                 holder = messagesGroupHolder;
@@ -318,6 +319,7 @@ public class ChatGroupUsecase implements Usecase {
         );
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void resendFailedMessage(Collection<Message> collection) {
         for (Message message : collection) {
             if (message.getType() == Message.TEXT) {
@@ -335,116 +337,209 @@ public class ChatGroupUsecase implements Usecase {
                 );
             } else if (message.getType() == Message.IMAGE) {
                 String[] dataPart = message.getData().split("eTaLkImAgE");
-                File file = new File(dataPart[0]);
-                if (file.exists()) {
+                if (dataPart[0].contains("firebasestorage")) {
                     disposable.add(
                             conversationRepository
-                                    .uploadNetworkFile(conversationKey, file, Message.IMAGE)
+                                    .pushNetworkMessage(conversationKey, message)
                                     .subscribeOn(Schedulers.from(executor))
                                     .observeOn(scheduler)
-                                    .subscribe(url -> {
-                                        message.setData(url + "eTaLkImAgE" + dataPart[1] + "eTaLkImAgE" + dataPart[2]);
-                                        disposable.add(
-                                                conversationRepository
-                                                        .pushNetworkMessage(conversationKey, message)
-                                                        .subscribeOn(Schedulers.from(executor))
-                                                        .observeOn(scheduler)
-                                                        .subscribe(result -> {
-                                                            if (result == true) {
-                                                                holder.sendSuccessMessage(message);
-                                                                needUpdateMessage = true;
-                                                            }
-                                                        })
-                                        );
+                                    .subscribe(result -> {
+                                        if (result == true) {
+                                            holder.sendSuccessMessage(message);
+                                            needUpdateMessage = true;
+                                        }
                                     })
                     );
                 } else {
-                    holder.sendFailedMessage(message);
+                    File internalFile = new File(context.getFilesDir(), "IMG_" + message.getKey() + ".png");
+                    if (internalFile.exists()) {
+                        disposable.add(
+                                conversationRepository
+                                        .uploadNetworkFile(conversationKey, internalFile, Message.IMAGE)
+                                        .subscribeOn(Schedulers.from(executor))
+                                        .observeOn(scheduler)
+                                        .subscribe(url -> {
+                                            internalFile.delete();
+                                            message.setData(url + "eTaLkImAgE" + dataPart[1] + "eTaLkImAgE" + dataPart[2]);
+                                            disposable.add(
+                                                    conversationRepository
+                                                            .pushNetworkMessage(conversationKey, message)
+                                                            .subscribeOn(Schedulers.from(executor))
+                                                            .observeOn(scheduler)
+                                                            .subscribe(result -> {
+                                                                if (result == true) {
+                                                                    holder.sendSuccessMessage(message);
+                                                                    needUpdateMessage = true;
+                                                                }
+                                                            })
+                                            );
+                                        })
+                        );
+                    } else {
+                        File externalFile = new File(dataPart[0]);
+                        if (externalFile.exists()) {
+                            Bitmap bitmap = Tool.getImageWithUri(context, Uri.fromFile(externalFile));
+                            disposable.add(
+                                    resizeBitmapToInternalStorage(bitmap, message.getKey())
+                                            .subscribeOn(Schedulers.from(executor))
+                                            .observeOn(scheduler)
+                                            .subscribe(file -> {
+                                                disposable.add(
+                                                        conversationRepository
+                                                                .uploadNetworkFile(conversationKey, file, Message.IMAGE)
+                                                                .subscribeOn(Schedulers.from(executor))
+                                                                .observeOn(scheduler)
+                                                                .subscribe(url -> {
+                                                                    file.delete();
+                                                                    message.setData(url + "eTaLkImAgE" + bitmap.getWidth() + "eTaLkImAgE" + bitmap.getHeight());
+                                                                    disposable.add(
+                                                                            conversationRepository
+                                                                                    .pushNetworkMessage(conversationKey, message)
+                                                                                    .subscribeOn(Schedulers.from(executor))
+                                                                                    .observeOn(scheduler)
+                                                                                    .subscribe(result -> {
+                                                                                        if (result == true) {
+                                                                                            holder.sendSuccessMessage(message);
+                                                                                            needUpdateMessage = true;
+                                                                                        }
+                                                                                    })
+                                                                    );
+                                                                })
+                                                );
+                                            })
+                            );
+                        } else {
+                            holder.sendFailedMessage(message);
+                            needUpdateMessage = true;
+                        }
+                    }
                 }
             } else if (message.getType() == Message.FILE) {
                 String[] dataPart = message.getData().split("eTaLkFiLe");
-                File file = new File(dataPart[0]);
-                String fileName = dataPart[1];
-                disposable.add(
-                        conversationRepository
-                                .uploadNetworkFile(conversationKey, file, Message.FILE)
-                                .subscribeOn(Schedulers.from(executor))
-                                .observeOn(scheduler)
-                                .subscribe(url -> {
-                                    file.delete();
-                                    message.setData(url + "eTaLkFiLe" + fileName);
-                                    disposable.add(
-                                            conversationRepository
-                                                    .pushNetworkMessage(conversationKey, message)
-                                                    .subscribeOn(Schedulers.from(executor))
-                                                    .observeOn(scheduler)
-                                                    .subscribe(result -> {
-                                                        if (result == true) {
-                                                            holder.sendSuccessMessage(message);
-                                                            needUpdateMessage = true;
-                                                        }
-                                                    })
-                                    );
-                                })
-                );
-            } else if (message.getType() == Message.SOUND) {
-                String[] dataPart = message.getData().split("eTaLkAuDiO");
-                File file = new File(dataPart[0]);
-                String time = dataPart[1];
-                disposable.add(
-                        conversationRepository
-                                .uploadNetworkFile(conversationKey, file, Message.SOUND)
-                                .subscribeOn(Schedulers.from(executor))
-                                .observeOn(scheduler)
-                                .subscribe(url -> {
-                                    file.delete();
-                                    message.setData(url + "eTaLkAuDiO" + time);
-                                    disposable.add(
-                                            conversationRepository
-                                                    .pushNetworkMessage(conversationKey, message)
-                                                    .subscribeOn(Schedulers.from(executor))
-                                                    .observeOn(scheduler)
-                                                    .subscribe(result -> {
-                                                        if (result == true) {
-                                                            holder.sendSuccessMessage(message);
-                                                            needUpdateMessage = true;
-                                                        }
-                                                    })
-                                    );
-                                })
-                );
-            } else if (message.getType() == Message.VIDEO) {
-                String[] dataPart = message.getData().split("eTaLkViDeO");
-                if (dataPart.length > 2) {
-                    File thumbnailFile = new File(dataPart[0]);
-                    File videoFile = new File(dataPart[1]);
+                if (dataPart[0].contains("firebasestorage")) {
                     disposable.add(
                             conversationRepository
-                                    .uploadNetworkFile(conversationKey, thumbnailFile, Message.VIDEO)
-                                    .zipWith(
-                                            conversationRepository.uploadNetworkFile(conversationKey, videoFile, Message.VIDEO),
-                                            ((thumbnailUrl, videoUrl) -> new String[]{thumbnailUrl, videoUrl})
-                                    )
+                                    .pushNetworkMessage(conversationKey, message)
                                     .subscribeOn(Schedulers.from(executor))
                                     .observeOn(scheduler)
-                                    .subscribe(urls -> {
-                                        thumbnailFile.delete();
-                                        videoFile.delete();
-                                        message.setData(urls[0] + "eTaLkViDeO" + urls[1] + "eTaLkViDeO" + dataPart[2] + "eTaLkViDeO" + dataPart[3]);
-                                        disposable.add(
-                                                conversationRepository
-                                                        .pushNetworkMessage(conversationKey, message)
-                                                        .subscribeOn(Schedulers.from(executor))
-                                                        .observeOn(scheduler)
-                                                        .subscribe(result -> {
-                                                            if (result == true) {
-                                                                holder.sendSuccessMessage(message);
-                                                                needUpdateMessage = true;
-                                                            }
-                                                        })
-                                        );
+                                    .subscribe(result -> {
+                                        if (result == true) {
+                                            holder.sendSuccessMessage(message);
+                                            needUpdateMessage = true;
+                                        }
                                     })
                     );
+                } else {
+                    String[] fileNamePart = dataPart[1].split("\\.");
+                    File file = new File(
+                            context.getFilesDir(),
+                            fileNamePart[0] + "_" + message.getKey() + "." + fileNamePart[1]
+                    );
+                    if (file.exists()) {
+                        disposable.add(
+                                conversationRepository
+                                        .uploadNetworkFile(conversationKey, file, Message.FILE)
+                                        .subscribeOn(Schedulers.from(executor))
+                                        .observeOn(scheduler)
+                                        .subscribe(url -> {
+                                            file.delete();
+                                            message.setData(url + "eTaLkFiLe" + dataPart[1]);
+                                            disposable.add(
+                                                    conversationRepository
+                                                            .pushNetworkMessage(conversationKey, message)
+                                                            .subscribeOn(Schedulers.from(executor))
+                                                            .observeOn(scheduler)
+                                                            .subscribe(result -> {
+                                                                if (result == true) {
+                                                                    holder.sendSuccessMessage(message);
+                                                                    needUpdateMessage = true;
+                                                                }
+                                                            })
+                                            );
+                                        })
+                        );
+                    } else {
+                        message.setData("failed" + "eTaLkFiLe" + dataPart[1]);
+                        holder.sendFailedMessage(message);
+                        needUpdateMessage = true;
+                    }
+                }
+            } else if (message.getType() == Message.SOUND) {
+                if (!message.getData().isEmpty()) {
+                    disposable.add(
+                            conversationRepository
+                                    .pushNetworkMessage(conversationKey, message)
+                                    .subscribeOn(Schedulers.from(executor))
+                                    .observeOn(scheduler)
+                                    .subscribe(result -> {
+                                        if (result == true) {
+                                            holder.sendSuccessMessage(message);
+                                            needUpdateMessage = true;
+                                        }
+                                    })
+                    );
+                } else {
+                    message.setData("failed");
+                    holder.sendFailedMessage(message);
+                }
+            } else if (message.getType() == Message.VIDEO) {
+                String[] dataPart = message.getData().split("eTaLkViDeO");
+                if (dataPart.length == 4) {
+                    disposable.add(
+                            conversationRepository
+                                    .pushNetworkMessage(conversationKey, message)
+                                    .subscribeOn(Schedulers.from(executor))
+                                    .observeOn(scheduler)
+                                    .subscribe(result -> {
+                                        if (result == true) {
+                                            holder.sendSuccessMessage(message);
+                                            needUpdateMessage = true;
+                                        }
+                                    })
+                    );
+                } else {
+                    File thumbnailFile = new File(
+                            context.getFilesDir(),
+                            "VID_" + message.getKey() + "_thumbnail.png"
+                    );
+                    File videoFile = new File(
+                            context.getFilesDir(),
+                            "VID_" + message.getKey() + ".mp4"
+                    );
+                    if (thumbnailFile.exists() && videoFile.exists()) {
+                        disposable.add(
+                                conversationRepository
+                                        .uploadNetworkFile(conversationKey, thumbnailFile, Message.VIDEO)
+                                        .zipWith(
+                                                conversationRepository.uploadNetworkFile(conversationKey, videoFile, Message.VIDEO),
+                                                ((thumbnailUrl, videoUrl) -> new String[]{thumbnailUrl, videoUrl})
+                                        )
+                                        .subscribeOn(Schedulers.from(executor))
+                                        .observeOn(scheduler)
+                                        .subscribe(urls -> {
+                                            thumbnailFile.delete();
+                                            videoFile.delete();
+                                            message.setData(urls[0] + "eTaLkViDeO" + urls[1] + "eTaLkViDeO" + message.getData());
+                                            disposable.add(
+                                                    conversationRepository
+                                                            .pushNetworkMessage(conversationKey, message)
+                                                            .subscribeOn(Schedulers.from(executor))
+                                                            .observeOn(scheduler)
+                                                            .subscribe(result -> {
+                                                                if (result == true) {
+                                                                    holder.sendSuccessMessage(message);
+                                                                    needUpdateMessage = true;
+                                                                }
+                                                            })
+                                            );
+                                        })
+                        );
+                    } else {
+                        if (thumbnailFile.exists()) thumbnailFile.delete();
+                        if (videoFile.exists()) videoFile.delete();
+                        message.setData("failedeTaLkViDeO" + message.getData());
+                        holder.sendFailedMessage(message);
+                    }
                 }
             }
         }
@@ -513,8 +608,6 @@ public class ChatGroupUsecase implements Usecase {
                         .subscribeOn(Schedulers.from(executor))
                         .observeOn(scheduler)
                         .subscribe(file -> {
-                            message.setData(file.getAbsolutePath()+ "eTaLkImAgE" + bitmap.getWidth() + "eTaLkImAgE" + bitmap.getHeight());
-                            holder.updateMessage(message);
                             disposable.add(
                                     conversationRepository
                                             .uploadNetworkFile(conversationKey, file, Message.IMAGE)
@@ -594,7 +687,7 @@ public class ChatGroupUsecase implements Usecase {
 
         File videoFile = new File(
                 context.getFilesDir(),
-                "video_" + message.getKey() + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(context.getContentResolver().getType(uri))
+                "VID_" + message.getKey() + ".mp4"
         );
 
         VideoCompress.compressVideoLow(getRealPathFromURI(context, uri), videoFile.getAbsolutePath(), new VideoCompress.CompressListener() {
@@ -604,7 +697,7 @@ public class ChatGroupUsecase implements Usecase {
             @Override
             public void onSuccess() {
                 disposable.add(
-                        makeThumbnailFile(Uri.fromFile(videoFile), message.getKey())
+                        makeThumbnailFileInInternalStorage(Uri.fromFile(videoFile), message.getKey())
                                 .subscribeOn(Schedulers.from(executor))
                                 .observeOn(scheduler)
                                 .subscribe(thumbnailFile ->
@@ -655,12 +748,12 @@ public class ChatGroupUsecase implements Usecase {
         return mediaMetadataRetriever.getFrameAtTime();
     }
 
-    private Single<File> makeThumbnailFile(Uri uri, String key) {
+    private Single<File> makeThumbnailFileInInternalStorage(Uri uri, String key) {
         return Single.create(emitter -> {
             MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
             mediaMetadataRetriever.setDataSource(context, uri);
             Bitmap bitmap = mediaMetadataRetriever.getFrameAtTime();
-            File file = new File(context.getFilesDir(), "video_" + key + "_thumbnail.png");
+            File file = new File(context.getFilesDir(), "VID_" + key + "_thumbnail.png");
             try {
                 OutputStream os = new FileOutputStream(file);
                 bitmap.compress(Bitmap.CompressFormat.PNG, 0, os);
@@ -675,16 +768,15 @@ public class ChatGroupUsecase implements Usecase {
     }
 
     private void executeSendFile(Uri uri) {
+        String fileName = getFileName(uri);
         Message message = new Message(
                 username,
-                null,
+                "null" + "eTaLkFiLe" + fileName,
                 Message.FILE
         );
-        String fileName = getFileName(uri);
-        String[] fileNamePart = fileName.split("\\.");
-        message.setData("null" + "eTaLkFiLe" + fileName);
         holder.sendNewMessage(message);
         needUpdateMessage = true;
+        String[] fileNamePart = fileName.split("\\.");
         disposable.add(
                 copyToInternalStorageFromUri(
                         uri,
@@ -720,6 +812,28 @@ public class ChatGroupUsecase implements Usecase {
         );
     }
 
+    public String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
+    }
+
     private void executeSendAudio(Uri uri, long time) {
         Message message = new Message(
                 username,
@@ -731,7 +845,7 @@ public class ChatGroupUsecase implements Usecase {
         disposable.add(
                 copyToInternalStorageFromUri(
                         uri,
-                        "audio_" + message.getKey() + ".3gp",
+                        "AUD_" + message.getKey() + ".3gp",
                         Message.SOUND
                 )
                         .subscribeOn(Schedulers.from(executor))
@@ -794,28 +908,6 @@ public class ChatGroupUsecase implements Usecase {
              }
              emitter.onSuccess(file);
         });
-    }
-
-    public String getFileName(Uri uri) {
-        String result = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
-        }
-        return result;
     }
 
     private Disposable downloadDisposable = null;
@@ -1178,21 +1270,18 @@ public class ChatGroupUsecase implements Usecase {
                 if (messages.get(i).getMessage().getKey().equals(message.getKey())) {
                     messages.set(
                             i,
-                            messages.get(i).newAvatar(FAILED_URL)
+                            messages.get(i).newAvatar(FAILED_URL).newData(message.getData())
                     );
-                    messages.get(i).getMessage().setServerTime(Long.parseLong(message.getKey().substring(username.length())));
-                    break;
-                }
-            }
-        }
-
-        public void updateMessage(Message message) {
-            for (int i = messages.size() - 1; i >= 0; --i) {
-                if (messages.get(i).getMessage().getKey().equals(message.getKey())) {
-                    messages.set(
-                            i,
-                            messages.get(i).newMessage(message).newData(message.getData())
-                    );
+                    messages
+                            .get(i)
+                            .getMessage()
+                            .setServerTime(Long.parseLong(message.getKey().substring(username.length())));
+                    if (message.getType() == Message.FILE || message.getType() == Message.VIDEO) {
+                        messages.set(
+                                i,
+                                messages.get(i).newStartVisible(View.GONE)
+                        );
+                    }
                     break;
                 }
             }
@@ -1203,7 +1292,8 @@ public class ChatGroupUsecase implements Usecase {
                 if (!entry.getKey().equals(username)) {
                     if (entry.getValue() != oldConversation.getMembers().get(entry.getKey())) {
                         for (int i = messages.size() - 1; i >= 0; --i) {
-                            if (!sendingMessage.containsKey(messages.get(i).getMessage().getKey())) {
+                            if (!sendingMessage.containsKey(messages.get(i).getMessage().getKey())
+                                    && !messages.get(i).getAvatar().equalsIgnoreCase(FAILED_URL)) {
                                 if (entry.getValue() > messages.get(i).getMessage().getTime()
                                         && !entry.getKey().equals(messages.get(i).getMessage().getSender())) {
                                     if (!messages.get(i).getSeen().containsKey(entry.getKey())) {

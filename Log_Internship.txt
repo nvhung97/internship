@@ -477,6 +477,14 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://github.com/Tourenathan-G5organisation/SiliCompressor
 	- Item views are not layout correctly when recycled in the RecyclerView
 		+ https://stackoverflow.com/a/39735385
+	- Get real path from uri
+		+ https://freakycoder.com/android-notes-73-how-to-get-real-path-from-uri-2f78320987f5
+4:39 PM 11/23/2018
+	- Crashlytics
+		+ https://android.jlelse.eu/crashlytics-google-firebase-crash-reporting-for-your-android-app-132d9f8e78f2
+	 	+ https://firebase.google.com/docs/crashlytics/get-started#android
+		+ https://www.fabric.io
+	- Hoàn thành app chat.
 
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/

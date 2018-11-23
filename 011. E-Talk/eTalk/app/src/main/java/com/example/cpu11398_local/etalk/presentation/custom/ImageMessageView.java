@@ -11,19 +11,27 @@ public class ImageMessageView extends android.support.v7.widget.AppCompatImageVi
 
     public ImageMessageView(Context context) {
         super(context);
+        init();
     }
 
     public ImageMessageView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public ImageMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    private void init() {
+        setClipToOutline(true);
     }
 
     public void setSize(int w, int h) {
         this.w = w;
         this.h = h;
+        requestLayout();
     }
 
     @Override

@@ -75,6 +75,10 @@
         <activity
             android:name=".presentation.view.chat.media.MediaVideoActivity"
             android:configChanges="orientation|screenSize|layoutDirection"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="ac6e55cd91d0fcbed23be5253a076b41f29fe387" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

@@ -33,4 +33,6 @@ public class MessageGroupDiffUtil extends DiffUtil.Callback{
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         return oldMessages.get(oldItemPosition).equalsContent(newMessages.get(newItemPosition));
     }
+
+
 }

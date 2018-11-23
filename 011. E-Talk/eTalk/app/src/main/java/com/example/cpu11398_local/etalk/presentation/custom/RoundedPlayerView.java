@@ -30,6 +30,7 @@ public class RoundedPlayerView extends PlayerView {
     public void setSize(int w, int h) {
         this.w = w;
         this.h = h;
+        requestLayout();
     }
 
     @Override

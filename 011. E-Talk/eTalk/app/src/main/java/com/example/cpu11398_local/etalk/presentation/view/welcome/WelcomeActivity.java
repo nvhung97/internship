@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.ndk.CrashlyticsNdk;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.di.AppComponent;
 import com.example.cpu11398_local.etalk.presentation.di.AppModule;
@@ -17,6 +19,7 @@ import com.example.cpu11398_local.etalk.presentation.view.register.RegisterActiv
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.utils.Event;
 import com.example.cpu11398_local.etalk.utils.Tool;
+import io.fabric.sdk.android.Fabric;
 import javax.inject.Inject;
 import javax.inject.Named;
 import io.reactivex.Observer;
@@ -38,6 +41,7 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_welcome);
     }
 

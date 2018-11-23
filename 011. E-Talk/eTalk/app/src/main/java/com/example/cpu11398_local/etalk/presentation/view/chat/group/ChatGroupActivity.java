@@ -19,6 +19,8 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+
+import com.crashlytics.android.Crashlytics;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
@@ -35,6 +37,8 @@ import com.example.cpu11398_local.etalk.utils.keyboard_height.KeyboardHeightObse
 import com.example.cpu11398_local.etalk.utils.keyboard_height.KeyboardHeightProvider;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import io.fabric.sdk.android.Fabric;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
