@@ -1,4 +1,4 @@
-﻿2:59 PM 5/28/2018
+2:59 PM 5/28/2018
 	- Tìm hiểu về ActivityCycleLife 
 		+ https://developer.android.com/guide/components/activities/activity-lifecycle
 
@@ -508,4 +508,4 @@ https://www.youtube.com/watch?v=55F8bT91KG4&index=27&list=RDEV-91JV4Fws
 http://www.phunutoday.vn/news/152750.amp
 https://www.youtube.com/watch?v=0sYrlalfbWw
 
-https://www.youtube.com/watch?v=wsCmB0KQxbM
+https://www.youtube.com/watch?v=wsCmB0KQxbM 111
