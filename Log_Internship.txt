@@ -500,8 +500,14 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Camera 2 API
 		+ https://github.com/googlesamples/android-Camera2Basic
 		+ https://github.com/googlesamples/android-Camera2Video
-
-
+9:34 3/12/2018
+	- 
+13:54 4/12/2018
+	- 
+13:54 5/12/2018
+	- Semaphore
+		+ https://viblo.asia/p/nhung-dieu-can-biet-ve-javautilconcurrent-trong-lap-trinh-da-luong-phan-2-157G5nOovAje
+		+ https://developer.android.com/reference/java/util/concurrent/Semaphore#tryAcquire(long,%20java.util.concurrent.TimeUnit)
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
