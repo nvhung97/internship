@@ -156,7 +156,7 @@
                     android:textSize="14dp"
                     android:text="@{viewModel.phone}"/>
                 <Button
-                    android:id="@id/add_friend_activity_btn_search"
+                    android:id="@id/add_friend_activity_lyt_result_add"
                     android:layout_width="80dp"
                     android:layout_height="30dp"
                     android:layout_marginRight="15dp"

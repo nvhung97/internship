@@ -508,6 +508,10 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Semaphore
 		+ https://viblo.asia/p/nhung-dieu-can-biet-ve-javautilconcurrent-trong-lap-trinh-da-luong-phan-2-157G5nOovAje
 		+ https://developer.android.com/reference/java/util/concurrent/Semaphore#tryAcquire(long,%20java.util.concurrent.TimeUnit)
+8:34 7/12/2018
+	- Tìm hiểu quay video trong Camera 2 API
+8:35 17/12/2018
+	- 
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
