@@ -71,24 +71,21 @@
         <activity
             android:name=".presentation.view.chat.media.MediaPhotoActivity"
             android:configChanges="orientation|screenSize|layoutDirection" />
-
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBH8Op0pU_ogBmbnlmMQ5YuUyVlrPdo07E" />
-
         <activity
             android:name=".presentation.view.chat.media.MapActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.view.chat.media.MediaVideoActivity"
             android:configChanges="orientation|screenSize|layoutDirection" />
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="ac6e55cd91d0fcbed23be5253a076b41f29fe387" />
-
-        <activity android:name=".presentation.view.camera.CaptureActivity" />
-        <activity android:name=".presentation.view.camera.RecordActivity"></activity>
+        <activity
+            android:name=".presentation.view.camera.CaptureActivity"/>
+        <activity
+            android:name=".presentation.view.camera.RecordActivity"/>
     </application>
-
 </manifest>

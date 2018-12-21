@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityContentBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
+import com.example.cpu11398_local.etalk.presentation.view.camera.CaptureActivity;
 import com.example.cpu11398_local.etalk.presentation.view.camera.RecordActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.ContentPagerAdapter;
 import com.example.cpu11398_local.etalk.presentation.view.friend.AddFriendActivity;
@@ -128,7 +129,7 @@ public class ContentActivity extends BaseActivity {
                             (View)data[0],
                             (PopupMenu.OnMenuItemClickListener)data[1]
                     );*/
-                    startActivity(new Intent(ContentActivity.this, RecordActivity.class));
+                    startActivity(new Intent(ContentActivity.this, CaptureActivity.class));
                     break;
                 case Event.CONTENT_ACTIVITY_MENU_ADD_FRIEND:
                     startActivity(new Intent(ContentActivity.this, AddFriendActivity.class));

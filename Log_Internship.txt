@@ -515,6 +515,14 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Add SHA1 on MAC
 14:2 18/12/2018
 	- Thiết kế layout capture và record
+10:36 19/12/2018
+	- Disable rotate animation
+		+ https://stackoverflow.com/a/21165739
+	- Vertical Button
+		+ https://looksok.wordpress.com/2012/10/13/android-button-with-rotated-vertical-text/
+17:39 21/12/2018
+	- Điều chỉnh layout để không bị dịch chuyển đối tượng khi xoay màn hình
+
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/

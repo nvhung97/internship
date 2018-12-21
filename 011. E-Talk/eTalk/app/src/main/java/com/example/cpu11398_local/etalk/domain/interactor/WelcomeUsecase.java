@@ -42,7 +42,6 @@ public class WelcomeUsecase implements Usecase {
     }
 
     private boolean onTask(String username) {
-        Log.e("Test", "Usernam = " + username);
         if (!username.isEmpty()) {
             userRepository.updateNetworkUserActive(username, true);
             return true;

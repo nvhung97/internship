@@ -4,6 +4,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import com.example.cpu11398_local.etalk.R;
@@ -39,6 +40,19 @@ public class RecordActivity extends AppCompatActivity {
         btnResolution1  = findViewById(R.id.record_activity_resolution_1);
         btnResolution2  = findViewById(R.id.record_activity_resolution_2);
         btnResolution3  = findViewById(R.id.record_activity_resolution_3);
+
+        setRotationAnimation();
+
+        btnResolution1.setText("1x2");
+        btnResolution2.setText("1x2");
+        btnResolution3.setText("1x2");
+    }
+
+    private void setRotationAnimation() {
+        Window window = getWindow();
+        WindowManager.LayoutParams winParams = window.getAttributes();
+        winParams.rotationAnimation = WindowManager.LayoutParams.ROTATION_ANIMATION_CROSSFADE;;
+        window.setAttributes(winParams);
     }
 
     public void onChooseResolution1(View view) {
@@ -72,13 +86,13 @@ public class RecordActivity extends AppCompatActivity {
         btnRecord.setVisibility(View.GONE);
         btnStopRecord.setVisibility(View.VISIBLE);
         clockView.setVisibility(View.VISIBLE);
-        clockView.setCountTime(70L);
         btnSwith.setVisibility(View.GONE);
+        clockView.setCountTime(70L);
     }
 
     public void onRecordStop(View view) {
         //TODO: Stop record video
-        btnStopRecord.setVisibility(View.INVISIBLE);
+        btnStopRecord.setVisibility(View.GONE);
         btnTick.setVisibility(View.VISIBLE);
     }
 

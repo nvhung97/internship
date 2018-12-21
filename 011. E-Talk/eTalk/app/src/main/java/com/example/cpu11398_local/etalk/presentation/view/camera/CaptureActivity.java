@@ -1,9 +1,11 @@
 package com.example.cpu11398_local.etalk.presentation.view.camera;
 
+import android.content.res.Configuration;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import com.example.cpu11398_local.etalk.R;
@@ -35,8 +37,19 @@ public class CaptureActivity extends AppCompatActivity {
         btnResolution2  = findViewById(R.id.capture_activity_resolution_2);
         btnResolution3  = findViewById(R.id.capture_activity_resolution_3);
 
+        setRotationAnimation();
+
+        btnResolution1.setText("1x2");
+        btnResolution2.setText("1x2");
+        btnResolution3.setText("1x2");
     }
 
+    private void setRotationAnimation() {
+        Window window = getWindow();
+        WindowManager.LayoutParams winParams = window.getAttributes();
+        winParams.rotationAnimation = WindowManager.LayoutParams.ROTATION_ANIMATION_CROSSFADE;;
+        window.setAttributes(winParams);
+    }
 
     public void onChooseResolution1(View view) {
         //TODO: Switch to resolution 1
@@ -66,9 +79,12 @@ public class CaptureActivity extends AppCompatActivity {
 
     public void onCaptureExecute(View view) {
         //TODO: Capture image
-        btnCapture.setVisibility(View.INVISIBLE);
+        btnCapture.setVisibility(View.GONE);
         btnSwith.setVisibility(View.GONE);
         btnTick.setVisibility(View.VISIBLE);
+        btnResolution1.setVisibility(View.GONE);
+        btnResolution2.setVisibility(View.GONE);
+        btnResolution3.setVisibility(View.GONE);
     }
 
     public void onCaptureSwitch(View view) {
