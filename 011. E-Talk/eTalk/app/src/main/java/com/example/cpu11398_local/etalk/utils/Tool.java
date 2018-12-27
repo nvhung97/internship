@@ -17,9 +17,10 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.PopupMenu;
@@ -52,6 +53,17 @@ public class Tool {
             viewStatusBar.getLayoutParams().height
                     = appCompatActivity.getResources().getDimensionPixelSize(resourceId);
         }
+    }
+
+    /**
+     * Disable rotate animation of given {@code activity}.
+     * @param activity need to disable rotate animation.
+     */
+    public static void setRotationAnimation(Activity activity) {
+        Window window = activity.getWindow();
+        WindowManager.LayoutParams winParams = window.getAttributes();
+        winParams.rotationAnimation = WindowManager.LayoutParams.ROTATION_ANIMATION_CROSSFADE;
+        window.setAttributes(winParams);
     }
 
     /**

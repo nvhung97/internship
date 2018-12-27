@@ -245,12 +245,14 @@ public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObs
                     break;
                 case Event.CHAT_ACTIVITY_GET_MEDIA:
                     if (ActivityCompat.checkSelfPermission(ChatGroupActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(ChatGroupActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            && ActivityCompat.checkSelfPermission(ChatGroupActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(ChatGroupActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(
                                 ChatGroupActivity.this,
                                 new String[]{
                                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest.permission.CAMERA
                                 },
                                 0
                         );

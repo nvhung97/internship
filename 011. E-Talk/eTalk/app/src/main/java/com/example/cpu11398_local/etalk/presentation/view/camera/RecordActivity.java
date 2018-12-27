@@ -4,12 +4,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AutoFitTextureView;
 import com.example.cpu11398_local.etalk.presentation.custom.ClockView;
+import com.example.cpu11398_local.etalk.utils.Tool;
 
 public class RecordActivity extends AppCompatActivity {
 
@@ -29,6 +29,7 @@ public class RecordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        Tool.setRotationAnimation(this);
 
         textureView     = findViewById(R.id.record_activity_texture);
         clockView       = findViewById(R.id.record_activity_time);
@@ -41,18 +42,9 @@ public class RecordActivity extends AppCompatActivity {
         btnResolution2  = findViewById(R.id.record_activity_resolution_2);
         btnResolution3  = findViewById(R.id.record_activity_resolution_3);
 
-        setRotationAnimation();
-
         btnResolution1.setText("1x2");
         btnResolution2.setText("1x2");
         btnResolution3.setText("1x2");
-    }
-
-    private void setRotationAnimation() {
-        Window window = getWindow();
-        WindowManager.LayoutParams winParams = window.getAttributes();
-        winParams.rotationAnimation = WindowManager.LayoutParams.ROTATION_ANIMATION_CROSSFADE;;
-        window.setAttributes(winParams);
     }
 
     public void onChooseResolution1(View view) {

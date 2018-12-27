@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/capture_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBlack"
@@ -10,21 +11,22 @@
 
     <com.example.cpu11398_local.etalk.presentation.custom.AutoFitTextureView
         android:id="@+id/capture_activity_texture"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/capture_activity_action"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="200dp"
         android:background="@color/colorBlack25Transparent"
         app:layout_constraintBottom_toBottomOf="parent">
         <Button
             android:id="@+id/capture_activity_resolution_1"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:textColor="@color/colorETalkClickLight"
+            android:textColor="@color/colorWhite"
             android:textAllCaps="false"
             android:background="@null"
             android:onClick="onChooseResolution1"

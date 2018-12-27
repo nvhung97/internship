@@ -26,23 +26,19 @@ public class AutoFitTextureView extends TextureView {
         requestLayout();
     }
 
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (w == 0 || h == 0) {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+        if (0 == w || 0 == h) {
+            setMeasuredDimension(width, height);
         } else {
-            int width = MeasureSpec.getSize(widthMeasureSpec);
-            int height = MeasureSpec.getSize(heightMeasureSpec);
             if (width < height * w / h) {
-                super.onMeasure(
-                        width | MeasureSpec.EXACTLY,
-                        (width * h / w) | MeasureSpec.EXACTLY
-                );
+                setMeasuredDimension(width, width * w / h);
             } else {
-                super.onMeasure(
-                        (height * w / h) | MeasureSpec.EXACTLY,
-                        height | MeasureSpec.EXACTLY
-                );
+                setMeasuredDimension(height * w / h, height);
             }
         }
     }

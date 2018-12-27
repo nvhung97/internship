@@ -1,9 +1,12 @@
 package com.example.cpu11398_local.etalk.presentation.view.content;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.PopupMenu;
@@ -13,6 +16,7 @@ import com.example.cpu11398_local.etalk.databinding.ActivityContentBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.camera.CaptureActivity;
 import com.example.cpu11398_local.etalk.presentation.view.camera.RecordActivity;
+import com.example.cpu11398_local.etalk.presentation.view.chat.group.ChatGroupActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.ContentPagerAdapter;
 import com.example.cpu11398_local.etalk.presentation.view.friend.AddFriendActivity;
 import com.example.cpu11398_local.etalk.presentation.view.group.CreateGroupActivity;
@@ -124,12 +128,24 @@ public class ContentActivity extends BaseActivity {
         public void onNext(Event event) {
             Object[] data = event.getData();
             switch (event.getType()) {
+                case Event.CONTENT_ACTIVITY_CAMERA:
+                    if (ActivityCompat.checkSelfPermission(ContentActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(
+                                ContentActivity.this,
+                                new String[]{
+                                        Manifest.permission.CAMERA
+                                },
+                                0
+                        );
+                    } else {
+                        startActivity(new Intent(ContentActivity.this, CaptureActivity.class));
+                    }
+                    break;
                 case Event.CONTENT_ACTIVITY_SHOW_POPUP_MENU:
-                    /*onShowPopupMenu(
+                    onShowPopupMenu(
                             (View)data[0],
                             (PopupMenu.OnMenuItemClickListener)data[1]
-                    );*/
-                    startActivity(new Intent(ContentActivity.this, CaptureActivity.class));
+                    );
                     break;
                 case Event.CONTENT_ACTIVITY_MENU_ADD_FRIEND:
                     startActivity(new Intent(ContentActivity.this, AddFriendActivity.class));
