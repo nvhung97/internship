@@ -26,6 +26,8 @@ import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import com.example.cpu11398_local.etalk.R;
+import com.example.cpu11398_local.etalk.presentation.view.camera.CaptureActivity;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -195,7 +197,7 @@ public class Tool {
 
         btn_option_camera.setOnClickListener(view1 -> {
             imageOptionDialog.dismiss();
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            Intent intent = new Intent(context, CaptureActivity.class);
             ((FragmentActivity) context).startActivityForResult(intent, REQUEST_CAMERA_CODE);
         });
 
@@ -237,25 +239,7 @@ public class Tool {
 
         btn_take_photo.setOnClickListener(view1 -> {
             mediaOptionDialog.dismiss();
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            try {
-                File dir = new File(
-                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
-                        "Camera"
-                );
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-                File file = File.createTempFile(
-                        "IMG_",
-                        ".jpg",
-                        dir
-                );
-                imageCaptureUri = FileProvider.getUriForFile(context, "com.example.cpu11398_local.etalk.provider", file);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageCaptureUri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Intent intent = new Intent(context, CaptureActivity.class);
             ((FragmentActivity) context).startActivityForResult(intent, REQUEST_TAKE_PHOTO_CODE);
         });
 

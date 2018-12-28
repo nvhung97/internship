@@ -1,18 +1,22 @@
 package com.example.cpu11398_local.etalk.presentation.view.group;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.widget.Toast;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityCreateGroupBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
 import com.example.cpu11398_local.etalk.presentation.view.chat.person.ChatPersonActivity;
+import com.example.cpu11398_local.etalk.presentation.view.profile.ProfileActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.group.CreateGroupViewModel;
@@ -108,12 +112,22 @@ public class CreateGroupActivity extends BaseActivity {
                     onBackPressed();
                     break;
                 case Event.CREATE_GROUP_ACTIVITY_SHOW_IMAGE_OPTION:
-                    avatarCopy = (CreateGroupViewModel.AvatarCopy)data[0];
-                    Tool.createImageOptionDialog(
-                            CreateGroupActivity.this,
-                            REQUEST_CAMERA_CODE,
-                            REQUEST_GALLERY_CODE
-                    ).show();
+                    if (ActivityCompat.checkSelfPermission(CreateGroupActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(
+                                CreateGroupActivity.this,
+                                new String[]{
+                                        Manifest.permission.CAMERA
+                                },
+                                0
+                        );
+                    } else {
+                        avatarCopy = (CreateGroupViewModel.AvatarCopy) data[0];
+                        Tool.createImageOptionDialog(
+                                CreateGroupActivity.this,
+                                REQUEST_CAMERA_CODE,
+                                REQUEST_GALLERY_CODE
+                        ).show();
+                    }
                     break;
                 case Event.CREATE_GROUP_ACTIVITY_SHOW_LOADING:
                     onShowLoading();
@@ -164,7 +178,7 @@ public class CreateGroupActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
             if (requestCode == REQUEST_CAMERA_CODE) {
-                Bitmap bitmapAvatar = (Bitmap)data.getExtras().get("data");
+                Bitmap bitmapAvatar = Tool.getImageWithUri(this, data.getData());
                 avatarCopy.copy(bitmapAvatar);
             }
             else if (requestCode == REQUEST_GALLERY_CODE) {

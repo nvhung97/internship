@@ -595,10 +595,10 @@ public class ChatGroupUsecase implements Usecase {
         String data = uri.getPath().contains("content")
                 ? getRealPathFromURI(context, uri)
                 : uri.getPath().replace("etalk","storage/emulated/0");
-        Bitmap bitmap = Tool.getImageWithUri(context, Uri.fromFile(new File(data)));
+        Bitmap bitmap = Tool.getImageWithUri(context, uri);
         Message message = new Message(
                 username,
-                data + "eTaLkImAgE" + bitmap.getWidth() + "eTaLkImAgE" + bitmap.getHeight(),
+                uri.getPath() + "eTaLkImAgE" + bitmap.getWidth() + "eTaLkImAgE" + bitmap.getHeight(),
                 Message.IMAGE
         );
         holder.sendNewMessage(message);

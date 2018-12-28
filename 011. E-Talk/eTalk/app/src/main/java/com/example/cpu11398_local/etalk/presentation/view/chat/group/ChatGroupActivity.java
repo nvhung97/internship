@@ -363,7 +363,7 @@ public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObs
                 case REQUEST_TAKE_PHOTO_CODE:
                     helper.onHelp(Event.create(
                             Event.CHAT_ACTIVITY_SEND_IMAGE_URI,
-                            Tool.imageCaptureUri
+                            data.getData()
                     ));
                     break;
                 case REQUEST_RECORD_CODE:

@@ -522,6 +522,11 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://looksok.wordpress.com/2012/10/13/android-button-with-rotated-vertical-text/
 17:39 21/12/2018
 	- Điều chỉnh layout để không bị dịch chuyển đối tượng khi xoay màn hình
+18:40 28/12/2018
+	- Front camera trong camera 2 api
+		+ https://stackoverflow.com/a/40597153
+	- Make an activity return results to the activity which calls it
+		+ https://stackoverflow.com/a/14785924
 
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
