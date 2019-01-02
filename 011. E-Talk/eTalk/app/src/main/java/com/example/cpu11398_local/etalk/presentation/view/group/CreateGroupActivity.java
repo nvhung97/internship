@@ -112,11 +112,15 @@ public class CreateGroupActivity extends BaseActivity {
                     onBackPressed();
                     break;
                 case Event.CREATE_GROUP_ACTIVITY_SHOW_IMAGE_OPTION:
-                    if (ActivityCompat.checkSelfPermission(CreateGroupActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(CreateGroupActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat.checkSelfPermission(CreateGroupActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat.checkSelfPermission(CreateGroupActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(
                                 CreateGroupActivity.this,
                                 new String[]{
-                                        Manifest.permission.CAMERA
+                                        Manifest.permission.CAMERA,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest.permission.READ_EXTERNAL_STORAGE
                                 },
                                 0
                         );

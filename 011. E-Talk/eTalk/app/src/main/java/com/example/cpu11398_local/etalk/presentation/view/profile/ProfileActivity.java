@@ -121,11 +121,15 @@ public class ProfileActivity extends BaseActivity {
             Object[] data = event.getData();
             switch (event.getType()) {
                 case Event.PROFILE_ACTIVITY_SHOW_IMAGE_OPTION:
-                    if (ActivityCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(
                                 ProfileActivity.this,
                                 new String[]{
-                                        Manifest.permission.CAMERA
+                                        Manifest.permission.CAMERA,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest.permission.READ_EXTERNAL_STORAGE
                                 },
                                 0
                         );

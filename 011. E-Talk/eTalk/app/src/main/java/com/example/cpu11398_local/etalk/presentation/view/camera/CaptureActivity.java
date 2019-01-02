@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -22,6 +23,7 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
@@ -37,7 +39,6 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 import com.example.cpu11398_local.etalk.R;
@@ -278,11 +279,9 @@ public class CaptureActivity extends AppCompatActivity {
             switch (mState) {
                 case STATE_PREVIEW: {
                     // We have nothing to do when the camera preview is working normally.
-                    Log.e("Test", "STATE_PREVIEW");
                     break;
                 }
                 case STATE_WAITING_LOCK: {
-                    Log.e("Test", "STATE_WAITING_LOCK");
                     Integer afState = result.get(CaptureResult.CONTROL_AF_STATE);
                     if (afState == null) {
                         captureStillPicture();
@@ -301,7 +300,6 @@ public class CaptureActivity extends AppCompatActivity {
                     break;
                 }
                 case STATE_WAITING_PRECAPTURE: {
-                    Log.e("Test", "STATE_WAITING_PRECAPTURE");
                     // CONTROL_AE_STATE can be null on some devices
                     Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
                     if (aeState == null ||
@@ -312,7 +310,6 @@ public class CaptureActivity extends AppCompatActivity {
                     break;
                 }
                 case STATE_WAITING_NON_PRECAPTURE: {
-                    Log.e("Test", "STATE_WAITING_NON_PRECAPTURE");
                     // CONTROL_AE_STATE can be null on some devices
                     Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
                     if (aeState == null || aeState != CaptureResult.CONTROL_AE_STATE_PRECAPTURE) {
@@ -383,14 +380,23 @@ public class CaptureActivity extends AppCompatActivity {
             }
         }
 
-        if (optionResolutionImage[0] != null) {
+        if (optionResolutionImage[0] != null && optionResolutionCamera[0] != null) {
+            btnResolution1.setEnabled(true);
             btnResolution1.setText(optionResolutionImage[0].getWidth() + "x" + optionResolutionImage[0].getHeight());
+        } else {
+            btnResolution1.setEnabled(false);
         }
-        if (optionResolutionImage[1] != null) {
+        if (optionResolutionImage[1] != null && optionResolutionCamera[1] != null) {
+            btnResolution1.setEnabled(true);
             btnResolution2.setText(optionResolutionImage[1].getWidth() + "x" + optionResolutionImage[1].getHeight());
+        } else {
+            btnResolution2.setEnabled(false);
         }
-        if (optionResolutionImage[2] != null) {
+        if (optionResolutionImage[2] != null && optionResolutionCamera[2] != null) {
+            btnResolution1.setEnabled(true);
             btnResolution3.setText(optionResolutionImage[2].getWidth() + "x" + optionResolutionImage[2].getHeight());
+        } else {
+            btnResolution3.setEnabled(false);
         }
     }
 
@@ -398,7 +404,11 @@ public class CaptureActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capture);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        );
         Tool.setRotationAnimation(this);
 
         if (savedInstanceState != null) {
@@ -416,6 +426,16 @@ public class CaptureActivity extends AppCompatActivity {
         btnResolution1  = findViewById(R.id.capture_activity_resolution_1);
         btnResolution2  = findViewById(R.id.capture_activity_resolution_2);
         btnResolution3  = findViewById(R.id.capture_activity_resolution_3);
+
+        File dir = new File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+                "eTalk"
+        );
+        if (!dir.exists() && !dir.mkdirs()) {
+            Tool.finishFailed(this);
+        } else {
+            mFile = new File(dir, "IMG_" + System.currentTimeMillis() + ".jpg");
+        }
     }
 
     @Override
@@ -433,7 +453,17 @@ public class CaptureActivity extends AppCompatActivity {
             textureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
 
-        mFile = new File(getExternalFilesDir(null), "pic.jpg");
+        // Set ratio for action layout
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getRealSize(size);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(rootView);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            constraintSet.setDimensionRatio(actionView.getId(), size.x + ":" + (size.y - size.x * 4 / 3));
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            constraintSet.setDimensionRatio(actionView.getId(), (size.x - size.y * 4 / 3) + ":" + size.y);
+        }
+        constraintSet.applyTo(rootView);
     }
 
     @Override
@@ -980,6 +1010,9 @@ public class CaptureActivity extends AppCompatActivity {
             btnResolution2.setVisibility(View.VISIBLE);
             btnResolution3.setVisibility(View.VISIBLE);
         } else {
+            if (mFile.exists()) {
+                mFile.delete();
+            }
             Tool.finishFailed(this);
         }
     }

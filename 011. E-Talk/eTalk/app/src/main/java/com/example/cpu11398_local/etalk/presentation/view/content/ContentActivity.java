@@ -129,16 +129,18 @@ public class ContentActivity extends BaseActivity {
             Object[] data = event.getData();
             switch (event.getType()) {
                 case Event.CONTENT_ACTIVITY_CAMERA:
-                    if (ActivityCompat.checkSelfPermission(ContentActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(ContentActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat.checkSelfPermission(ContentActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(
                                 ContentActivity.this,
                                 new String[]{
-                                        Manifest.permission.CAMERA
+                                        Manifest.permission.CAMERA,
+                                        Manifest.permission.RECORD_AUDIO
                                 },
                                 0
                         );
                     } else {
-                        startActivity(new Intent(ContentActivity.this, CaptureActivity.class));
+                        startActivity(new Intent(ContentActivity.this, RecordActivity.class));
                     }
                     break;
                 case Event.CONTENT_ACTIVITY_SHOW_POPUP_MENU:

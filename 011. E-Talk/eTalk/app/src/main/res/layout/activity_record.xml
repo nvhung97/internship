@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/record_activity_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBlack"
@@ -11,9 +12,9 @@
     <com.example.cpu11398_local.etalk.presentation.custom.AutoFitTextureView
         android:id="@+id/record_activity_texture"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="3:4"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <com.example.cpu11398_local.etalk.presentation.custom.ClockView
         android:id="@+id/record_activity_time"
@@ -29,43 +30,12 @@
         app:layout_constraintRight_toRightOf="parent"/>
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/record_activity_action"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="9:4"
         android:background="@color/colorBlack25Transparent"
         app:layout_constraintBottom_toBottomOf="parent">
-        <Button
-            android:id="@+id/record_activity_resolution_1"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:textColor="@color/colorETalkClickLight"
-            android:textAllCaps="false"
-            android:background="@null"
-            android:onClick="onChooseResolution1"
-            app:layout_constraintLeft_toLeftOf="@id/record_activity_left_action"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="@id/record_activity_left_action"/>
-        <Button
-            android:id="@+id/record_activity_resolution_2"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:textColor="@color/colorWhite"
-            android:textAllCaps="false"
-            android:background="@null"
-            android:onClick="onChooseResolution2"
-            app:layout_constraintLeft_toLeftOf="@id/record_activity_center_action"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="@id/record_activity_center_action"/>
-        <Button
-            android:id="@+id/record_activity_resolution_3"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:textColor="@color/colorWhite"
-            android:textAllCaps="false"
-            android:background="@null"
-            android:onClick="onChooseResolution3"
-            app:layout_constraintLeft_toLeftOf="@id/record_activity_right_action"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="@id/record_activity_right_action"/>
         <FrameLayout
             android:id="@+id/record_activity_left_action"
             android:layout_width="50dp"

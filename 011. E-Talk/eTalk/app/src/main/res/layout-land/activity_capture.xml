@@ -18,14 +18,15 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/capture_activity_action"
-        android:layout_width="200dp"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
+        app:layout_constraintDimensionRatio="4:9"
         android:background="@color/colorBlack25Transparent"
         app:layout_constraintRight_toRightOf="parent">
         <com.example.cpu11398_local.etalk.presentation.custom.VerticalButton
             android:id="@+id/capture_activity_resolution_1"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:textColor="@color/colorWhite"
             android:textAllCaps="false"
             android:background="@null"
@@ -36,7 +37,7 @@
         <com.example.cpu11398_local.etalk.presentation.custom.VerticalButton
             android:id="@+id/capture_activity_resolution_2"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:textColor="@color/colorWhite"
             android:textAllCaps="false"
             android:background="@null"
@@ -47,7 +48,7 @@
         <com.example.cpu11398_local.etalk.presentation.custom.VerticalButton
             android:id="@+id/capture_activity_resolution_3"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:textColor="@color/colorWhite"
             android:textAllCaps="false"
             android:background="@null"

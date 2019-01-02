@@ -19,13 +19,14 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/capture_activity_action"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="9:4"
         android:background="@color/colorBlack25Transparent"
         app:layout_constraintBottom_toBottomOf="parent">
         <Button
             android:id="@+id/capture_activity_resolution_1"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:textColor="@color/colorWhite"
             android:textAllCaps="false"
             android:background="@null"
@@ -36,7 +37,7 @@
         <Button
             android:id="@+id/capture_activity_resolution_2"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:textColor="@color/colorWhite"
             android:textAllCaps="false"
             android:background="@null"
@@ -47,7 +48,7 @@
         <Button
             android:id="@+id/capture_activity_resolution_3"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:textColor="@color/colorWhite"
             android:textAllCaps="false"
             android:background="@null"

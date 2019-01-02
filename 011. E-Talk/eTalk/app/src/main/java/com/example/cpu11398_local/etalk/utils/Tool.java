@@ -11,11 +11,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,19 +25,11 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.view.camera.CaptureActivity;
-
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.concurrent.Callable;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class Tool {
-
-    /**
-     * {@code imageCaptureUri} used to hold {@code Uri} of image from intent camera.
-     */
-    public static Uri imageCaptureUri = null;
 
     /**
      * Calculate status bar height with given activity to set height of view as statusBar.

@@ -527,6 +527,9 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://stackoverflow.com/a/40597153
 	- Make an activity return results to the activity which calls it
 		+ https://stackoverflow.com/a/14785924
+18:12 2/01/2019
+	- Temporarily disable orientation changes
+		+ https://stackoverflow.com/a/3614089
 
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
