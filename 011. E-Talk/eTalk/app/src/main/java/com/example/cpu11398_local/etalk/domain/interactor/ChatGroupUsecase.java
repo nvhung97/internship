@@ -41,6 +41,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -653,6 +654,8 @@ public class ChatGroupUsecase implements Usecase {
 
     private void executeSendVideoUri(Uri uri) {
 
+        Log.e("Test", uri.getScheme());
+
         Bitmap bitmap = makeThumbnail(context, uri);
 
         Message message = new Message(
@@ -669,7 +672,7 @@ public class ChatGroupUsecase implements Usecase {
                 "VID_" + message.getKey() + ".mp4"
         );
 
-        VideoCompress.compressVideoLow(getRealPathFromURI(context, uri), videoFile.getAbsolutePath(), new VideoCompress.CompressListener() {
+        VideoCompress.compressVideoLow(uri.getPath(), videoFile.getAbsolutePath(), new VideoCompress.CompressListener() {
             @Override
             public void onStart() {}
 

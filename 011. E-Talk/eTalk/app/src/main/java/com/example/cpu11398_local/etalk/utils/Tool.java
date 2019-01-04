@@ -25,6 +25,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.view.camera.CaptureActivity;
+import com.example.cpu11398_local.etalk.presentation.view.camera.RecordActivity;
+
 import java.lang.reflect.Field;
 import java.util.concurrent.Callable;
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -235,7 +237,7 @@ public class Tool {
 
         btn_record.setOnClickListener(view1 -> {
             mediaOptionDialog.dismiss();
-            Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            Intent intent = new Intent(context, RecordActivity.class);
             ((FragmentActivity) context).startActivityForResult(intent, REQUEST_RECORD_CODE);
         });
 

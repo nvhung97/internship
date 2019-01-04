@@ -1,5 +1,6 @@
 package com.example.cpu11398_local.etalk.presentation.view.camera;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
@@ -45,6 +47,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -202,6 +206,9 @@ public class RecordActivity extends AppCompatActivity {
 
     private Integer mSensorOrientation;
     private CaptureRequest.Builder mPreviewBuilder;
+    private Timer timer;
+    private long recordingTime;
+    private Handler updateTimeHandler = new Handler();
 
     /**
      * In this sample, we choose a video size with 3x4 aspect ratio. Also, we don't use sizes
@@ -574,6 +581,19 @@ public class RecordActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         // UI
                         mIsRecordingVideo = true;
+                        // Update count time
+                        timer = new Timer(true);
+                        recordingTime = 0;
+                        timer.scheduleAtFixedRate(
+                                new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        updateTimeHandler.post(()-> clockView.setCountTime(++recordingTime));
+                                    }
+                                },
+                                1000,
+                                1000
+                        );
                         // Start recording
                         mMediaRecorder.start();
                     });
@@ -603,6 +623,8 @@ public class RecordActivity extends AppCompatActivity {
         // Stop recording
         mMediaRecorder.stop();
         mMediaRecorder.reset();
+        // Stop update time
+        timer.cancel();
     }
 
     /**
@@ -632,6 +654,7 @@ public class RecordActivity extends AppCompatActivity {
             btnStopRecord.setVisibility(View.GONE);
             btnRecord.setVisibility(View.VISIBLE);
             btnSwith.setVisibility(View.VISIBLE);
+            clockView.setVisibility(View.GONE);
         } else if (btnTick.getVisibility() == View.VISIBLE) {
             startPreview();
             enableOrientationChanges();
@@ -641,6 +664,7 @@ public class RecordActivity extends AppCompatActivity {
             btnTick.setVisibility(View.GONE);
             btnSwith.setVisibility(View.VISIBLE);
             btnRecord.setVisibility(View.VISIBLE);
+            clockView.setVisibility(View.GONE);
         } else {
             Tool.finishFailed(this);
         }
@@ -657,7 +681,7 @@ public class RecordActivity extends AppCompatActivity {
         btnStopRecord.setVisibility(View.VISIBLE);
         clockView.setVisibility(View.VISIBLE);
         btnSwith.setVisibility(View.GONE);
-        clockView.setCountTime(70L);
+        clockView.setCountTime(0L);
     }
 
     /**

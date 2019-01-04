@@ -530,6 +530,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 18:12 2/01/2019
 	- Temporarily disable orientation changes
 		+ https://stackoverflow.com/a/3614089
+18:51 4/01/2019
+	- Hoàn thành Camera 2 api
 
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
