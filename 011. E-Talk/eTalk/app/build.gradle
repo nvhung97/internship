@@ -93,6 +93,8 @@ dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics-ndk:2.0.5@aar') {
         transitive = true;
     }
+    //Java MP4 Parser
+    implementation 'com.googlecode.mp4parser:isoparser:1.1.21'
 }
 apply plugin: 'com.google.gms.google-services'
 

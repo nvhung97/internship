@@ -37,12 +37,17 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AutoFitTextureView;
 import com.example.cpu11398_local.etalk.presentation.custom.ClockView;
 import com.example.cpu11398_local.etalk.utils.Tool;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -713,6 +718,7 @@ public class RecordActivity extends AppCompatActivity {
      * @param view
      */
     public void onRecordTick(View view) {
+        //fixVideoError();
         Intent data = new Intent();
         data.setData(Uri.fromFile(mFile));
         setResult(RESULT_OK, data);
@@ -732,4 +738,44 @@ public class RecordActivity extends AppCompatActivity {
     private void enableOrientationChanges() {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
     }
+/*
+    private void fixVideoError() {
+        try {
+            DataSource channel = new FileDataSourceImpl(mFile);
+            IsoFile isoFile = new IsoFile(channel);
+
+            List<TrackBox> trackBoxes = isoFile.getMovieBox().getBoxes(TrackBox.class);
+            boolean sampleError = false;
+            for (TrackBox trackBox : trackBoxes) {
+                TimeToSampleBox.Entry firstEntry = trackBox.getMediaBox().getMediaInformationBox().getSampleTableBox().getTimeToSampleBox().getEntries().get(0);
+
+                // Detect if first sample is a problem and fix it in isoFile
+                // This is a hack. The audio deltas are 1024 for my files, and video deltas about 3000
+                // 10000 seems sufficient since for 30 fps the normal delta is about 3000
+                if (firstEntry.getDelta() > 10000) {
+                    sampleError = true;
+                    firstEntry.setDelta(3000);
+                }
+            }
+
+            if (sampleError) {
+                Movie movie = new Movie();
+                for (TrackBox trackBox : trackBoxes) {
+                    movie.addTrack(new Mp4TrackImpl(channel.toString() + "[" + trackBox.getTrackHeaderBox().getTrackId() + "]", trackBox));
+                }
+                movie.setMatrix(isoFile.getMovieBox().getMovieHeaderBox().getMatrix());
+                Container out = new DefaultMp4Builder().build(movie);
+
+                //delete file first!
+                FileChannel fc = new RandomAccessFile(mFile.getName(), "rw").getChannel();
+                out.writeContainer(fc);
+                fc.close();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+

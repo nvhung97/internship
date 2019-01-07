@@ -532,7 +532,11 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://stackoverflow.com/a/3614089
 18:51 4/01/2019
 	- Hoàn thành Camera 2 api
-
+9:22 7/01/2019
+	- Get real path from uri
+		+ http://kaushalprajapati.net/mobile/android/android-get-the-full-file-path-from-uri/
+	- Program type already present: com.coremedia.iso.AbstractBoxParser$1
+		+ https://stackoverflow.com/a/46972628
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
