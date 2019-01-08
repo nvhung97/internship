@@ -537,6 +537,10 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ http://kaushalprajapati.net/mobile/android/android-get-the-full-file-path-from-uri/
 	- Program type already present: com.coremedia.iso.AbstractBoxParser$1
 		+ https://stackoverflow.com/a/46972628
+	- Fix samsung bug
+		+ https://stackoverflow.com/questions/48685626/mp4parser-produces-corrupted-file
+13:57 8/01/2019
+	- Nghiên cứu GPUImage
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/

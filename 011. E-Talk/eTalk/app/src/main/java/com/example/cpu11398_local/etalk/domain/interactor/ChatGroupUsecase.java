@@ -17,7 +17,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.View;
-import android.webkit.MimeTypeMap;
+
 import com.example.cpu11398_local.etalk.data.repository.ConversationRepository;
 import com.example.cpu11398_local.etalk.data.repository.UserRepository;
 import com.example.cpu11398_local.etalk.presentation.model.Conversation;
@@ -44,7 +44,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -673,7 +672,7 @@ public class ChatGroupUsecase implements Usecase {
                 "VID_" + message.getKey() + ".mp4"
         );
 
-        VideoCompress.compressVideoLow(getPath(context, uri), videoFile.getAbsolutePath(), new VideoCompress.CompressListener() {
+        VideoCompress.compressVideoLow(getRealPath(context, uri), videoFile.getAbsolutePath(), new VideoCompress.CompressListener() {
             @Override
             public void onStart() {}
 
@@ -726,7 +725,7 @@ public class ChatGroupUsecase implements Usecase {
     }
 
     @SuppressLint("NewApi")
-    public static String getPath(final Context context, final Uri uri) {
+    public static String getRealPath(final Context context, final Uri uri) {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
