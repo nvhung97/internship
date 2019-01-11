@@ -1,4 +1,4 @@
-﻿2:59 PM 5/28/2018
+2:59 PM 5/28/2018
 	- Tìm hiểu về ActivityCycleLife 
 		+ https://developer.android.com/guide/components/activities/activity-lifecycle
 
@@ -485,6 +485,22 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	 	+ https://firebase.google.com/docs/crashlytics/get-started#android
 		+ https://www.fabric.io
 	- Hoàn thành app chat.
+16:15 26/11/2018
+	- Trả máy Desktop, làm quen với Mac
+16:16 27/11/2018
+	- Sử dụng git trên Mac
+	- Cài Android Studio trên Mac
+	- Viết Script để insert TimeStamp trong TextEdit
+		on run {input, parameters}			set theDate to (current date)			tell application "System Events"				keystroke (hours of theDate as text) & ":" & (minutes of theDate as text) & " " & (day of theDate as text) & "/" & text -2 thru -1 of ("00" & ((month of theDate) as integer)) & "/" & (year of theDate as text)			end tell			return input
+		end run
+	- Tìm hiểu về auto backup data
+		+ https://blog.devknox.io/what-is-android-allowbackup-how-it-affects-your-app/
+		+ https://medium.com/mindorks/auto-backup-in-android-dont-do-it-unless-you-know-it-cc9fe2f9176b
+15:5 28/11/2018
+	- Camera 2 API
+		+ https://github.com/googlesamples/android-Camera2Basic
+		+ https://github.com/googlesamples/android-Camera2Video
+
 
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
@@ -509,3 +525,4 @@ http://www.phunutoday.vn/news/152750.amp
 https://www.youtube.com/watch?v=0sYrlalfbWw
 
 https://www.youtube.com/watch?v=wsCmB0KQxbM
+https://www.youtube.com/watch?v=55F8bT91KG4&start_radio=1&list=RD55F8bT91KG4
