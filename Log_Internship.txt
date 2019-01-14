@@ -541,6 +541,7 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 13:57 8/01/2019
 17:24 9/01/2019
 17:7 11/01/2019
+10:11 14/01/2019
 	- Nghiên cứu GPUImage
 		+ https://www.codeproject.com/Articles/1007973/%2FArticles%2F1007973%2FBasic-Shader-Programming-on-Android
 	- Một số sample
