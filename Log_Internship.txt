@@ -542,10 +542,20 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 17:24 9/01/2019
 17:7 11/01/2019
 10:11 14/01/2019
+10:44 15/01/2019
+10:44 16/01/2019
+13:58 18/01/2019
+13:58 21/01/2019
 	- Nghiên cứu GPUImage
 		+ https://www.codeproject.com/Articles/1007973/%2FArticles%2F1007973%2FBasic-Shader-Programming-on-Android
 	- Một số sample
 		+ https://github.com/JimSeker/opengl#opengl-examples
+		+ https://github.com/nekocode/CameraFilter
+		+ https://github.com/cats-oss/android-gpuimage
+		+ https://github.com/BradLarson/GPUImage
+		+ https://github.com/bq/OpenGLCamera
+		+ https://www.maninara.com/2015/03/render-camera-preview-using-opengl-es.html
+		+ http://setosa.io/ev/image-kernels/
 	- OpenGL ES 2.0 API Quick Reference Card
 		+ https://www.khronos.org/opengles/sdk/docs/reference_cards/OpenGL-ES-2_0-Reference-card.pdf
 

@@ -21,6 +21,8 @@ import java.nio.FloatBuffer;
 
 import android.opengl.GLES20;
 
+import javax.microedition.khronos.opengles.GL;
+
 /**
  * A two-dimensional triangle for use as a drawn object in OpenGL ES 2.0.
  */

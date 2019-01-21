@@ -32,7 +32,7 @@ import android.util.Log;
  */
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
-    private static final String TAG = "MyGLRenderer";
+    private static final String TAG = "Test_" + "MyGLRenderer";
     private Triangle mTriangle;
     private Square   mSquare;
 
@@ -46,7 +46,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
-
+        Log.e(TAG, "onSurfaceCreated");
         // Set the background frame color
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -56,6 +56,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 unused) {
+        Log.e(TAG, "onDrawFrame");
         float[] scratch = new float[16];
 
         // Draw background color
@@ -90,6 +91,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceChanged(GL10 unused, int width, int height) {
+        Log.e(TAG, "onSurfaceChanged");
         // Adjust the viewport based on geometry changes,
         // such as screen rotation
         GLES20.glViewport(0, 0, width, height);
