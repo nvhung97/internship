@@ -171,7 +171,6 @@
 			* https://medium.com/@be.betr.codr/android-mvp-survival-guide-b2094ab79f78
 			* https://thinkmobiles.com/blog/mvp-vs-mvvm-android-patterns/
 
-
 8:56 AM 7/3/2018
 	- DataBinding
 		+ https://viblo.asia/p/data-binding-trong-android-Do754EpJKM6
@@ -228,7 +227,7 @@
 5:23 PM 7/31/2018
 8:30 AM 8/1/2018
 	- NestedScrollingView
-.		+ https://developer.android.com/reference/android/support/v4/widget/NestedScrollView
+		+ https://developer.android.com/reference/android/support/v4/widget/NestedScrollView
 		+ https://developer.android.com/reference/android/support/v4/view/NestedScrollingParent
 		+ https://developer.android.com/reference/android/support/v4/view/NestedScrollingParent2
 		+ https://developer.android.com/reference/android/support/v4/view/NestedScrollingParentHelper
@@ -500,12 +499,57 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Camera 2 API
 		+ https://github.com/googlesamples/android-Camera2Basic
 		+ https://github.com/googlesamples/android-Camera2Video
-
-
+9:34 3/12/2018
+	- 
+13:54 4/12/2018
+	- 
+13:54 5/12/2018
+	- Semaphore
+		+ https://viblo.asia/p/nhung-dieu-can-biet-ve-javautilconcurrent-trong-lap-trinh-da-luong-phan-2-157G5nOovAje
+		+ https://developer.android.com/reference/java/util/concurrent/Semaphore#tryAcquire(long,%20java.util.concurrent.TimeUnit)
+8:34 7/12/2018
+	- Tìm hiểu quay video trong Camera 2 API
+8:35 17/12/2018
+	- Fix bug về databinding
+	- Add SHA1 on MAC
+14:2 18/12/2018
+	- Thiết kế layout capture và record
+10:36 19/12/2018
+	- Disable rotate animation
+		+ https://stackoverflow.com/a/21165739
+	- Vertical Button
+		+ https://looksok.wordpress.com/2012/10/13/android-button-with-rotated-vertical-text/
+17:39 21/12/2018
+	- Điều chỉnh layout để không bị dịch chuyển đối tượng khi xoay màn hình
+18:40 28/12/2018
+	- Front camera trong camera 2 api
+		+ https://stackoverflow.com/a/40597153
+	- Make an activity return results to the activity which calls it
+		+ https://stackoverflow.com/a/14785924
+18:12 2/01/2019
+	- Temporarily disable orientation changes
+		+ https://stackoverflow.com/a/3614089
+18:51 4/01/2019
+	- Hoàn thành Camera 2 api
+9:22 7/01/2019
+	- Get real path from uri
+		+ http://kaushalprajapati.net/mobile/android/android-get-the-full-file-path-from-uri/
+	- Program type already present: com.coremedia.iso.AbstractBoxParser$1
+		+ https://stackoverflow.com/a/46972628
+	- Fix samsung bug
+		+ https://stackoverflow.com/questions/48685626/mp4parser-produces-corrupted-file
+13:57 8/01/2019
+17:24 9/01/2019
+17:7 11/01/2019
+	- Nghiên cứu GPUImage
+		+ https://www.codeproject.com/Articles/1007973/%2FArticles%2F1007973%2FBasic-Shader-Programming-on-Android
+	- Một số sample
+		+ https://github.com/JimSeker/opengl#opengl-examples
+	- OpenGL ES 2.0 API Quick Reference Card
+		+ https://www.khronos.org/opengles/sdk/docs/reference_cards/OpenGL-ES-2_0-Reference-card.pdf
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
-https://www.youtube.com/watch?v=jXf9A0c4qLw
 
 https://engineeringblog.yelp.com/2018/06/how-yelp-modularized-the-android-app.html
 http://sijinjoseph.com/programmer-competency-matrix/
@@ -519,10 +563,9 @@ https://medium.com/@jamesrochabrun/advance-generics-to-create-reusable-ui-f0b8b8
 
 https://www.dkn.tv/doi-song/17-buc-anh-day-xuc-dong-khien-trai-tim-ban-tan-chay-ngay-lap-tuc.html
 https://ins.dkn.tv/giaitri/cam-dong-hinh-anh-ve-8-chu-cho-trung-thanh.html
-Tháng Tư Là Lời Nói Dối Của Em
-https://www.youtube.com/watch?v=55F8bT91KG4&index=27&list=RDEV-91JV4Fws
-http://www.phunutoday.vn/news/152750.amp
-https://www.youtube.com/watch?v=0sYrlalfbWw
 
-https://www.youtube.com/watch?v=wsCmB0KQxbM
-https://www.youtube.com/watch?v=55F8bT91KG4&start_radio=1&list=RD55F8bT91KG4
+http://www.phunutoday.vn/news/152750.amp
+https://techtalk.vn/bai-hoc-dang-long-sau-2-nam-lap-trinh-android.html
+https://techtalk.vn/50-meo-thu-thuat-va-tai-nguyen-ban-can-biet-neu-la-mot-android-developer.html
+
+https://www.youtube.com/watch?v=jXf9A0c4qLw

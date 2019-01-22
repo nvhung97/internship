@@ -11,32 +11,27 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import com.example.cpu11398_local.etalk.R;
-import java.io.File;
-import java.io.IOException;
+import com.example.cpu11398_local.etalk.presentation.view.camera.CaptureActivity;
+import com.example.cpu11398_local.etalk.presentation.view.camera.RecordActivity;
+
 import java.lang.reflect.Field;
 import java.util.concurrent.Callable;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class Tool {
-
-    /**
-     * {@code imageCaptureUri} used to hold {@code Uri} of image from intent camera.
-     */
-    public static Uri imageCaptureUri = null;
 
     /**
      * Calculate status bar height with given activity to set height of view as statusBar.
@@ -52,6 +47,17 @@ public class Tool {
             viewStatusBar.getLayoutParams().height
                     = appCompatActivity.getResources().getDimensionPixelSize(resourceId);
         }
+    }
+
+    /**
+     * Disable rotate animation of given {@code activity}.
+     * @param activity need to disable rotate animation.
+     */
+    public static void setRotationAnimation(Activity activity) {
+        Window window = activity.getWindow();
+        WindowManager.LayoutParams winParams = window.getAttributes();
+        winParams.rotationAnimation = WindowManager.LayoutParams.ROTATION_ANIMATION_CROSSFADE;
+        window.setAttributes(winParams);
     }
 
     /**
@@ -183,7 +189,7 @@ public class Tool {
 
         btn_option_camera.setOnClickListener(view1 -> {
             imageOptionDialog.dismiss();
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            Intent intent = new Intent(context, CaptureActivity.class);
             ((FragmentActivity) context).startActivityForResult(intent, REQUEST_CAMERA_CODE);
         });
 
@@ -225,31 +231,13 @@ public class Tool {
 
         btn_take_photo.setOnClickListener(view1 -> {
             mediaOptionDialog.dismiss();
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            try {
-                File dir = new File(
-                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
-                        "Camera"
-                );
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-                File file = File.createTempFile(
-                        "IMG_",
-                        ".jpg",
-                        dir
-                );
-                imageCaptureUri = FileProvider.getUriForFile(context, "com.example.cpu11398_local.etalk.provider", file);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageCaptureUri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Intent intent = new Intent(context, CaptureActivity.class);
             ((FragmentActivity) context).startActivityForResult(intent, REQUEST_TAKE_PHOTO_CODE);
         });
 
         btn_record.setOnClickListener(view1 -> {
             mediaOptionDialog.dismiss();
-            Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            Intent intent = new Intent(context, RecordActivity.class);
             ((FragmentActivity) context).startActivityForResult(intent, REQUEST_RECORD_CODE);
         });
 

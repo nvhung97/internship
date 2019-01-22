@@ -245,12 +245,16 @@ public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObs
                     break;
                 case Event.CHAT_ACTIVITY_GET_MEDIA:
                     if (ActivityCompat.checkSelfPermission(ChatGroupActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(ChatGroupActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            || ActivityCompat.checkSelfPermission(ChatGroupActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat.checkSelfPermission(ChatGroupActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat.checkSelfPermission(ChatGroupActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(
                                 ChatGroupActivity.this,
                                 new String[]{
                                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest.permission.CAMERA,
+                                        Manifest.permission.RECORD_AUDIO
                                 },
                                 0
                         );
@@ -361,7 +365,7 @@ public class ChatGroupActivity extends BaseActivity implements KeyboardHeightObs
                 case REQUEST_TAKE_PHOTO_CODE:
                     helper.onHelp(Event.create(
                             Event.CHAT_ACTIVITY_SEND_IMAGE_URI,
-                            Tool.imageCaptureUri
+                            data.getData()
                     ));
                     break;
                 case REQUEST_RECORD_CODE:

@@ -26,6 +26,7 @@ public class Event {
     public static final int CONTENT_ACTIVITY_MENU_CREATE_GROUP          = CONTENT_ACTIVITY_MARK | 2;
     public static final int CONTENT_ACTIVITY_LOGOUT                     = CONTENT_ACTIVITY_MARK | 3;
     public static final int CONTENT_ACTIVITY_EMIT_DATA                  = CONTENT_ACTIVITY_MARK | 4;
+    public static final int CONTENT_ACTIVITY_CAMERA                     = CONTENT_ACTIVITY_MARK | 5;
 
     /**
      * Bellow commands for {@code ChatPersonActivity} and {@code ChatGroupActivity}.

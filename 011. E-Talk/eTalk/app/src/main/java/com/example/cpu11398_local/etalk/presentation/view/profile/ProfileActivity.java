@@ -1,18 +1,23 @@
 package com.example.cpu11398_local.etalk.presentation.view.profile;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityProfileBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
+import com.example.cpu11398_local.etalk.presentation.view.camera.CaptureActivity;
+import com.example.cpu11398_local.etalk.presentation.view.content.ContentActivity;
 import com.example.cpu11398_local.etalk.presentation.view.welcome.WelcomeActivity;
 import com.example.cpu11398_local.etalk.presentation.view_model.ViewModel;
 import com.example.cpu11398_local.etalk.presentation.view_model.profile.ProfileViewModel;
@@ -116,12 +121,26 @@ public class ProfileActivity extends BaseActivity {
             Object[] data = event.getData();
             switch (event.getType()) {
                 case Event.PROFILE_ACTIVITY_SHOW_IMAGE_OPTION:
-                    avatarCopy = (ProfileViewModel.AvatarCopy)data[0];
-                    Tool.createImageOptionDialog(
-                            ProfileActivity.this,
-                            REQUEST_CAMERA_CODE,
-                            REQUEST_GALLERY_CODE
-                    ).show();
+                    if (ActivityCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(
+                                ProfileActivity.this,
+                                new String[]{
+                                        Manifest.permission.CAMERA,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest.permission.READ_EXTERNAL_STORAGE
+                                },
+                                0
+                        );
+                    } else {
+                        avatarCopy = (ProfileViewModel.AvatarCopy)data[0];
+                        Tool.createImageOptionDialog(
+                                ProfileActivity.this,
+                                REQUEST_CAMERA_CODE,
+                                REQUEST_GALLERY_CODE
+                        ).show();
+                    }
                     break;
                 case Event.PROFILE_ACTIVITY_TIME_OUT:
                     Toast.makeText(
@@ -173,7 +192,7 @@ public class ProfileActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
             if (requestCode == REQUEST_CAMERA_CODE) {
-                Bitmap bitmapAvatar = (Bitmap)data.getExtras().get("data");
+                Bitmap bitmapAvatar = Tool.getImageWithUri(this, data.getData());
                 avatarCopy.copy(bitmapAvatar);
             }
             else if (requestCode == REQUEST_GALLERY_CODE) {

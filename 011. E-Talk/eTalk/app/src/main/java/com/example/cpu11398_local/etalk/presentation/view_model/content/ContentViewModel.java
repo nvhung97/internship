@@ -146,7 +146,11 @@ public class ContentViewModel implements ViewModel,
      * @param view
      */
     public void onCameraClick(View view) {
-        Toast.makeText(context, "This feature is not ready yet", Toast.LENGTH_SHORT).show();
+        viewPublisher.onNext(
+                Event.create(
+                        Event.CONTENT_ACTIVITY_CAMERA
+                )
+        );
     }
 
     /**
