@@ -92,12 +92,14 @@ public class CameraRenderer implements Runnable, TextureView.SurfaceTextureListe
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+        Log.e("Test", "onSurfaceTextureSizeChanged" + width + "x" + height);
         gwidth = -width;
         gheight = -height;
     }
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        Log.e("Test", "onSurfaceTextureDestroyed");
         if (camera != null) {
             camera.stopPreview();
             camera.release();
@@ -112,6 +114,7 @@ public class CameraRenderer implements Runnable, TextureView.SurfaceTextureListe
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        Log.e("Test", "onSurfaceTextureAvailable" + width + "x" + height);
         if (renderThread != null && renderThread.isAlive()) {
             renderThread.interrupt();
         }
