@@ -1,5 +1,7 @@
 package com.example.cpu11398_local.etalk.presentation.view.camera;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -54,11 +56,14 @@ import java.util.concurrent.TimeUnit;
 
 public class CaptureActivity extends AppCompatActivity {
 
+    private final int ANIMATION_DURATION = 500;
+
     /**
      * Views on this activity
      */
     private ConstraintLayout    rootView;
     private ConstraintLayout    actionView;
+    private ConstraintLayout    filterView;
     private AutoFitTextureView  textureView;
     private Button btnCapture;
     private Button btnTick;
@@ -170,6 +175,16 @@ public class CaptureActivity extends AppCompatActivity {
      * Current optionResolutionCamera size
      */
     private int numChoice = 0;
+
+    /**
+     * Store current state of filter view
+     */
+    private boolean isFilterOn = false;
+
+    /**
+     * Store current filter
+     */
+    private int filterId = 0;
 
     /**
      * {@link CameraDevice.StateCallback} is called when {@link CameraDevice} changes its state.
@@ -343,58 +358,43 @@ public class CaptureActivity extends AppCompatActivity {
      */
     private void chooseOptionSize(Size[] cameraChoices, Size[] imageChoices) {
         optionResolutionCamera = new Size[3];
+        optionResolutionImage = new Size[3];
         for (Size choice : cameraChoices) {
             if (optionResolutionCamera[0] == null) {
                 if (choice.getWidth() * 9 / 16 == choice.getHeight()) {
                     optionResolutionCamera[0] = choice;
+                    optionResolutionImage[0] = new Size(16, 9);
                 }
             }
             if (optionResolutionCamera[1] == null) {
                 if (choice.getWidth() * 3 / 4 == choice.getHeight()) {
                     optionResolutionCamera[1] = choice;
+                    optionResolutionImage[1] = new Size(4, 3);
                 }
             }
             if (optionResolutionCamera[2] == null) {
                 if (choice.getWidth() * 1 / 1 == choice.getHeight()) {
                     optionResolutionCamera[2] = choice;
-                }
-            }
-        }
-
-        optionResolutionImage = new Size[3];
-        for (Size choice : imageChoices) {
-            if (optionResolutionImage[0] == null) {
-                if (choice.getWidth() * 9 / 16 == choice.getHeight()) {
-                    optionResolutionImage[0] = choice;
-                }
-            }
-            if (optionResolutionImage[1] == null) {
-                if (choice.getWidth() * 3 / 4 == choice.getHeight()) {
-                    optionResolutionImage[1] = choice;
-                }
-            }
-            if (optionResolutionImage[2] == null) {
-                if (choice.getWidth() * 1 / 1 == choice.getHeight()) {
-                    optionResolutionImage[2] = choice;
+                    optionResolutionImage[2] = new Size(1, 1);
                 }
             }
         }
 
         if (optionResolutionImage[0] != null && optionResolutionCamera[0] != null) {
             btnResolution1.setEnabled(true);
-            btnResolution1.setText(optionResolutionImage[0].getWidth() + "x" + optionResolutionImage[0].getHeight());
+            btnResolution1.setText(optionResolutionImage[0].getWidth() + ":" + optionResolutionImage[0].getHeight());
         } else {
             btnResolution1.setEnabled(false);
         }
         if (optionResolutionImage[1] != null && optionResolutionCamera[1] != null) {
             btnResolution1.setEnabled(true);
-            btnResolution2.setText(optionResolutionImage[1].getWidth() + "x" + optionResolutionImage[1].getHeight());
+            btnResolution2.setText(optionResolutionImage[1].getWidth() + ":" + optionResolutionImage[1].getHeight());
         } else {
             btnResolution2.setEnabled(false);
         }
         if (optionResolutionImage[2] != null && optionResolutionCamera[2] != null) {
             btnResolution1.setEnabled(true);
-            btnResolution3.setText(optionResolutionImage[2].getWidth() + "x" + optionResolutionImage[2].getHeight());
+            btnResolution3.setText(optionResolutionImage[2].getWidth() + ":" + optionResolutionImage[2].getHeight());
         } else {
             btnResolution3.setEnabled(false);
         }
@@ -414,11 +414,14 @@ public class CaptureActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             numChoice = savedInstanceState.getInt("num_choice");
             cameraChoice = savedInstanceState.getInt("camera_choice");
+            isFilterOn = savedInstanceState.getBoolean("is_filter_on");
+            filterId = savedInstanceState.getInt("filter_id");
         }
 
         rootView        = findViewById(R.id.capture_activity);
         actionView      = findViewById(R.id.capture_activity_action);
         textureView     = findViewById(R.id.capture_activity_texture);
+        filterView      = findViewById(R.id.capture_activity_lyt_filter);
         btnCapture      = findViewById(R.id.capture_activity_capture);
         btnTick         = findViewById(R.id.capture_activity_tick);
         btnSwith        = findViewById(R.id.capture_activity_switch);
@@ -426,6 +429,9 @@ public class CaptureActivity extends AppCompatActivity {
         btnResolution1  = findViewById(R.id.capture_activity_resolution_1);
         btnResolution2  = findViewById(R.id.capture_activity_resolution_2);
         btnResolution3  = findViewById(R.id.capture_activity_resolution_3);
+
+        // Hide filter View
+        filterView.post(() -> toggleFilterView(isFilterOn, 0));
 
         File dir = new File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
@@ -470,6 +476,8 @@ public class CaptureActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle savedInstanceState){
         savedInstanceState.putInt("num_choice", numChoice);
         savedInstanceState.putInt("camera_choice", cameraChoice);
+        savedInstanceState.putBoolean("is_filter_on", isFilterOn);
+        savedInstanceState.putInt("filter_id", filterId);
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -1060,5 +1068,245 @@ public class CaptureActivity extends AppCompatActivity {
         data.setData(Uri.fromFile(mFile));
         setResult(RESULT_OK, data);
         finish();
+    }
+
+    /**
+     * Execute when user press to show/hide filter options
+     * @param view
+     */
+    public void onShowFilter(View view) {
+        toggleFilterView(isFilterOn = !isFilterOn, ANIMATION_DURATION);
+    }
+
+    private void toggleFilterView(boolean show, int duration) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            toggleFilterViewPortrait(show, duration);
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            toggleFilterViewLandscape(show, duration);
+        }
+    }
+
+    private void toggleFilterViewPortrait(boolean show, int duration) {
+        if (show) {
+            filterView
+                    .animate()
+                    .translationY(0)
+                    .alpha(1.0f)
+                    .setDuration(duration)
+                    .start();
+            ((View)btnCapture.getParent())
+                    .animate()
+                    .translationY((filterView.getHeight() - btnResolution1.getHeight()) / 2)
+                    .setDuration(duration)
+                    .start();
+            ((View)btnCancel.getParent())
+                    .animate()
+                    .translationY((filterView.getHeight() - btnResolution1.getHeight()) / 2)
+                    .setDuration(duration)
+                    .start();
+            ((View)btnSwith.getParent())
+                    .animate()
+                    .translationY((filterView.getHeight() - btnResolution1.getHeight()) / 2)
+                    .setDuration(duration)
+                    .start();
+            btnResolution1
+                    .animate()
+                    .translationY(btnResolution1.getHeight())
+                    .alpha(0.0f)
+                    .setDuration(duration)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            btnResolution1.setVisibility(View.GONE);
+                            btnResolution1.animate().setListener(null);
+                        }
+                    })
+                    .start();
+            btnResolution2
+                    .animate()
+                    .translationY(btnResolution2.getHeight())
+                    .alpha(0.0f)
+                    .setDuration(duration)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            btnResolution2.setVisibility(View.GONE);
+                            btnResolution2.animate().setListener(null);
+                        }
+                    })
+                    .start();
+            btnResolution3
+                    .animate()
+                    .translationY(btnResolution3.getHeight())
+                    .alpha(0.0f)
+                    .setDuration(duration)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            btnResolution3.setVisibility(View.GONE);
+                            btnResolution3.animate().setListener(null);
+                        }
+                    })
+                    .start();
+        } else {
+            filterView
+                    .animate()
+                    .translationY(-filterView.getHeight())
+                    .alpha(0.0f)
+                    .setDuration(duration)
+                    .start();
+            ((View)btnCapture.getParent())
+                    .animate()
+                    .translationY(0)
+                    .setDuration(duration)
+                    .start();
+            ((View)btnCancel.getParent())
+                    .animate()
+                    .translationY(0)
+                    .setDuration(duration)
+                    .start();
+            ((View)btnSwith.getParent())
+                    .animate()
+                    .translationY(0)
+                    .setDuration(duration)
+                    .start();
+            btnResolution1.setVisibility(View.VISIBLE);
+            btnResolution2.setVisibility(View.VISIBLE);
+            btnResolution3.setVisibility(View.VISIBLE);
+            btnResolution1
+                    .animate()
+                    .translationY(0)
+                    .alpha(1.0f)
+                    .setDuration(duration)
+                    .start();
+            btnResolution2
+                    .animate()
+                    .translationY(0)
+                    .alpha(1.0f)
+                    .setDuration(duration)
+                    .start();
+            btnResolution3
+                    .animate()
+                    .translationY(0)
+                    .alpha(1.0f)
+                    .setDuration(duration)
+                    .start();
+        }
+    }
+
+    private void toggleFilterViewLandscape(boolean show, int duration) {
+        if (show) {
+            filterView
+                    .animate()
+                    .translationX(0)
+                    .alpha(1.0f)
+                    .setDuration(duration)
+                    .start();
+            ((View)btnCapture.getParent())
+                    .animate()
+                    .translationX((filterView.getWidth() - btnResolution1.getHeight()) / 2)
+                    .setDuration(duration)
+                    .start();
+            ((View)btnCancel.getParent())
+                    .animate()
+                    .translationX((filterView.getWidth() - btnResolution1.getHeight()) / 2)
+                    .setDuration(duration)
+                    .start();
+            ((View)btnSwith.getParent())
+                    .animate()
+                    .translationX((filterView.getWidth() - btnResolution1.getHeight()) / 2)
+                    .setDuration(duration)
+                    .start();
+            btnResolution1
+                    .animate()
+                    .translationX(btnResolution1.getTranslationX() + btnResolution1.getHeight())
+                    .alpha(0.0f)
+                    .setDuration(duration)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            btnResolution1.setVisibility(View.GONE);
+                            btnResolution1.animate().setListener(null);
+                        }
+                    })
+                    .start();
+            btnResolution2
+                    .animate()
+                    .translationX(btnResolution2.getTranslationX() + btnResolution2.getHeight())
+                    .alpha(0.0f)
+                    .setDuration(duration)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            btnResolution2.setVisibility(View.GONE);
+                            btnResolution2.animate().setListener(null);
+                        }
+                    })
+                    .start();
+            btnResolution3
+                    .animate()
+                    .translationX(btnResolution3.getTranslationX() + btnResolution3.getHeight())
+                    .alpha(0.0f)
+                    .setDuration(duration)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            btnResolution3.setVisibility(View.GONE);
+                            btnResolution3.animate().setListener(null);
+                        }
+                    })
+                    .start();
+        } else {
+            filterView
+                    .animate()
+                    .translationX(-filterView.getWidth())
+                    .alpha(0.0f)
+                    .setDuration(duration)
+                    .start();
+            ((View)btnCapture.getParent())
+                    .animate()
+                    .translationX(0)
+                    .setDuration(duration)
+                    .start();
+            ((View)btnCancel.getParent())
+                    .animate()
+                    .translationX(0)
+                    .setDuration(duration)
+                    .start();
+            ((View)btnSwith.getParent())
+                    .animate()
+                    .translationX(0)
+                    .setDuration(duration)
+                    .start();
+            btnResolution1.setVisibility(View.VISIBLE);
+            btnResolution2.setVisibility(View.VISIBLE);
+            btnResolution3.setVisibility(View.VISIBLE);
+            btnResolution1
+                    .animate()
+                    .translationX(btnResolution1.getTranslationX() - btnResolution1.getHeight())
+                    .alpha(1.0f)
+                    .setDuration(duration)
+                    .start();
+            btnResolution2
+                    .animate()
+                    .translationX(btnResolution2.getTranslationX() - btnResolution2.getHeight())
+                    .alpha(1.0f)
+                    .setDuration(duration)
+                    .start();
+            btnResolution3
+                    .animate()
+                    .translationX(btnResolution3.getTranslationX() - btnResolution3.getHeight())
+                    .alpha(1.0f)
+                    .setDuration(duration)
+                    .start();
+        }
+    }
+
+    /**
+     * Execute when user select one filter
+     * @param view
+     */
+    public void onFilterSelected(View view) {
+        filterId = view.getId();
     }
 }
