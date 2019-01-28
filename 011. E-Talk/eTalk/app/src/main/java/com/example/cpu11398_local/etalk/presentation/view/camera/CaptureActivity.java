@@ -45,6 +45,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AutoFitTextureView;
+import com.example.cpu11398_local.etalk.presentation.custom.VerticalButton;
 import com.example.cpu11398_local.etalk.utils.Tool;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -1219,7 +1220,7 @@ public class CaptureActivity extends AppCompatActivity {
                     .start();
             btnResolution1
                     .animate()
-                    .translationX(btnResolution1.getTranslationX() + btnResolution1.getHeight())
+                    .translationX(((VerticalButton)btnResolution1).getOriginalX() + btnResolution1.getHeight())
                     .alpha(0.0f)
                     .setDuration(duration)
                     .setListener(new AnimatorListenerAdapter() {
@@ -1232,7 +1233,7 @@ public class CaptureActivity extends AppCompatActivity {
                     .start();
             btnResolution2
                     .animate()
-                    .translationX(btnResolution2.getTranslationX() + btnResolution2.getHeight())
+                    .translationX(((VerticalButton)btnResolution2).getOriginalX() + btnResolution2.getHeight())
                     .alpha(0.0f)
                     .setDuration(duration)
                     .setListener(new AnimatorListenerAdapter() {
@@ -1245,7 +1246,7 @@ public class CaptureActivity extends AppCompatActivity {
                     .start();
             btnResolution3
                     .animate()
-                    .translationX(btnResolution3.getTranslationX() + btnResolution3.getHeight())
+                    .translationX(((VerticalButton)btnResolution3).getOriginalX() + btnResolution3.getHeight())
                     .alpha(0.0f)
                     .setDuration(duration)
                     .setListener(new AnimatorListenerAdapter() {
@@ -1283,19 +1284,19 @@ public class CaptureActivity extends AppCompatActivity {
             btnResolution3.setVisibility(View.VISIBLE);
             btnResolution1
                     .animate()
-                    .translationX(btnResolution1.getTranslationX() - btnResolution1.getHeight())
+                    .translationX(((VerticalButton)btnResolution1).getOriginalX())
                     .alpha(1.0f)
                     .setDuration(duration)
                     .start();
             btnResolution2
                     .animate()
-                    .translationX(btnResolution2.getTranslationX() - btnResolution2.getHeight())
+                    .translationX(((VerticalButton)btnResolution2).getOriginalX())
                     .alpha(1.0f)
                     .setDuration(duration)
                     .start();
             btnResolution3
                     .animate()
-                    .translationX(btnResolution3.getTranslationX() - btnResolution3.getHeight())
+                    .translationX(((VerticalButton)btnResolution3).getOriginalX())
                     .alpha(1.0f)
                     .setDuration(duration)
                     .start();
