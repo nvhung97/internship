@@ -554,6 +554,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 13:58 22/01/2019
 13:58 23/01/2019
 13:58 25/01/2019
+13:58 28/01/2019
+13:58 29/01/2019
 	- Nghiên cứu GPUImage
 		+ https://www.codeproject.com/Articles/1007973/%2FArticles%2F1007973%2FBasic-Shader-Programming-on-Android
 	- Một số sample
@@ -568,6 +570,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://www.khronos.org/opengles/sdk/docs/reference_cards/OpenGL-ES-2_0-Reference-card.pdf
 	- Start Animation immediately after onCreate
 		+ https://stackoverflow.com/a/14796504
+	- Detecting device orientation
+		+ https://stackoverflow.com/a/11239676
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
