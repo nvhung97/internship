@@ -18,10 +18,22 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <ImageButton
-        android:id="@+id/btn_filter"
+        android:id="@+id/capture_activity_back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_arrow_back"
+        android:scaleType="fitXY"
+        android:padding="15dp"
+        android:background="@drawable/tool_bar_background_button"
+        android:onClick="onBackPressed"/>
+
+    <ImageButton
+        android:id="@+id/capture_activity_filter"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/btn_filter"
+        android:scaleType="fitXY"
+        android:padding="15dp"
         android:background="@drawable/tool_bar_background_button"
         android:onClick="onShowFilter"
         app:layout_constraintTop_toTopOf="parent"
@@ -147,39 +159,39 @@
                     android:onClick="onFilterSelected"/>
             </LinearLayout>
         </android.support.constraint.ConstraintLayout>
-        <Button
-            android:id="@+id/capture_activity_resolution_1"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/capture_activity_resolution"
+            android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:textColor="@color/colorWhite"
-            android:textAllCaps="false"
-            android:background="@null"
-            android:onClick="onChooseResolution1"
-            app:layout_constraintLeft_toLeftOf="@id/capture_activity_left_action"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="@id/capture_activity_left_action"/>
-        <Button
-            android:id="@+id/capture_activity_resolution_2"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:textColor="@color/colorWhite"
-            android:textAllCaps="false"
-            android:background="@null"
-            android:onClick="onChooseResolution2"
-            app:layout_constraintLeft_toLeftOf="@id/capture_activity_center_action"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="@id/capture_activity_center_action"/>
-        <Button
-            android:id="@+id/capture_activity_resolution_3"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:textColor="@color/colorWhite"
-            android:textAllCaps="false"
-            android:background="@null"
-            android:onClick="onChooseResolution3"
-            app:layout_constraintLeft_toLeftOf="@id/capture_activity_right_action"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="@id/capture_activity_right_action"/>
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/capture_activity_resolution_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:textColor="@color/colorWhite"
+                android:textAllCaps="false"
+                android:background="@null"
+                android:onClick="onChooseResolution1"/>
+            <Button
+                android:id="@+id/capture_activity_resolution_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textColor="@color/colorWhite"
+                android:textAllCaps="false"
+                android:background="@null"
+                android:onClick="onChooseResolution2"/>
+            <Button
+                android:id="@+id/capture_activity_resolution_3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:textColor="@color/colorWhite"
+                android:textAllCaps="false"
+                android:background="@null"
+                android:onClick="onChooseResolution3"/>
+        </LinearLayout>
         <FrameLayout
             android:id="@+id/capture_activity_left_action"
             android:layout_width="50dp"

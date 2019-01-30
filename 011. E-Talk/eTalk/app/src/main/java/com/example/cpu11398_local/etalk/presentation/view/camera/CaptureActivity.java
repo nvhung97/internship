@@ -5,8 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Point;
@@ -38,16 +36,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseArray;
-import android.util.SparseIntArray;
 import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AutoFitTextureView;
-import com.example.cpu11398_local.etalk.presentation.custom.VerticalButton;
 import com.example.cpu11398_local.etalk.presentation.view.camera.Utils.MyGLUtils;
 import com.example.cpu11398_local.etalk.presentation.view.camera.filter.AsciiArtFilter;
 import com.example.cpu11398_local.etalk.presentation.view.camera.filter.BaseFilter;
@@ -77,6 +74,9 @@ public class CaptureActivity extends AppCompatActivity {
     private final int EGL_OPENGL_ES2_BIT = 4;
     private final int EGL_CONTEXT_CLIENT_VERSION = 0x3098;
 
+    /**
+     * OpenGL ES 2.0
+     */
     private EGL10 egl10;
     private EGLDisplay eglDisplay;
     private EGLContext eglContext;
@@ -90,12 +90,19 @@ public class CaptureActivity extends AppCompatActivity {
     private int cameraTextureId;
 
     /**
+     * Detect Device's orientation.
+     */
+    private OrientationEventListener orientationEventListener;
+    private int mOrientation = 0;
+
+    /**
      * Views on this activity
      */
     private ConstraintLayout    rootView;
     private ConstraintLayout    actionView;
     private ConstraintLayout    filterView;
     private AutoFitTextureView  textureView;
+    private LinearLayout        resolutionView;
     private Button btnCapture;
     private Button btnTick;
     private Button btnSwith;
@@ -105,15 +112,9 @@ public class CaptureActivity extends AppCompatActivity {
     private Button btnResolution3;
 
     /**
-     * Conversion from screen rotation to JPEG orientation.
+     * Camera state: unknown.
      */
-    private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
-    static {
-        ORIENTATIONS.append(Surface.ROTATION_0, 90);
-        ORIENTATIONS.append(Surface.ROTATION_90, 0);
-        ORIENTATIONS.append(Surface.ROTATION_180, 270);
-        ORIENTATIONS.append(Surface.ROTATION_270, 180);
-    }
+    private static final int STATE_UNKNOWN = -1;
 
     /**
      * Camera state: Showing camera preview.
@@ -220,11 +221,6 @@ public class CaptureActivity extends AppCompatActivity {
     private int numChoice = 0;
 
     /**
-     * Store current state of filter view
-     */
-    private boolean isFilterOn = false;
-
-    /**
      * Store current filter
      */
     private int filterId = R.id.capture_activity_original_filter;
@@ -287,7 +283,7 @@ public class CaptureActivity extends AppCompatActivity {
     /**
      * The current state of camera state for taking pictures.
      */
-    private int mState = -1;
+    private int mState = STATE_UNKNOWN;
 
     /**
      * A {@link Semaphore} to prevent the app from exiting before closing the camera.
@@ -342,19 +338,12 @@ public class CaptureActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         );
-        Tool.setRotationAnimation(this);
-
-        if (savedInstanceState != null) {
-            numChoice = savedInstanceState.getInt("num_choice");
-            cameraChoice = savedInstanceState.getInt("camera_choice");
-            isFilterOn = savedInstanceState.getBoolean("is_filter_on");
-            filterId = savedInstanceState.getInt("filter_id");
-        }
 
         rootView        = findViewById(R.id.capture_activity);
         actionView      = findViewById(R.id.capture_activity_action);
         textureView     = findViewById(R.id.capture_activity_texture);
         filterView      = findViewById(R.id.capture_activity_lyt_filter);
+        resolutionView  = findViewById(R.id.capture_activity_resolution);
         btnCapture      = findViewById(R.id.capture_activity_capture);
         btnTick         = findViewById(R.id.capture_activity_tick);
         btnSwith        = findViewById(R.id.capture_activity_switch);
@@ -364,7 +353,7 @@ public class CaptureActivity extends AppCompatActivity {
         btnResolution3  = findViewById(R.id.capture_activity_resolution_3);
 
         // Hide filter View
-        filterView.post(() -> toggleFilterView(isFilterOn, 0));
+        filterView.post(() -> toggleFilterView(false, 0));
 
         File dir = new File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
@@ -374,6 +363,16 @@ public class CaptureActivity extends AppCompatActivity {
             Tool.finishFailed(this);
         } else {
             mFile = new File(dir, "IMG_" + System.currentTimeMillis() + ".jpg");
+        }
+
+        orientationEventListener = new OrientationEventListener(this, SensorManager.SENSOR_DELAY_NORMAL) {
+            @Override
+            public void onOrientationChanged(int orientation) {
+                rotateView(getImageOrientation(orientation));
+            }
+        };
+        if (orientationEventListener.canDetectOrientation()) {
+            orientationEventListener.enable();
         }
     }
 
@@ -397,37 +396,41 @@ public class CaptureActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getRealSize(size);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(rootView);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            constraintSet.setDimensionRatio(actionView.getId(), size.x + ":" + (size.y - size.x * 4 / 3));
-        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            constraintSet.setDimensionRatio(actionView.getId(), (size.x - size.y * 4 / 3) + ":" + size.y);
-        }
+        constraintSet.setDimensionRatio(actionView.getId(), size.x + ":" + (size.y - size.x * 4 / 3));
         constraintSet.applyTo(rootView);
-    }
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
-        savedInstanceState.putInt("num_choice", numChoice);
-        savedInstanceState.putInt("camera_choice", cameraChoice);
-        savedInstanceState.putBoolean("is_filter_on", isFilterOn);
-        savedInstanceState.putInt("filter_id", filterId);
-        super.onSaveInstanceState(savedInstanceState);
+        // Delete file if it existed
+        if (mFile.exists()) {
+            mFile.delete();
+        }
     }
 
     @Override
     public void onPause() {
-        mState = STATE_NOT_WORK;
         closeCamera();
         stopBackgroundThread();
         if (mState == STATE_PICTURE_TAKEN) {
             btnCapture.setVisibility(View.VISIBLE);
             btnSwith.setVisibility(View.VISIBLE);
             btnTick.setVisibility(View.GONE);
-            btnResolution1.setVisibility(View.VISIBLE);
-            btnResolution2.setVisibility(View.VISIBLE);
-            btnResolution3.setVisibility(View.VISIBLE);
+            resolutionView.setVisibility(View.VISIBLE);
         }
+        mState = STATE_NOT_WORK;
         super.onPause();
+    }
+
+    public void onBackPressed(View view) {
+        if (mFile.exists()) {
+            mFile.delete();
+        }
+        orientationEventListener.disable();
+        Tool.finishFailed(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        orientationEventListener.disable();
+        super.onDestroy();
     }
 
     /**
@@ -714,7 +717,8 @@ public class CaptureActivity extends AppCompatActivity {
         public void run() {
             try {
                 OutputStream outputStream = new FileOutputStream(mFile);
-                mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                Tool.rotateImage(mBitmap, mOrientation)
+                        .compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 outputStream.flush();
                 outputStream.close();
             } catch (FileNotFoundException e) {
@@ -746,11 +750,7 @@ public class CaptureActivity extends AppCompatActivity {
 
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(rootView);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            constraintSet.connect(textureView.getId(), ConstraintSet.BOTTOM, rootView.getId(), ConstraintSet.BOTTOM);
-        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            constraintSet.connect(textureView.getId(), ConstraintSet.RIGHT, rootView.getId(), ConstraintSet.RIGHT);
-        }
+        constraintSet.connect(textureView.getId(), ConstraintSet.BOTTOM, rootView.getId(), ConstraintSet.BOTTOM);
         constraintSet.applyTo(rootView);
 
         btnResolution1.setTextColor(ContextCompat.getColor(this, R.color.colorETalkClickLight));
@@ -779,11 +779,7 @@ public class CaptureActivity extends AppCompatActivity {
 
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(rootView);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            constraintSet.connect(textureView.getId(), ConstraintSet.BOTTOM, actionView.getId(), ConstraintSet.TOP);
-        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            constraintSet.connect(textureView.getId(), ConstraintSet.RIGHT, actionView.getId(), ConstraintSet.LEFT);
-        }
+        constraintSet.connect(textureView.getId(), ConstraintSet.BOTTOM, actionView.getId(), ConstraintSet.TOP);
         constraintSet.applyTo(rootView);
 
         btnResolution1.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
@@ -812,11 +808,7 @@ public class CaptureActivity extends AppCompatActivity {
 
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(rootView);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            constraintSet.connect(textureView.getId(), ConstraintSet.BOTTOM, actionView.getId(), ConstraintSet.TOP);
-        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            constraintSet.connect(textureView.getId(), ConstraintSet.RIGHT, actionView.getId(), ConstraintSet.LEFT);
-        }
+        constraintSet.connect(textureView.getId(), ConstraintSet.BOTTOM, actionView.getId(), ConstraintSet.TOP);
         constraintSet.applyTo(rootView);
 
         btnResolution1.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
@@ -877,18 +869,16 @@ public class CaptureActivity extends AppCompatActivity {
      */
     public void onCaptureCancel(View view) {
         if (mState == STATE_PICTURE_TAKEN) {
-            enableOrientationChanges();
             btnCapture.setVisibility(View.VISIBLE);
             btnSwith.setVisibility(View.VISIBLE);
             btnTick.setVisibility(View.GONE);
-            btnResolution1.setVisibility(View.VISIBLE);
-            btnResolution2.setVisibility(View.VISIBLE);
-            btnResolution3.setVisibility(View.VISIBLE);
+            resolutionView.setVisibility(View.VISIBLE);
             mBackgroundHandler.post(mCameraRender);
         } else {
             if (mFile.exists()) {
                 mFile.delete();
             }
+            orientationEventListener.disable();
             Tool.finishFailed(this);
         }
     }
@@ -898,21 +888,18 @@ public class CaptureActivity extends AppCompatActivity {
      * @param view
      */
     public void onCaptureExecute(View view) {
-        disableOrientationChanges();
         mBackgroundThread.interrupt();
         BaseFilter.release();
         mBackgroundHandler.post(new ImageSaver(
                 textureView.getBitmap(),
                 mFile,
-                getWindowManager().getDefaultDisplay().getRotation()
+                mOrientation
         ));
         btnCapture.setVisibility(View.GONE);
         btnSwith.setVisibility(View.GONE);
         btnTick.setVisibility(View.VISIBLE);
-        toggleFilterView(isFilterOn = false, ANIMATION_DURATION);
-        btnResolution1.setVisibility(View.GONE);
-        btnResolution2.setVisibility(View.GONE);
-        btnResolution3.setVisibility(View.GONE);
+        toggleFilterView(false, ANIMATION_DURATION);
+        resolutionView.setVisibility(View.GONE);
         mState = STATE_PICTURE_TAKEN;
     }
 
@@ -953,33 +940,13 @@ public class CaptureActivity extends AppCompatActivity {
      */
     public void onShowFilter(View view) {
         if (view.getId() == R.id.capture_activity_texture) {
-            toggleFilterView(isFilterOn = false, ANIMATION_DURATION);
+            toggleFilterView(false, ANIMATION_DURATION);
         } else {
-            toggleFilterView(isFilterOn = !isFilterOn, ANIMATION_DURATION);
-        }
-        OrientationEventListener orientationEventListener = new OrientationEventListener(this, SensorManager.SENSOR_DELAY_NORMAL) {
-            @Override
-            public void onOrientationChanged(int orientation) {
-                Log.e("Test", "Orientation " + orientation);
-            }
-        };
-        if (orientationEventListener.canDetectOrientation()) {
-            Log.e("Test", "OK");
-            orientationEventListener.enable();
-        } else {
-            Log.e("Test", "Fail");
+            toggleFilterView(filterView.getTranslationY() != 0.0f, ANIMATION_DURATION);
         }
     }
 
     private void toggleFilterView(boolean show, int duration) {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            toggleFilterViewPortrait(show, duration);
-        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            toggleFilterViewLandscape(show, duration);
-        }
-    }
-
-    private void toggleFilterViewPortrait(boolean show, int duration) {
         if (show) {
             filterView
                     .animate()
@@ -1002,42 +969,16 @@ public class CaptureActivity extends AppCompatActivity {
                     .translationY((filterView.getHeight() - btnResolution1.getHeight()) / 2)
                     .setDuration(duration)
                     .start();
-            btnResolution1
+            resolutionView
                     .animate()
-                    .translationY(btnResolution1.getHeight())
+                    .translationY(resolutionView.getHeight())
                     .alpha(0.0f)
                     .setDuration(duration)
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            btnResolution1.setVisibility(View.GONE);
-                            btnResolution1.animate().setListener(null);
-                        }
-                    })
-                    .start();
-            btnResolution2
-                    .animate()
-                    .translationY(btnResolution2.getHeight())
-                    .alpha(0.0f)
-                    .setDuration(duration)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            btnResolution2.setVisibility(View.GONE);
-                            btnResolution2.animate().setListener(null);
-                        }
-                    })
-                    .start();
-            btnResolution3
-                    .animate()
-                    .translationY(btnResolution3.getHeight())
-                    .alpha(0.0f)
-                    .setDuration(duration)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            btnResolution3.setVisibility(View.GONE);
-                            btnResolution3.animate().setListener(null);
+                            resolutionView.setVisibility(View.GONE);
+                            resolutionView.animate().setListener(null);
                         }
                     })
                     .start();
@@ -1063,132 +1004,10 @@ public class CaptureActivity extends AppCompatActivity {
                     .translationY(0)
                     .setDuration(duration)
                     .start();
-            btnResolution1.setVisibility(View.VISIBLE);
-            btnResolution2.setVisibility(View.VISIBLE);
-            btnResolution3.setVisibility(View.VISIBLE);
-            btnResolution1
+            resolutionView.setVisibility(View.VISIBLE);
+            resolutionView
                     .animate()
                     .translationY(0)
-                    .alpha(1.0f)
-                    .setDuration(duration)
-                    .start();
-            btnResolution2
-                    .animate()
-                    .translationY(0)
-                    .alpha(1.0f)
-                    .setDuration(duration)
-                    .start();
-            btnResolution3
-                    .animate()
-                    .translationY(0)
-                    .alpha(1.0f)
-                    .setDuration(duration)
-                    .start();
-        }
-    }
-
-    private void toggleFilterViewLandscape(boolean show, int duration) {
-        if (show) {
-            filterView
-                    .animate()
-                    .translationX(0)
-                    .alpha(1.0f)
-                    .setDuration(duration)
-                    .start();
-            ((View)btnCapture.getParent())
-                    .animate()
-                    .translationX((filterView.getWidth() - btnResolution1.getHeight()) / 2)
-                    .setDuration(duration)
-                    .start();
-            ((View)btnCancel.getParent())
-                    .animate()
-                    .translationX((filterView.getWidth() - btnResolution1.getHeight()) / 2)
-                    .setDuration(duration)
-                    .start();
-            ((View)btnSwith.getParent())
-                    .animate()
-                    .translationX((filterView.getWidth() - btnResolution1.getHeight()) / 2)
-                    .setDuration(duration)
-                    .start();
-            btnResolution1
-                    .animate()
-                    .translationX(((VerticalButton)btnResolution1).getOriginalX() + btnResolution1.getHeight())
-                    .alpha(0.0f)
-                    .setDuration(duration)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            btnResolution1.setVisibility(View.GONE);
-                            btnResolution1.animate().setListener(null);
-                        }
-                    })
-                    .start();
-            btnResolution2
-                    .animate()
-                    .translationX(((VerticalButton)btnResolution2).getOriginalX() + btnResolution2.getHeight())
-                    .alpha(0.0f)
-                    .setDuration(duration)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            btnResolution2.setVisibility(View.GONE);
-                            btnResolution2.animate().setListener(null);
-                        }
-                    })
-                    .start();
-            btnResolution3
-                    .animate()
-                    .translationX(((VerticalButton)btnResolution3).getOriginalX() + btnResolution3.getHeight())
-                    .alpha(0.0f)
-                    .setDuration(duration)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            btnResolution3.setVisibility(View.GONE);
-                            btnResolution3.animate().setListener(null);
-                        }
-                    })
-                    .start();
-        } else {
-            filterView
-                    .animate()
-                    .translationX(-filterView.getWidth())
-                    .alpha(0.0f)
-                    .setDuration(duration)
-                    .start();
-            ((View)btnCapture.getParent())
-                    .animate()
-                    .translationX(0)
-                    .setDuration(duration)
-                    .start();
-            ((View)btnCancel.getParent())
-                    .animate()
-                    .translationX(0)
-                    .setDuration(duration)
-                    .start();
-            ((View)btnSwith.getParent())
-                    .animate()
-                    .translationX(0)
-                    .setDuration(duration)
-                    .start();
-            btnResolution1.setVisibility(View.VISIBLE);
-            btnResolution2.setVisibility(View.VISIBLE);
-            btnResolution3.setVisibility(View.VISIBLE);
-            btnResolution1
-                    .animate()
-                    .translationX(((VerticalButton)btnResolution1).getOriginalX())
-                    .alpha(1.0f)
-                    .setDuration(duration)
-                    .start();
-            btnResolution2
-                    .animate()
-                    .translationX(((VerticalButton)btnResolution2).getOriginalX())
-                    .alpha(1.0f)
-                    .setDuration(duration)
-                    .start();
-            btnResolution3
-                    .animate()
-                    .translationX(((VerticalButton)btnResolution3).getOriginalX())
                     .alpha(1.0f)
                     .setDuration(duration)
                     .start();
@@ -1270,6 +1089,11 @@ public class CaptureActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Get orientation to rotate image base on device orientation
+     * @param deviceOrientation
+     * @return
+     */
     private int getImageOrientation(int deviceOrientation) {
         //   225\ 180 /135
         //       \   /
@@ -1279,5 +1103,45 @@ public class CaptureActivity extends AppCompatActivity {
         //       /   \
         //   315/  0  \45
         return (deviceOrientation + 45) % 360 / 90 * 90;
+    }
+
+    /**
+     * Rotate some view
+     * @param orientation
+     */
+    private void rotateView(int orientation) {
+        if (orientation != mOrientation) {
+            int degrees;
+            if (mOrientation == 0 && orientation == 270) {
+                degrees = 90;
+            } else if (mOrientation == 270 && orientation == 0) {
+                degrees = -360;
+            } else {
+                degrees = -orientation;
+            }
+            mOrientation = orientation;
+            ((View)btnCancel.getParent())
+                    .animate()
+                    .rotation(degrees)
+                    .setDuration(ANIMATION_DURATION)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            ((View)btnCancel.getParent()).setRotation(-mOrientation);
+                        }
+                    })
+                    .start();
+            ((View)btnSwith.getParent())
+                    .animate()
+                    .rotation(degrees)
+                    .setDuration(ANIMATION_DURATION)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            ((View)btnSwith.getParent()).setRotation(-mOrientation);
+                        }
+                    })
+                    .start();
+        }
     }
 }

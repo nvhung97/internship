@@ -93,7 +93,8 @@
             android:name="io.fabric.ApiKey"
             android:value="ac6e55cd91d0fcbed23be5253a076b41f29fe387" />
         <activity
-            android:name=".presentation.view.camera.CaptureActivity"/>
+            android:name=".presentation.view.camera.CaptureActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".presentation.view.camera.RecordActivity"/>
     </application>
