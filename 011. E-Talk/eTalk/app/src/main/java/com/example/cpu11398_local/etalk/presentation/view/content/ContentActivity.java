@@ -14,9 +14,7 @@ import android.widget.Toast;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityContentBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
-import com.example.cpu11398_local.etalk.presentation.view.camera.CaptureActivity;
-import com.example.cpu11398_local.etalk.presentation.view.camera.RecordActivity;
-import com.example.cpu11398_local.etalk.presentation.view.chat.group.ChatGroupActivity;
+import com.example.cpu11398_local.etalk.presentation.view.camera.CameraActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.ContentPagerAdapter;
 import com.example.cpu11398_local.etalk.presentation.view.friend.AddFriendActivity;
 import com.example.cpu11398_local.etalk.presentation.view.group.CreateGroupActivity;
@@ -140,7 +138,7 @@ public class ContentActivity extends BaseActivity {
                                 0
                         );
                     } else {
-                        startActivity(new Intent(ContentActivity.this, RecordActivity.class));
+                        startActivity(new Intent(ContentActivity.this, CameraActivity.class));
                     }
                     break;
                 case Event.CONTENT_ACTIVITY_SHOW_POPUP_MENU:
