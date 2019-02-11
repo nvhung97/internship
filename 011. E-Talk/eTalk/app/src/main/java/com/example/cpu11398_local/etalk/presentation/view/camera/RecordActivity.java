@@ -608,7 +608,6 @@ public class RecordActivity extends AppCompatActivity {
         } catch (CameraAccessException | IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private void closePreviewSession() {

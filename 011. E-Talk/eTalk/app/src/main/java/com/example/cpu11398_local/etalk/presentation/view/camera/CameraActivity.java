@@ -80,22 +80,19 @@ public class CameraActivity extends AppCompatActivity {
      */
     private EGL10 egl10;
     private EGLDisplay eglDisplay;
-    private EGLContext eglContext;
-    private EGLSurface eglSurface;
-    private EGL10 egl102;
-    private EGLDisplay eglDisplay2;
-    private EGLContext eglContext2;
-    private EGLSurface eglSurface2;
+    private EGLContext eglContextPreview;
+    private EGLSurface eglSurfacePreview;
+    private EGLContext eglContextRecord;
+    private EGLSurface eglSurfaceRecord;
 
     private BaseFilter filter;
 
     private SparseArray<BaseFilter> filterMap = new SparseArray<>();
-    private SparseArray<BaseFilter> filterMap2 = new SparseArray<>();
 
-    private int cameraTextureId;
-    private SurfaceTexture cameraSurfaceTexture;
-    private int cameraTextureId2;
-    private SurfaceTexture cameraSurfaceTexture2;
+    private int previewTextureId;
+    private SurfaceTexture previewSurfaceTexture;
+    private int recordTextureId;
+    private SurfaceTexture recordSurfaceTexture;
 
     /**
      * Detect Device's orientation.
@@ -171,13 +168,21 @@ public class CameraActivity extends AppCompatActivity {
 
     };
 
+    private MediaRecorder mMediaRecorder;
+
     /**
      * Render on background
      */
     private Runnable mCameraRender = new Runnable() {
         @Override
         public void run() {
-            initGL(textureView.getSurfaceTexture());
+            mMediaRecorder = new MediaRecorder();
+            try {
+                setUpMediaRecorder();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            initGL(textureView.getSurfaceTexture(), mMediaRecorder.getSurface());
 
             if (filterMap.size() != 0) {
                 filterMap.clear();
@@ -192,43 +197,7 @@ public class CameraActivity extends AppCompatActivity {
 
             setSelectedFilter(filterId);
 
-            cameraTextureId = MyGLUtils.genTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES);
-            cameraSurfaceTexture = new SurfaceTexture(cameraTextureId);
-
             createCameraPreviewSession();
-        }
-    };
-
-    private MediaRecorder mMediaRecorder;
-
-    private Runnable mCameraRender2 = new Runnable() {
-        @Override
-        public void run() {
-            mMediaRecorder = new MediaRecorder();
-            try {
-                setUpMediaRecorder();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            initGL2(mMediaRecorder.getSurface());
-
-            if (filterMap2.size() != 0) {
-                filterMap2.clear();
-            }
-            boolean isFrontCamera = cameraChoice == CameraCharacteristics.LENS_FACING_FRONT;
-            filterMap2.append(R.id.capture_activity_original_filter, new OriginalFilter(CameraActivity.this, isFrontCamera));
-            filterMap2.append(R.id.capture_activity_legofied_filter, new LegofiedFilter(CameraActivity.this, isFrontCamera));
-            filterMap2.append(R.id.capture_activity_trianglesmosaic_filter, new TrianglesMosaicFilter(CameraActivity.this, isFrontCamera));
-            filterMap2.append(R.id.capture_activity_poligonization_filter, new PolygonizationFilter(CameraActivity.this, isFrontCamera));
-            filterMap2.append(R.id.capture_activity_asciiart_filter, new AsciiArtFilter(CameraActivity.this, isFrontCamera));
-            filterMap2.append(R.id.capture_activity_edgedetection_filter, new EdgeDetectionFilter(CameraActivity.this, isFrontCamera));
-
-            setSelectedFilter(filterId);
-
-            cameraTextureId2 = MyGLUtils.genTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES);
-            cameraSurfaceTexture2 = new SurfaceTexture(cameraTextureId2);
-
-            createCameraPreviewSession2();
         }
     };
 
@@ -263,7 +232,6 @@ public class CameraActivity extends AppCompatActivity {
      * A {@link CameraCaptureSession } for camera preview.
      */
     private CameraCaptureSession mCaptureSession;
-    private CameraCaptureSession mCaptureSession2;
 
     /**
      * A reference to the opened {@link CameraDevice}.
@@ -301,7 +269,6 @@ public class CameraActivity extends AppCompatActivity {
             mCameraOpenCloseLock.release();
             mCameraDevice = cameraDevice;
             mBackgroundHandler.post(mCameraRender);
-            mBackgroundHandler2.post(mCameraRender2);
         }
 
         @Override
@@ -326,14 +293,10 @@ public class CameraActivity extends AppCompatActivity {
      */
     private HandlerThread mBackgroundThread;
 
-    private HandlerThread mBackgroundThread2;
-
     /**
      * A {@link Handler} for running tasks in the background.
      */
     private Handler mBackgroundHandler;
-
-    private Handler mBackgroundHandler2;
 
     /**
      * This is the output file for our picture.
@@ -344,13 +307,11 @@ public class CameraActivity extends AppCompatActivity {
      * {@link CaptureRequest.Builder} for the camera preview
      */
     private CaptureRequest.Builder mPreviewRequestBuilder;
-    private CaptureRequest.Builder mPreviewRequestBuilder2;
 
     /**
      * {@link CaptureRequest} generated by {@link #mPreviewRequestBuilder}
      */
     private CaptureRequest mPreviewRequest;
-    private CaptureRequest mPreviewRequest2;
 
     /**
      * The current state of camera state for taking pictures.
@@ -434,7 +395,7 @@ public class CameraActivity extends AppCompatActivity {
         if (!dir.exists() && !dir.mkdirs()) {
             Tool.finishFailed(this);
         } else {
-            mFile = new File(dir, "IMG_" + System.currentTimeMillis() + ".jpg");
+            mFile = new File(dir, "VID_" + System.currentTimeMillis() + ".mp4");
         }
 
         orientationEventListener = new OrientationEventListener(this, SensorManager.SENSOR_DELAY_NORMAL) {
@@ -609,9 +570,6 @@ public class CameraActivity extends AppCompatActivity {
         mBackgroundThread = new HandlerThread("CameraBackground");
         mBackgroundThread.start();
         mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
-        mBackgroundThread2 = new HandlerThread("CameraBackground2");
-        mBackgroundThread2.start();
-        mBackgroundHandler2 = new Handler(mBackgroundThread2.getLooper());
     }
 
     /**
@@ -627,15 +585,6 @@ public class CameraActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        mBackgroundThread2.interrupt();
-        mBackgroundThread2.quitSafely();
-        try {
-            mBackgroundThread2.join();
-            mBackgroundThread2 = null;
-            mBackgroundHandler2 = null;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         BaseFilter.release();
     }
 
@@ -645,18 +594,21 @@ public class CameraActivity extends AppCompatActivity {
     private void createCameraPreviewSession() {
         try {
             // We configure the size of default buffer to be the size of camera preview we want.
-            cameraSurfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
+            previewSurfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
+            recordSurfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
 
             // This is the output Surface we need to start preview.
-            Surface surface = new Surface(cameraSurfaceTexture);
+            Surface previewSurface = new Surface(previewSurfaceTexture);
+            Surface recordSurface = new Surface(recordSurfaceTexture);
 
             // We set up a CaptureRequest.Builder with the output Surface.
-            mPreviewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
-            mPreviewRequestBuilder.addTarget(surface);
+            mPreviewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
+            mPreviewRequestBuilder.addTarget(previewSurface);
+            mPreviewRequestBuilder.addTarget(recordSurface);
 
             // Here, we create a CameraCaptureSession for camera preview.
             mCameraDevice.createCaptureSession(
-                    Arrays.asList(surface),
+                    Arrays.asList(previewSurface, recordSurface),
                     new CameraCaptureSession.StateCallback() {
 
                         @Override
@@ -686,101 +638,15 @@ public class CameraActivity extends AppCompatActivity {
                                         null,
                                         mBackgroundHandler);
 
-                                // Render loop
-                                while (!Thread.currentThread().isInterrupted()) {
-                                    if (mState == STATE_PREVIEW) {
-                                        if (textureView.getWidth() >= 0 && textureView.getHeight() >= 0)
-                                            GLES20.glViewport(0, 0, textureView.getWidth(), textureView.getHeight());
-
-                                        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-
-                                        // Update the camera preview texture
-                                        synchronized (this) {
-                                            cameraSurfaceTexture.updateTexImage();
-                                        }
-
-                                        // Draw camera preview
-                                        filter.draw(cameraTextureId, textureView.getWidth(), textureView.getHeight());
-
-                                        // Flush
-                                        GLES20.glFlush();
-                                        egl10.eglSwapBuffers(eglDisplay, eglSurface);
-                                    }
-                                    try {
-                                        Thread.sleep(1000 / 30);
-                                    } catch (InterruptedException e) {
-                                        Thread.currentThread().interrupt();
-                                    }
-                                }
-                                cameraSurfaceTexture.release();
-                                GLES20.glDeleteTextures(1, new int[]{cameraTextureId}, 0);
-                                egl10.eglDestroySurface(eglDisplay, eglSurface);
-                            } catch (CameraAccessException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onConfigureFailed( @NonNull CameraCaptureSession cameraCaptureSession) {
-                            Toast.makeText(CameraActivity.this, "Failed", Toast.LENGTH_SHORT).show();
-                        }
-                    },
-                    null
-            );
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void createCameraPreviewSession2() {
-        try {
-            // We configure the size of default buffer to be the size of camera preview we want.
-            cameraSurfaceTexture2.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-
-            // This is the output Surface we need to start preview.
-            Surface surface2 = new Surface(cameraSurfaceTexture2);
-
-            // We set up a CaptureRequest.Builder with the output Surface.
-            mPreviewRequestBuilder2 = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
-            mPreviewRequestBuilder2.addTarget(surface2);
-
-            // Here, we create a CameraCaptureSession for camera preview.
-            mCameraDevice.createCaptureSession(
-                    Arrays.asList(surface2),
-                    new CameraCaptureSession.StateCallback() {
-
-                        @Override
-                        public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
-                            // The camera is already closed
-                            if (null == mCameraDevice) {
-                                return;
-                            }
-
-                            mState = STATE_PREVIEW;
-
-                            // When the session is ready, we start displaying the preview.
-                            mCaptureSession2 = cameraCaptureSession;
-                            try {
-                                // Auto focus should be continuous for camera preview.
-                                mPreviewRequestBuilder2.set(
-                                        CaptureRequest.CONTROL_AF_MODE,
-                                        CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE
-                                );
-                                // Flash is automatically enabled when necessary.
-                                setAutoFlash(mPreviewRequestBuilder2);
-
-                                // Finally, we start displaying the camera preview.
-                                mPreviewRequest2 = mPreviewRequestBuilder2.build();
-                                mCaptureSession2.setRepeatingRequest(
-                                        mPreviewRequest2,
-                                        null,
-                                        mBackgroundHandler2);
-
                                 mMediaRecorder.start();
 
                                 // Render loop
                                 while (!Thread.currentThread().isInterrupted()) {
                                     if (mState == STATE_PREVIEW) {
+                                        if (!egl10.eglMakeCurrent(eglDisplay, eglSurfacePreview, eglSurfacePreview, eglContextPreview)) {
+                                            throw new RuntimeException("eglMakeCurrent failed " +
+                                                    android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
+                                        }
                                         if (textureView.getWidth() >= 0 && textureView.getHeight() >= 0)
                                             GLES20.glViewport(0, 0, textureView.getWidth(), textureView.getHeight());
 
@@ -788,15 +654,36 @@ public class CameraActivity extends AppCompatActivity {
 
                                         // Update the camera preview texture
                                         synchronized (this) {
-                                            cameraSurfaceTexture2.updateTexImage();
+                                            previewSurfaceTexture.updateTexImage();
                                         }
 
                                         // Draw camera preview
-                                        filter.draw(cameraTextureId2, textureView.getWidth(), textureView.getHeight());
+                                        filter.draw(previewTextureId, textureView.getWidth(), textureView.getHeight());
 
                                         // Flush
                                         GLES20.glFlush();
-                                        egl10.eglSwapBuffers(eglDisplay2, eglSurface2);
+                                        egl10.eglSwapBuffers(eglDisplay, eglSurfacePreview);
+
+                                        if (!egl10.eglMakeCurrent(eglDisplay, eglSurfaceRecord, eglSurfaceRecord, eglContextRecord)) {
+                                            throw new RuntimeException("eglMakeCurrent failed " +
+                                                    android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
+                                        }
+                                        if (textureView.getWidth() >= 0 && textureView.getHeight() >= 0)
+                                            GLES20.glViewport(0, 0, textureView.getWidth(), textureView.getHeight());
+
+                                        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+
+                                        // Update the camera preview texture
+                                        synchronized (this) {
+                                            recordSurfaceTexture.updateTexImage();
+                                        }
+
+                                        // Draw camera preview
+                                        filter.draw(recordTextureId, textureView.getWidth(), textureView.getHeight());
+
+                                        // Flush
+                                        GLES20.glFlush();
+                                        egl10.eglSwapBuffers(eglDisplay, eglSurfaceRecord);
                                     }
                                     try {
                                         Thread.sleep(1000 / 30);
@@ -804,9 +691,19 @@ public class CameraActivity extends AppCompatActivity {
                                         Thread.currentThread().interrupt();
                                     }
                                 }
-                                cameraSurfaceTexture2.release();
-                                GLES20.glDeleteTextures(1, new int[]{cameraTextureId2}, 0);
-                                egl10.eglDestroySurface(eglDisplay2, eglSurface2);
+                                if (!egl10.eglMakeCurrent(eglDisplay, eglSurfacePreview, eglSurfacePreview, eglContextPreview)) {
+                                    throw new RuntimeException("eglMakeCurrent failed " +
+                                            android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
+                                }
+                                previewSurfaceTexture.release();
+                                GLES20.glDeleteTextures(1, new int[]{previewTextureId}, 0);
+                                egl10.eglDestroySurface(eglDisplay, eglSurfacePreview);
+                                if (!egl10.eglMakeCurrent(eglDisplay, eglSurfaceRecord, eglSurfaceRecord, eglContextRecord)) {
+                                    throw new RuntimeException("eglMakeCurrent failed " +
+                                            android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
+                                }
+                                GLES20.glDeleteTextures(1, new int[]{recordTextureId}, 0);
+                                egl10.eglDestroySurface(eglDisplay, eglSurfaceRecord);
                             } catch (CameraAccessException e) {
                                 e.printStackTrace();
                             }
@@ -1207,7 +1104,7 @@ public class CameraActivity extends AppCompatActivity {
             filter.onAttach();
     }
 
-    private void initGL(SurfaceTexture texture) {
+    private void initGL(Object previewTexture, Object recordTexture) {
         egl10 = (EGL10) EGLContext.getEGL();
 
         eglDisplay = egl10.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
@@ -1248,10 +1145,13 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         int[] attrib_list = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE};
-        eglContext = egl10.eglCreateContext(eglDisplay, eglConfig, EGL10.EGL_NO_CONTEXT, attrib_list);
-        eglSurface = egl10.eglCreateWindowSurface(eglDisplay, eglConfig, texture, null);
+        eglContextPreview = egl10.eglCreateContext(eglDisplay, eglConfig, EGL10.EGL_NO_CONTEXT, attrib_list);
+        eglSurfacePreview = egl10.eglCreateWindowSurface(eglDisplay, eglConfig, previewTexture, null);
 
-        if (eglSurface == null || eglSurface == EGL10.EGL_NO_SURFACE) {
+        eglContextRecord = egl10.eglCreateContext(eglDisplay, eglConfig, eglContextPreview, attrib_list);
+        eglSurfaceRecord = egl10.eglCreateWindowSurface(eglDisplay, eglConfig, recordTexture, null);
+
+        if (eglSurfacePreview == null || eglSurfacePreview == EGL10.EGL_NO_SURFACE) {
             int error = egl10.eglGetError();
             if (error == EGL10.EGL_BAD_NATIVE_WINDOW) {
                 Log.e("eTalk", "eglCreateWindowSurface returned EGL10.EGL_BAD_NATIVE_WINDOW");
@@ -1261,58 +1161,8 @@ public class CameraActivity extends AppCompatActivity {
                     android.opengl.GLUtils.getEGLErrorString(error));
         }
 
-        if (!egl10.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext)) {
-            throw new RuntimeException("eglMakeCurrent failed " +
-                    android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
-        }
-    }
-
-    private void initGL2(Object texture) {
-        egl102 = (EGL10) EGLContext.getEGL();
-
-        eglDisplay2 = egl102.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
-        if (eglDisplay2 == EGL10.EGL_NO_DISPLAY) {
-            throw new RuntimeException("eglGetDisplay failed " +
-                    android.opengl.GLUtils.getEGLErrorString(egl102.eglGetError()));
-        }
-
-        int[] version = new int[2];
-        if (!egl102.eglInitialize(eglDisplay2, version)) {
-            throw new RuntimeException("eglInitialize failed " +
-                    android.opengl.GLUtils.getEGLErrorString(egl102.eglGetError()));
-        }
-
-        int[] configsCount = new int[1];
-        EGLConfig[] configs = new EGLConfig[1];
-        int[] configSpec = {
-                EGL10.EGL_RENDERABLE_TYPE,
-                EGL_OPENGL_ES2_BIT,
-                EGL10.EGL_RED_SIZE, 8,
-                EGL10.EGL_GREEN_SIZE, 8,
-                EGL10.EGL_BLUE_SIZE, 8,
-                EGL10.EGL_ALPHA_SIZE, 8,
-                EGL10.EGL_DEPTH_SIZE, 0,
-                EGL10.EGL_STENCIL_SIZE, 0,
-                EGL10.EGL_NONE
-        };
-
-        EGLConfig eglConfig = null;
-        if (!egl102.eglChooseConfig(eglDisplay2, configSpec, configs, 1, configsCount)) {
-            throw new IllegalArgumentException("eglChooseConfig failed " +
-                    android.opengl.GLUtils.getEGLErrorString(egl102.eglGetError()));
-        } else if (configsCount[0] > 0) {
-            eglConfig = configs[0];
-        }
-        if (eglConfig == null) {
-            throw new RuntimeException("eglConfig not initialized");
-        }
-
-        int[] attrib_list = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE};
-        eglContext2 = egl102.eglCreateContext(eglDisplay2, eglConfig, EGL10.EGL_NO_CONTEXT, attrib_list);
-        eglSurface2 = egl102.eglCreateWindowSurface(eglDisplay2, eglConfig, texture, null);
-
-        if (eglSurface2 == null || eglSurface2 == EGL10.EGL_NO_SURFACE) {
-            int error = egl102.eglGetError();
+        if (eglSurfaceRecord == null || eglSurfaceRecord == EGL10.EGL_NO_SURFACE) {
+            int error = egl10.eglGetError();
             if (error == EGL10.EGL_BAD_NATIVE_WINDOW) {
                 Log.e("eTalk", "eglCreateWindowSurface returned EGL10.EGL_BAD_NATIVE_WINDOW");
                 return;
@@ -1321,10 +1171,27 @@ public class CameraActivity extends AppCompatActivity {
                     android.opengl.GLUtils.getEGLErrorString(error));
         }
 
-        if (!egl102.eglMakeCurrent(eglDisplay2, eglSurface2, eglSurface2, eglContext2)) {
+        if (!egl10.eglMakeCurrent(eglDisplay, eglSurfacePreview, eglSurfacePreview, eglContextPreview)) {
             throw new RuntimeException("eglMakeCurrent failed " +
-                    android.opengl.GLUtils.getEGLErrorString(egl102.eglGetError()));
+                    android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
         }
+
+        previewTextureId = MyGLUtils.genTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES);
+        previewSurfaceTexture = new SurfaceTexture(previewTextureId);
+        Log.e("Test", " " + previewTextureId);
+        Log.e("Test", " " + eglSurfacePreview);
+        Log.e("Test", " " + eglContextPreview);
+
+        if (!egl10.eglMakeCurrent(eglDisplay, eglSurfaceRecord, eglSurfaceRecord, eglContextRecord)) {
+            throw new RuntimeException("eglMakeCurrent failed " +
+                    android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
+        }
+
+        recordTextureId = MyGLUtils.genTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES);
+        recordSurfaceTexture = new SurfaceTexture(recordTextureId);
+        Log.e("Test", " " + recordTextureId);
+        Log.e("Test", " " + eglSurfaceRecord);
+        Log.e("Test", " " + eglContextRecord);
     }
 
     /**
