@@ -41,7 +41,7 @@ public abstract class BaseFilter {
     final long START_TIME = System.currentTimeMillis();
     int iFrame = 0;
 
-    public BaseFilter(Context context) {
+    public BaseFilter(Context context, boolean isFrontCamera) {
         // Setup default Buffers
         if (VERTEX_BUF == null) {
             VERTEX_BUF = ByteBuffer.allocateDirect(SQUARE_COORDS.length * 4)
@@ -65,7 +65,11 @@ public abstract class BaseFilter {
         }
 
         if (PROGRAM == 0) {
-            PROGRAM = MyGLUtils.buildProgram(context, R.raw.vertext, R.raw.original_rtt);
+            PROGRAM = MyGLUtils.buildProgram(
+                    context,
+                    R.raw.vertext,
+                    isFrontCamera ? R.raw.base_front : R.raw.base_back
+            );
         }
     }
 

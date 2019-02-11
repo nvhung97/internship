@@ -8,8 +8,8 @@ import com.example.cpu11398_local.etalk.presentation.view.camera.Utils.MyGLUtils
 public class OriginalFilter extends BaseFilter {
     private int program;
 
-    public OriginalFilter(Context context) {
-        super(context);
+    public OriginalFilter(Context context, boolean isFrontCamera) {
+        super(context, isFrontCamera);
 
         // Build shaders
         program = MyGLUtils.buildProgram(context, R.raw.vertext, R.raw.original);

@@ -8,8 +8,8 @@ import com.example.cpu11398_local.etalk.presentation.view.camera.Utils.MyGLUtils
 public class TrianglesMosaicFilter extends BaseFilter {
     private int program;
 
-    public TrianglesMosaicFilter(Context context) {
-        super(context);
+    public TrianglesMosaicFilter(Context context, boolean isFrontCamera) {
+        super(context, isFrontCamera);
 
         // Build shaders
         program = MyGLUtils.buildProgram(context, R.raw.vertext, R.raw.triangles_mosaic);

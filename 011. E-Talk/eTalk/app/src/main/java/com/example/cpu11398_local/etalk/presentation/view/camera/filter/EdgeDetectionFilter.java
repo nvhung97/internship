@@ -8,8 +8,8 @@ import com.example.cpu11398_local.etalk.presentation.view.camera.Utils.MyGLUtils
 public class EdgeDetectionFilter extends BaseFilter {
     private int program;
 
-    public EdgeDetectionFilter(Context context) {
-        super(context);
+    public EdgeDetectionFilter(Context context, boolean isFrontCamera) {
+        super(context, isFrontCamera);
 
         // Build shaders
         program = MyGLUtils.buildProgram(context, R.raw.vertext, R.raw.edge_detection);

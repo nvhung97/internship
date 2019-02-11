@@ -8,8 +8,8 @@ import com.example.cpu11398_local.etalk.presentation.view.camera.Utils.MyGLUtils
 public class AsciiArtFilter extends BaseFilter {
     private int program;
 
-    public AsciiArtFilter(Context context) {
-        super(context);
+    public AsciiArtFilter(Context context, boolean isFrontCamera) {
+        super(context, isFrontCamera);
 
         // Build shaders
         program = MyGLUtils.buildProgram(context, R.raw.vertext, R.raw.ascii_art);

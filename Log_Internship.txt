@@ -572,6 +572,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://stackoverflow.com/a/14796504
 	- Detecting device orientation
 		+ https://stackoverflow.com/a/11239676
+	- Flip texture
+		+ https://stackoverflow.com/a/16519226
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/

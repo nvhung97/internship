@@ -174,12 +174,13 @@ public class CaptureActivity extends AppCompatActivity {
             if (filterMap.size() != 0) {
                 filterMap.clear();
             }
-            filterMap.append(R.id.capture_activity_original_filter, new OriginalFilter(CaptureActivity.this));
-            filterMap.append(R.id.capture_activity_legofied_filter, new LegofiedFilter(CaptureActivity.this));
-            filterMap.append(R.id.capture_activity_trianglesmosaic_filter, new TrianglesMosaicFilter(CaptureActivity.this));
-            filterMap.append(R.id.capture_activity_poligonization_filter, new PolygonizationFilter(CaptureActivity.this));
-            filterMap.append(R.id.capture_activity_asciiart_filter, new AsciiArtFilter(CaptureActivity.this));
-            filterMap.append(R.id.capture_activity_edgedetection_filter, new EdgeDetectionFilter(CaptureActivity.this));
+            boolean isFrontCamera = cameraChoice == CameraCharacteristics.LENS_FACING_FRONT;
+            filterMap.append(R.id.capture_activity_original_filter, new OriginalFilter(CaptureActivity.this, isFrontCamera));
+            filterMap.append(R.id.capture_activity_legofied_filter, new LegofiedFilter(CaptureActivity.this, isFrontCamera));
+            filterMap.append(R.id.capture_activity_trianglesmosaic_filter, new TrianglesMosaicFilter(CaptureActivity.this, isFrontCamera));
+            filterMap.append(R.id.capture_activity_poligonization_filter, new PolygonizationFilter(CaptureActivity.this, isFrontCamera));
+            filterMap.append(R.id.capture_activity_asciiart_filter, new AsciiArtFilter(CaptureActivity.this, isFrontCamera));
+            filterMap.append(R.id.capture_activity_edgedetection_filter, new EdgeDetectionFilter(CaptureActivity.this, isFrontCamera));
 
             setSelectedFilter(filterId);
 

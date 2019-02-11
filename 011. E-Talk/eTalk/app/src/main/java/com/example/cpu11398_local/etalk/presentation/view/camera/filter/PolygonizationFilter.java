@@ -8,8 +8,8 @@ import com.example.cpu11398_local.etalk.presentation.view.camera.Utils.MyGLUtils
 public class PolygonizationFilter extends BaseFilter {
     private int program;
 
-    public PolygonizationFilter(Context context) {
-        super(context);
+    public PolygonizationFilter(Context context, boolean isFrontCamera) {
+        super(context, isFrontCamera);
 
         // Build shaders
         program = MyGLUtils.buildProgram(context, R.raw.vertext, R.raw.polygonization);
