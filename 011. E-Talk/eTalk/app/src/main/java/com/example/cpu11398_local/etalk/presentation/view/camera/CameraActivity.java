@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.RectF;
@@ -18,7 +17,6 @@ import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
-import android.media.Image;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.opengl.GLES11Ext;
@@ -27,16 +25,17 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.TextureView;
@@ -55,12 +54,12 @@ import com.example.cpu11398_local.etalk.presentation.view.camera.filter.Original
 import com.example.cpu11398_local.etalk.presentation.view.camera.filter.PolygonizationFilter;
 import com.example.cpu11398_local.etalk.presentation.view.camera.filter.TrianglesMosaicFilter;
 import com.example.cpu11398_local.etalk.utils.Tool;
+import com.vincent.videocompressor.SamsungCameraTool;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import javax.microedition.khronos.egl.EGL10;
@@ -72,8 +71,6 @@ import javax.microedition.khronos.egl.EGLSurface;
 public class CameraActivity extends AppCompatActivity {
 
     private final int ANIMATION_DURATION = 500;
-    private final int EGL_OPENGL_ES2_BIT = 4;
-    private final int EGL_CONTEXT_CLIENT_VERSION = 0x3098;
 
     /**
      * OpenGL ES 2.0
@@ -89,7 +86,10 @@ public class CameraActivity extends AppCompatActivity {
     private SurfaceTexture previewSurfaceTexture;
     private int recordTextureId;
     private SurfaceTexture recordSurfaceTexture;
-    
+
+    /**
+     * Filters and map of filters
+     */
     private BaseFilter filter;
     private SparseArray<BaseFilter> filterMap = new SparseArray<>();
 
@@ -113,10 +113,11 @@ public class CameraActivity extends AppCompatActivity {
     private Button              btnSwith;
     private Button              btnCancel;
 
+
     /**
-     * Camera state: unknown.
+     * Camera state: Camera not working.
      */
-    private static final int STATE_UNKNOWN = -1;
+    private static final int STATE_NOT_WORK = -1;
 
     /**
      * Camera state: Showing camera preview.
@@ -126,12 +127,7 @@ public class CameraActivity extends AppCompatActivity {
     /**
      * Camera state: Picture was taken.
      */
-    private static final int STATE_PICTURE_TAKEN = 1;
-
-    /**
-     * Camera state: Camera not working.
-     */
-    private static final int STATE_NOT_WORK = 2;
+    private static final int STATE_VIDEO_RECORDED = 1;
 
     /**
      * Define current camera
@@ -165,7 +161,15 @@ public class CameraActivity extends AppCompatActivity {
 
     };
 
+    /**
+     * Used to record video
+     */
     private MediaRecorder mMediaRecorder;
+
+    /**
+     * Determine allow record video or not
+     */
+    private boolean isRecordVideoEnable = false;
 
     /**
      * Render on background
@@ -173,13 +177,13 @@ public class CameraActivity extends AppCompatActivity {
     private Runnable mCameraRender = new Runnable() {
         @Override
         public void run() {
-            mMediaRecorder = new MediaRecorder();
-            try {
+            if (isRecordVideoEnable) {
+                mMediaRecorder = new MediaRecorder();
                 setUpMediaRecorder();
-            } catch (IOException e) {
-                e.printStackTrace();
+                initGL(textureView.getSurfaceTexture(), mMediaRecorder.getSurface());
+            } else {
+                initGL(textureView.getSurfaceTexture(), null);
             }
-            initGL(textureView.getSurfaceTexture(), mMediaRecorder.getSurface());
 
             if (filterMap.size() != 0) {
                 filterMap.clear();
@@ -198,28 +202,6 @@ public class CameraActivity extends AppCompatActivity {
         }
     };
 
-    private void setUpMediaRecorder() throws IOException {
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mMediaRecorder.setOutputFile(mFile.getAbsolutePath());
-        mMediaRecorder.setVideoEncodingBitRate(10000000);
-        mMediaRecorder.setVideoFrameRate(30);
-        mMediaRecorder.setVideoSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        /*int rotation = getWindowManager().getDefaultDisplay().getRotation();
-        switch (mSensorOrientation) {
-            case SENSOR_ORIENTATION_DEFAULT_DEGREES:
-                mMediaRecorder.setOrientationHint(DEFAULT_ORIENTATIONS.get(rotation));
-                break;
-            case SENSOR_ORIENTATION_INVERSE_DEGREES:
-                mMediaRecorder.setOrientationHint(INVERSE_ORIENTATIONS.get(rotation));
-                break;
-        }*/
-        mMediaRecorder.prepare();
-    }
-
     /**
      * ID of the current {@link CameraDevice}.
      */
@@ -236,19 +218,14 @@ public class CameraActivity extends AppCompatActivity {
     private CameraDevice mCameraDevice;
 
     /**
+     * The {@link android.util.Size} of video recording.
+     */
+    private Size mVideoSize;
+
+    /**
      * The {@link android.util.Size} of camera preview.
      */
     private Size mPreviewSize;
-
-    /**
-     * The optionResolutionCamera {@link android.util.Size} user can choose.
-     */
-    private Size[] optionResolutionCamera;
-
-    /**
-     * Current optionResolutionCamera size
-     */
-    private int numChoice = 0;
 
     /**
      * Store current filter
@@ -282,7 +259,6 @@ public class CameraActivity extends AppCompatActivity {
             mCameraDevice = null;
             Tool.finishFailed(CameraActivity.this);
         }
-
     };
 
     /**
@@ -313,7 +289,7 @@ public class CameraActivity extends AppCompatActivity {
     /**
      * The current state of camera state for taking pictures.
      */
-    private int mState = STATE_UNKNOWN;
+    private int mState = STATE_NOT_WORK;
 
     /**
      * A {@link Semaphore} to prevent the app from exiting before closing the camera.
@@ -326,37 +302,50 @@ public class CameraActivity extends AppCompatActivity {
     private boolean mFlashSupported;
 
     /**
-     * Get some size from {@code choices} such as largest sizes has ratio 16:9, 4:3, 1:1.
-     * @param cameraChoices the list of sizes that the camera supports for the intended output class
+     * In this sample, we choose a video size with 3x4 aspect ratio. Also, we don't use sizes
+     * larger than 1080p, since MediaRecorder cannot handle such a high-resolution video.
+     *
+     * @param choices The list of available sizes
+     * @return The video size
      */
-    private void chooseOptionSize(Size[] cameraChoices) {
-        optionResolutionCamera = new Size[3];
-        /*btnResolution1.setEnabled(false);
-        btnResolution2.setEnabled(false);
-        btnResolution3.setEnabled(false);
-        for (Size choice : cameraChoices) {
-            if (optionResolutionCamera[0] == null) {
-                if (choice.getWidth() * 9 / 16 == choice.getHeight()) {
-                    optionResolutionCamera[0] = choice;
-                    btnResolution1.setEnabled(true);
-                    btnResolution1.setText("16:9");
-                }
+    private Size chooseVideoSize(Size[] choices) {
+        for (Size size : choices) {
+            if (size.getWidth() == size.getHeight() * 4 / 3 && size.getHeight() <= 1080) {
+                return size;
             }
-            if (optionResolutionCamera[1] == null) {
-                if (choice.getWidth() * 3 / 4 == choice.getHeight()) {
-                    optionResolutionCamera[1] = choice;
-                    btnResolution2.setEnabled(true);
-                    btnResolution2.setText("4:3");
-                }
+        }
+        Toast.makeText(this, "Couldn't find any suitable video size", Toast.LENGTH_SHORT).show();
+        return choices[choices.length - 1];
+    }
+
+    /**
+     * Given {@code choices} of {@code Size}s supported by a camera, chooses the smallest one whose
+     * width and height are at least as large as the respective requested values, and whose aspect
+     * ratio matches with the specified value.
+     *
+     * @param choices     The list of sizes that the camera supports for the intended output class
+     * @param width       The minimum desired width
+     * @param height      The minimum desired height
+     * @param aspectRatio The aspect ratio
+     * @return The optimal {@code Size}, or an arbitrary one if none were big enough
+     */
+    private Size chooseOptimalSize(Size[] choices, int width, int height, Size aspectRatio) {
+        // Collect the supported resolutions that are at least as big as the preview Surface
+        List<Size> bigEnough = new ArrayList<>();
+        for (Size option : choices) {
+            if (option.getHeight() == option.getWidth() * aspectRatio.getHeight() / aspectRatio.getWidth()
+                    && option.getWidth() >= width && option.getHeight() >= height) {
+                bigEnough.add(option);
             }
-            if (optionResolutionCamera[2] == null) {
-                if (choice.getWidth() * 1 / 1 == choice.getHeight()) {
-                    optionResolutionCamera[2] = choice;
-                    btnResolution3.setEnabled(true);
-                    btnResolution3.setText("1:1");
-                }
-            }
-        }*/
+        }
+
+        // Pick the smallest of those, assuming we found any
+        if (bigEnough.size() > 0) {
+            return Collections.min(bigEnough, new RecordActivity.CompareSizesByArea());
+        } else {
+            Toast.makeText(this, "Couldn't find any suitable preview size", Toast.LENGTH_SHORT).show();
+            return choices[0];
+        }
     }
 
     @Override
@@ -369,7 +358,7 @@ public class CameraActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         );
 
-        rootView        = findViewById(R.id.record_activity_root);
+        rootView        = findViewById(R.id.record_activity);
         actionView      = findViewById(R.id.record_activity_action);
         textureView     = findViewById(R.id.record_activity_texture);
         filterView      = findViewById(R.id.record_activity_lyt_filter);
@@ -417,15 +406,15 @@ public class CameraActivity extends AppCompatActivity {
             openCamera(textureView.getWidth(), textureView.getHeight(), cameraChoice);
         } else {
             textureView.setSurfaceTextureListener(mSurfaceTextureListener);
-        }
 
-        // Set ratio for action layout
-        Point size = new Point();
-        getWindowManager().getDefaultDisplay().getRealSize(size);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(rootView);
-        constraintSet.setDimensionRatio(actionView.getId(), size.x + ":" + (size.y - size.x * 4 / 3));
-        constraintSet.applyTo(rootView);
+            // Set ratio for action layout
+            Point size = new Point();
+            getWindowManager().getDefaultDisplay().getRealSize(size);
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(rootView);
+            constraintSet.setDimensionRatio(actionView.getId(), size.x + ":" + (size.y - size.x * 4 / 3));
+            constraintSet.applyTo(rootView);
+        }
 
         // Delete file if it existed
         if (mFile.exists()) {
@@ -435,15 +424,26 @@ public class CameraActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-        mMediaRecorder.stop();
-        mMediaRecorder.reset();
         closeCamera();
         stopBackgroundThread();
-        if (mState == STATE_PICTURE_TAKEN) {
-            //btnCapture.setVisibility(View.VISIBLE);
+        if (mState == STATE_PREVIEW) {
+            if (isRecordVideoEnable) {
+                isRecordVideoEnable = false;
+                mMediaRecorder.stop();
+                mMediaRecorder.reset();
+                if (mFile.exists()) {
+                    mFile.delete();
+                }
+                btnRecord.setVisibility(View.VISIBLE);
+                btnStopRecord.setVisibility(View.GONE);
+                btnSwith.setVisibility(View.VISIBLE);
+                clockView.setVisibility(View.GONE);
+            }
+        } else if (mState == STATE_VIDEO_RECORDED) {
+            btnRecord.setVisibility(View.VISIBLE);
             btnSwith.setVisibility(View.VISIBLE);
             btnTick.setVisibility(View.GONE);
-            //resolutionView.setVisibility(View.VISIBLE);
+            clockView.setVisibility(View.GONE);
         }
         mState = STATE_NOT_WORK;
         super.onPause();
@@ -486,21 +486,18 @@ public class CameraActivity extends AppCompatActivity {
                         CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP
                 );
                 if (map == null) {
-                    continue;
+                    throw new RuntimeException("Cannot get available preview/video sizes");
                 }
 
-                chooseOptionSize(map.getOutputSizes(SurfaceTexture.class));
-                /*switch (numChoice) {
-                    case 0:
-                        onChooseResolution1(null);
-                        break;
-                    case 1:
-                        onChooseResolution2(null);
-                        break;
-                    case 2:
-                        onChooseResolution3(null);
-                        break;
-                }*/
+                mVideoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder.class));
+                mPreviewSize = chooseOptimalSize(
+                        map.getOutputSizes(SurfaceTexture.class),
+                        height,
+                        width,
+                        mVideoSize
+                );
+
+                textureView.setAspectRatio(mPreviewSize.getHeight(), mPreviewSize.getWidth());
 
                 // Check if the flash is supported.
                 Boolean available = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
@@ -588,22 +585,30 @@ public class CameraActivity extends AppCompatActivity {
      */
     private void createCameraPreviewSession() {
         try {
-            // We configure the size of default buffer to be the size of camera preview we want.
-            previewSurfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-            recordSurfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-
-            // This is the output Surface we need to start preview.
-            Surface previewSurface = new Surface(previewSurfaceTexture);
-            Surface recordSurface = new Surface(recordSurfaceTexture);
+            List<Surface> surfaces = new ArrayList<>();
 
             // We set up a CaptureRequest.Builder with the output Surface.
             mPreviewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
+
+            // We configure the size of default buffer to be the size of camera preview we want.
+            previewSurfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
+
+            // This is the output Surface we need to start preview.
+            Surface previewSurface = new Surface(previewSurfaceTexture);
+
             mPreviewRequestBuilder.addTarget(previewSurface);
-            mPreviewRequestBuilder.addTarget(recordSurface);
+            surfaces.add(previewSurface);
+
+            if (isRecordVideoEnable) {
+                recordSurfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
+                Surface recordSurface = new Surface(recordSurfaceTexture);
+                mPreviewRequestBuilder.addTarget(recordSurface);
+                surfaces.add(recordSurface);
+            }
 
             // Here, we create a CameraCaptureSession for camera preview.
             mCameraDevice.createCaptureSession(
-                    Arrays.asList(previewSurface, recordSurface),
+                    surfaces,
                     new CameraCaptureSession.StateCallback() {
 
                         @Override
@@ -633,7 +638,10 @@ public class CameraActivity extends AppCompatActivity {
                                         null,
                                         mBackgroundHandler);
 
-                                mMediaRecorder.start();
+                                // Start record video if allowed
+                                if (isRecordVideoEnable) {
+                                    mMediaRecorder.start();
+                                }
 
                                 // Render loop
                                 while (!Thread.currentThread().isInterrupted()) {
@@ -659,26 +667,28 @@ public class CameraActivity extends AppCompatActivity {
                                         GLES20.glFlush();
                                         egl10.eglSwapBuffers(eglDisplay, eglSurfacePreview);
 
-                                        if (!egl10.eglMakeCurrent(eglDisplay, eglSurfaceRecord, eglSurfaceRecord, eglContextRecord)) {
-                                            throw new RuntimeException("eglMakeCurrent failed " +
-                                                    android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
+                                        if (isRecordVideoEnable) {
+                                            if (!egl10.eglMakeCurrent(eglDisplay, eglSurfaceRecord, eglSurfaceRecord, eglContextRecord)) {
+                                                throw new RuntimeException("eglMakeCurrent failed " +
+                                                        android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
+                                            }
+                                            if (textureView.getWidth() >= 0 && textureView.getHeight() >= 0)
+                                                GLES20.glViewport(0, 0, mVideoSize.getWidth(), mVideoSize.getHeight());
+
+                                            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+
+                                            // Update the camera preview texture
+                                            synchronized (this) {
+                                                recordSurfaceTexture.updateTexImage();
+                                            }
+
+                                            // Draw camera preview
+                                            filter.draw(recordTextureId, textureView.getWidth(), textureView.getHeight());
+
+                                            // Flush
+                                            GLES20.glFlush();
+                                            egl10.eglSwapBuffers(eglDisplay, eglSurfaceRecord);
                                         }
-                                        if (textureView.getWidth() >= 0 && textureView.getHeight() >= 0)
-                                            GLES20.glViewport(0, 0, textureView.getWidth(), textureView.getHeight());
-
-                                        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-
-                                        // Update the camera preview texture
-                                        synchronized (this) {
-                                            recordSurfaceTexture.updateTexImage();
-                                        }
-
-                                        // Draw camera preview
-                                        filter.draw(recordTextureId, textureView.getWidth(), textureView.getHeight());
-
-                                        // Flush
-                                        GLES20.glFlush();
-                                        egl10.eglSwapBuffers(eglDisplay, eglSurfaceRecord);
                                     }
                                     try {
                                         Thread.sleep(1000 / 30);
@@ -693,12 +703,14 @@ public class CameraActivity extends AppCompatActivity {
                                 previewSurfaceTexture.release();
                                 GLES20.glDeleteTextures(1, new int[]{previewTextureId}, 0);
                                 egl10.eglDestroySurface(eglDisplay, eglSurfacePreview);
-                                if (!egl10.eglMakeCurrent(eglDisplay, eglSurfaceRecord, eglSurfaceRecord, eglContextRecord)) {
-                                    throw new RuntimeException("eglMakeCurrent failed " +
-                                            android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
+                                if (isRecordVideoEnable) {
+                                    if (!egl10.eglMakeCurrent(eglDisplay, eglSurfaceRecord, eglSurfaceRecord, eglContextRecord)) {
+                                        throw new RuntimeException("eglMakeCurrent failed " +
+                                                android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
+                                    }
+                                    GLES20.glDeleteTextures(1, new int[]{recordTextureId}, 0);
+                                    egl10.eglDestroySurface(eglDisplay, eglSurfaceRecord);
                                 }
-                                GLES20.glDeleteTextures(1, new int[]{recordTextureId}, 0);
-                                egl10.eglDestroySurface(eglDisplay, eglSurfaceRecord);
                             } catch (CameraAccessException e) {
                                 e.printStackTrace();
                             }
@@ -762,60 +774,41 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     /**
-     * Saves a JPEG {@link Image} into the specified {@link File}.
-     */
-    private static class ImageSaver implements Runnable {
-
-        /**
-         * The JPEG image
-         */
-        private final Bitmap mBitmap;
-        /**
-         * The file we save the image into.
-         */
-        private final File mFile;
-
-        private final int mOrientation;
-
-        ImageSaver(Bitmap bitmap, File file, int orientation) {
-            mBitmap      = bitmap;
-            mFile        = file;
-            mOrientation = orientation;
-        }
-
-        @Override
-        public void run() {
-            try {
-                OutputStream outputStream = new FileOutputStream(mFile);
-                Tool.rotateImage(mBitmap, mOrientation)
-                        .compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                outputStream.flush();
-                outputStream.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
      * Execute when user press to finish capture
      * @param view
      */
     public void onRecordCancel(View view) {
-        if (mState == STATE_PICTURE_TAKEN) {
-            //btnCapture.setVisibility(View.VISIBLE);
+        if (mState == STATE_PREVIEW) {
+            if (isRecordVideoEnable) {
+                isRecordVideoEnable = false;
+                mMediaRecorder.stop();
+                mMediaRecorder.reset();
+                mBackgroundThread.interrupt();
+                BaseFilter.release();
+                if (mFile.exists()) {
+                    mFile.delete();
+                }
+                btnRecord.setVisibility(View.VISIBLE);
+                btnSwith.setVisibility(View.VISIBLE);
+                btnStopRecord.setVisibility(View.GONE);
+                clockView.setVisibility(View.GONE);
+                mBackgroundHandler.post(mCameraRender);
+            } else {
+                if (mFile.exists()) {
+                    mFile.delete();
+                }
+                orientationEventListener.disable();
+                Tool.finishFailed(this);
+            }
+        } else if (mState == STATE_VIDEO_RECORDED) {
+            btnRecord.setVisibility(View.VISIBLE);
             btnSwith.setVisibility(View.VISIBLE);
             btnTick.setVisibility(View.GONE);
-            //resolutionView.setVisibility(View.VISIBLE);
-            mBackgroundHandler.post(mCameraRender);
-        } else {
+            clockView.setVisibility(View.GONE);
             if (mFile.exists()) {
                 mFile.delete();
             }
-            orientationEventListener.disable();
-            Tool.finishFailed(this);
+            mBackgroundHandler.post(mCameraRender);
         }
     }
 
@@ -826,17 +819,37 @@ public class CameraActivity extends AppCompatActivity {
     public void onRecordExecute(View view) {
         mBackgroundThread.interrupt();
         BaseFilter.release();
-        mBackgroundHandler.post(new ImageSaver(
-                textureView.getBitmap(),
-                mFile,
-                mOrientation
-        ));
-        //btnCapture.setVisibility(View.GONE);
+        mState = STATE_NOT_WORK;
+        isRecordVideoEnable = true;
+        btnRecord.setVisibility(View.GONE);
         btnSwith.setVisibility(View.GONE);
-        btnTick.setVisibility(View.VISIBLE);
-        toggleFilterView(false, ANIMATION_DURATION);
-        //resolutionView.setVisibility(View.GONE);
-        mState = STATE_PICTURE_TAKEN;
+        btnStopRecord.setVisibility(View.VISIBLE);
+        clockView.setVisibility(View.VISIBLE);
+        clockView.setCountTime(0L);
+        mBackgroundHandler.post(mCameraRender);
+    }
+
+
+    /**
+     * Set up MediaRecoder
+     * @throws IOException
+     */
+    private void setUpMediaRecorder() {
+        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mMediaRecorder.setOutputFile(mFile.getAbsolutePath());
+        mMediaRecorder.setVideoEncodingBitRate(10000000);
+        mMediaRecorder.setVideoFrameRate(30);
+        mMediaRecorder.setVideoSize(mVideoSize.getHeight(), mVideoSize.getWidth());
+        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mMediaRecorder.setOrientationHint(mOrientation);
+        try {
+            mMediaRecorder.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -844,19 +857,14 @@ public class CameraActivity extends AppCompatActivity {
      * @param view
      */
     public void onRecordStop(View view) {
+        mMediaRecorder.stop();
+        mMediaRecorder.reset();
         mBackgroundThread.interrupt();
         BaseFilter.release();
-        mBackgroundHandler.post(new ImageSaver(
-                textureView.getBitmap(),
-                mFile,
-                mOrientation
-        ));
-        //btnCapture.setVisibility(View.GONE);
-        btnSwith.setVisibility(View.GONE);
+        btnStopRecord.setVisibility(View.GONE);
         btnTick.setVisibility(View.VISIBLE);
         toggleFilterView(false, ANIMATION_DURATION);
-        //resolutionView.setVisibility(View.GONE);
-        mState = STATE_PICTURE_TAKEN;
+        mState = STATE_VIDEO_RECORDED;
     }
 
     /**
@@ -879,11 +887,12 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     /**
-     * Execute when user press to use current captured image
+     * Execute when user press to use current recorded video
      * @param view
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onRecordTick(View view) {
+        mFile = SamsungCameraTool.FixSamsungBug(mFile);
         Intent data = new Intent();
         data.setData(Uri.fromFile(mFile));
         setResult(RESULT_OK, data);
@@ -983,8 +992,7 @@ public class CameraActivity extends AppCompatActivity {
         int[] configsCount = new int[1];
         EGLConfig[] configs = new EGLConfig[1];
         int[] configSpec = {
-                EGL10.EGL_RENDERABLE_TYPE,
-                EGL_OPENGL_ES2_BIT,
+                EGL10.EGL_RENDERABLE_TYPE, 4,
                 EGL10.EGL_RED_SIZE, 8,
                 EGL10.EGL_GREEN_SIZE, 8,
                 EGL10.EGL_BLUE_SIZE, 8,
@@ -1005,12 +1013,10 @@ public class CameraActivity extends AppCompatActivity {
             throw new RuntimeException("eglConfig not initialized");
         }
 
-        int[] attrib_list = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE};
+        int[] attrib_list = {0x3098, 2, EGL10.EGL_NONE};
+
         eglContextPreview = egl10.eglCreateContext(eglDisplay, eglConfig, EGL10.EGL_NO_CONTEXT, attrib_list);
         eglSurfacePreview = egl10.eglCreateWindowSurface(eglDisplay, eglConfig, previewTexture, null);
-
-        eglContextRecord = egl10.eglCreateContext(eglDisplay, eglConfig, eglContextPreview, attrib_list);
-        eglSurfaceRecord = egl10.eglCreateWindowSurface(eglDisplay, eglConfig, recordTexture, null);
 
         if (eglSurfacePreview == null || eglSurfacePreview == EGL10.EGL_NO_SURFACE) {
             int error = egl10.eglGetError();
@@ -1021,14 +1027,20 @@ public class CameraActivity extends AppCompatActivity {
             throw new RuntimeException("eglCreateWindowSurface failed " +
                     android.opengl.GLUtils.getEGLErrorString(error));
         }
-        if (eglSurfaceRecord == null || eglSurfaceRecord == EGL10.EGL_NO_SURFACE) {
-            int error = egl10.eglGetError();
-            if (error == EGL10.EGL_BAD_NATIVE_WINDOW) {
-                Log.e("eTalk", "eglCreateWindowSurface returned EGL10.EGL_BAD_NATIVE_WINDOW");
-                return;
+
+        if (recordTexture != null) {
+            eglContextRecord = egl10.eglCreateContext(eglDisplay, eglConfig, eglContextPreview, attrib_list);
+            eglSurfaceRecord = egl10.eglCreateWindowSurface(eglDisplay, eglConfig, recordTexture, null);
+
+            if (eglSurfaceRecord == null || eglSurfaceRecord == EGL10.EGL_NO_SURFACE) {
+                int error = egl10.eglGetError();
+                if (error == EGL10.EGL_BAD_NATIVE_WINDOW) {
+                    Log.e("eTalk", "eglCreateWindowSurface returned EGL10.EGL_BAD_NATIVE_WINDOW");
+                    return;
+                }
+                throw new RuntimeException("eglCreateWindowSurface failed " +
+                        android.opengl.GLUtils.getEGLErrorString(error));
             }
-            throw new RuntimeException("eglCreateWindowSurface failed " +
-                    android.opengl.GLUtils.getEGLErrorString(error));
         }
 
         if (!egl10.eglMakeCurrent(eglDisplay, eglSurfacePreview, eglSurfacePreview, eglContextPreview)) {
@@ -1038,12 +1050,14 @@ public class CameraActivity extends AppCompatActivity {
         previewTextureId = MyGLUtils.genTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES);
         previewSurfaceTexture = new SurfaceTexture(previewTextureId);
 
-        if (!egl10.eglMakeCurrent(eglDisplay, eglSurfaceRecord, eglSurfaceRecord, eglContextRecord)) {
-            throw new RuntimeException("eglMakeCurrent failed " +
-                    android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
+        if (recordTexture != null) {
+            if (!egl10.eglMakeCurrent(eglDisplay, eglSurfaceRecord, eglSurfaceRecord, eglContextRecord)) {
+                throw new RuntimeException("eglMakeCurrent failed " +
+                        android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
+            }
+            recordTextureId = MyGLUtils.genTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES);
+            recordSurfaceTexture = new SurfaceTexture(recordTextureId);
         }
-        recordTextureId = MyGLUtils.genTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES);
-        recordSurfaceTexture = new SurfaceTexture(recordTextureId);
     }
 
     /**
@@ -1052,10 +1066,10 @@ public class CameraActivity extends AppCompatActivity {
      * @return
      */
     private int getImageOrientation(int deviceOrientation) {
-        //   225\ 180 /135
+        //   225\ 180  /135
         //       \   /
         //        \ /
-        //    270  o  90
+        //    270  o   90
         //        / \
         //       /   \
         //   315/  0  \45
