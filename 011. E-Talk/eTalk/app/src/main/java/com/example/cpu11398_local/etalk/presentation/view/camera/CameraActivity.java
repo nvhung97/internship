@@ -42,10 +42,10 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.presentation.custom.AutoFitTextureView;
+import com.example.cpu11398_local.etalk.presentation.custom.ClockView;
 import com.example.cpu11398_local.etalk.presentation.view.camera.Utils.MyGLUtils;
 import com.example.cpu11398_local.etalk.presentation.view.camera.filter.AsciiArtFilter;
 import com.example.cpu11398_local.etalk.presentation.view.camera.filter.BaseFilter;
@@ -85,14 +85,13 @@ public class CameraActivity extends AppCompatActivity {
     private EGLContext eglContextRecord;
     private EGLSurface eglSurfaceRecord;
 
-    private BaseFilter filter;
-
-    private SparseArray<BaseFilter> filterMap = new SparseArray<>();
-
     private int previewTextureId;
     private SurfaceTexture previewSurfaceTexture;
     private int recordTextureId;
     private SurfaceTexture recordSurfaceTexture;
+    
+    private BaseFilter filter;
+    private SparseArray<BaseFilter> filterMap = new SparseArray<>();
 
     /**
      * Detect Device's orientation.
@@ -107,14 +106,12 @@ public class CameraActivity extends AppCompatActivity {
     private ConstraintLayout    actionView;
     private ConstraintLayout    filterView;
     private AutoFitTextureView  textureView;
-    private LinearLayout        resolutionView;
-    private Button btnCapture;
-    private Button btnTick;
-    private Button btnSwith;
-    private Button btnCancel;
-    private Button btnResolution1;
-    private Button btnResolution2;
-    private Button btnResolution3;
+    private ClockView           clockView;
+    private Button              btnRecord;
+    private Button              btnStopRecord;
+    private Button              btnTick;
+    private Button              btnSwith;
+    private Button              btnCancel;
 
     /**
      * Camera state: unknown.
@@ -188,12 +185,12 @@ public class CameraActivity extends AppCompatActivity {
                 filterMap.clear();
             }
             boolean isFrontCamera = cameraChoice == CameraCharacteristics.LENS_FACING_FRONT;
-            filterMap.append(R.id.capture_activity_original_filter, new OriginalFilter(CameraActivity.this, isFrontCamera));
-            filterMap.append(R.id.capture_activity_legofied_filter, new LegofiedFilter(CameraActivity.this, isFrontCamera));
-            filterMap.append(R.id.capture_activity_trianglesmosaic_filter, new TrianglesMosaicFilter(CameraActivity.this, isFrontCamera));
-            filterMap.append(R.id.capture_activity_poligonization_filter, new PolygonizationFilter(CameraActivity.this, isFrontCamera));
-            filterMap.append(R.id.capture_activity_asciiart_filter, new AsciiArtFilter(CameraActivity.this, isFrontCamera));
-            filterMap.append(R.id.capture_activity_edgedetection_filter, new EdgeDetectionFilter(CameraActivity.this, isFrontCamera));
+            filterMap.append(R.id.record_activity_original_filter, new OriginalFilter(CameraActivity.this, isFrontCamera));
+            filterMap.append(R.id.record_activity_legofied_filter, new LegofiedFilter(CameraActivity.this, isFrontCamera));
+            filterMap.append(R.id.record_activity_trianglesmosaic_filter, new TrianglesMosaicFilter(CameraActivity.this, isFrontCamera));
+            filterMap.append(R.id.record_activity_poligonization_filter, new PolygonizationFilter(CameraActivity.this, isFrontCamera));
+            filterMap.append(R.id.record_activity_asciiart_filter, new AsciiArtFilter(CameraActivity.this, isFrontCamera));
+            filterMap.append(R.id.record_activity_edgedetection_filter, new EdgeDetectionFilter(CameraActivity.this, isFrontCamera));
 
             setSelectedFilter(filterId);
 
@@ -256,7 +253,7 @@ public class CameraActivity extends AppCompatActivity {
     /**
      * Store current filter
      */
-    private int filterId = R.id.capture_activity_original_filter;
+    private int filterId = R.id.record_activity_original_filter;
 
     /**
      * {@link CameraDevice.StateCallback} is called when {@link CameraDevice} changes its state.
@@ -334,7 +331,7 @@ public class CameraActivity extends AppCompatActivity {
      */
     private void chooseOptionSize(Size[] cameraChoices) {
         optionResolutionCamera = new Size[3];
-        btnResolution1.setEnabled(false);
+        /*btnResolution1.setEnabled(false);
         btnResolution2.setEnabled(false);
         btnResolution3.setEnabled(false);
         for (Size choice : cameraChoices) {
@@ -359,31 +356,29 @@ public class CameraActivity extends AppCompatActivity {
                     btnResolution3.setText("1:1");
                 }
             }
-        }
+        }*/
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_capture);
+        setContentView(R.layout.activity_camera);
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         );
 
-        rootView        = findViewById(R.id.capture_activity);
-        actionView      = findViewById(R.id.capture_activity_action);
-        textureView     = findViewById(R.id.capture_activity_texture);
-        filterView      = findViewById(R.id.capture_activity_lyt_filter);
-        resolutionView  = findViewById(R.id.capture_activity_resolution);
-        btnCapture      = findViewById(R.id.capture_activity_capture);
-        btnTick         = findViewById(R.id.capture_activity_tick);
-        btnSwith        = findViewById(R.id.capture_activity_switch);
-        btnCancel       = findViewById(R.id.capture_activity_cancel);
-        btnResolution1  = findViewById(R.id.capture_activity_resolution_1);
-        btnResolution2  = findViewById(R.id.capture_activity_resolution_2);
-        btnResolution3  = findViewById(R.id.capture_activity_resolution_3);
+        rootView        = findViewById(R.id.record_activity_root);
+        actionView      = findViewById(R.id.record_activity_action);
+        textureView     = findViewById(R.id.record_activity_texture);
+        filterView      = findViewById(R.id.record_activity_lyt_filter);
+        clockView       = findViewById(R.id.record_activity_time);
+        btnRecord       = findViewById(R.id.record_activity_record);
+        btnStopRecord   = findViewById(R.id.record_activity_stop_record);
+        btnTick         = findViewById(R.id.record_activity_tick);
+        btnSwith        = findViewById(R.id.record_activity_switch);
+        btnCancel       = findViewById(R.id.record_activity_cancel);
 
         // Hide filter View
         filterView.post(() -> toggleFilterView(false, 0));
@@ -445,10 +440,10 @@ public class CameraActivity extends AppCompatActivity {
         closeCamera();
         stopBackgroundThread();
         if (mState == STATE_PICTURE_TAKEN) {
-            btnCapture.setVisibility(View.VISIBLE);
+            //btnCapture.setVisibility(View.VISIBLE);
             btnSwith.setVisibility(View.VISIBLE);
             btnTick.setVisibility(View.GONE);
-            resolutionView.setVisibility(View.VISIBLE);
+            //resolutionView.setVisibility(View.VISIBLE);
         }
         mState = STATE_NOT_WORK;
         super.onPause();
@@ -495,7 +490,7 @@ public class CameraActivity extends AppCompatActivity {
                 }
 
                 chooseOptionSize(map.getOutputSizes(SurfaceTexture.class));
-                switch (numChoice) {
+                /*switch (numChoice) {
                     case 0:
                         onChooseResolution1(null);
                         break;
@@ -505,7 +500,7 @@ public class CameraActivity extends AppCompatActivity {
                     case 2:
                         onChooseResolution3(null);
                         break;
-                }
+                }*/
 
                 // Check if the flash is supported.
                 Boolean available = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
@@ -805,149 +800,15 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     /**
-     * Execute when user press to choose resolution 1
-     * @param view
-     */
-    public void onChooseResolution1(View view) {
-        if (mState == STATE_NOT_WORK) return;
-        mState = STATE_NOT_WORK;
-        numChoice = 0;
-        mPreviewSize = optionResolutionCamera[numChoice];
-        if (mCameraId != null) {
-            mBackgroundThread.interrupt();
-            BaseFilter.release();
-            clearSurface(textureView.getSurfaceTexture());
-            textureView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-            mBackgroundHandler.post(mCameraRender);
-        } else {
-            textureView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-        }
-
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(rootView);
-        constraintSet.connect(textureView.getId(), ConstraintSet.BOTTOM, rootView.getId(), ConstraintSet.BOTTOM);
-        constraintSet.applyTo(rootView);
-
-        btnResolution1.setTextColor(ContextCompat.getColor(this, R.color.colorETalkClickLight));
-        btnResolution2.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
-        btnResolution3.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
-    }
-
-    /**
-     * Execute when user press to choose resolution 2
-     * @param view
-     */
-    public void onChooseResolution2(View view) {
-        if (mState == STATE_NOT_WORK) return;
-        mState = STATE_NOT_WORK;
-        numChoice = 1;
-        mPreviewSize = optionResolutionCamera[numChoice];
-        if (mCameraId != null) {
-            mBackgroundThread.interrupt();
-            BaseFilter.release();
-            clearSurface(textureView.getSurfaceTexture());
-            textureView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-            mBackgroundHandler.post(mCameraRender);
-        } else {
-            textureView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-        }
-
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(rootView);
-        constraintSet.connect(textureView.getId(), ConstraintSet.BOTTOM, actionView.getId(), ConstraintSet.TOP);
-        constraintSet.applyTo(rootView);
-
-        btnResolution1.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
-        btnResolution2.setTextColor(ContextCompat.getColor(this, R.color.colorETalkClickLight));
-        btnResolution3.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
-    }
-
-    /**
-     * Execute when user press to choose resolution 3
-     * @param view
-     */
-    public void onChooseResolution3(View view) {
-        if (mState == STATE_NOT_WORK) return;
-        mState = STATE_NOT_WORK;
-        numChoice = 2;
-        mPreviewSize = optionResolutionCamera[numChoice];
-        if (mCameraId != null) {
-            mBackgroundThread.interrupt();
-            BaseFilter.release();
-            clearSurface(textureView.getSurfaceTexture());
-            textureView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-            mBackgroundHandler.post(mCameraRender);
-        } else {
-            textureView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-        }
-
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(rootView);
-        constraintSet.connect(textureView.getId(), ConstraintSet.BOTTOM, actionView.getId(), ConstraintSet.TOP);
-        constraintSet.applyTo(rootView);
-
-        btnResolution1.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
-        btnResolution2.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
-        btnResolution3.setTextColor(ContextCompat.getColor(this, R.color.colorETalkClickLight));
-    }
-
-    /**
-     * Clear the given surface Texture by attaching a GL context and clearing the surface.
-     * @param texture a valid SurfaceTexture
-     */
-    private void clearSurface(SurfaceTexture texture) {
-        if(texture == null){
-            return;
-        }
-
-        EGL10 egl = (EGL10) EGLContext.getEGL();
-        EGLDisplay display = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
-        egl.eglInitialize(display, null);
-
-        int[] attribList = {
-                EGL10.EGL_RED_SIZE, 8,
-                EGL10.EGL_GREEN_SIZE, 8,
-                EGL10.EGL_BLUE_SIZE, 8,
-                EGL10.EGL_ALPHA_SIZE, 8,
-                EGL10.EGL_RENDERABLE_TYPE,
-                EGL10.EGL_WINDOW_BIT,
-                EGL10.EGL_NONE, 0, // placeholder for recordable [@-3]
-                EGL10.EGL_NONE
-        };
-        EGLConfig[] configs = new EGLConfig[1];
-        int[] numConfigs = new int[1];
-        egl.eglChooseConfig(display, attribList, configs, configs.length, numConfigs);
-        EGLConfig config = configs[0];
-        EGLContext context = egl.eglCreateContext(display, config, EGL10.EGL_NO_CONTEXT, new int[]{
-                12440, 2,
-                EGL10.EGL_NONE
-        });
-        EGLSurface eglSurface = egl.eglCreateWindowSurface(display, config, texture,
-                new int[]{
-                        EGL10.EGL_NONE
-                });
-
-        egl.eglMakeCurrent(display, eglSurface, eglSurface, context);
-        GLES20.glClearColor(0, 0, 0, 1);
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-        egl.eglSwapBuffers(display, eglSurface);
-        egl.eglDestroySurface(display, eglSurface);
-        egl.eglMakeCurrent(display, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE,
-                EGL10.EGL_NO_CONTEXT);
-        egl.eglDestroyContext(display, context);
-        egl.eglTerminate(display);
-    }
-
-    /**
      * Execute when user press to finish capture
      * @param view
      */
-    public void onCaptureCancel(View view) {
+    public void onRecordCancel(View view) {
         if (mState == STATE_PICTURE_TAKEN) {
-            btnCapture.setVisibility(View.VISIBLE);
+            //btnCapture.setVisibility(View.VISIBLE);
             btnSwith.setVisibility(View.VISIBLE);
             btnTick.setVisibility(View.GONE);
-            resolutionView.setVisibility(View.VISIBLE);
+            //resolutionView.setVisibility(View.VISIBLE);
             mBackgroundHandler.post(mCameraRender);
         } else {
             if (mFile.exists()) {
@@ -962,7 +823,7 @@ public class CameraActivity extends AppCompatActivity {
      * Execute when user press to capture image
      * @param view
      */
-    public void onCaptureExecute(View view) {
+    public void onRecordExecute(View view) {
         mBackgroundThread.interrupt();
         BaseFilter.release();
         mBackgroundHandler.post(new ImageSaver(
@@ -970,11 +831,31 @@ public class CameraActivity extends AppCompatActivity {
                 mFile,
                 mOrientation
         ));
-        btnCapture.setVisibility(View.GONE);
+        //btnCapture.setVisibility(View.GONE);
         btnSwith.setVisibility(View.GONE);
         btnTick.setVisibility(View.VISIBLE);
         toggleFilterView(false, ANIMATION_DURATION);
-        resolutionView.setVisibility(View.GONE);
+        //resolutionView.setVisibility(View.GONE);
+        mState = STATE_PICTURE_TAKEN;
+    }
+
+    /**
+     * Execute when user press to stop record
+     * @param view
+     */
+    public void onRecordStop(View view) {
+        mBackgroundThread.interrupt();
+        BaseFilter.release();
+        mBackgroundHandler.post(new ImageSaver(
+                textureView.getBitmap(),
+                mFile,
+                mOrientation
+        ));
+        //btnCapture.setVisibility(View.GONE);
+        btnSwith.setVisibility(View.GONE);
+        btnTick.setVisibility(View.VISIBLE);
+        toggleFilterView(false, ANIMATION_DURATION);
+        //resolutionView.setVisibility(View.GONE);
         mState = STATE_PICTURE_TAKEN;
     }
 
@@ -982,7 +863,7 @@ public class CameraActivity extends AppCompatActivity {
      * Execute when user press to switch camera
      * @param view
      */
-    public void onCaptureSwitch(View view) {
+    public void onRecordSwitch(View view) {
         if (mState == STATE_NOT_WORK) return;
         mState = STATE_NOT_WORK;
         mBackgroundThread.interrupt();
@@ -1002,7 +883,7 @@ public class CameraActivity extends AppCompatActivity {
      * @param view
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void onCaptureTick(View view) {
+    public void onRecordTick(View view) {
         Intent data = new Intent();
         data.setData(Uri.fromFile(mFile));
         setResult(RESULT_OK, data);
@@ -1014,7 +895,7 @@ public class CameraActivity extends AppCompatActivity {
      * @param view
      */
     public void onShowFilter(View view) {
-        if (view.getId() == R.id.capture_activity_texture) {
+        if (view.getId() == R.id.record_activity_texture) {
             toggleFilterView(false, ANIMATION_DURATION);
         } else {
             toggleFilterView(filterView.getTranslationY() != 0.0f, ANIMATION_DURATION);
@@ -1029,33 +910,20 @@ public class CameraActivity extends AppCompatActivity {
                     .alpha(1.0f)
                     .setDuration(duration)
                     .start();
-            ((View)btnCapture.getParent())
+            ((View)btnRecord.getParent())
                     .animate()
-                    .translationY((filterView.getHeight() - btnResolution1.getHeight()) / 2)
+                    .translationY(filterView.getHeight() / 2)
                     .setDuration(duration)
                     .start();
             ((View)btnCancel.getParent())
                     .animate()
-                    .translationY((filterView.getHeight() - btnResolution1.getHeight()) / 2)
+                    .translationY(filterView.getHeight() / 2)
                     .setDuration(duration)
                     .start();
             ((View)btnSwith.getParent())
                     .animate()
-                    .translationY((filterView.getHeight() - btnResolution1.getHeight()) / 2)
+                    .translationY(filterView.getHeight() / 2)
                     .setDuration(duration)
-                    .start();
-            resolutionView
-                    .animate()
-                    .translationY(resolutionView.getHeight())
-                    .alpha(0.0f)
-                    .setDuration(duration)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            resolutionView.setVisibility(View.GONE);
-                            resolutionView.animate().setListener(null);
-                        }
-                    })
                     .start();
         } else {
             filterView
@@ -1064,7 +932,7 @@ public class CameraActivity extends AppCompatActivity {
                     .alpha(0.0f)
                     .setDuration(duration)
                     .start();
-            ((View)btnCapture.getParent())
+            ((View)btnRecord.getParent())
                     .animate()
                     .translationY(0)
                     .setDuration(duration)
@@ -1077,13 +945,6 @@ public class CameraActivity extends AppCompatActivity {
             ((View)btnSwith.getParent())
                     .animate()
                     .translationY(0)
-                    .setDuration(duration)
-                    .start();
-            resolutionView.setVisibility(View.VISIBLE);
-            resolutionView
-                    .animate()
-                    .translationY(0)
-                    .alpha(1.0f)
                     .setDuration(duration)
                     .start();
         }
@@ -1160,7 +1021,6 @@ public class CameraActivity extends AppCompatActivity {
             throw new RuntimeException("eglCreateWindowSurface failed " +
                     android.opengl.GLUtils.getEGLErrorString(error));
         }
-
         if (eglSurfaceRecord == null || eglSurfaceRecord == EGL10.EGL_NO_SURFACE) {
             int error = egl10.eglGetError();
             if (error == EGL10.EGL_BAD_NATIVE_WINDOW) {
@@ -1175,23 +1035,15 @@ public class CameraActivity extends AppCompatActivity {
             throw new RuntimeException("eglMakeCurrent failed " +
                     android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
         }
-
         previewTextureId = MyGLUtils.genTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES);
         previewSurfaceTexture = new SurfaceTexture(previewTextureId);
-        Log.e("Test", " " + previewTextureId);
-        Log.e("Test", " " + eglSurfacePreview);
-        Log.e("Test", " " + eglContextPreview);
 
         if (!egl10.eglMakeCurrent(eglDisplay, eglSurfaceRecord, eglSurfaceRecord, eglContextRecord)) {
             throw new RuntimeException("eglMakeCurrent failed " +
                     android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
         }
-
         recordTextureId = MyGLUtils.genTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES);
         recordSurfaceTexture = new SurfaceTexture(recordTextureId);
-        Log.e("Test", " " + recordTextureId);
-        Log.e("Test", " " + eglSurfaceRecord);
-        Log.e("Test", " " + eglContextRecord);
     }
 
     /**

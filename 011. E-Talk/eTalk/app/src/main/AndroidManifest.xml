@@ -98,7 +98,8 @@
         <activity
             android:name=".presentation.view.camera.CaptureActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".presentation.view.camera.RecordActivity" />
+        <activity android:name=".presentation.view.camera.RecordActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".presentation.view.camera.CameraActivity"
             android:screenOrientation="portrait" />
     </application>

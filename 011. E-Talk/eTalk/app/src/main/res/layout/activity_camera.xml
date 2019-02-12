@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/capture_activity"
+    android:id="@+id/record_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBlack"
-    tools:context=".presentation.view.camera.CaptureActivity">
+    tools:context=".presentation.view.camera.CameraActivity">
 
     <com.example.cpu11398_local.etalk.presentation.custom.AutoFitTextureView
-        android:id="@+id/capture_activity_texture"
+        android:id="@+id/record_activity_texture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="onShowFilter"
@@ -18,7 +18,7 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <ImageButton
-        android:id="@+id/capture_activity_back"
+        android:id="@+id/record_activity_back"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/ic_arrow_back"
@@ -28,7 +28,7 @@
         android:onClick="onBackPressed"/>
 
     <ImageButton
-        android:id="@+id/capture_activity_filter"
+        android:id="@+id/record_activity_filter"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/btn_filter"
@@ -39,15 +39,28 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
+    <com.example.cpu11398_local.etalk.presentation.custom.ClockView
+        android:id="@+id/record_activity_time"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/capture_activity_action"
+        android:id="@+id/record_activity_action"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="9:4"
         android:background="@color/colorBlack25Transparent"
         app:layout_constraintBottom_toBottomOf="parent">
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/capture_activity_lyt_filter"
+            android:id="@+id/record_activity_lyt_filter"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="6:1">
@@ -56,7 +69,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <ImageButton
-                    android:id="@+id/capture_activity_original_filter"
+                    android:id="@+id/record_activity_original_filter"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -73,7 +86,7 @@
                     android:background="@drawable/filter_background"
                     android:onClick="onFilterSelected"/>
                 <ImageButton
-                    android:id="@+id/capture_activity_legofied_filter"
+                    android:id="@+id/record_activity_legofied_filter"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -90,7 +103,7 @@
                     android:background="@drawable/filter_background"
                     android:onClick="onFilterSelected"/>
                 <ImageButton
-                    android:id="@+id/capture_activity_trianglesmosaic_filter"
+                    android:id="@+id/record_activity_trianglesmosaic_filter"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -107,7 +120,7 @@
                     android:background="@drawable/filter_background"
                     android:onClick="onFilterSelected"/>
                 <ImageButton
-                    android:id="@+id/capture_activity_poligonization_filter"
+                    android:id="@+id/record_activity_poligonization_filter"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -124,7 +137,7 @@
                     android:background="@drawable/filter_background"
                     android:onClick="onFilterSelected"/>
                 <ImageButton
-                    android:id="@+id/capture_activity_asciiart_filter"
+                    android:id="@+id/record_activity_asciiart_filter"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -141,7 +154,7 @@
                     android:background="@drawable/filter_background"
                     android:onClick="onFilterSelected"/>
                 <ImageButton
-                    android:id="@+id/capture_activity_edgedetection_filter"
+                    android:id="@+id/record_activity_edgedetection_filter"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -159,56 +172,23 @@
                     android:onClick="onFilterSelected"/>
             </LinearLayout>
         </android.support.constraint.ConstraintLayout>
-        <LinearLayout
-            android:id="@+id/capture_activity_resolution"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/capture_activity_resolution_1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.5"
-                android:textColor="@color/colorWhite"
-                android:textAllCaps="false"
-                android:background="@null"
-                android:onClick="onChooseResolution1"/>
-            <Button
-                android:id="@+id/capture_activity_resolution_2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textColor="@color/colorWhite"
-                android:textAllCaps="false"
-                android:background="@null"
-                android:onClick="onChooseResolution2"/>
-            <Button
-                android:id="@+id/capture_activity_resolution_3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.5"
-                android:textColor="@color/colorWhite"
-                android:textAllCaps="false"
-                android:background="@null"
-                android:onClick="onChooseResolution3"/>
-        </LinearLayout>
         <FrameLayout
-            android:id="@+id/capture_activity_left_action"
+            android:id="@+id/record_activity_left_action"
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/capture_activity_center_action"
+            app:layout_constraintRight_toLeftOf="@id/record_activity_center_action"
             app:layout_constraintBottom_toBottomOf="parent">
             <Button
-                android:id="@+id/capture_activity_cancel"
+                android:id="@+id/record_activity_cancel"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/btn_cancel"
-                android:onClick="onCaptureCancel"/>
+                android:onClick="onRecordCancel"/>
         </FrameLayout>
         <FrameLayout
-            android:id="@+id/capture_activity_center_action"
+            android:id="@+id/record_activity_center_action"
             android:layout_width="75dp"
             android:layout_height="75dp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -216,33 +196,40 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
             <Button
-                android:id="@+id/capture_activity_capture"
+                android:id="@+id/record_activity_stop_record"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/btn_capture"
-                android:onClick="onCaptureExecute"/>
+                android:background="@drawable/btn_stop_record"
+                android:onClick="onRecordStop"
+                android:visibility="gone"/>
+            <Button
+                android:id="@+id/record_activity_record"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_record"
+                android:onClick="onRecordExecute"/>
         </FrameLayout>
         <FrameLayout
-            android:id="@+id/capture_activity_right_action"
+            android:id="@+id/record_activity_right_action"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            app:layout_constraintLeft_toRightOf="@id/capture_activity_center_action"
+            app:layout_constraintLeft_toRightOf="@id/record_activity_center_action"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
             <Button
-                android:id="@+id/capture_activity_tick"
+                android:id="@+id/record_activity_tick"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/btn_tick"
                 android:visibility="gone"
-                android:onClick="onCaptureTick"/>
+                android:onClick="onRecordTick"/>
             <Button
-                android:id="@+id/capture_activity_switch"
+                android:id="@+id/record_activity_switch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/btn_switch"
-                android:onClick="onCaptureSwitch"/>
+                android:onClick="onRecordSwitch"/>
         </FrameLayout>
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>
