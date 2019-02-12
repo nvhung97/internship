@@ -708,6 +708,7 @@ public class CameraActivity extends AppCompatActivity {
                                         throw new RuntimeException("eglMakeCurrent failed " +
                                                 android.opengl.GLUtils.getEGLErrorString(egl10.eglGetError()));
                                     }
+                                    recordSurfaceTexture.release();
                                     GLES20.glDeleteTextures(1, new int[]{recordTextureId}, 0);
                                     egl10.eglDestroySurface(eglDisplay, eglSurfaceRecord);
                                 }
