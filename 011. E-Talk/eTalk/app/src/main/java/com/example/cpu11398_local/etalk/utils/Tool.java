@@ -24,9 +24,8 @@ import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import com.example.cpu11398_local.etalk.R;
-import com.example.cpu11398_local.etalk.presentation.view.camera.CaptureActivity;
 import com.example.cpu11398_local.etalk.presentation.view.camera.RecordActivity;
-
+import com.example.cpu11398_local.etalk.presentation.view.camera.CaptureActivity;
 import java.lang.reflect.Field;
 import java.util.concurrent.Callable;
 import static android.content.Context.INPUT_METHOD_SERVICE;

@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.example.cpu11398_local.etalk.R;
 import com.example.cpu11398_local.etalk.databinding.ActivityContentBinding;
 import com.example.cpu11398_local.etalk.presentation.view.BaseActivity;
-import com.example.cpu11398_local.etalk.presentation.view.camera.CameraActivity;
+import com.example.cpu11398_local.etalk.presentation.view.camera.RecordActivity;
 import com.example.cpu11398_local.etalk.presentation.view.content.pager_page.ContentPagerAdapter;
 import com.example.cpu11398_local.etalk.presentation.view.friend.AddFriendActivity;
 import com.example.cpu11398_local.etalk.presentation.view.group.CreateGroupActivity;
@@ -127,18 +127,22 @@ public class ContentActivity extends BaseActivity {
             Object[] data = event.getData();
             switch (event.getType()) {
                 case Event.CONTENT_ACTIVITY_CAMERA:
-                    if (ActivityCompat.checkSelfPermission(ContentActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                    if (ActivityCompat.checkSelfPermission(ContentActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat.checkSelfPermission(ContentActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat.checkSelfPermission(ContentActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
                             || ActivityCompat.checkSelfPermission(ContentActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(
                                 ContentActivity.this,
                                 new String[]{
+                                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                         Manifest.permission.CAMERA,
                                         Manifest.permission.RECORD_AUDIO
                                 },
                                 0
                         );
                     } else {
-                        startActivity(new Intent(ContentActivity.this, CameraActivity.class));
+                        startActivity(new Intent(ContentActivity.this, RecordActivity.class));
                     }
                     break;
                 case Event.CONTENT_ACTIVITY_SHOW_POPUP_MENU:

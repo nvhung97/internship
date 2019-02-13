@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/record_activity_root"
+    android:id="@+id/record_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBlack"
@@ -13,8 +13,31 @@
         android:id="@+id/record_activity_texture"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:onClick="onShowFilter"
         app:layout_constraintDimensionRatio="3:4"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageButton
+        android:id="@+id/record_activity_back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_arrow_back"
+        android:scaleType="fitXY"
+        android:padding="15dp"
+        android:background="@drawable/tool_bar_background_button"
+        android:onClick="onBackPressed"/>
+
+    <ImageButton
+        android:id="@+id/record_activity_filter"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/btn_filter"
+        android:scaleType="fitXY"
+        android:padding="15dp"
+        android:background="@drawable/tool_bar_background_button"
+        android:onClick="onShowFilter"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <com.example.cpu11398_local.etalk.presentation.custom.ClockView
         android:id="@+id/record_activity_time"
@@ -36,6 +59,119 @@
         app:layout_constraintDimensionRatio="9:4"
         android:background="@color/colorBlack25Transparent"
         app:layout_constraintBottom_toBottomOf="parent">
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/record_activity_lyt_filter"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="6:1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/record_activity_original_filter"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/original_filter"
+                    android:background="@drawable/filter_background"
+                    android:onClick="onFilterSelected"/>
+                <ImageButton
+                    android:id="@+id/record_activity_legofied_filter"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/legofied_filter"
+                    android:background="@drawable/filter_background"
+                    android:onClick="onFilterSelected"/>
+                <ImageButton
+                    android:id="@+id/record_activity_trianglesmosaic_filter"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/trianglesmosaic_filter"
+                    android:background="@drawable/filter_background"
+                    android:onClick="onFilterSelected"/>
+                <ImageButton
+                    android:id="@+id/record_activity_poligonization_filter"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/poligonization_filter"
+                    android:background="@drawable/filter_background"
+                    android:onClick="onFilterSelected"/>
+                <ImageButton
+                    android:id="@+id/record_activity_asciiart_filter"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/asciiart_filter"
+                    android:background="@drawable/filter_background"
+                    android:onClick="onFilterSelected"/>
+                <ImageButton
+                    android:id="@+id/record_activity_edgedetection_filter"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/edgedetection_filter"
+                    android:background="@drawable/filter_background"
+                    android:onClick="onFilterSelected"/>
+            </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
         <FrameLayout
             android:id="@+id/record_activity_left_action"
             android:layout_width="50dp"
@@ -46,8 +182,8 @@
             app:layout_constraintBottom_toBottomOf="parent">
             <Button
                 android:id="@+id/record_activity_cancel"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:background="@drawable/btn_cancel"
                 android:onClick="onRecordCancel"/>
         </FrameLayout>

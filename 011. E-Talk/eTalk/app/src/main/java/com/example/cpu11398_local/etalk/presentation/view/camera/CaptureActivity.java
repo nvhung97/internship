@@ -236,7 +236,7 @@ public class CaptureActivity extends AppCompatActivity {
             // This method is called when the camera is opened.  We start camera preview here.
             mCameraOpenCloseLock.release();
             mCameraDevice = cameraDevice;
-            mBackgroundHandler.post(mCameraRender);
+            startRenderThread();
         }
 
         @Override
@@ -380,7 +380,6 @@ public class CaptureActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        startBackgroundThread();
 
         // When the screen is turned off and turned back on, the SurfaceTexture is already
         // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
@@ -390,26 +389,24 @@ public class CaptureActivity extends AppCompatActivity {
             openCamera(textureView.getWidth(), textureView.getHeight(), cameraChoice);
         } else {
             textureView.setSurfaceTextureListener(mSurfaceTextureListener);
-        }
 
-        // Set ratio for action layout
-        Point size = new Point();
-        getWindowManager().getDefaultDisplay().getRealSize(size);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(rootView);
-        constraintSet.setDimensionRatio(actionView.getId(), size.x + ":" + (size.y - size.x * 4 / 3));
-        constraintSet.applyTo(rootView);
+            // Set ratio for action layout
+            Point size = new Point();
+            getWindowManager().getDefaultDisplay().getRealSize(size);
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(rootView);
+            constraintSet.setDimensionRatio(actionView.getId(), size.x + ":" + (size.y - size.x * 4 / 3));
+            constraintSet.applyTo(rootView);
+        }
 
         // Delete file if it existed
-        if (mFile.exists()) {
-            mFile.delete();
-        }
+        cleanFile();
     }
 
     @Override
     public void onPause() {
         closeCamera();
-        stopBackgroundThread();
+        stopRenderThread();
         if (mState == STATE_PICTURE_TAKEN) {
             btnCapture.setVisibility(View.VISIBLE);
             btnSwith.setVisibility(View.VISIBLE);
@@ -421,9 +418,7 @@ public class CaptureActivity extends AppCompatActivity {
     }
 
     public void onBackPressed(View view) {
-        if (mFile.exists()) {
-            mFile.delete();
-        }
+        cleanFile();
         orientationEventListener.disable();
         Tool.finishFailed(this);
     }
@@ -457,7 +452,7 @@ public class CaptureActivity extends AppCompatActivity {
                         CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP
                 );
                 if (map == null) {
-                    continue;
+                    throw new RuntimeException("Cannot get available preview/video sizes");
                 }
 
                 chooseOptionSize(map.getOutputSizes(SurfaceTexture.class));
@@ -513,10 +508,6 @@ public class CaptureActivity extends AppCompatActivity {
     private void closeCamera() {
         try {
             mCameraOpenCloseLock.acquire();
-            if (null != mCaptureSession) {
-                mCaptureSession.close();
-                mCaptureSession = null;
-            }
             if (null != mCameraDevice) {
                 mCameraDevice.close();
                 mCameraDevice = null;
@@ -530,28 +521,45 @@ public class CaptureActivity extends AppCompatActivity {
     }
 
     /**
+     * Closes the current {@link CameraCaptureSession}
+     */
+    private void closePreviewSession() {
+        if (mCaptureSession != null) {
+            mCaptureSession.close();
+            mCaptureSession = null;
+        }
+    }
+
+    /**
      * Starts a background thread and its {@link Handler}.
      */
-    private void startBackgroundThread() {
+    private void startRenderThread() {
         mBackgroundThread = new HandlerThread("CameraBackground");
         mBackgroundThread.start();
         mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
+        mBackgroundHandler.post(mCameraRender);
     }
 
     /**
      * Stops the background thread and its {@link Handler}.
      */
-    private void stopBackgroundThread() {
-        mBackgroundThread.interrupt();
-        mBackgroundThread.quitSafely();
-        try {
-            mBackgroundThread.join();
-            mBackgroundThread = null;
-            mBackgroundHandler = null;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    private void stopRenderThread() {
+        if (mBackgroundThread != null) {
+            try {
+                mCameraOpenCloseLock.acquire();
+                mBackgroundThread.interrupt();
+                mCameraOpenCloseLock.acquire();
+                mCameraOpenCloseLock.release();
+                closePreviewSession();
+                BaseFilter.release();
+                mBackgroundThread.quitSafely();
+                mBackgroundThread.join();
+                mBackgroundThread = null;
+                mBackgroundHandler = null;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        BaseFilter.release();
     }
 
     /**
@@ -560,7 +568,7 @@ public class CaptureActivity extends AppCompatActivity {
     private void createCameraPreviewSession() {
         try {
             // We configure the size of default buffer to be the size of camera preview we want.
-            cameraSurfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
+            cameraSurfaceTexture.setDefaultBufferSize(textureView.getHeight(), textureView.getWidth());
 
             // This is the output Surface we need to start preview.
             Surface surface = new Surface(cameraSurfaceTexture);
@@ -576,10 +584,6 @@ public class CaptureActivity extends AppCompatActivity {
 
                         @Override
                         public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
-                            // The camera is already closed
-                            if (null == mCameraDevice) {
-                                return;
-                            }
 
                             mState = STATE_PREVIEW;
 
@@ -604,10 +608,6 @@ public class CaptureActivity extends AppCompatActivity {
                                 // Render loop
                                 while (!Thread.currentThread().isInterrupted()) {
                                     if (mState == STATE_PREVIEW) {
-                                        if (textureView.getWidth() >= 0 && textureView.getHeight() >= 0)
-                                            GLES20.glViewport(0, 0, textureView.getWidth(), textureView.getHeight());
-
-                                        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
                                         // Update the camera preview texture
                                         synchronized (this) {
@@ -616,6 +616,7 @@ public class CaptureActivity extends AppCompatActivity {
 
                                         // Draw camera preview
                                         filter.draw(cameraTextureId, textureView.getWidth(), textureView.getHeight());
+
 
                                         // Flush
                                         GLES20.glFlush();
@@ -632,6 +633,8 @@ public class CaptureActivity extends AppCompatActivity {
                                 egl10.eglDestroySurface(eglDisplay, eglSurface);
                             } catch (CameraAccessException e) {
                                 e.printStackTrace();
+                            } finally {
+                                mCameraOpenCloseLock.release();
                             }
                         }
 
@@ -695,38 +698,17 @@ public class CaptureActivity extends AppCompatActivity {
     /**
      * Saves a JPEG {@link Image} into the specified {@link File}.
      */
-    private static class ImageSaver implements Runnable {
-
-        /**
-         * The JPEG image
-         */
-        private final Bitmap mBitmap;
-        /**
-         * The file we save the image into.
-         */
-        private final File mFile;
-
-        private final int mOrientation;
-
-        ImageSaver(Bitmap bitmap, File file, int orientation) {
-            mBitmap      = bitmap;
-            mFile        = file;
-            mOrientation = orientation;
-        }
-
-        @Override
-        public void run() {
-            try {
-                OutputStream outputStream = new FileOutputStream(mFile);
-                Tool.rotateImage(mBitmap, mOrientation)
-                        .compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                outputStream.flush();
-                outputStream.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    private void saveImage(Bitmap bitmap, File file, int orientation) {
+        try {
+            OutputStream outputStream = new FileOutputStream(file);
+            Tool.rotateImage(bitmap, mOrientation)
+                    .compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            outputStream.flush();
+            outputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -740,11 +722,10 @@ public class CaptureActivity extends AppCompatActivity {
         numChoice = 0;
         mPreviewSize = optionResolutionCamera[numChoice];
         if (mCameraId != null) {
-            mBackgroundThread.interrupt();
-            BaseFilter.release();
+            stopRenderThread();
             clearSurface(textureView.getSurfaceTexture());
             textureView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-            mBackgroundHandler.post(mCameraRender);
+            startRenderThread();
         } else {
             textureView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.getHeight());
         }
@@ -769,11 +750,10 @@ public class CaptureActivity extends AppCompatActivity {
         numChoice = 1;
         mPreviewSize = optionResolutionCamera[numChoice];
         if (mCameraId != null) {
-            mBackgroundThread.interrupt();
-            BaseFilter.release();
+            stopRenderThread();
             clearSurface(textureView.getSurfaceTexture());
             textureView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-            mBackgroundHandler.post(mCameraRender);
+            startRenderThread();
         } else {
             textureView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.getHeight());
         }
@@ -798,11 +778,10 @@ public class CaptureActivity extends AppCompatActivity {
         numChoice = 2;
         mPreviewSize = optionResolutionCamera[numChoice];
         if (mCameraId != null) {
-            mBackgroundThread.interrupt();
-            BaseFilter.release();
+            stopRenderThread();
             clearSurface(textureView.getSurfaceTexture());
             textureView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-            mBackgroundHandler.post(mCameraRender);
+            startRenderThread();
         } else {
             textureView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.getHeight());
         }
@@ -874,11 +853,9 @@ public class CaptureActivity extends AppCompatActivity {
             btnSwith.setVisibility(View.VISIBLE);
             btnTick.setVisibility(View.GONE);
             resolutionView.setVisibility(View.VISIBLE);
-            mBackgroundHandler.post(mCameraRender);
+            startRenderThread();
         } else {
-            if (mFile.exists()) {
-                mFile.delete();
-            }
+            cleanFile();
             orientationEventListener.disable();
             Tool.finishFailed(this);
         }
@@ -889,13 +866,12 @@ public class CaptureActivity extends AppCompatActivity {
      * @param view
      */
     public void onCaptureExecute(View view) {
-        mBackgroundThread.interrupt();
-        BaseFilter.release();
-        mBackgroundHandler.post(new ImageSaver(
+        stopRenderThread();
+        saveImage(
                 textureView.getBitmap(),
                 mFile,
                 mOrientation
-        ));
+        );
         btnCapture.setVisibility(View.GONE);
         btnSwith.setVisibility(View.GONE);
         btnTick.setVisibility(View.VISIBLE);
@@ -911,9 +887,8 @@ public class CaptureActivity extends AppCompatActivity {
     public void onCaptureSwitch(View view) {
         if (mState == STATE_NOT_WORK) return;
         mState = STATE_NOT_WORK;
-        mBackgroundThread.interrupt();
+        stopRenderThread();
         closeCamera();
-        BaseFilter.release();
         mCameraId = null;
         if (cameraChoice == CameraCharacteristics.LENS_FACING_BACK) {
             cameraChoice = CameraCharacteristics.LENS_FACING_FRONT;
@@ -957,17 +932,17 @@ public class CaptureActivity extends AppCompatActivity {
                     .start();
             ((View)btnCapture.getParent())
                     .animate()
-                    .translationY((filterView.getHeight() - btnResolution1.getHeight()) / 2)
+                    .translationY(filterView.getHeight()  / 2)
                     .setDuration(duration)
                     .start();
             ((View)btnCancel.getParent())
                     .animate()
-                    .translationY((filterView.getHeight() - btnResolution1.getHeight()) / 2)
+                    .translationY(filterView.getHeight() / 2)
                     .setDuration(duration)
                     .start();
             ((View)btnSwith.getParent())
                     .animate()
-                    .translationY((filterView.getHeight() - btnResolution1.getHeight()) / 2)
+                    .translationY(filterView.getHeight() / 2)
                     .setDuration(duration)
                     .start();
             resolutionView
@@ -1143,6 +1118,15 @@ public class CaptureActivity extends AppCompatActivity {
                         }
                     })
                     .start();
+        }
+    }
+
+    /**
+     * Delete unnecessary file
+     */
+    private void cleanFile() {
+        if (mFile.exists()) {
+            mFile.delete();
         }
     }
 }
