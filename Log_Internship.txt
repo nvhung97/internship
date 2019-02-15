@@ -578,6 +578,9 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Flip texture
 		+ https://stackoverflow.com/a/16519226
 
+18:20 15/02/2019
+	- Bắt đầu với app vline
+
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
 
