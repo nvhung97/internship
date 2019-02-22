@@ -97,8 +97,6 @@ dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics-ndk:2.0.5@aar') {
         transitive = true
     }
-    //GPUImage
-    //implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.0'
 }
 apply plugin: 'com.google.gms.google-services'
 

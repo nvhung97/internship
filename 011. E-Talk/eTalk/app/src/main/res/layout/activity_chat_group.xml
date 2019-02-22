@@ -114,6 +114,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
+                    android:requiresFadingEdge="vertical"
+                    android:fadingEdgeLength="30dp"
                     bind:setRecyclerViewAdapter="@{viewModel.adapter}"/>
             </FrameLayout>
 

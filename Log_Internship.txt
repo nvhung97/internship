@@ -579,7 +579,16 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://stackoverflow.com/a/16519226
 
 18:20 15/02/2019
+9:1 18/02/2019
 	- Bắt đầu với app vline
+9:5 20/02/2019
+	- Fading edge với RecyclerView
+		+ https://stackoverflow.com/a/33757890
+19:1 22/02/2019
+	- Fading edge layout
+		+ https://stackoverflow.com/a/54222661
+		+ https://www.jianshu.com/p/713584d018fc
+		+ https://blog.csdn.net/cquwentao/article/details/51423371
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
