@@ -8,7 +8,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
@@ -55,6 +54,7 @@ public class MyView extends FrameLayout {
         matrix.setScale(1, FADEING_LENGTH);
         matrix.postTranslate(l, t);
         shader.setLocalMatrix(matrix);
+        paint.setXfermode(xfermode);
         paint.setShader(shader);
         canvas.drawRect(l, t, r, b, paint);
         canvas.restoreToCount(saveCount);
