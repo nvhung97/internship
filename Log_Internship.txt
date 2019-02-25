@@ -589,6 +589,13 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://stackoverflow.com/a/54222661
 		+ https://www.jianshu.com/p/713584d018fc
 		+ https://blog.csdn.net/cquwentao/article/details/51423371
+9:35 25/02/2019
+	- Canvas
+		+ https://blog.csdn.net/cquwentao/article/details/51363719
+		+ https://blog.csdn.net/cquwentao/article/details/51423371
+	- Xfermode
+		+ https://www.jianshu.com/p/713584d018fc
+		
 
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
