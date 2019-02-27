@@ -595,8 +595,18 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://blog.csdn.net/cquwentao/article/details/51423371
 	- Xfermode
 		+ https://www.jianshu.com/p/713584d018fc
-		
+10:23 26/02/2019
+	- Shaders and Filters
+		+ https://chiuki.github.io/android-shaders-filters/#/	
+	- Create a transparent bitmap from an existing bitmap by replacing certain color with transparent
+		+ http://www.java2s.com/Code/Android/2D-Graphics/Createatransparentbitmapfromanexistingbitmapbyreplacingcertaincolorwithtransparent.htm
+10:51 27/02/2019
+	- Android drawing process
+		+ https://www.youtube.com/watch?v=zdQRIYOST64
+		+ https://www.youtube.com/watch?v=v9S5EO7CLjo
 
+
+https://riptutorial.com/android/topic/85/getting-started-with-android
 http://techkids.vn/blog/20-source-code-app-android-tu-hoc-lap-trinh/
 http://techkids.vn/blog/tu-hoc-lap-trinh-25-thu-vien-android/
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.cpu11398_local.etalk.presentation.custom.MyView
+<com.example.cpu11398_local.etalk.presentation.custom.FadingEdgeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,4 +13,4 @@
         android:layout_gravity="center_horizontal"
         android:background="@color/colorETalkDark"/>
 
-</com.example.cpu11398_local.etalk.presentation.custom.MyView>
+</com.example.cpu11398_local.etalk.presentation.custom.FadingEdgeLayout>
