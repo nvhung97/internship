@@ -10,9 +10,11 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
 
-public class MyView extends FrameLayout {
+public class FadingEdgeLayout extends FrameLayout {
 
     private static final int[] FADE_COLORS = new int[]{Color.TRANSPARENT, Color.WHITE};
     private static final int FADEING_LENGTH = 200;
@@ -21,17 +23,17 @@ public class MyView extends FrameLayout {
     private Shader              shader;
     private PorterDuffXfermode  xfermode;
 
-    public MyView(Context context) {
+    public FadingEdgeLayout(Context context) {
         super(context);
         init();
     }
 
-    public MyView(Context context, AttributeSet attrs) {
+    public FadingEdgeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public MyView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FadingEdgeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -47,7 +49,7 @@ public class MyView extends FrameLayout {
     protected void dispatchDraw(Canvas canvas) {
         int l = 0;
         int t = 0;
-        int r = getMeasuredWidth();
+        int r = getWidth();
         int b = t + FADEING_LENGTH;
         int saveCount = canvas.saveLayer(0.0f, 0.0f, (float) getWidth(), (float) getHeight(), null, Canvas.ALL_SAVE_FLAG);
         super.dispatchDraw(canvas);
