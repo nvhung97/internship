@@ -604,6 +604,9 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Android drawing process
 		+ https://www.youtube.com/watch?v=zdQRIYOST64
 		+ https://www.youtube.com/watch?v=v9S5EO7CLjo
+13:54 1/03/2019
+	- Zalo SDK
+		+ https://developers.zalo.me/docs/sdk/android-sdk-8
 
 
 https://riptutorial.com/android/topic/85/getting-started-with-android
