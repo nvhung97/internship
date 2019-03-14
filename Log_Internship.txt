@@ -1,4 +1,4 @@
-2:59 PM 5/28/2018
+﻿2:59 PM 5/28/2018
 	- Tìm hiểu về ActivityCycleLife 
 		+ https://developer.android.com/guide/components/activities/activity-lifecycle
 
@@ -623,6 +623,9 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://gist.github.com/lecho/6473458
 	- Change icon key
 		+ https://stackoverflow.com/a/34775600
+	- Understand VectorDrawable
+		+ https://medium.com/@ali.muzaffar/understanding-vectordrawable-pathdata-commands-in-android-d56a6054610e
+		+ https://www.w3.org/TR/SVG/paths.html#PathData
 
 
 

@@ -31,13 +31,13 @@ public class MainActivity extends AppCompatActivity {
                     case -101:  // language
                     case 32:    // space
                     case 10:    // enter
-                        keyboardView.setPreviewEnabled(false);
+                        /*keyboardView.setPreviewEnabled(false);
                         for (Key key : keyboard.getKeys()) {
                             if (key.codes[0] == primaryCode) {
                                 key.icon = getDrawable(R.drawable.key_enter);
                                 break;
                             }
-                        }
+                        }*/
                         break;
                     default:
                         keyboardView.setPreviewEnabled(true);
