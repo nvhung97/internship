@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.inputmethodservice.KeyboardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/keyboard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@color/colorBoard"
+    android:keyBackground="@color/colorKey"
+    android:keyTextColor="@color/colorKeyText"
+    android:keyPreviewLayout="@layout/key_preview"
+    android:keyPreviewOffset="@dimen/key_offset"
+    android:keyPreviewHeight="@dimen/key_preview_height"/>
