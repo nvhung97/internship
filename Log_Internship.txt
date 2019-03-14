@@ -604,6 +604,26 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Android drawing process
 		+ https://www.youtube.com/watch?v=zdQRIYOST64
 		+ https://www.youtube.com/watch?v=v9S5EO7CLjo
+13:54 1/03/2019
+	- Zalo SDK
+		+ https://developers.zalo.me/docs/sdk/android-sdk-8
+10:50 4/03/2019
+	- Tìm hiểu Kotlin
+11:58 5/03/2019
+11:59 6/03/2019
+18:36 14/03/2019
+	- KeyboardView
+		+ https://stackoverflow.com/a/24979782
+		+ https://www.blackcj.com/blog/2016/03/30/building-a-custom-android-keyboard/
+	- Disable key preview
+		+ https://stackoverflow.com/a/53972962
+	- Change background
+		+ https://stackoverflow.com/a/39091883
+	- Shadow drawable
+		+ https://gist.github.com/lecho/6473458
+	- Change icon key
+		+ https://stackoverflow.com/a/34775600
+
 
 
 https://riptutorial.com/android/topic/85/getting-started-with-android
