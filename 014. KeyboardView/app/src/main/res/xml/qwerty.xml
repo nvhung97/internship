@@ -29,7 +29,7 @@
     </Row>
 
     <Row>
-        <Key android:codes="-1"  android:keyIcon="@drawable/key_shift" android:keyWidth="15%p" android:keyEdgeFlags="left"/>
+        <Key android:codes="-1"  android:keyIcon="@drawable/key_shift_hold" android:keyWidth="15%p" android:keyEdgeFlags="left"/>
         <Key android:codes="122" android:keyLabel="z"/>
         <Key android:codes="120" android:keyLabel="x"/>
         <Key android:codes="99"  android:keyLabel="c"/>
