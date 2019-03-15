@@ -1,95 +1,25 @@
 package com.example.keyboarddemo;
 
-import android.inputmethodservice.Keyboard;
-import android.inputmethodservice.Keyboard.Key;
-import android.inputmethodservice.KeyboardView;
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Keyboard     keyboard;
-    private KeyboardView keyboardView;
+    private EditText            editText;
+    private CustomKeyboardView  keyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        keyboard     = new Keyboard(this, R.xml.qwerty);
-        keyboardView = findViewById(R.id.keyboard);
+        editText = findViewById(R.id.edt);
+        keyboard = findViewById(R.id.keyboard);
 
-        keyboardView.setKeyboard(keyboard);
-        keyboardView.setOnKeyboardActionListener(new KeyboardView.OnKeyboardActionListener() {
-            @Override
-            public void onPress(int primaryCode) {
-                switch (primaryCode) {
-                    case -1:    // shift
-                    case -5:    // delete
-                    case -2:    // ?123
-                    case -101:  // language
-                    case 32:    // space
-                    case 10:    // enter
-                        /*keyboardView.setPreviewEnabled(false);
-                        for (Key key : keyboard.getKeys()) {
-                            if (key.codes[0] == primaryCode) {
-                                key.icon = getDrawable(R.drawable.key_enter);
-                                break;
-                            }
-                        }*/
-                        keyboard.setShifted(true);
-                        keyboardView.invalidateAllKeys();
-                        break;
-                    default:
-                        keyboardView.setPreviewEnabled(true);
-                }
-                Log.e("Test", "onPress " + primaryCode);
-            }
-
-            @Override
-            public void onRelease(int primaryCode) {
-                Log.e("Test", "onRelease " + primaryCode);
-            }
-
-            @Override
-            public void onKey(int primaryCode, int[] keyCodes) {
-                Log.e("Test", "onKey " + primaryCode);
-            }
-
-            @Override
-            public void onText(CharSequence text) {
-                Log.e("Test", "onText " + text);
-            }
-
-            @Override
-            public void swipeLeft() {
-                Log.e("Test", "swipeLeft");
-            }
-
-            @Override
-            public void swipeRight() {
-                Log.e("Test", "swipeRight");
-            }
-
-            @Override
-            public void swipeDown() {
-                Log.e("Test", "swipeDown");
-            }
-
-            @Override
-            public void swipeUp() {
-                Log.e("Test", "swipeUp");
-            }
-        });
-    }
-
-    public void onCode(View view) {
-        ((Button)findViewById(R.id.btn)).setText(String.valueOf(
-                (int)((TextView)findViewById(R.id.edt)).getText().charAt(0)
-        ));
+        keyboard.with(editText);
     }
 }

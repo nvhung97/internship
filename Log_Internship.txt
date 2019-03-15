@@ -1,4 +1,4 @@
-﻿2:59 PM 5/28/2018
+2:59 PM 5/28/2018
 	- Tìm hiểu về ActivityCycleLife 
 		+ https://developer.android.com/guide/components/activities/activity-lifecycle
 
@@ -626,6 +626,9 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- Understand VectorDrawable
 		+ https://medium.com/@ali.muzaffar/understanding-vectordrawable-pathdata-commands-in-android-d56a6054610e
 		+ https://www.w3.org/TR/SVG/paths.html#PathData
+18:54 15/03/2019
+	- Get InputConnection from EditText
+		+ https://stackoverflow.com/a/45005691
 
 
 
