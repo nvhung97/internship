@@ -6,6 +6,9 @@ import android.inputmethodservice.KeyboardView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             }
                         }*/
+                        keyboard.setShifted(true);
+                        keyboardView.invalidateAllKeys();
                         break;
                     default:
                         keyboardView.setPreviewEnabled(true);
@@ -80,5 +85,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Test", "swipeUp");
             }
         });
+    }
+
+    public void onCode(View view) {
+        ((Button)findViewById(R.id.btn)).setText(String.valueOf(
+                (int)((TextView)findViewById(R.id.edt)).getText().charAt(0)
+        ));
     }
 }

@@ -7,6 +7,6 @@
     android:background="@color/colorBoard"
     android:keyBackground="@color/colorKey"
     android:keyTextColor="@color/colorKeyText"
-    android:keyPreviewLayout="@layout/key_preview"
+    android:keyPreviewLayout="@layout/preview"
     android:keyPreviewOffset="@dimen/key_offset"
     android:keyPreviewHeight="@dimen/key_preview_height"/>
