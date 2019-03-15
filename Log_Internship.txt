@@ -1,4 +1,4 @@
-2:59 PM 5/28/2018
+﻿2:59 PM 5/28/2018
 	- Tìm hiểu về ActivityCycleLife 
 		+ https://developer.android.com/guide/components/activities/activity-lifecycle
 
@@ -615,6 +615,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 	- KeyboardView
 		+ https://stackoverflow.com/a/24979782
 		+ https://www.blackcj.com/blog/2016/03/30/building-a-custom-android-keyboard/
+		+ https://medium.com/@ssaurel/learn-to-create-a-system-keyboard-on-android-95aca21b1e5f
+		+ https://medium.com/@ssaurel/creating-an-in-app-keyboard-for-your-android-apps-a0a6c6e1e289
 	- Disable key preview
 		+ https://stackoverflow.com/a/53972962
 	- Change background
@@ -627,9 +629,8 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 		+ https://medium.com/@ali.muzaffar/understanding-vectordrawable-pathdata-commands-in-android-d56a6054610e
 		+ https://www.w3.org/TR/SVG/paths.html#PathData
 18:54 15/03/2019
-	- Get InputConnection from EditText
-		+ https://stackoverflow.com/a/45005691
-
+	- InputMethod Subtype
+		+ https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/android-4.1.2_r2/java/res/xml/method.xml
 
 
 https://riptutorial.com/android/topic/85/getting-started-with-android

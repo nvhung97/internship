@@ -1,22 +1,17 @@
 package com.example.keyboarddemo;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.Keyboard.Key;
 import android.inputmethodservice.KeyboardView;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.EditText;
 import java.util.List;
-import java.util.Locale;
 
 public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnKeyboardActionListener {
 
@@ -38,8 +33,6 @@ public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnK
     private boolean isSpacePressed   = false;
     private boolean isShiftHold      = false;
     private long    timeShiftPressed = 0;
-
-    private EditText editText;
 
 
     public CustomKeyboardView(Context context, AttributeSet attrs) {
@@ -79,28 +72,28 @@ public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnK
                 invalidate();
                 break;
             case KEY_DELETE:
-                // TODO
+                // Do nothing here
                 break;
             case KEY_SHIFT:
                 if (isShifted()) {
                     if (isShiftHold) {
                         setShifted(false);
-                        getKey(KEY_SHIFT).icon = getContext().getDrawable(R.drawable.key_shift);
                         invalidateAllKeys();
+                        updateKeyIcon(KEY_SHIFT, R.drawable.key_shift);
                         isShiftHold = false;
                     } else if (System.currentTimeMillis() - timeShiftPressed <= DOUBLE_PRESS_TIME) {
-                        getKey(KEY_SHIFT).icon = getContext().getDrawable(R.drawable.key_shift_hold);
+                        updateKeyIcon(KEY_SHIFT, R.drawable.key_shift_hold);
                         isShiftHold = true;
                     } else {
                         setShifted(false);
-                        getKey(KEY_SHIFT).icon = getContext().getDrawable(R.drawable.key_shift);
                         invalidateAllKeys();
+                        updateKeyIcon(KEY_SHIFT, R.drawable.key_shift);
                     }
                 } else {
                     timeShiftPressed = System.currentTimeMillis();
                     setShifted(true);
-                    getKey(KEY_SHIFT).icon = getContext().getDrawable(R.drawable.key_shift_hit);
                     invalidateAllKeys();
+                    updateKeyIcon(KEY_SHIFT, R.drawable.key_shift_hit);
                 }
                 break;
             case KEY_NUMERIC:
@@ -113,7 +106,7 @@ public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnK
                 // Do nothing here
                 break;
             case KEY_DONE:
-                getKey(KEY_DONE).icon = getContext().getDrawable(R.drawable.key_done_hit);
+                updateKeyIcon(KEY_DONE, R.drawable.key_done_hit);
                 break;
             case KEY_LANGUAGE:
                 //TODO
@@ -127,18 +120,15 @@ public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnK
     public void onKey(int primaryCode, int[] keyCodes) {
         switch (primaryCode) {
             case KEY_SPACE:
-                //TODO
+                inputConnection.commitText(" ", 1);
                 break;
             case KEY_DELETE:
                 CharSequence selectedText = inputConnection.getSelectedText(0);
                 if (TextUtils.isEmpty(selectedText)) {
-                    // no selection, so delete previous character
                     inputConnection.deleteSurroundingText(1, 0);
                 } else {
-                    // delete the selection
                     inputConnection.commitText("", 1);
                 }
-                //TODO
                 break;
             case KEY_SHIFT:
                 // Do nothing here
@@ -159,9 +149,11 @@ public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnK
                 //TODO
                 break;
             default:
-                //TODO
-                inputConnection.commitText(String.valueOf((char)primaryCode), 1);
-
+                if (isShifted() && primaryCode >= 'a' && primaryCode <= 'z') {
+                    inputConnection.commitText(String.valueOf((char)(primaryCode - 32)), 1);
+                } else {
+                    inputConnection.commitText(String.valueOf((char)primaryCode), 1);
+                }
         }
     }
 
@@ -188,28 +180,26 @@ public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnK
                 setKeyboard(keyboardSymbol);
                 break;
             case KEY_DONE:
-                getKey(KEY_DONE).icon = getContext().getDrawable(R.drawable.key_done);
+                updateKeyIcon(KEY_DONE, R.drawable.key_done);
                 break;
             case KEY_LANGUAGE:
                 //TODO
                 break;
             default:
-                //TODO
+                if (isShifted() && !isShiftHold) {
+                    setShifted(false);
+                    invalidateAllKeys();
+                    updateKeyIcon(KEY_SHIFT, R.drawable.key_shift);
+                }
         }
     }
 
     private InputConnection inputConnection;
 
     public void with(EditText editText) {
-        this.editText = editText;
         inputConnection = editText.onCreateInputConnection(new EditorInfo());
     }
 
-    private void addChar(int code) {
-        if (editText != null) {
-            editText.setText(editText.getText().toString() + (char)code);
-        }
-    }
     private void drawKeyBackground(Key key, int drawableId, Canvas canvas) {
         Drawable drawable = getContext().getDrawable(drawableId);
         drawable.setState(key.getCurrentDrawableState());
@@ -230,6 +220,10 @@ public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnK
             }
         }
         return null;
+    }
+
+    private void updateKeyIcon(int keyCode, int drawableId) {
+        getKey(keyCode).icon = getContext().getDrawable(drawableId);
     }
 
     @Override
