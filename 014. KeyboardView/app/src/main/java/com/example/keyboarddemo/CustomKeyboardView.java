@@ -10,10 +10,12 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import java.lang.reflect.Field;
@@ -36,15 +38,22 @@ public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnK
     private Keyboard keyboardNumeric;
     private Keyboard keyboardSymbol;
 
-    private boolean isPopupOnScreen   = false;
-    private boolean isLanguagePressed = false;
-    private boolean isSpacePressed    = false;
-    private boolean isShiftHold       = false;
-    private long    timeShiftPressed  = 0;
-    private int     keyHeight         = 0;
+    private boolean isPopupOnScreen     = false;
+    private boolean isLanguagePressed   = false;
+    private boolean isSpacePressed      = false;
+    private boolean isShiftHold         = false;
+    private long    timeShiftPressed    = 0;
+    private int     keyHeight           = 0;
+    private int[]   coordinates         = new int[2];
 
     private InputConnection inputConnection;
+    private PopupWindow     popupWindow;
     private MotionEvent     motionEvent;
+
+    private OnClickListener listener = v -> {
+        ((InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(v.getWindowToken(), 0);
+    };
 
     public CustomKeyboardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -61,6 +70,8 @@ public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnK
         keyboardQwerty  = new Keyboard(context, R.xml.qwerty);
         keyboardNumeric = new Keyboard(context, R.xml.numeric);
         keyboardSymbol  = new Keyboard(context, R.xml.symbol);
+        popupWindow     = new PopupWindow(context);
+        popupWindow.setBackgroundDrawable(context.getDrawable(R.drawable.bg_preview));
         setKeyboard(keyboardQwerty);
         setOnKeyboardActionListener(this);
     }
@@ -70,7 +81,13 @@ public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnK
      * @param editText receive text from this keyboard.
      */
     public void with(EditText editText) {
+        editText.setOnClickListener(listener);
         inputConnection = editText.onCreateInputConnection(new EditorInfo());
+    }
+
+    public void clear(EditText editText) {
+        editText.setOnClickListener(null);
+        inputConnection = null;
     }
 
     @Override
@@ -129,6 +146,7 @@ public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnK
 
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
+        if (inputConnection == null) return;
         switch (primaryCode) {
             case KEY_SPACE:
                 inputConnection.commitText(" ", 1);
@@ -208,7 +226,80 @@ public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnK
 
     @Override
     protected boolean onLongPress(Key popupKey) {
-        if (isPopupOnScreen = super.onLongPress(popupKey)) {
+        int popupKeyboardId = popupKey.popupResId;
+        if (popupKeyboardId != 0) {
+            CustomPopupView popupView = (CustomPopupView)((LayoutInflater)getContext()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                    .inflate(R.layout.popup, null);
+            popupView.setOnKeyboardActionListener(new OnKeyboardActionListener() {
+                @Override
+                public void onPress(int primaryCode) {
+                    CustomKeyboardView.this.onPress(primaryCode);
+                    popupView.onPress(primaryCode);
+                }
+
+                @Override
+                public void onKey(int primaryCode, int[] keyCodes) {
+                    CustomKeyboardView.this.onKey(primaryCode, keyCodes);
+                }
+
+                @Override
+                public void onRelease(int primaryCode) {
+                    CustomKeyboardView.this.onRelease(primaryCode);
+                    if (popupWindow.isShowing()) {
+                        popupWindow.dismiss();
+                        isPopupOnScreen = false;
+                        invalidateAllKeys();
+                    }
+                }
+
+                @Override
+                public void onText(CharSequence text) {}
+                @Override
+                public void swipeLeft() {}
+                @Override
+                public void swipeRight() {}
+                @Override
+                public void swipeDown() {}
+                @Override
+                public void swipeUp() {}
+            });
+            Keyboard keyboard = new Keyboard(
+                    getContext(),
+                    popupKeyboardId,
+                    popupKey.popupCharacters,
+                    -1,
+                    getPaddingLeft() + getPaddingRight()
+            );
+            popupView.setKeyboard(keyboard);
+            popupView.setPopupParent(this);
+            popupView.measure(
+                    getWidth() | MeasureSpec.AT_MOST,
+                    getHeight() | MeasureSpec.AT_MOST
+            );
+            getLocationInWindow(coordinates);
+            popupView.setShifted(isShifted());
+            popupWindow.setContentView(popupView);
+            popupWindow.setWidth(popupView.getMeasuredWidth());
+            popupWindow.setHeight(popupView.getMeasuredHeight()
+                    + getResources().getDimensionPixelSize(R.dimen.key_preview_padding));
+            int numChar = popupKey.popupCharacters.length();
+            int keyWidth = popupWindow.getWidth() / numChar;
+            int x = popupKey.x + coordinates[0];
+            int y = popupKey.y - popupView.getMeasuredHeight() + coordinates[1] - keyHeight / 2;
+            int numShift = (numChar % 2 == 0) ? (numChar / 2 - 1) : (numChar / 2);
+            while ((numShift-- > 0) && (x - keyWidth >= 0)) {
+                x -= keyWidth;
+            }
+            while (x + popupWindow.getWidth() > getRight()) {
+                x -= keyWidth;
+            }
+            popupWindow.showAtLocation(
+                    this,
+                    Gravity.NO_GRAVITY,
+                    x, y
+            );
+            isPopupOnScreen = true;
             onTouchEvent(motionEvent);
             return true;
         }
@@ -219,25 +310,25 @@ public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnK
     public boolean onTouchEvent(final MotionEvent me) {
         if (isPopupOnScreen) {
             try {
-                int action = MotionEvent.ACTION_DOWN;
-                if (me.getAction() == MotionEvent.ACTION_UP) {
-                    action = MotionEvent.ACTION_UP;
-                    isPopupOnScreen = false;
-                }
-                int[] popupLocation = new int[2];
-                PopupWindow popupWindow = getPopupWindow();
-                popupWindow.getContentView().getLocationOnScreen(popupLocation);
-                popupWindow.getContentView().onTouchEvent(MotionEvent.obtain(
+                KeyboardView keyboardView = (KeyboardView)popupWindow.getContentView();
+                Keyboard keyboard = keyboardView.getKeyboard();
+                int keyWidth = popupWindow.getWidth() / keyboard.getKeys().size();
+                keyboardView.getLocationOnScreen(coordinates);
+                keyboardView.onTouchEvent(MotionEvent.obtain(
                         SystemClock.uptimeMillis(),
                         SystemClock.uptimeMillis(),
-                        action,
-                        me.getRawX() - popupLocation[0],
-                        me.getRawY() - popupLocation[1] - keyHeight,
-                        0
+                        me.getAction() == MotionEvent.ACTION_UP
+                                ? MotionEvent.ACTION_UP
+                                : MotionEvent.ACTION_DOWN,
+                        Math.min(
+                                Math.max(keyWidth >> 1, me.getRawX() - coordinates[0]),
+                                popupWindow.getWidth() - (keyWidth >> 1)),
+                        keyHeight >> 1, 0
                 ));
             } catch (Exception e) {
                 new Handler().postDelayed(() -> onTouchEvent(me), 10);
             }
+            return true;
         }
         return super.onTouchEvent(motionEvent = me);
     }

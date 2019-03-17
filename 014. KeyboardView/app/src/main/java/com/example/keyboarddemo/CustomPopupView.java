@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.inputmethodservice.Keyboard.Key;
 import android.inputmethodservice.KeyboardView;
 import android.util.AttributeSet;
+import java.util.List;
 
 public class CustomPopupView extends KeyboardView {
 
@@ -19,11 +20,9 @@ public class CustomPopupView extends KeyboardView {
         super(context, attrs, defStyleAttr);
     }
 
-    @Override
-    protected boolean onLongPress(Key popupKey) {
-        currentKey = popupKey;
+    public void onPress(int keyCode) {
+        currentKey = getKey(keyCode);
         invalidate();
-        return super.onLongPress(popupKey);
     }
 
     @Override
@@ -40,5 +39,15 @@ public class CustomPopupView extends KeyboardView {
             drawable.draw(canvas);
         }
         super.onDraw(canvas);
+    }
+
+    private Key getKey(int code) {
+        List<Key> keys = getKeyboard().getKeys();
+        for (Key key : keys) {
+            if (key.codes[0] == code) {
+                return key;
+            }
+        }
+        return null;
     }
 }
