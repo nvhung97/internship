@@ -60,7 +60,7 @@
     <!-- Background -->
     <item>
         <shape>
-            <solid android:color="#3c474c" />
+            <solid android:color="@color/colorPreview" />
             <corners android:radius="5dp" />
         </shape>
     </item>

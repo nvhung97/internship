@@ -5,6 +5,10 @@
     <color name="colorAccent">#D81B60</color>
 
     <color name="colorKey">#00000000</color>
-    <color name="colorBoard">#263238</color>
+    <color name="colorKeyHit">#3b464c</color>
     <color name="colorKeyText">#d4d6d7</color>
+    <color name="colorKeyIcon">#bec2c4</color>
+    <color name="colorBoard">#263238</color>
+    <color name="colorPreview">#3c474c</color>
+    <color name="colorPreviewHit">#80cbc4</color>
 </resources>

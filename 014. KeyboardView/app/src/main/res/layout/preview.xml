@@ -6,4 +6,4 @@
     android:textStyle="bold"
     android:textSize="30sp"
     android:textColor="@color/colorKeyText"
-    android:background="@drawable/key_popup"/>
+    android:background="@drawable/bg_preview"/>

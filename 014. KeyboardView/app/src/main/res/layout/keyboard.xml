@@ -3,10 +3,10 @@
     android:id="@+id/keyboard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="bottom"
+    android:popupLayout="@layout/popup"
     android:background="@color/colorBoard"
     android:keyBackground="@color/colorKey"
     android:keyTextColor="@color/colorKeyText"
     android:keyPreviewLayout="@layout/preview"
-    android:keyPreviewOffset="@dimen/key_offset"
+    android:keyPreviewOffset="@dimen/key_preview_offset"
     android:keyPreviewHeight="@dimen/key_preview_height"/>

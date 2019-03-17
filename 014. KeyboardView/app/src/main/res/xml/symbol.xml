@@ -38,16 +38,16 @@
         <Key android:codes="10003" android:keyLabel="&#10003;"/>
         <Key android:codes="91"    android:keyLabel="&#91;"/>
         <Key android:codes="93"    android:keyLabel="&#93;"/>
-        <Key android:codes="-5"    android:keyIcon="@drawable/key_delete" android:keyWidth="15%p" android:isRepeatable="true" android:keyEdgeFlags="right"/>
+        <Key android:codes="-5"    android:keyIcon="@drawable/ic_delete" android:keyWidth="15%p" android:isRepeatable="true" android:keyEdgeFlags="right"/>
     </Row>
 
     <Row android:rowEdgeFlags="bottom">
         <Key android:codes="-103" android:keyLabel="ABC" android:keyWidth="15%p" android:keyEdgeFlags="left"/>
         <Key android:codes="60"   android:keyLabel="&#60;"/>
-        <Key android:codes="-101" android:keyIcon="@drawable/key_language"/>
-        <Key android:codes="32"   android:keyLabel="\ " android:keyWidth="40%p"/>
+        <Key android:codes="-101" android:keyIcon="@drawable/ic_language"/>
+        <Key android:codes="32"   android:keyLabel="English" android:keyWidth="40%p"/>
         <Key android:codes="62"   android:keyLabel="&#62;"/>
-        <Key android:codes="-4"   android:keyIcon="@drawable/key_done" android:keyWidth="15%p" android:keyEdgeFlags="right"/>
+        <Key android:codes="-4"   android:keyIcon="@drawable/ic_done" android:keyWidth="15%p" android:keyEdgeFlags="right"/>
     </Row>
 
 </Keyboard>
