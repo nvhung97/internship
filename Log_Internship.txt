@@ -1,4 +1,4 @@
-﻿2:59 PM 5/28/2018
+2:59 PM 5/28/2018
 	- Tìm hiểu về ActivityCycleLife 
 		+ https://developer.android.com/guide/components/activities/activity-lifecycle
 
@@ -631,6 +631,9 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 18:54 15/03/2019
 	- InputMethod Subtype
 		+ https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/android-4.1.2_r2/java/res/xml/method.xml
+17:31 21/03/2019
+	- BottomSheetDialogFragment doesn't show full height in landscape mode
+		+ https://stackoverflow.com/a/45706484
 
 
 https://riptutorial.com/android/topic/85/getting-started-with-android
