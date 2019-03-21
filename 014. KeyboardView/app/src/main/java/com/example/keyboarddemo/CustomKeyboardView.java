@@ -49,6 +49,7 @@ public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnK
     private InputConnection inputConnection;
     private PopupWindow     popupWindow;
     private MotionEvent     motionEvent;
+    private EditText        editText;
 
     private OnClickListener listener = v -> {
         ((InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
@@ -81,13 +82,24 @@ public class CustomKeyboardView extends KeyboardView implements KeyboardView.OnK
      * @param editText receive text from this keyboard.
      */
     public void with(EditText editText) {
-        editText.setOnClickListener(listener);
-        inputConnection = editText.onCreateInputConnection(new EditorInfo());
+        if (this.editText != null) {
+            clear(this.editText);
+        }
+        this.editText = editText;
+        this.editText.setOnClickListener(listener);
+        inputConnection = this.editText.onCreateInputConnection(new EditorInfo());
     }
 
+    /**
+     * Disconect the keyboard with given {@code editText} if it is the current one.
+     * @param editText that want to stop receive text from this keyboard.
+     */
     public void clear(EditText editText) {
-        editText.setOnClickListener(null);
-        inputConnection = null;
+        if (this.editText == editText) {
+            this.editText.setOnClickListener(null);
+            this.editText = null;
+            inputConnection = null;
+        }
     }
 
     @Override

@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 import com.example.cpu11398_local.etalk.R;
 
 /**
@@ -43,7 +42,6 @@ public class KeyboardHeightProvider extends PopupWindow {
 
     /**
      * Construct a new KeyboardHeightProvider
-     *
      * @param activity The parent activity
      */
     public KeyboardHeightProvider(Activity activity) {
