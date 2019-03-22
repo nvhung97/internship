@@ -634,6 +634,9 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 17:31 21/03/2019
 	- BottomSheetDialogFragment doesn't show full height in landscape mode
 		+ https://stackoverflow.com/a/45706484
+18:36 22/03/2019
+	- Custom seekbar
+		+ https://stackoverflow.com/a/16165498
 
 
 https://riptutorial.com/android/topic/85/getting-started-with-android

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.myapplication.PlaybackContainer
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/playback_controller"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#707070">
+
+    <ImageButton
+        android:id="@+id/play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:src="@drawable/ic_play"
+        android:background="@null"/>
+
+    <ImageButton
+        android:id="@+id/pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_pause"
+        android:background="@null"/>
+
+    <SeekBar
+        android:id="@+id/seek_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:progressDrawable="@drawable/progress"
+        android:thumb="@drawable/cursor"/>
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/playback_padding"
+        android:paddingRight="@dimen/playback_padding"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:text="-00:00"/>
+
+    <ImageButton
+        android:id="@+id/mute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_mute"
+        android:background="@null"/>
+
+    <ImageButton
+        android:id="@+id/unmute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:src="@drawable/ic_unmute"
+        android:background="@null"/>
+
+    <ImageButton
+        android:id="@+id/full_screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_full_screen"
+        android:background="@null"/>
+
+    <ImageButton
+        android:id="@+id/exit_full_screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:src="@drawable/ic_exit_full_screen"
+        android:background="@null"/>
+
+</com.example.myapplication.PlaybackContainer>
