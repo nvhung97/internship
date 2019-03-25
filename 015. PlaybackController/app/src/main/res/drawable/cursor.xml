@@ -1,9 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <size
+                android:width="@dimen/playback_cursor_size"
+                android:height="@dimen/playback_cursor_size"/>
+            <solid
+                android:color="@color/colorSeekBarSecondary"/>
+            <corners
+                android:radius="@dimen/playback_cursor_size"/>
+        </shape>
+    </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorSeekBarSecondary"/>
-            <size android:width="15dp" android:height="15dp"/>
-            <corners android:radius="10dp"/>
+            <size
+                android:width="@dimen/playback_cursor_size"
+                android:height="@dimen/playback_cursor_size"/>
+            <solid
+                android:color="@color/colorSeekBarSecondary"/>
+            <corners
+                android:radius="@dimen/playback_cursor_size"/>
+            <stroke
+                android:width="@dimen/playback_cursor_stroke"
+                android:color="@android:color/transparent"/>
         </shape>
     </item>
 </selector>

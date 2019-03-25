@@ -1,16 +1,16 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
         android:id="@android:id/background"
-        android:top="7dp"
-        android:bottom="7dp">
+        android:top="@dimen/playback_progress_top"
+        android:bottom="@dimen/playback_progress_bottom">
         <shape android:shape="rectangle">
             <solid android:color="@color/colorSeekBarTrack"/>
         </shape>
     </item>
     <item
         android:id="@android:id/secondaryProgress"
-        android:top="7dp"
-        android:bottom="7dp">
+        android:top="@dimen/playback_progress_top"
+        android:bottom="@dimen/playback_progress_bottom">
         <scale android:scaleWidth="100%" >
             <shape android:shape="rectangle">
                 <solid android:color="@color/colorSeekBarSecondary"/>
@@ -19,8 +19,8 @@
     </item>
     <item
         android:id="@android:id/progress"
-        android:top="7dp"
-        android:bottom="7dp">
+        android:top="@dimen/playback_progress_top"
+        android:bottom="@dimen/playback_progress_bottom">
         <scale android:scaleWidth="100%">
             <shape android:shape="rectangle">
                 <solid android:color="@color/colorSeekBarPrimary"/>
