@@ -637,6 +637,11 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 18:36 22/03/2019
 	- Custom seekbar
 		+ https://stackoverflow.com/a/16165498
+17:18 28/03/2019
+	- git commit message format:
+		"Title
+		<blank line>
+		description"
 
 
 https://riptutorial.com/android/topic/85/getting-started-with-android

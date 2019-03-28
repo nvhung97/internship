@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.widget.ImageButton;
 import android.widget.FrameLayout;
 import android.widget.SeekBar;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 
 public class PlaybackContainer extends FrameLayout {
@@ -140,11 +141,19 @@ public class PlaybackContainer extends FrameLayout {
             progressHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (!isTouching) {
-                        seekBar.setProgress((int) (player.getCurrentPosition() * 100 / player.getDuration()));
+                    if (player.getPlaybackState() != 0) {
+                        if (player.getPlayWhenReady() &&
+                                (player.getPlaybackState() == Player.STATE_READY || player.getPlaybackState() == Player.STATE_BUFFERING)) {
+                            if (!isTouching) {
+                                seekBar.setProgress((int) (player.getCurrentPosition() * 100 / player.getDuration()));
+                            }
+                            seekBar.setSecondaryProgress((int) (player.getBufferedPosition() * 100 / player.getDuration()));
+                            time.setRemainingTime(player.getDuration() - player.getCurrentPosition());
+                            progressHandler.postDelayed(this, 1000 - player.getCurrentPosition() % 1000);
+                        } else {
+                            progressHandler.postDelayed(this, 1000);
+                        }
                     }
-                    time.setRemainingTime(player.getDuration() - player.getCurrentPosition());
-                    progressHandler.postDelayed(this, 100);
                 }
             });
         }
