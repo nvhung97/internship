@@ -650,6 +650,9 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 16:0 18/04/2019
 	- Chat RecyclerView
 		+ https://github.com/firebase/FirebaseUI-Android/issues/886#issuecomment-326819391
+17:17 9/05/2019
+	- Reflection
+		+ https://viblo.asia/p/java-reflection-and-anotation-DbmvmWRMeAg
 
 
 https://riptutorial.com/android/topic/85/getting-started-with-android
