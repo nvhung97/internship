@@ -190,6 +190,7 @@
 	- Clean Architecture
 		+ https://github.com/android10/Android-CleanArchitecture
 		+ https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html
+		+ https://five.agency/android-architecture-part-1-every-new-beginning-is-hard/
 	- Access modifiers in java
 		+ https://www.geeksforgeeks.org/access-modifiers-java/
 		+ https://stackoverflow.com/questions/5181578/what-is-the-point-of-final-class-in-java/12335925#12335925
