@@ -1,0 +1,114 @@
+MÔ TẢ HIỆN THỰC KIẾN TRÚC CLEAN
+
+1. Tầng Domain
+	- Tạo các class cho các model sẽ được sử dụng trong ứng dụng.
+	- Hiện thực các interface repository cho mỗi loại đối tượng cần tương tác. Trong các interface này định nghĩa prototype cho việc CRUD.
+	- Hiện thực class <TaskExecutor> để thực thi các task sẽ được thực hiện trong các usecase.
+	- Hiện thực class <UsecaseManager> sử dụng <Executor> và cài đặt các phương thức <addTask> và <removeAllTask> để quản lý sự sống của các task.
+	- Hiện thực interface <Usecase> chứa prototype của phương thức <endTask> giúp tầng Presentation có thể huỷ task khi cần thiết.
+	- Mỗi usecase hiện thực một interface kế thừa <Usecase>, trong interface này định nghĩa các prototype cho các phương thức sẽ được gọi từ tầng Presentation.  
+	  Các phương thức này (input port) chỉ định kiểu observer (output port) mà tầng Presentation phải truyền theo để nhận kết quả khi gọi. 
+	  Kiểu observer được định nghĩa bằng một interface con trong interface của usecase.
+	- Mỗi usecase hiện thực một class hiện thực interface tương ứng và kế thừa <UsecaseManager>.
+	  Class này gọi phương thức <addTask> khi thực thi một task và <removeAllTask> trong hiện thực của phương thức <endTask>.
+	  Class này có thể sử dụng các repository đã định nghĩa từ trước.
+
+2. Tầng Data
+	- Tạo các class model sử dụng trong tầng Data và class <Mapper> để chuyển đổi model giữa tầng Data và Domain.
+	- Hiện thực các loại lưu trữ (cache, local, network). Mỗi loại lưu trữ hiện thực một interface và một class hiện thực interface đó.
+	- Với mỗi interface repository được định nghĩa trong tầng Domain, hiện thực một class hiện thực interface này. Trong class này sử dụng các loại lưu trữ đã hiện thực thông qua các interface của chúng.
+
+3. Tầng Presentation
+	- Tạo các class model sử dụng trong tầng Presentation và class <Mapper> để chuyển đổi model giữa tầng Presentation và Domain.
+	- Hiện thực interface <ViewModel> định nghĩa prototype cho phương thức <subscribeObserver> để View nhận sự kiện từ ViewModel và <endTask> để View có thể huỷ task khi cần.
+	- Hiện thực interface <ViewModelCallback> định nghĩa các help function hỗ trợ các đối tượng trong ứng dụng gọi ViewModel thực hiện một task nào đó.
+	- Hiện thực các class ViewModel hiện thực <ViewModel> và <ViewModelCallBack> để điều khiển View. Trong class này sử dụng các usecase đã hiện thực trong tầng Domain thông qua interface của chúng.
+	- Hiện thực abstract class <BaseActivity> kiểm soát các hoạt động chung nhất của View.
+	- Hiện thực các Activity kế thừa <BaseActivity>, sử dụng DataBinding để bind View với ViewModel tương ứng.
+	- Sử dụng Dagger để cấp phát đối tượng trong toàn ứng dụng.
+
+* Để đảm bảo không vi phạm Dependency Rule, chia các lớp trong kiến trúc thành các Module và điều chỉnh dependencies trong file build để đảm bảo lớp bên trong không thể thấy được lớp bên ngoài.
+
+* Cấu trúc source code:
+
+App
+	data
+		model
+			<C>Model1
+			<C>Model2
+			<C>Model3
+			...
+			<C>Mapper
+		cache
+			<I>CacheSorce
+			<C>CacheImpl
+		local
+			<I>LocalSorce
+			<C>LocalImpl
+		network
+			<I>NetworkSorce
+			<C>NetworkImpl
+		<C>Repository1Impl
+		<C>Repository2Impl
+		<C>Repository3Impl
+		...
+	domain
+		executor
+			<C>TaskExecutor
+		interaction
+			<C>UsecaseManager
+			<I>Usecase
+			<I>Usecase1
+			<I>Usecase2
+			<I>Usecase3
+			...
+			<C>Usecase1Impl
+			<C>Usecase2Impl
+			<C>Usecase3Impl
+			...
+		model
+			<C>Model1
+			<C>Model2
+			<C>Model3
+			...
+		repository
+			<I>Repository1
+			<I>Repository2
+			<I>Repository3
+			...
+	presentation
+		custom (option)
+		di
+			<I>AppComponent
+			<C>AppModule
+		model
+			<C>Model1
+			<C>Model2
+			<C>Model3
+			...
+			<C>Mapper
+		view
+			view1
+				<C>Activity1
+				<C>Layout1
+			view2
+				<C>Activity2
+				<C>Layout2
+			view3
+				<C>Activity3
+				<C>Layout3
+			...
+			<A>BaseActivity
+		view_model
+			view_model1
+				ViewModel1
+			view_model2
+				ViewModel2
+			view_model3
+				ViewModel3
+			...
+			<I>ViewModel
+			<I>ViewModelCallback
+	utils (option)
+		
+		

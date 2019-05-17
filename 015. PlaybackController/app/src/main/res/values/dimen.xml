@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="playback_controller_height">40dp</dimen>
+    <dimen name="playback_height">40dp</dimen>
     <dimen name="playback_padding">10dp</dimen>
+    <dimen name="playback_progress_top">7dp</dimen>
+    <dimen name="playback_progress_bottom">7dp</dimen>
+    <dimen name="playback_cursor_size">15dp</dimen>
+    <dimen name="playback_cursor_stroke">5dp</dimen>
 </resources>

@@ -190,6 +190,7 @@
 	- Clean Architecture
 		+ https://github.com/android10/Android-CleanArchitecture
 		+ https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html
+		+ https://five.agency/android-architecture-part-1-every-new-beginning-is-hard/
 	- Access modifiers in java
 		+ https://www.geeksforgeeks.org/access-modifiers-java/
 		+ https://stackoverflow.com/questions/5181578/what-is-the-point-of-final-class-in-java/12335925#12335925
@@ -637,6 +638,21 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 18:36 22/03/2019
 	- Custom seekbar
 		+ https://stackoverflow.com/a/16165498
+17:18 28/03/2019
+	- git commit message format:
+		"Title
+		<blank line>
+		description"
+9:41 4/04/2019
+	- Tìm hiểu RTMP
+		+ https://cuongquach.com/he-thong-http-live-streaming-video-la-gi.html#53_Su_khac_biet_giua_2_giao_thuc_HTTP_va_RTMP
+		+ http://wwwimages.adobe.com/www.adobe.com/content/dam/acom/en/devnet/rtmp/pdf/rtmp_specification_1.0.pdf
+16:0 18/04/2019
+	- Chat RecyclerView
+		+ https://github.com/firebase/FirebaseUI-Android/issues/886#issuecomment-326819391
+17:17 9/05/2019
+	- Reflection
+		+ https://viblo.asia/p/java-reflection-and-anotation-DbmvmWRMeAg
 5:44 PM 5/17/2019
 	- Release SHA1
 		+ https://stackoverflow.com/a/35308827
@@ -655,6 +671,10 @@ https://pegasi.com.vn/job/technical-director-55
 https://www.raywenderlich.com/959-arc-and-memory-management-in-swift
 https://dzone.com/articles/immutables-in-java
 https://medium.com/@jamesrochabrun/advance-generics-to-create-reusable-ui-f0b8b8934895
+https://vuihocweb.com/vhw-reviews/hosting-reviews/nhung-dich-vu-vps-free-dang-dung
+https://instagram-engineering.com/improving-comment-rendering-on-android-a77d5db3d82e
+https://codelabs.developers.google.com/codelabs/android-testing/index.html#0
+https://marcosantadev.com/implement-cache-lru-swift/
 
 https://www.dkn.tv/doi-song/17-buc-anh-day-xuc-dong-khien-trai-tim-ban-tan-chay-ngay-lap-tuc.html
 https://ins.dkn.tv/giaitri/cam-dong-hinh-anh-ve-8-chu-cho-trung-thanh.html
