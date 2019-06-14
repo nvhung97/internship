@@ -1,4 +1,4 @@
-2:59 PM 5/28/2018
+﻿2:59 PM 5/28/2018
 	- Tìm hiểu về ActivityCycleLife 
 		+ https://developer.android.com/guide/components/activities/activity-lifecycle
 
@@ -653,6 +653,9 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 17:17 9/05/2019
 	- Reflection
 		+ https://viblo.asia/p/java-reflection-and-anotation-DbmvmWRMeAg
+5:44 PM 5/17/2019
+	- Release SHA1
+		+ https://stackoverflow.com/a/35308827
 
 
 https://riptutorial.com/android/topic/85/getting-started-with-android
