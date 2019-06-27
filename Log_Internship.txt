@@ -656,6 +656,12 @@ TẠO APP CHAT eTalk (Tương tự Zalo/Messenger)
 5:44 PM 5/17/2019
 	- Release SHA1
 		+ https://stackoverflow.com/a/35308827
+9:58 19/06/2019
+	- Combine RGBA color
+		+ https://stackoverflow.com/a/48343059
+15:24 27/06/2019
+	- Animated Vector Drawable
+		+ https://www.androiddesignpatterns.com/2016/11/introduction-to-icon-animation-techniques.html
 
 
 https://riptutorial.com/android/topic/85/getting-started-with-android
